@@ -15,6 +15,6 @@ public class LightTheme extends Theme {
 		super.backgroundColor = Color.WHITE;
 		super.foregroundColor = Color.BLACK;
 		super.shadowColor = super.backgroundColor;
-		super.dividerSize = 3;
+		super.dividerSize = 2;
 	}
 }

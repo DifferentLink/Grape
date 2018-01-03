@@ -30,33 +30,32 @@ public class GrapeUI extends JFrame {
 
 		JPanel correlationUI = CorrelationUI.makeCorrelationUI(language, theme);
 
-		JPanel filterAndCorrelationUI = new JPanel();
-		filterAndCorrelationUI.setLayout(new BoxLayout(filterAndCorrelationUI, BoxLayout.Y_AXIS));
 		JSplitPane filterCorrelationDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
 				true,
 				filterUI,
 				correlationUI);
 		filterCorrelationDivider.setDividerSize(theme.dividerSize);
-		filterCorrelationDivider.setContinuousLayout(true);
-		filterAndCorrelationUI.add(filterCorrelationDivider);
 
 		JPanel graphEditor = GraphEditorUI.makeGraphEditorUI(language, theme);
-		JPanel leftUI = new JPanel();
-		leftUI.setBackground(theme.backgroundColor);
-		leftUI.setForeground(theme.foregroundColor);
+
 		JSplitPane graphEditorDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
 				true,
 				filterCorrelationDivider,
 				graphEditor);
 		graphEditorDivider.setDividerSize(theme.dividerSize);
-		graphEditorDivider.setContinuousLayout(true);
+
+		JPanel leftUI = new JPanel();
+		leftUI.setLayout(new BoxLayout(leftUI, BoxLayout.Y_AXIS));
+		leftUI.setBackground(theme.backgroundColor);
+		leftUI.setForeground(theme.foregroundColor);
 		leftUI.add(graphEditorDivider);
 
 		JPanel tableUI = TableUI.makeTableUI(language, theme);
 		JPanel statusbarUI = StatusbarUI.makeStatusbarUI(language, theme);
 		JPanel rightUI = new JPanel();
+
 		rightUI.setLayout(new BoxLayout(rightUI, BoxLayout.Y_AXIS));
 		rightUI.add(tableUI);
 		rightUI.add(statusbarUI);
@@ -74,7 +73,7 @@ public class GrapeUI extends JFrame {
 
 		mainWindow.setJMenuBar(MenuUI.makeMenuBar(language, theme));
 
-		mainWindow.pack();
+		// mainWindow.pack();
 		mainWindow.setVisible(true);
 	}
 }
