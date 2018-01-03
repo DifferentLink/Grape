@@ -1,14 +1,43 @@
 group 'edu.kit.ipd.dbis'
 version '0.0.1-SNAPSHOT'
 
-apply plugin: 'java'
+// Allows to build JAR. Implicitly applies the 'java' plugin
+apply plugin: 'application'
 
+// Java version
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
+// Access variables defined below by using $variableName
+mainClassName = 'edu.kit.ipd.dbis.Main'
+
+// Gradle searches here for dependencies
+// JCenter is a superset of MavenCentral
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.mockito:mockito-core:1.+'
+}
+
+// Configuration of the java jar plugin.
+jar {
+    manifest {
+        attributes 'Main-Class': "$mainClassName"
+    }
+}
+
+// Build a single jar file with all the dependencies
+task fullJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': "$mainClassName"
+    }
+    baseName = project.name + '-all'
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }
