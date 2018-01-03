@@ -1,4 +1,4 @@
-/*
+/**
   Created by Robin Link
 */
 
@@ -7,12 +7,12 @@ package edu.kit.ipd.dbis.gui;
 import javax.swing.*;
 import java.util.ResourceBundle;
 
-public class MainWindow extends JPanel {
+public class GrapeUI extends JPanel {
 
 	private final String programName = "Grape";
 	private ResourceBundle language;
 
-	public MainWindow(final ResourceBundle language) {
+	public GrapeUI(final ResourceBundle language) {
 		this.language = language;
 		run();
 	}

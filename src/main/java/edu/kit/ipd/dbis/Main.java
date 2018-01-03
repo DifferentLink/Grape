@@ -1,6 +1,6 @@
 package edu.kit.ipd.dbis;
 
-import edu.kit.ipd.dbis.gui.MainWindow;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -16,7 +16,7 @@ public class Main {
 	 * @param args arguments provided when run using the command line.
 	 */
 	public static void main(String[] args) {
-		new MainWindow(getLanguage());
+		new GrapeUI(getLanguage());
 	}
 
 	private static ResourceBundle getLanguage() {
