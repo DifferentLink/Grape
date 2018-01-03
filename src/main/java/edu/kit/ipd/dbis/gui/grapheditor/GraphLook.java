@@ -4,5 +4,35 @@
 
 package edu.kit.ipd.dbis.gui.grapheditor;
 
+import java.awt.*;
+
+/**
+ * This class simply lists render values for graphs in the GraphEditor.
+ */
 public class GraphLook {
+	public final int vertexDiameter = 10;
+	public final Color vertexFillColor = Color.WHITE;
+	public final int vertexOutLineThickness = 2;
+	public final Color vertexOutlineColor = Color.BLACK;
+
+	public final int edgeThickness = 3;
+	public final Color edgeColor = Color.BLACK;
+
+	/**
+	 * This method takes n input colors and spreads these on the colorwheel
+	 * so that two respective colors have maximum contrast.
+	 * @param numColors number of colors to spread
+	 * @return an array with n Colors
+	 */
+	public Color[] spreadColors(final int numColors) {
+		Color[] colors = new Color[numColors];
+
+		final float step = 1/numColors;
+
+		for (int color = 0; color < numColors; color++) {
+			colors[color] = Color.getHSBColor(step * color, 1f, 1f);
+		}
+
+		return colors;
+	}
 }
