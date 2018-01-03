@@ -1,0 +1,19 @@
+# System files
+.*
+
+# Gradle
+/gradlew
+/gradlew.bat
+/gradle/
+
+# Gradle output
+/build/
+
+# IntelliJ files
+/out/
+
+# Compiled sources
+*.class
+
+# Unignore this .gitignore
+!/.gitignore
