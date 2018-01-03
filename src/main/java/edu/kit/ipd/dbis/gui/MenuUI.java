@@ -4,13 +4,15 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.gui.theme.Theme;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.util.ResourceBundle;
 
 public class MenuUI {
-	public static JMenuBar makeMenuBar(ResourceBundle language) {
+	public static JMenuBar makeMenuBar(ResourceBundle language, Theme theme) {
 		JMenuBar menuBar = new JMenuBar();
 
 		JMenu file = new JMenu(language.getString("file"));
@@ -48,6 +50,10 @@ public class MenuUI {
 		help.add(info);
 		help.add(documentation);
 		menuBar.add(help);
+
+		menuBar.setBackground(theme.backgroundColor);
+		menuBar.setForeground(theme.foregroundColor);
+		menuBar.setFont(theme.defaultFont);
 
 		return menuBar;
 	}
