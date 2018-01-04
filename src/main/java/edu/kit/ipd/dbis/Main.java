@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis;
 
 import edu.kit.ipd.dbis.gui.GrapeUI;
 
+import javax.swing.*;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -16,7 +17,7 @@ public class Main {
 	 * @param args arguments provided when run using the command line.
 	 */
 	public static void main(String[] args) {
-		new GrapeUI(getLanguage());
+		SwingUtilities.invokeLater(() -> new GrapeUI(getLanguage()));
 	}
 
 	private static ResourceBundle getLanguage() {
