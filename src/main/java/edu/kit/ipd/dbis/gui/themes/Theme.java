@@ -2,7 +2,7 @@
  * Created by Robin Link
  */
 
-package edu.kit.ipd.dbis.gui.theme;
+package edu.kit.ipd.dbis.gui.themes;
 
 import java.awt.*;
 

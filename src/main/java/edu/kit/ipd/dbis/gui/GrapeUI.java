@@ -5,8 +5,8 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
-import edu.kit.ipd.dbis.gui.theme.LightTheme;
-import edu.kit.ipd.dbis.gui.theme.Theme;
+import edu.kit.ipd.dbis.gui.themes.LightTheme;
+import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
 import java.awt.*;

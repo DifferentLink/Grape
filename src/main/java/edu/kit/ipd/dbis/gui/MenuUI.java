@@ -4,7 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
-import edu.kit.ipd.dbis.gui.theme.Theme;
+import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;

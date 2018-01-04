@@ -4,7 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
-import edu.kit.ipd.dbis.gui.theme.Theme;
+import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
