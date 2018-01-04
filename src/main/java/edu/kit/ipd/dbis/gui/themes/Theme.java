@@ -17,4 +17,5 @@ public abstract class Theme {
 	public Color backgroundColor;
 	public int dividerSize;
 	public Color shadowColor;
+	public Color assertiveBackground;
 }

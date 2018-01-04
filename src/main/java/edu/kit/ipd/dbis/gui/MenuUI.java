@@ -4,11 +4,12 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class MenuUI {
@@ -31,7 +32,8 @@ public class MenuUI {
 		menuBar.add(file);
 
 		JMenu edit = new JMenu(language.getString("edit"));
-		JMenuItem generateGraphs = new JMenuItem(language.getString("generateGraph"));
+		JMenuItem generateGraphs = new JMenuItem(language.getString("generateGraphs"));
+		generateGraphs.addActionListener(new GenerateGraphAction(language, theme));
 		JMenuItem emptyGraph = new JMenuItem(language.getString("emptyGraph"));
 		JMenuItem readBFSCode = new JMenuItem(language.getString("readBFSCode"));
 		JMenuItem Undo = new JMenuItem(language.getString("undo"));
@@ -56,5 +58,22 @@ public class MenuUI {
 		menuBar.setFont(theme.defaultFont);
 
 		return menuBar;
+	}
+
+	private static class GenerateGraphAction implements ActionListener {
+
+		ResourceBundle language;
+		Theme theme;
+
+		public GenerateGraphAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			JFrame generateGraphUI = new GenerateGraphUI(language, theme);
+			generateGraphUI.setVisible(true);
+		}
 	}
 }
