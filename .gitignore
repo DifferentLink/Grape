@@ -23,4 +23,4 @@
 *.png
 
 # Unignore Icons
-!/src/main/resources/Icons/
+!/src/main/resources/icons/*
