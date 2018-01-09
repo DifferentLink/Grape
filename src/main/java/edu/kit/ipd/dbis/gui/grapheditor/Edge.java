@@ -31,7 +31,7 @@ public class Edge {
 		this.thickness = thickness;
 	}
 
-	public boolean incident(Vertex vertex) {
+	public boolean isIncidentTo(Vertex vertex) {
 		return start == vertex || end == vertex;
 	}
 
