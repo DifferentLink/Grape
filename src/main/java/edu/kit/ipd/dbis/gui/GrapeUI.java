@@ -21,7 +21,7 @@ public class GrapeUI extends GUIWindow {
 	private GUIElement statusbarUI;
 	private GUIElement logUI;
 
-	String programName;
+	String programName = "Grape";
 	JFrame mainWindow;
 
 	public GrapeUI(ResourceBundle language, Theme theme) {
@@ -31,13 +31,13 @@ public class GrapeUI extends GUIWindow {
 	}
 
 	private void build() {
-		programName = "Grape";
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(600, 400));
 		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-		mainWindow.setJMenuBar(MenuUI.makeMenuBar(language, theme));
+		menuUI = new MenuUI(language, theme);
+		mainWindow.setJMenuBar(menuUI);
 
 		filterUI = new FilterUI(language, theme);
 		correlationUI = new CorrelationUI(language, theme);
