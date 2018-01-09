@@ -22,13 +22,14 @@ public class TableUI extends GUIElement {
 		super(language, theme);
 
 		table = new JTable(data, defaultColumns);
-		JScrollPane tableContainer = new JScrollPane(table);
+		JScrollPane tableScrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
-		tableContainer.add(table);
-		tableContainer.setBackground(theme.backgroundColor);
-		tableContainer.setForeground(theme.foregroundColor);
-		tableContainer.setFont(theme.defaultFont);
-		this.add(tableContainer);
+
+		tableScrollPane.setBackground(theme.backgroundColor);
+		tableScrollPane.setForeground(theme.foregroundColor);
+		tableScrollPane.setFont(theme.defaultFont);
+
+		this.add(tableScrollPane);
 	}
 
 	/**
