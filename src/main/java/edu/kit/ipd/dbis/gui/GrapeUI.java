@@ -21,8 +21,8 @@ public class GrapeUI extends GUIWindow {
 	private GUIElement statusbarUI;
 	private GUIElement logUI;
 
-	String programName = "Grape";
-	JFrame mainWindow;
+	private String programName = "Grape";
+	private JFrame mainWindow;
 
 	public GrapeUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
