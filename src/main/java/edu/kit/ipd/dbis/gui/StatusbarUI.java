@@ -14,27 +14,24 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class StatusbarUI extends GUIElement {
+
+	final int statusbarHeight = 15;
+
 	public StatusbarUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
-	}
 
-	public static JPanel makeStatusbarUI(ResourceBundle language, Theme theme) {
-
-		final int statusbarHeight = 15;
-
-		JPanel statusbarUI = new JPanel();
-		statusbarUI.setLayout(new BoxLayout(statusbarUI, BoxLayout.X_AXIS));
-		statusbarUI.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
-		statusbarUI.add(Box.createHorizontalStrut(5));
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
+		this.add(Box.createHorizontalStrut(5));
 
 		JLabel statusText = new JLabel(language.getString("noDatabaseLoaded"));
-		statusbarUI.add(statusText);
+		this.add(statusText);
 
-		statusbarUI.setMaximumSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
-		statusbarUI.setMinimumSize(new Dimension(Integer.MIN_VALUE, statusbarHeight));
-		statusbarUI.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
-		statusbarUI.setBackground(theme.backgroundColor);
-		statusbarUI.setForeground(theme.foregroundColor);
+		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
+		this.setMinimumSize(new Dimension(Integer.MIN_VALUE, statusbarHeight));
+		this.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
+		this.setBackground(theme.backgroundColor);
+		this.setForeground(theme.foregroundColor);
 
 		JButton log = new JButton("Log");
 		log.setBackground(theme.backgroundColor);
@@ -43,10 +40,9 @@ public class StatusbarUI extends GUIElement {
 		log.getSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
 		log.setBorder(BorderFactory.createEmptyBorder());
 
-		statusbarUI.add(Box.createHorizontalGlue());
-		statusbarUI.add(log);
+		this.add(Box.createHorizontalGlue());
+		this.add(log);
 
-		return statusbarUI;
 	}
 
 	private static JButton makePauseButton(Dimension size, Theme theme) {

@@ -67,8 +67,7 @@ public class GrapeUI extends GUIWindow {
 
 		tableUI = new TableUI(controller, language, theme);
 		statusbarUI = new StatusbarUI(controller, language, theme);
-		JPanel rightUI;
-		rightUI = new JPanel();
+		JPanel rightUI = new JPanel();
 
 		rightUI.setLayout(new BoxLayout(rightUI, BoxLayout.Y_AXIS));
 		rightUI.add(tableUI, BorderLayout.NORTH);
