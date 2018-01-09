@@ -10,17 +10,25 @@ import javax.swing.*;
 import java.util.ResourceBundle;
 
 public class TableUI extends GUIElement {
+
+	private JTable table;
+
+	private String[] defaultColumns = {"ID", "#Vertices", "#Edges"};
+	private Object[][] data = {{"001", "5", "6"},
+			{"002", "3", "5"},
+			{"003", "2", "4"}};
+
 	public TableUI(ResourceBundle language, Theme theme) {
 		super(language, theme);
-	}
 
-	public GUIElement makeTableUI() {
-		GUIElement tableUI = new TableUI(language, theme);
-		tableUI.add(new JLabel("TableUI"));
-		tableUI.setBackground(theme.backgroundColor);
-		tableUI.setForeground(theme.foregroundColor);
-		tableUI.setFont(theme.defaultFont);
-		return tableUI;
+		table = new JTable(data, defaultColumns);
+		JScrollPane tableContainer = new JScrollPane(table);
+		table.setFillsViewportHeight(true);
+		tableContainer.add(table);
+		tableContainer.setBackground(theme.backgroundColor);
+		tableContainer.setForeground(theme.foregroundColor);
+		tableContainer.setFont(theme.defaultFont);
+		this.add(tableContainer);
 	}
 
 	/**
