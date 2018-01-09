@@ -11,7 +11,7 @@ public class RenderableGraph {
 	private Vertex[] vertices;
 	private Edge[] edges;
 	private int id;
-	private Set<Set<Vertex>> subgraphs;
+	private Set<RenderableGraph> subgraphs;
 
 	public RenderableGraph(Vertex[] vertices, Edge[] edges, int id) {
 		this.vertices = vertices;

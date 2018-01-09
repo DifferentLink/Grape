@@ -7,16 +7,16 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import java.awt.*;
 
 /**
- * This class simply lists render values for graphs in the GraphEditor.
+ * This class simply lists default render values for RenderableGraphs.
  */
 public class GraphLook {
-	public final int vertexDiameter = 10;
-	public final Color vertexFillColor = Color.WHITE;
-	public final int vertexOutLineThickness = 2;
-	public final Color vertexOutlineColor = Color.BLACK;
+	public static final int vertexDiameter = 10;
+	public static final Color vertexFillColor = Color.WHITE;
+	public static final int vertexOutLineThickness = 2;
+	public static final Color vertexOutlineColor = Color.BLACK;
 
-	public final int edgeThickness = 3;
-	public final Color edgeColor = Color.BLACK;
+	public static final int edgeThickness = 3;
+	public static final Color edgeColor = Color.BLACK;
 
 	/**
 	 * This method takes n input colors and spreads these on the colorwheel
@@ -34,5 +34,9 @@ public class GraphLook {
 		}
 
 		return colors;
+	}
+
+	public void arrangeInCircle(Vertex[] vertices) {
+
 	}
 }
