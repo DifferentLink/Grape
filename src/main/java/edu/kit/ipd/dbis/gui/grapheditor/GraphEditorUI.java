@@ -14,6 +14,9 @@ import java.util.ResourceBundle;
 
 public class GraphEditorUI extends GUIElement {
 
+	RenderableGraph graph;
+	GraphEditorHistory history;
+
 	public GraphEditorUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
 	}
@@ -29,4 +32,6 @@ public class GraphEditorUI extends GUIElement {
 	public void update() {
 
 	}
+
+
 }

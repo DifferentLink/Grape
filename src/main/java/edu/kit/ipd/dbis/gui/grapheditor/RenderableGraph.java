@@ -23,5 +23,7 @@ public class RenderableGraph {
 
 	}
 
-
+	public PropertyGraph asPropertyGraph() {
+		return new PropertyGraph();
+	}
 }
