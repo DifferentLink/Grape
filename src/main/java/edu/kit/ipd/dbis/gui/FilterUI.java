@@ -9,21 +9,23 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import javax.swing.*;
 import java.util.ResourceBundle;
 
-public class FilterUI extends GUI {
+public class FilterUI extends GUIElement {
 
-	private FilterUI() {}
+	public FilterUI(ResourceBundle language, Theme theme) {
+		super(language, theme);
+	}
 
-	public static JPanel makeFilterUI(ResourceBundle language, Theme theme) {
-		JPanel filterUI = new JPanel();
+	public GUIElement makeFilterUI() {
+		GUIElement filterUI = new FilterUI(super.language, super.theme);
 		filterUI.add(new JLabel("FilterUI"));
-		filterUI.setBackground(theme.backgroundColor);
-		filterUI.setForeground(theme.foregroundColor);
-		filterUI.setFont(theme.defaultFont);
+		filterUI.setBackground(super.theme.backgroundColor);
+		filterUI.setForeground(super.theme.foregroundColor);
+		filterUI.setFont(super.theme.defaultFont);
 		return filterUI;
 	}
 
 	/**
-	 * Updates the GUI element.
+	 * Updates the GUIWindow element.
 	 */
 	@Override
 	public void update() {

@@ -4,15 +4,21 @@
 
 package edu.kit.ipd.dbis.gui.grapheditor;
 
-import edu.kit.ipd.dbis.gui.GUI;
+import edu.kit.ipd.dbis.gui.GUIElement;
+import edu.kit.ipd.dbis.gui.GUIWindow;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
 import java.util.ResourceBundle;
 
-public class GraphEditorUI extends GUI {
-	public static JPanel makeGraphEditorUI(ResourceBundle language, Theme theme) {
-		JPanel graphEditorUI = new JPanel();
+public class GraphEditorUI extends GUIElement {
+
+	public GraphEditorUI(ResourceBundle language, Theme theme) {
+		super(language, theme);
+	}
+
+	public GUIElement makeGraphEditorUI() {
+		GUIElement graphEditorUI = new GraphEditorUI(language, theme);
 		graphEditorUI.add(new JLabel("GraphEditorUI"));
 		graphEditorUI.setBackground(theme.backgroundColor);
 		graphEditorUI.setForeground(theme.foregroundColor);
@@ -20,7 +26,7 @@ public class GraphEditorUI extends GUI {
 	}
 
 	/**
-	 * Updates the GUI element.
+	 * Updates the GUIWindow element.
 	 */
 	@Override
 	public void update() {

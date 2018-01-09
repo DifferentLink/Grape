@@ -6,15 +6,22 @@ package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
+import javax.swing.*;
 import java.util.ResourceBundle;
 
-public abstract class GUI {
+public abstract class GUIElement extends JPanel {
 	// protected Controller controller; todo
 	protected Theme theme;
 	protected ResourceBundle language;
 
+	public GUIElement(ResourceBundle language, Theme theme) {
+		this.language = language;
+		this.theme = theme;
+	}
+
 	/**
-	 * Updates the GUI element.
+	 * Updates the GUIWindow element.
 	 */
 	public abstract void update();
+
 }

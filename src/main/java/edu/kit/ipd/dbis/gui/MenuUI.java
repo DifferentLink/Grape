@@ -12,7 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
-public class MenuUI extends GUI {
+public class MenuUI extends GUIElement {
+
+	public MenuUI(ResourceBundle language, Theme theme) {
+		super(language, theme);
+	}
+
 	public static JMenuBar makeMenuBar(ResourceBundle language, Theme theme) {
 		JMenuBar menuBar = new JMenuBar();
 
@@ -61,7 +66,7 @@ public class MenuUI extends GUI {
 	}
 
 	/**
-	 * Updates the GUI element.
+	 * Updates the GUIWindow element.
 	 */
 	@Override
 	public void update() {

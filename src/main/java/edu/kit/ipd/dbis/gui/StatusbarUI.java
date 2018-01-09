@@ -13,7 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-public class StatusbarUI extends GUI {
+public class StatusbarUI extends GUIElement {
+	public StatusbarUI(ResourceBundle language, Theme theme) {
+		super(language, theme);
+	}
+
 	public static JPanel makeStatusbarUI(ResourceBundle language, Theme theme) {
 
 		final int statusbarHeight = 15;
@@ -65,7 +69,7 @@ public class StatusbarUI extends GUI {
 	}
 
 	/**
-	 * Updates the GUI element.
+	 * Updates the GUIWindow element.
 	 */
 	@Override
 	public void update() {

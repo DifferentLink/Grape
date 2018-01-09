@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis;
 
 import edu.kit.ipd.dbis.gui.GrapeUI;
+import edu.kit.ipd.dbis.gui.themes.LightTheme;
 
 import javax.swing.*;
 import java.util.Locale;
@@ -17,7 +18,7 @@ public class Main {
 	 * @param args arguments provided when run using the command line.
 	 */
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> new GrapeUI(getLanguage()));
+		SwingUtilities.invokeLater(() -> new GrapeUI(getLanguage(), new LightTheme()));
 	}
 
 	private static ResourceBundle getLanguage() {
