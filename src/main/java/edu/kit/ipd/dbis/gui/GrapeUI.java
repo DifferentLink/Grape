@@ -24,12 +24,14 @@ public class GrapeUI extends GUIWindow {
 	private String programName = "Grape";
 	private JFrame mainWindow;
 
+	private float verticalSplitRatio = .22f;
+
 	public GrapeUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
 
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setMinimumSize(new Dimension(600, 400));
+		mainWindow.setMinimumSize(new Dimension(400, 400));
 		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		menuUI = new MenuUI(language, theme);
@@ -65,11 +67,10 @@ public class GrapeUI extends GUIWindow {
 		graphEditorDivider.setResizeWeight(.55f);
 		filterCorrelationDivider.setResizeWeight(.5f);
 
-		tableUI = new TableUI(controller, language, theme);
 		statusbarUI = new StatusbarUI(controller, language, theme);
 		JPanel rightUI = new JPanel();
-
 		rightUI.setLayout(new BoxLayout(rightUI, BoxLayout.Y_AXIS));
+		tableUI = new TableUI(controller, language, theme, new Dimension(1000, 1080));
 		rightUI.add(tableUI, BorderLayout.NORTH);
 		rightUI.add(statusbarUI, BorderLayout.SOUTH);
 
@@ -80,7 +81,7 @@ public class GrapeUI extends GUIWindow {
 				leftUI,
 				rightUI);
 		verticalDivider.setDividerSize(theme.dividerSize);
-		verticalDivider.setResizeWeight(.2f);
+		verticalDivider.setResizeWeight(verticalSplitRatio);
 
 		mainWindow.add(verticalDivider);
 
