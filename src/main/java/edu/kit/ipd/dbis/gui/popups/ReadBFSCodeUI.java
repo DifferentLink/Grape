@@ -4,5 +4,8 @@
 
 package edu.kit.ipd.dbis.gui.popups;
 
-public class ReadBFSCodeUI {
+import javax.swing.*;
+
+public class ReadBFSCodeUI extends JFrame{
+
 }

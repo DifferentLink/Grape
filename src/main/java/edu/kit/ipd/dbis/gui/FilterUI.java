@@ -9,7 +9,7 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import javax.swing.*;
 import java.util.ResourceBundle;
 
-public class FilterUI extends JPanel {
+public class FilterUI extends GUI {
 
 	private FilterUI() {}
 
@@ -20,5 +20,13 @@ public class FilterUI extends JPanel {
 		filterUI.setForeground(theme.foregroundColor);
 		filterUI.setFont(theme.defaultFont);
 		return filterUI;
+	}
+
+	/**
+	 * Updates the GUI element.
+	 */
+	@Override
+	public void update() {
+
 	}
 }

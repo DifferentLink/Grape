@@ -5,24 +5,29 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
-import edu.kit.ipd.dbis.gui.themes.LightTheme;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ResourceBundle;
 
-public class GrapeUI extends JFrame {
+public class GrapeUI extends GUI {
 
-	private ResourceBundle language;
-	private Theme theme = new LightTheme();
+	private GraphEditorUI graphEditorUI;
+	private MenuUI menuUI;
+	private FilterUI filterUI;
+	private CorrelationUI correlationUI;
+	private TableUI tableUI;
+	private StatusbarUI statusbarUI;
+	private LogUI logUI;
 
-	public GrapeUI(final ResourceBundle language) {
-		this.language = language;
-		run();
+	public GrapeUI(final ResourceBundle language, Theme theme) {
+		super.language = language;
+		super.theme = theme;
+		show();
 	}
 
-	private void run() {
+	private void show() {
 		String programName = "Grape";
 		JFrame mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,5 +85,41 @@ public class GrapeUI extends JFrame {
 		mainWindow.add(verticalDivider);
 
 		mainWindow.setVisible(true);
+	}
+
+	/**
+	 * Updates the GUI element.
+	 */
+	@Override
+	public void update() {
+
+	}
+
+	public void updateGraphEditor() {
+
+	}
+
+	public void updateMenu() {
+
+	}
+
+	public void updateFilter() {
+
+	}
+
+	public void updateCorrelation() {
+
+	}
+
+	public void updateTable() {
+
+	}
+
+	public void updateStatusbar() {
+
+	}
+
+	public void updateLog() {
+
 	}
 }

@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-public class StatusbarUI {
+public class StatusbarUI extends GUI {
 	public static JPanel makeStatusbarUI(ResourceBundle language, Theme theme) {
 
 		final int statusbarHeight = 15;
@@ -62,5 +62,13 @@ public class StatusbarUI {
 		}
 
 		return pauseButton;
+	}
+
+	/**
+	 * Updates the GUI element.
+	 */
+	@Override
+	public void update() {
+
 	}
 }

@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
-public class MenuUI {
+public class MenuUI extends GUI {
 	public static JMenuBar makeMenuBar(ResourceBundle language, Theme theme) {
 		JMenuBar menuBar = new JMenuBar();
 
@@ -58,6 +58,14 @@ public class MenuUI {
 		menuBar.setFont(theme.defaultFont);
 
 		return menuBar;
+	}
+
+	/**
+	 * Updates the GUI element.
+	 */
+	@Override
+	public void update() {
+
 	}
 
 	private static class GenerateGraphAction implements ActionListener {

@@ -9,7 +9,7 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import javax.swing.*;
 import java.util.ResourceBundle;
 
-public class TableUI {
+public class TableUI extends GUI {
 	public static JPanel makeTableUI(ResourceBundle language, Theme theme) {
 		JPanel tableUI = new JPanel();
 		tableUI.add(new JLabel("TableUI"));
@@ -17,5 +17,13 @@ public class TableUI {
 		tableUI.setForeground(theme.foregroundColor);
 		tableUI.setFont(theme.defaultFont);
 		return tableUI;
+	}
+
+	/**
+	 * Updates the GUI element.
+	 */
+	@Override
+	public void update() {
+
 	}
 }

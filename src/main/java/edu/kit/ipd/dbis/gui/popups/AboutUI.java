@@ -4,5 +4,10 @@
 
 package edu.kit.ipd.dbis.gui.popups;
 
-public class AboutUI {
+import edu.kit.ipd.dbis.gui.GUI;
+
+import javax.swing.*;
+
+public class AboutUI extends JFrame {
+
 }
