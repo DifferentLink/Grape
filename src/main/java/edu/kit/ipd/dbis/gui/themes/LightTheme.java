@@ -17,5 +17,6 @@ public class LightTheme extends Theme {
 		super.shadowColor = super.backgroundColor;
 		super.dividerSize = 2;
 		super.assertiveBackground = Color.GREEN;
+		super.tableSelectionColor = Color.YELLOW;
 	}
 }
