@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 
 public class StatusbarUI extends GUIElement {
 
-	final int statusbarHeight = 15;
+	private final int statusbarHeight = 15;
 
 	public StatusbarUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
