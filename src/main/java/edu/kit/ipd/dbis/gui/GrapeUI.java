@@ -26,10 +26,7 @@ public class GrapeUI extends GUIWindow {
 
 	public GrapeUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
-		build();
-	}
 
-	private void build() {
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(600, 400));
