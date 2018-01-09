@@ -21,10 +21,6 @@ public class GraphEditorUI extends GUIElement {
 		super(controller, language, theme);
 	}
 
-	public GUIElement makeGraphEditorUI() {
-		return null;
-	}
-
 	/**
 	 * Updates the GUIWindow element.
 	 */
