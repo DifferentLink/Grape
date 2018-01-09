@@ -98,7 +98,6 @@ public class GrapeUI extends GUIWindow {
 	@Override
 	public void update() {
 		updateGraphEditor();
-		updateMenu();
 		updateFilter();
 		updateCorrelation();
 		updateTable();
@@ -107,30 +106,26 @@ public class GrapeUI extends GUIWindow {
 	}
 
 	public void updateGraphEditor() {
-
-	}
-
-	public void updateMenu() {
-
+		graphEditorUI.update();
 	}
 
 	public void updateFilter() {
-
+		filterUI.update();
 	}
 
 	public void updateCorrelation() {
-
+		correlationUI.update();
 	}
 
 	public void updateTable() {
-
+		tableUI.update();
 	}
 
 	public void updateStatusbar() {
-
+		statusbarUI.update();
 	}
 
 	public void updateLog() {
-
+		logUI.update();
 	}
 }
