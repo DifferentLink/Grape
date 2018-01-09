@@ -10,11 +10,12 @@ import javax.swing.*;
 import java.util.ResourceBundle;
 
 public abstract class GUIElement extends JPanel {
-	// protected Controller controller; todo
+	protected Controller controller;
 	protected Theme theme;
 	protected ResourceBundle language;
 
-	public GUIElement(ResourceBundle language, Theme theme) {
+	public GUIElement(Controller controller, ResourceBundle language, Theme theme) {
+		this.controller = controller;
 		this.language = language;
 		this.theme = theme;
 	}

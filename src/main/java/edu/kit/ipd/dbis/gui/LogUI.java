@@ -10,8 +10,8 @@ import java.util.ResourceBundle;
 
 public class LogUI extends GUIElement {
 
-	public LogUI(ResourceBundle language, Theme theme) {
-		super(language, theme);
+	public LogUI(Controller controller, ResourceBundle language, Theme theme) {
+		super(controller, language, theme);
 	}
 
 	/**

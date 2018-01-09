@@ -24,9 +24,8 @@ public class GrapeUI extends GUIWindow {
 	String programName = "Grape";
 	JFrame mainWindow;
 
-	public GrapeUI(ResourceBundle language, Theme theme) {
-		super.language = language;
-		super.theme = theme;
+	public GrapeUI(Controller controller, ResourceBundle language, Theme theme) {
+		super(controller, language, theme);
 		build();
 	}
 
@@ -39,8 +38,8 @@ public class GrapeUI extends GUIWindow {
 		menuUI = new MenuUI(language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
-		filterUI = new FilterUI(language, theme);
-		correlationUI = new CorrelationUI(language, theme);
+		filterUI = new FilterUI(controller, language, theme);
+		correlationUI = new CorrelationUI(controller, language, theme);
 
 		JSplitPane filterCorrelationDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
@@ -50,7 +49,7 @@ public class GrapeUI extends GUIWindow {
 		filterCorrelationDivider.setDividerSize(theme.dividerSize);
 		filterCorrelationDivider.setBorder(null);
 
-		graphEditorUI = new GraphEditorUI(language, theme);
+		graphEditorUI = new GraphEditorUI(controller, language, theme);
 
 		JSplitPane graphEditorDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
@@ -69,8 +68,8 @@ public class GrapeUI extends GUIWindow {
 		graphEditorDivider.setResizeWeight(.55f);
 		filterCorrelationDivider.setResizeWeight(.5f);
 
-		tableUI = new TableUI(language, theme);
-		statusbarUI = new StatusbarUI(language, theme);
+		tableUI = new TableUI(controller, language, theme);
+		statusbarUI = new StatusbarUI(controller, language, theme);
 		JPanel rightUI;
 		rightUI = new JPanel();
 

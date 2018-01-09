@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui.grapheditor;
 
+import edu.kit.ipd.dbis.gui.Controller;
 import edu.kit.ipd.dbis.gui.GUIElement;
 import edu.kit.ipd.dbis.gui.GUIWindow;
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -13,16 +14,12 @@ import java.util.ResourceBundle;
 
 public class GraphEditorUI extends GUIElement {
 
-	public GraphEditorUI(ResourceBundle language, Theme theme) {
-		super(language, theme);
+	public GraphEditorUI(Controller controller, ResourceBundle language, Theme theme) {
+		super(controller, language, theme);
 	}
 
 	public GUIElement makeGraphEditorUI() {
-		GUIElement graphEditorUI = new GraphEditorUI(language, theme);
-		graphEditorUI.add(new JLabel("GraphEditorUI"));
-		graphEditorUI.setBackground(theme.backgroundColor);
-		graphEditorUI.setForeground(theme.foregroundColor);
-		return graphEditorUI;
+		return null;
 	}
 
 	/**

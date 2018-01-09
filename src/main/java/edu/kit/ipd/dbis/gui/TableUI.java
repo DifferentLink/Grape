@@ -18,8 +18,8 @@ public class TableUI extends GUIElement {
 			{"002", "3", "5"},
 			{"003", "2", "4"}};
 
-	public TableUI(ResourceBundle language, Theme theme) {
-		super(language, theme);
+	public TableUI(Controller controller, ResourceBundle language, Theme theme) {
+		super(controller, language, theme);
 
 		table = new JTable(data, defaultColumns);
 		JScrollPane tableScrollPane = new JScrollPane(table);
