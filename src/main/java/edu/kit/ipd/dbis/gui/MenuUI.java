@@ -12,14 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
-public class MenuUI extends GUIElement {
+public class MenuUI extends GUIMenu {
 
 	public MenuUI(ResourceBundle language, Theme theme) {
 		super(language, theme);
-	}
-
-	public static JMenuBar makeMenuBar(ResourceBundle language, Theme theme) {
-		JMenuBar menuBar = new JMenuBar();
 
 		JMenu file = new JMenu(language.getString("file"));
 		JMenuItem newDatabase = new JMenuItem(language.getString("newDatabase"));
@@ -34,7 +30,7 @@ public class MenuUI extends GUIElement {
 		file.add(saveDatabase);
 		file.add(saveDatabaseAs);
 		file.add(saveSelection);
-		menuBar.add(file);
+		this.add(file);
 
 		JMenu edit = new JMenu(language.getString("edit"));
 		JMenuItem generateGraphs = new JMenuItem(language.getString("generateGraphs"));
@@ -49,27 +45,18 @@ public class MenuUI extends GUIElement {
 		edit.addSeparator();
 		edit.add(Undo);
 		edit.add(Redo);
-		menuBar.add(edit);
+		this.add(edit);
 
 		JMenu help = new JMenu(language.getString("help"));
 		JMenuItem info = new JMenuItem(language.getString("info"));
 		JMenuItem documentation = new JMenuItem(language.getString("documentation"));
 		help.add(info);
 		help.add(documentation);
-		menuBar.add(help);
+		this.add(help);
 
-		menuBar.setBackground(theme.backgroundColor);
-		menuBar.setForeground(theme.foregroundColor);
-		menuBar.setFont(theme.defaultFont);
-
-		return menuBar;
-	}
-
-	/**
-	 * Updates the GUIWindow element.
-	 */
-	@Override
-	public void update() {
+		this.setBackground(theme.backgroundColor);
+		this.setForeground(theme.foregroundColor);
+		this.setFont(theme.defaultFont);
 
 	}
 
