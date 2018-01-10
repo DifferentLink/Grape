@@ -15,6 +15,11 @@ public class RenderableGraph {
 	private int id;
 	private Set<RenderableGraph> subgraphs;
 
+	public RenderableGraph() {
+		vertices = new HashSet<>();
+		edges = new HashSet<>();
+	}
+
 	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id) {
 		this.vertices = vertices;
 		this.edges = edges;
@@ -29,7 +34,17 @@ public class RenderableGraph {
 		return new PropertyGraph();
 	}
 
-	public void removeVertex(Vertex vertex) {
+	public void move(Point delta) {
+		for (Vertex vertex : vertices) {
+			vertex.move(delta);
+		}
+	}
+
+	public void add(Vertex vertex) {
+		vertices.add(vertex);
+	}
+
+	public void remove(Vertex vertex) {
 		Set<Edge> edgesRemove = new HashSet();
 		for (Edge edge : edges) {
 			if (edge.isIncidentTo(vertex)) {
@@ -40,16 +55,57 @@ public class RenderableGraph {
 		edges.remove(edgesRemove);
 	}
 
-	public void removeVertex(Point point) {
+	public void remove(Point point) {
 		Vertex foundVertex = getVertexAt(point);
 		if (foundVertex != null) {
 			vertices.remove(foundVertex);
 		}
 	}
 
-	public Vertex getVertexAt(Point position) {
+	public void add(Edge edge) {
+		vertices.add(edge.getStart());
+		vertices.add(edge.getEnd());
+		edges.add(edge);
+	}
+
+	public void remove(Edge edge) {
+		edges.remove(edge);
+	}
+
+	public int getDegree(final Vertex vertex) {
+		if (!vertices.contains(vertex)) {
+			return -1;
+		}
+
+		int vertexDegree = 0;
+		for (Edge edge : edges) {
+			if (edge.getStart() == vertex || edge.getEnd() == vertex) {
+				vertexDegree++;
+			}
+		}
+		return vertexDegree;
+	}
+
+	public int getMaxDegree() {
+		int maxDegree = 0;
+		for (final Vertex vertex : vertices) {
+			final int vertexDegree = getDegree(vertex);
+			maxDegree = (vertexDegree > maxDegree)? vertexDegree : maxDegree;
+		}
+		return maxDegree;
+	}
+
+	public boolean isConnected() { // todo implement isConnected()
+		return true;
+	}
+
+	public void makeConnected() { // todo implement makeConnected() by removing smallest disconnected graph
+
+	}
+
+	public Vertex getVertexAt(final Point position) {
 		for (Vertex vertex : vertices) {
-			if (vertex.containsPoint(position)) {
+			if (vertex.containsPoint(position.x, position.y)) {
 				return vertex;
 			}
 		}

@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 
 public class Edge {
 	private final Vertex start;
@@ -33,6 +34,18 @@ public class Edge {
 
 	public boolean isIncidentTo(Vertex vertex) {
 		return start == vertex || end == vertex;
+	}
+
+	public Shape draw() {
+		return new Line2D.Double(start.x, start.y, end.x, end.y);
+	}
+
+	public Vertex getStart() {
+		return this.start;
+	}
+
+	public Vertex getEnd() {
+		return end;
 	}
 
 	public Color getColor() {

@@ -27,15 +27,17 @@ public class GraphEditorUI extends GUIElement {
 	private JButton center;
 	private JButton preview;
 	private JButton apply;
-	private JLabel graphInfo;
+	private JLabel graphInfo; // todo add to GUI
 	private JComboBox<String> coloringType;
 
 	private int barHeight = 25;
 	private Dimension buttonHeight = new Dimension(barHeight - 2, barHeight - 2);
-	private int buttonSeparation = 2;
+	private int buttonSeparation = 1;
 
 	public GraphEditorUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
+
+		graph = new RenderableGraph();
 
 		this.setLayout(new BorderLayout());
 
@@ -64,6 +66,7 @@ public class GraphEditorUI extends GUIElement {
 
 		topBarButtons.add(undo);
 		topBarButtons.add(redo);
+		topBarButtons.add(Box.createHorizontalGlue());
 		topBarButtons.add(denser);
 		topBarButtons.add(switchColor);
 		topBarButtons.add(coloringType);
@@ -87,6 +90,8 @@ public class GraphEditorUI extends GUIElement {
 		bottomBarButtons.add(Box.createHorizontalStrut(buttonSeparation));
 
 		graphEditor = new Editor();
+		graphEditor.setBackground(theme.backgroundColor);
+		graphEditor.setForeground(theme.foregroundColor);
 
 		this.add(topBarButtons, BorderLayout.NORTH);
 		this.add(graphEditor, BorderLayout.CENTER); // todo use GridBagLayout Manager for to properly display graph information
@@ -103,21 +108,48 @@ public class GraphEditorUI extends GUIElement {
 
 	private class Editor extends JComponent {
 
+		private Point mStart;
+		private Point mTarget;
+		private int currentMouseButtonKey = MouseEvent.BUTTON1;
+
 		public Editor() {
 
 			this.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent mouseEvent) {
+					mStart = new Point(mouseEvent.getX(), mouseEvent.getY());
+					mTarget = mStart;
+					currentMouseButtonKey = mouseEvent.getButton();
+					repaint();
 				}
 
 				@Override
 				public void mouseReleased(MouseEvent mouseEvent) {
+					mTarget = mouseEvent.getPoint();
+
+					if (mouseEvent.getButton() == MouseEvent.BUTTON1) { // Linke Maustaste losgelassen
+						Vertex vertex = graph.getVertexAt(mouseEvent.getPoint());
+						if (vertex != null) {
+							graph.add(new Edge(new Vertex(mStart), new Vertex(mTarget)));
+						} else {
+							graph.add(new Vertex(mTarget));
+						}
+					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Rechte Maustaste losgelassen
+						graph.remove(mTarget);
+					}
+					repaint();
 				}
 			});
 
 			this.addMouseMotionListener(new MouseMotionAdapter() {
 				@Override
 				public void mouseDragged(MouseEvent mouseEvent) {
+					if (currentMouseButtonKey == MouseEvent.BUTTON2) {
+						mTarget = mouseEvent.getPoint();
+						graph.move(new Point(mTarget.x - mStart.x, mTarget.y - mStart.y));
+						repaint();
+						mStart = mouseEvent.getPoint();
+					}
 				}
 			});
 		}
@@ -127,6 +159,23 @@ public class GraphEditorUI extends GUIElement {
 			Graphics2D kanvas = (Graphics2D) g;
 			kanvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			kanvas.setBackground(theme.backgroundColor);
+			for (Edge edge : graph.getEdges()) {
+				Shape currentEdgeShape = edge.draw();
+				kanvas.setPaint(edge.getColor());
+				kanvas.fill(currentEdgeShape);
+				kanvas.setStroke(new BasicStroke(edge.getThickness()));
+				kanvas.setPaint(edge.getColor());
+				kanvas.draw(currentEdgeShape);
+			}
+
+			for (Vertex vertex : graph.getVertices()) {
+				Shape vertexShape = vertex.draw();
+				kanvas.setPaint(vertex.getFillColor());
+				kanvas.fill(vertexShape);
+				kanvas.setStroke(new BasicStroke(vertex.getOutlineThickness()));
+				kanvas.setPaint(vertex.getOutlineColor());
+				kanvas.draw(vertexShape);
+			}
 		}
 	}
 }

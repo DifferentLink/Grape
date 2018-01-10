@@ -5,51 +5,46 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 public class Vertex {
-	private Point position;
+	public int x;
+	public int y;
 	private float diameter = GraphLook.vertexDiameter;
 	private Color fillColor = GraphLook.vertexFillColor;
 	private Color outlineColor = GraphLook.vertexOutlineColor;
+	private float outlineThickness = GraphLook.vertexOutLineThickness;
 
 	public Vertex(int x, int y) {
-		position.x = x;
-		position.y = y;
-	}
-
-	public Vertex(Point position) {
-		this.position = position;
-	}
-
-	public Vertex(Point position, Color fillColor) {
-		this.position = position;
-		this.fillColor = fillColor;
+		this.x = x;
+		this.y = y;
 	}
 
 	public Vertex(int x, int y, Color fillColor) {
-		position.x = x;
-		position.y = y;
+		this.x = x;
+		this.y = y;
 		this.fillColor = fillColor;
 	}
 
-	public void move(Point delta) {
-		position.x += delta.x;
-		position.y += delta.y;
+	public Vertex(Point point) {
+		this.x = point.x;
+		this.y = point.y;
 	}
 
-	public boolean containsPoint(Point point) {
-		int deltaX = point.x - position.x;
-		int deltaY = point.y - position.y;
+	public void move(Point delta) {
+		this.x += delta.x;
+		this.y += delta.y;
+	}
+
+	public boolean containsPoint(int x, int y) {
+		int deltaX = x - this.x;
+		int deltaY = y - this.y;
 
 		return Math.sqrt(deltaX*deltaX + deltaY*deltaY) <= diameter/2;
 	}
 
-	public Point getPosition() {
-		return position;
-	}
-
-	public void setPosition(Point position) {
-		this.position = position;
+	public Shape draw() {
+		return new Ellipse2D.Double(x - diameter /2, y - diameter /2, diameter, diameter);
 	}
 
 	public Color getFillColor() {
@@ -74,5 +69,13 @@ public class Vertex {
 
 	public void setDiameter(float diameter) {
 		this.diameter = diameter;
+	}
+
+	public float getOutlineThickness() {
+		return outlineThickness;
+	}
+
+	public void setOutlineThickness(float outlineThickness) {
+		this.outlineThickness = outlineThickness;
 	}
 }
