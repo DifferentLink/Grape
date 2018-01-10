@@ -19,4 +19,8 @@ public abstract class Theme {
 	public Color shadowColor;
 	public Color assertiveBackground;
 	public Color tableSelectionColor;
+	public Color buttonBackgorundColor;
+	public Color buttonHighlightColor;
+	public Color buttonDisabledColor;
+	public Color disabledTextColor;
 }
