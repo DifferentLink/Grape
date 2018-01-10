@@ -15,9 +15,7 @@ public abstract class Property<T> {
 	 * @param graph graph for which the property is calculated
 	 */
 	public void calculate(PropertyGraph graph) {
-		T result;
-		result = this.calculationAlgorithm(graph);
-		this.value = result;
+		this.value = this.calculationAlgorithm(graph);
 	}
 
 	/**
