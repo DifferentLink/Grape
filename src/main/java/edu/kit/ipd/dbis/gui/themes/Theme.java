@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui.themes;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -23,4 +24,9 @@ public abstract class Theme {
 	public Color buttonHighlightColor;
 	public Color buttonDisabledColor;
 	public Color disabledTextColor;
+	public Color buttonTextColor;
+	public Color outlineColor;
+	public int outlineThickness;
+
+	abstract public void style(JButton button);
 }
