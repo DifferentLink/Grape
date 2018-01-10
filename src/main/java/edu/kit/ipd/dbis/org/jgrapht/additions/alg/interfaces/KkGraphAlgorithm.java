@@ -1,8 +1,11 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.HashSet;
 
 /**
  * A algorithm that computes a kk-graph of a given graph based on the Hadwiger Conjecture
@@ -68,8 +71,20 @@ public interface KkGraphAlgorithm<V, E> {
 		}
 		@Override
 		public List<Set<V>> getSubgraphs() {
-			//Implementation of the specific algorithm
-			return null;
+			Map<Integer, Set<V>> groups = new HashMap<>();
+			kkGraph.forEach((v, kkgraph) -> {
+				Set<V> g = groups.get(kkgraph);
+				if (g == null) {
+					g = new HashSet<>();
+					groups.put(kkgraph, g);
+				}
+				g.add(v);
+			});
+			List<Set<V>> classes = new ArrayList<>(numberOfSubgraphs);
+			for (Set<V> c : groups.values()) {
+				classes.add(c);
+			}
+			return classes;
 		}
 
 		@Override
