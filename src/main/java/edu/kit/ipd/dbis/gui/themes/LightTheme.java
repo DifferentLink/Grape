@@ -27,13 +27,4 @@ public class LightTheme extends Theme {
 		super.buttonDisabledColor = Color.GRAY;
 		super.disabledTextColor = Color.DARK_GRAY;
 	}
-
-	@Override
-	public void style(JButton button) {
-		Theme theme = new LightTheme();
-
-		button.setBackground(theme.buttonBackgorundColor);
-		button.setForeground(theme.buttonTextColor);
-		button.setBorder(BorderFactory.createLineBorder(outlineColor, outlineThickness));
-	}
 }

@@ -28,5 +28,21 @@ public abstract class Theme {
 	public Color outlineColor;
 	public int outlineThickness;
 
-	abstract public void style(JButton button);
+	public void style(JPanel panel) {
+		panel.setBackground(backgroundColor);
+		panel.setForeground(foregroundColor);
+		panel.setBorder(BorderFactory.createLineBorder(outlineColor, outlineThickness));
+	}
+
+	public void style(JButton button) {
+		button.setBackground(buttonBackgorundColor);
+		button.setForeground(buttonTextColor);
+		button.setBorder(BorderFactory.createLineBorder(outlineColor, outlineThickness));
+	}
+
+	public void style(JComboBox comboBox) {
+		comboBox.setBackground(backgroundColor);
+		comboBox.setForeground(foregroundColor);
+		comboBox.setBorder(BorderFactory.createLineBorder(outlineColor, outlineThickness));
+	}
 }
