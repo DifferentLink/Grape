@@ -158,7 +158,9 @@ public class GraphEditorUI extends GUIElement {
 
 			Graphics2D kanvas = (Graphics2D) g;
 			kanvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			kanvas.setBackground(theme.backgroundColor);
+			kanvas.setPaint(theme.backgroundColor);
+			kanvas.fill(new Rectangle(0, 0, this.getWidth(), this.getHeight()));
+
 			for (Edge edge : graph.getEdges()) {
 				Shape currentEdgeShape = edge.draw();
 				kanvas.setPaint(edge.getColor());
