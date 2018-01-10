@@ -11,8 +11,7 @@ import java.util.Set;
  */
 public class PropertyGraph<V,E> extends SimpleGraph {
 	private int id;
-	Set<Property> properties;
-
+	private Set<Property> properties;
 
 	/**
 	 *
@@ -45,9 +44,13 @@ public class PropertyGraph<V,E> extends SimpleGraph {
 
 	/**
 	 *
-	 * @param property
+	 * @param type
 	 */
-	public void update(Property property) {
-
+	public void update(PropertyType type) {
+		for (Property p : properties) {
+			if (p.type == type) {
+				p.calculate(this);
+			}
+		}
 	}
 }

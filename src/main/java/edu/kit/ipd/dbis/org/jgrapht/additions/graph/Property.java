@@ -2,37 +2,36 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
 /**
  * Represents a graph's property
- *
- * @param <T> the type of the property's value
  */
-public abstract class Property<T> {
-	private T value;
+public class Property {
+	private Object value;
+	protected PropertyType type;
 
 	/**
-	 * Template method which induces the calculation
+	 * Standard constructor
+	 * @param type the property's type
+	 */
+	public Property(PropertyType type) {
+		this.type = type;
+	}
+
+	/**
+	 * Method which induces the calculation
 	 * of the property
 	 *
 	 * @param graph graph for which the property is calculated
 	 */
 	public void calculate(PropertyGraph graph) {
-		this.value = this.calculationAlgorithm(graph);
+		this.value = this.type.calculate(graph);
 	}
-
-	/**
-	 * Calculates the value of the property
-	 * for the given graph
-	 *
-	 * @param graph graph for which the property is calculated
-	 * @return result of calculation
-	 */
-	protected abstract T calculationAlgorithm(PropertyGraph graph);
 
 	/**
 	 * Getter method for value
 	 *
 	 * @return value
 	 */
-	public T getValue() {
+	public Object getValue() {
 		return this.value;
 	}
+
 }
