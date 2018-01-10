@@ -17,8 +17,8 @@ import java.util.ResourceBundle;
 
 public class GraphEditorUI extends GUIElement {
 
-	private RenderableGraph graph;
-	private GraphEditorHistory history;
+	private RenderableGraph graph = new RenderableGraph();
+	private GraphEditorHistory history = new GraphEditorHistory();
 	private Editor graphEditor;
 	private JButton undo;
 	private JButton redo;
@@ -37,8 +37,6 @@ public class GraphEditorUI extends GUIElement {
 	public GraphEditorUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
 
-		graph = new RenderableGraph();
-
 		this.setLayout(new BorderLayout());
 
 		// todo get text from language resource
@@ -47,9 +45,11 @@ public class GraphEditorUI extends GUIElement {
 		topBarButtons.setPreferredSize(new Dimension(Integer.MAX_VALUE, barHeight));
 		theme.style(topBarButtons);
 		undo = new JButton("U");
+		undo.addActionListener((e) -> graph = history.moveBack());
 		theme.style(undo);
 		undo.setPreferredSize(buttonHeight);
 		redo = new JButton("R");
+		redo.addActionListener((e) -> graph = history.moveForward());
 		theme.style(redo);
 		redo.setPreferredSize(buttonHeight);
 		denser = new JButton("D+");
@@ -120,7 +120,6 @@ public class GraphEditorUI extends GUIElement {
 					mStart = new Point(mouseEvent.getX(), mouseEvent.getY());
 					mTarget = mStart;
 					currentMouseButtonKey = mouseEvent.getButton();
-					repaint();
 				}
 
 				@Override
@@ -137,6 +136,8 @@ public class GraphEditorUI extends GUIElement {
 					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Rechte Maustaste losgelassen
 						graph.remove(mTarget);
 					}
+
+					history.addToHistory(graph);
 					repaint();
 				}
 			});
