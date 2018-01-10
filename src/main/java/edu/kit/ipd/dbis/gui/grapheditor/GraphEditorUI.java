@@ -58,7 +58,6 @@ public class GraphEditorUI extends GUIElement {
 			});
 		}
 
-		@SuppressWarnings("Duplicates")
 		public void paint(Graphics g) {
 
 			Graphics2D kanvas = (Graphics2D) g;
