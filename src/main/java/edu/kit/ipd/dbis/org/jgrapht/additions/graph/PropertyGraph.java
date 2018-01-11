@@ -9,7 +9,7 @@ import java.util.Set;
  * @param <V>
  * @param <E>
  */
-public class PropertyGraph<V,E> extends SimpleGraph {
+public class PropertyGraph<V, E> extends SimpleGraph {
 	private int id;
 	private Set<Property> properties;
 
