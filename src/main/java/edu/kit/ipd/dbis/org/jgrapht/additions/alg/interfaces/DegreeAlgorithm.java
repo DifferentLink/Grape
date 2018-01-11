@@ -9,9 +9,10 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
  */
 public interface DegreeAlgorithm<V, E> {
 	/**
-	 * Get the degree.
+	 * Returns the degree.
+	 * //TODO: now has return type Number, differs from design
 	 *
 	 * @return the degree
 	 */
-	int getDegree();
+	Number getDegree();
 }
