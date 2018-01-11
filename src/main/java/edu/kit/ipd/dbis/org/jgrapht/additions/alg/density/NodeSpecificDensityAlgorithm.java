@@ -13,8 +13,11 @@ import java.util.Objects;
  * @param <V>
  * @param <E>
  */
-public class NodeSpecificDensityAlgorithm<V,E> implements NumberDensityAlgorithm {
-	private PropertyGraph graph;
+public class NodeSpecificDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
+	/**
+	 * The input graph
+	 */
+	protected final PropertyGraph<V, E> graph;
 
 	/**
 	 * Standard constructor
