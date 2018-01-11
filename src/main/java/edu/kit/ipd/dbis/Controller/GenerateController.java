@@ -5,12 +5,25 @@ package edu.kit.ipd.dbis.Controller;
  */
 public class GenerateController {
 
+	private Database;
+
+	private static GenerateController generate;
+
+	private GenerateController(){}
+
+	public static GenerateController getInstance() {
+		if(generate == null) {
+			generate = new GenerateController();
+		}
+		return generate;
+	}
+
 	/**
 	 * Replaces the old database with the given database.
 	 * @param database the current database
 	 */
 	public void setDatabase(Database database) {
-
+		this.database = Database;
 	}
 
 	/**

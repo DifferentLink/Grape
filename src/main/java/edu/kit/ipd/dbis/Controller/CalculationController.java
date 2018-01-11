@@ -2,30 +2,68 @@ package edu.kit.ipd.dbis.Controller;
 
 public class CalculationController {
 
-	public void setDatabase(database: Database): void
-	replaces the old database with the given database.
-	@param database the current database.
-			private void calculateGraphProperties(): void
-	induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
-	of the database and induces their saving in the database.
+	private Boolean calculationStatus = false;
 
-	public int getNumberNotCalculatedGraphs(){
+	private Database;
+
+	private static CalculationController calculation;
+
+	private CalculationController(){}
+
+	public static CalculationController getInstance() {
+		if(calculation == null) {
+			calculation = new CalculationController();
+		}
+		return calculation;
+	}
+
+	/**
+	 * Replaces the old database with the given database.
+	 *
+	 * @param database the current database
+	 */
+	public void setDatabase(Database database) {
+		this.database = Database;
+	}
+
+	/**
+	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
+	 * of the database and induces their saving in the database.
+	 */
+	private void calculateGraphProperties() {
 
 	}
 
-	@return the length of the graphlist of CalculationController.
+	/**
+	 * @return the length of the graphlist of CalculationController.
+	 */
+	public int getNumberNotCalculatedGraphs() {
+		return 9999;
+	}
 
-	public Boolean getCalcStatus(){
+	/**
+	 * checks if the current calculation is running.
+	 *
+	 * @return true if the calculation is running.
+	 */
+	public Boolean getCalcStatus() {
+		return calculationStatus;
+	}
+
+
+	/**
+	 * pauses the method calculateGraphProperties().
+	 */
+	public void pauseCalculation() {
 
 	}
 
-	checks if the current calculation is running.
-	@return true if the calculation is running.
+	/**
+	 * continues the method calculateGraphProperties().
+	 */
+	public void continueCalculation() {
 
-	public void pauseCalculation(): void
-	pauses the method calculateGraphProperties().
+	}
 
-	public void continueCalculation(){}
-	continues the method calculateGraphProperties().
 
 }
