@@ -1,6 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
-import org.jgrapht.Graph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.util.Objects;
@@ -19,14 +19,14 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	/**
 	 * The input graph
 	 */
-	protected final Graph<V, E> graph;
+	protected final PropertyGraph<V, E> graph;
 
 	/**
 	 * Construct a new coloring algorithm.
 	 *
 	 * @param graph the input graph
 	 */
-	public MinimalVertexColoring(Graph<V, E> graph) {
+	public MinimalVertexColoring(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 	@Override
