@@ -53,4 +53,18 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 			}
 		}
 	}
+
+	/**
+	 * Returns a property
+	 * @param type the type of the desired property
+	 * @return the property
+	 */
+	public Property getProperty(PropertyType type) {
+		for (Property p : properties) {
+			if (p.type == type) {
+				return p;
+			}
+		}
+		return null;
+	}
 }
