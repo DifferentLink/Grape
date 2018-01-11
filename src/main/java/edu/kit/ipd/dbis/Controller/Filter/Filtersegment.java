@@ -17,7 +17,7 @@ public abstract class Filtersegment {
      * was disabled stays disabled even if the filtergroup gets enabled.
      */
     void activate() {
-
+        this.isActivated = true;
     }
 
     /**
@@ -26,7 +26,7 @@ public abstract class Filtersegment {
      * every filter of the group gets disabled even if the filter of the group are enabled.
      */
     void deactivate() {
-
+        this.isActivated = false;
     }
 
     /**
