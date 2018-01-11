@@ -1,10 +1,12 @@
 package edu.kit.ipd.dbis.Controller;
 
+import edu.kit.ipd.dbis.database.GraphDatabase;
+
 public class CalculationController {
 
 	private Boolean calculationStatus = false;
 
-	private Database;
+	private GraphDatabase database;
 
 	private static CalculationController calculation;
 
@@ -22,8 +24,8 @@ public class CalculationController {
 	 *
 	 * @param database the current database
 	 */
-	public void setDatabase(Database database) {
-		this.database = Database;
+	public void setDatabase(GraphDatabase database) {
+		this.database = database;
 	}
 
 	/**

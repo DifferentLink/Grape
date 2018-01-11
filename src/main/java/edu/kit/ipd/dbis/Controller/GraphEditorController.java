@@ -1,8 +1,10 @@
 package edu.kit.ipd.dbis.Controller;
 
+import edu.kit.ipd.dbis.database.GraphDatabase;
+
 public class GraphEditorController {
 
-	private Database;
+	private GraphDatabase database;
 
 	private static GraphEditorController editor;
 
@@ -20,8 +22,8 @@ public class GraphEditorController {
 	 *
 	 * @param database the current database
 	 */
-	public void setDatabase(Database database) {
-		this.database = Database;
+	public void setDatabase(GraphDatabase database) {
+		this.database = database;
 	}
 
 }

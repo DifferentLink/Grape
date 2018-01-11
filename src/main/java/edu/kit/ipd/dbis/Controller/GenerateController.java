@@ -1,15 +1,27 @@
 package edu.kit.ipd.dbis.Controller;
 
+import edu.kit.ipd.dbis.database.GraphDatabase;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * The type Generate controller.
  */
 public class GenerateController {
 
-	private Database;
+	private GraphDatabase database;
 
 	private static GenerateController generate;
 
-	private GenerateController(){}
+	private BulkGraphGenerator generator;
+
+	private GenerateController(){
+		this.generator = new BulkRandomConnectedGraphGenerator();
+	}
 
 	public static GenerateController getInstance() {
 		if(generate == null) {
@@ -22,8 +34,8 @@ public class GenerateController {
 	 * Replaces the old database with the given database.
 	 * @param database the current database
 	 */
-	public void setDatabase(Database database) {
-		this.database = Database;
+	public void setDatabase(GraphDatabase database) {
+		this.database = database;
 	}
 
 	/**
@@ -34,8 +46,10 @@ public class GenerateController {
 	 * @param maxEdges upper bound of edges.
 	 * @param amount the number of graphs
 	 */
-	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
-
+	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws Exception {
+		Set<PropertyGraph<Integer,Integer>> graphs = new HashSet<PropertyGraph<Integer,Integer>>();
+		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+		this.saveGraphs(graphs);
 	}
 
 	/**
@@ -50,16 +64,18 @@ public class GenerateController {
 	 * Deletes the given graph from the GUI table.
 	 * @param id the ID of the PropertyGraph<V,E>.
 	 */
-	public void delGraph(int id) {
-
+	public void delGraph(int id) throws Exception {
+		database.deleteGraph(id);
 	}
 
 	/**
 	 * Saves the graphs in the Database in the list of not yet calculated graphs.
 	 * @param graphs the set of PropertyGraph<V,E>
 	 */
-	public void saveGraphs(int graphs) {
-
+	private void saveGraphs(Set<PropertyGraph<Integer,Integer>> graphs) throws Exception {
+		for (PropertyGraph<Integer,Integer> graph: graphs) {
+			database.addGraph(graph);
+		}
 	}
 
 	private Boolean isValidBFS(String bfsCode) {
