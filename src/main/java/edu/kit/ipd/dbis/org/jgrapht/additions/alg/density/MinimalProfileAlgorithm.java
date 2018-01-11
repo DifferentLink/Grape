@@ -1,7 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
-import org.jgrapht.Graph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.Objects;
 
@@ -16,14 +16,14 @@ public class MinimalProfileAlgorithm<V, E> implements ProfileDensityAlgorithm {
 	/**
 	 * The input graph
 	 */
-	protected final Graph<V, E> graph;
+	protected final PropertyGraph<V, E> graph;
 
 	/**
 	 * Construct a new minimal profile algorithm.
 	 *
 	 * @param graph the input graph
 	 */
-	public MinimalProfileAlgorithm(Graph<V, E> graph) {
+	public MinimalProfileAlgorithm(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 

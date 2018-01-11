@@ -1,7 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.NumberDensityAlgorithm;
-import org.jgrapht.Graph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.Objects;
 
@@ -15,20 +15,20 @@ public class ProportionDensityAlgorithm<V, E> implements NumberDensityAlgorithm 
 	/**
 	 * The input graph
 	 */
-	protected final Graph<V, E> graph;
+	protected final PropertyGraph<V, E> graph;
 
 	/**
 	 * Construct a new proportion density algorithm.
 	 *
 	 * @param graph the input graph
 	 */
-	public ProportionDensityAlgorithm(Graph<V, E> graph) {
+	public ProportionDensityAlgorithm(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 
 	private int factorial(int n) {
 		if (n < 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("n has to be positive!");
 		}
 		if (n == 0) {
 			return 1;

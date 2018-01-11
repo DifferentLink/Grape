@@ -1,7 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
-import org.jgrapht.Graph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.Objects;
 
@@ -15,14 +15,14 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	/**
 	 * The input graph
 	 */
-	protected final Graph<V, E> graph;
+	protected final PropertyGraph<V, E> graph;
 
 	/**
 	 * Construct a new minimal bfs code algorithm.
 	 *
 	 * @param graph the input graph
 	 */
-	public MinimalBfsCodeAlgorithm(Graph<V, E> graph) {
+	public MinimalBfsCodeAlgorithm(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 

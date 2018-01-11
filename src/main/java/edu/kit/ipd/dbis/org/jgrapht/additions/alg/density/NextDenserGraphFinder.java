@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.NextDensityAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.Graph;
 
 import java.util.Objects;
@@ -16,14 +17,14 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 	/**
 	 * The input graph
 	 */
-	protected final Graph<V, E> graph;
+	protected final PropertyGraph<V, E> graph;
 
 	/**
 	 * Construct a new next denser graph finder.
 	 *
 	 * @param graph the input graph
 	 */
-	public NextDenserGraphFinder(Graph<V, E> graph) {
+	public NextDenserGraphFinder(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 
