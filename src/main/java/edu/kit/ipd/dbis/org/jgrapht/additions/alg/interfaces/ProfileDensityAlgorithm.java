@@ -38,10 +38,16 @@ public interface ProfileDensityAlgorithm<V, E> {
 	 * @param <E> the graph edge type
 	 */
 	class ProfileImpl<V, E> implements Profile<V, E> {
+		private List<BfsCodeAlgorithm.BfsCode> profile;
+
+		public ProfileImpl(List<BfsCodeAlgorithm.BfsCode> profile) {
+			//TODO: clone profile
+			this.profile = profile;
+		}
 
 		@Override
 		public List<BfsCodeAlgorithm.BfsCode> getProfile() {
-			return null;
+			return this.profile;
 		}
 	}
 }

@@ -23,11 +23,11 @@ public class AverageDegreeFinder<V> implements DegreeAlgorithm {
 
 	@Override
 	public Double getDegree() {
-		Iterator it = graph.vertexSet().iterator();
+		Iterator it = this.graph.vertexSet().iterator();
 		double sum = 0;
 		int number = 0;
 		while (it.hasNext()) {
-			sum += graph.degreeOf(it.next());
+			sum += this.graph.degreeOf(it.next());
 			number++;
 		}
 		return sum / number;
