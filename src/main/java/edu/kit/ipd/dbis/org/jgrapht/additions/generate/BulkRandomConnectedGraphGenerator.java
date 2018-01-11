@@ -14,6 +14,10 @@ import java.util.Set;
  */
 public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerator<V, E> {
 
+	/**
+	 * Constructs a new bulk ranm connected graph generator
+	 */
+	public BulkRandomConnectedGraphGenerator() { }
 
 	@Override
 	public void generateBulk(Set<Graph> target, int quantity, int minVertices, int maxVertices, int minEdges,
