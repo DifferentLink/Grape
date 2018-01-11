@@ -33,6 +33,12 @@ public interface BfsCodeAlgorithm<V, E> {
 		 * @return the bfs code
 		 */
 		int[] getCode();
+
+		/**
+		 * Determines the number of backward edges
+		 * @return number of backward edges
+		 */
+		int getNumberOfBackwardEdges();
 	}
 	/**
 	 * Default implementation of the bfs code.
@@ -61,6 +67,12 @@ public interface BfsCodeAlgorithm<V, E> {
 		@Override
 		public int[] getCode() {
 			return code;
+		}
+
+		@Override
+		public int getNumberOfBackwardEdges() {
+			// TODO: implement me
+			return 0;
 		}
 	}
 }
