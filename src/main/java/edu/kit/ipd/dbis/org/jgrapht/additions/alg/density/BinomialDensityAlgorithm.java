@@ -8,8 +8,8 @@ import java.util.Objects;
 /**
 The binomial density algorithm.
  *
- * @param <V>
- * @param <E>
+ * @param <V> the graph vertex type
+ * @param <E> the graph edge type
  */
 public class BinomialDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
 	/**
