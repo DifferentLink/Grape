@@ -36,7 +36,6 @@ public class BinomialDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
 	}
 	@Override
 	public double getDensity() {
-
 		int k = graph.vertexSet().size();
 		int n = graph.edgeSet().size();
 		return n / binomialCoefficient(k, 2);
