@@ -79,8 +79,16 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	protected void createTable() {
-
+	protected void createTable() throws Exception{
+		Connection connection = this.getConnection();
+		String sql = "CREATE TABLE IF NOT EXISTS "
+				+ this.name +" ("
+				+ "filter longblob, "
+				+ "id int NOT NULL, "
+				+ "isActivated boolean, "
+				+ "PRIMARY KEY(id))";
+		PreparedStatement create = connection.prepareStatement(sql);
+		create.executeUpdate();
 	}
 
 }
