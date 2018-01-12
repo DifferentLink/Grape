@@ -77,24 +77,22 @@ public class Filtermanagement {
      * @param id unique identifier of the filtersegment which should be disabled
      */
     public void deactivate(int id) {
-        for (Filtersegment element: availableFilter) {
-            for (Filtersegment CurrentElement: availableFilter) {
+            for (Filter element: availableFilter) {
                 if (element.id == id) {
                     element.deactivate();
                     return;
                 }
             }
-            for (Filtergroup CurrentElement: availableFilterGroups) {
-                if (element.id == id) {
-                    element.deactivate();
+            for (Filtergroup currentElement: availableFilterGroups) {
+                if (currentElement.id == id) {
+                    currentElement.deactivate();
                 }
-                for (Filter currentFilter: CurrentElement.availableFilter) {
+                for (Filter currentFilter : currentElement.availableFilter) {
                     if (currentFilter.id == id) {
                         currentFilter.deactivate();
                     }
                 }
             }
-        }
 
     }
 
