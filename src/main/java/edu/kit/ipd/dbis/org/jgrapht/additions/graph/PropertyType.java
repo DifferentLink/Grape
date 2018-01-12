@@ -11,7 +11,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgor
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ import java.util.Set;
  * This enum represents the different types of properties
  * and defines how they are calculated.
  */
-public enum PropertyType implements PropertyCalculator {
+public enum PropertyType {
 	/**
 	 * Calculates a graph's BFS-Code.
 	 */
@@ -144,8 +143,6 @@ public enum PropertyType implements PropertyCalculator {
 		}
 	},
 	MAXCLIQUES {
-		// as enums cannot have type parameters such as <V> (the vertex type),
-		// Object is used here.
 		@Override
 		public List<Set<Object>> calculate(PropertyGraph graph) {
 			return null;
@@ -156,5 +153,12 @@ public enum PropertyType implements PropertyCalculator {
 		public KkGraphAlgorithm.KkGraph calculate(PropertyGraph graph) {
 			return null;
 		}
-	}
+	};
+
+	/**
+	 *
+	 * @param graph
+	 * @return
+	 */
+	abstract Object calculate(PropertyGraph graph);
 }
