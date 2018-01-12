@@ -7,14 +7,23 @@ import java.util.List;
  */
 public class Filtermanagement {
 
-    private List<Filtersegment> availableFilter;
+    private List<Filtergroup> availableFilterGroups;
+    private List<Filter> availableFilter;
 
     /**
-     * adds a filtersegment to the list of class Filtermanagement
-     * @param filtersegment filtersegment which should be added
+     * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
+     * @param filtergroup filtersegment which should be added
      */
-    private void addFiltersegment(Filtersegment filtersegment) {
-        availableFilter.add(filtersegment);
+    private void addFilterGroup(Filtergroup filtergroup) {
+        availableFilterGroups.add(filtergroup);
+    }
+
+    /**
+     * adds a filter to the list availableFilter of class Filtermanagement
+     * @param filter filtersegment which should be added
+     */
+    private void addFilter(Filter filter) {
+        availableFilter.add(filter);
     }
 
     /**
@@ -25,7 +34,15 @@ public class Filtermanagement {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 availableFilter.remove(element);
+                return;
             }
+        }
+        for (Filtergroup element: availableFilterGroups) {
+            if (element.id == id) {
+                availableFilterGroups.remove(element);
+                return;
+            }
+            element.removeFilter(id);
         }
     }
 
@@ -39,6 +56,17 @@ public class Filtermanagement {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 element.activate();
+                return;
+            }
+        }
+        for (Filtergroup element: availableFilterGroups) {
+            if (element.id == id) {
+                element.activate();
+            }
+            for (Filter currentFilter: element.availableFilter) {
+                if (currentFilter.id == id) {
+                    currentFilter.activate();
+                }
             }
         }
     }
@@ -50,8 +78,21 @@ public class Filtermanagement {
      */
     public void deactivate(int id) {
         for (Filtersegment element: availableFilter) {
-            if (element.id == id) {
-                element.deactivate();
+            for (Filtersegment CurrentElement: availableFilter) {
+                if (element.id == id) {
+                    element.deactivate();
+                    return;
+                }
+            }
+            for (Filtergroup CurrentElement: availableFilterGroups) {
+                if (element.id == id) {
+                    element.deactivate();
+                }
+                for (Filter currentFilter: CurrentElement.availableFilter) {
+                    if (currentFilter.id == id) {
+                        currentFilter.deactivate();
+                    }
+                }
             }
         }
 
