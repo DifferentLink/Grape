@@ -6,6 +6,7 @@ public class GraphEditorController {
 
 	private GraphDatabase database;
 
+	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
 	private GraphEditorController(){}

@@ -8,6 +8,7 @@ public class CalculationController {
 
 	private GraphDatabase database;
 
+	//TODO: Singleton pattern
 	private static CalculationController calculation;
 
 	private CalculationController(){}

@@ -15,9 +15,12 @@ public class GenerateController {
 
 	private GraphDatabase database;
 
-	private static GenerateController generate;
+
 
 	private BulkGraphGenerator generator;
+
+	//TODO: Singleton pattern
+	private static GenerateController generate;
 
 	private GenerateController(){
 		this.generator = new BulkRandomConnectedGraphGenerator();
