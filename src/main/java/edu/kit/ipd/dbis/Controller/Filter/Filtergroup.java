@@ -1,9 +1,13 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
+import java.util.List;
+
 /**
  * this class allows to put multiply filter to one set
  */
 public class Filtergroup extends Filtersegment {
+
+    List<Filter> availableFilter;
 
     /**
      * Constructor of class Filtergroup
@@ -24,14 +28,14 @@ public class Filtergroup extends Filtersegment {
      * @param filter filter which should be added to a specific filtergroup
      */
     void addFilter(Filter filter) {
-
+        availableFilter.add(filter);
     }
 
     /**
      * removes a filter from a specific filtergroup
-     * @param filter filter which should be removed from a specific filtergroup
+     * @param id unique identifier of the filtersegment which should be enabled
      */
-    void removeFilter(Filter filter) {
+    void removeFilter(int id) {
 
     }
 
