@@ -15,13 +15,15 @@ import java.util.Set;
 public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerator<V, E> {
 
 	/**
-	 * Constructs a new bulk ranm connected graph generator
+	 * Constructs a new bulk random connected graph generator
 	 */
 	public BulkRandomConnectedGraphGenerator() { }
 
 	@Override
 	public void generateBulk(Set<Graph> target, int quantity, int minVertices, int maxVertices, int minEdges,
-									int maxEdges) {
+							 int maxEdges) {
 		//Import algorithm
+		//Generiere Graph -> schicke zu Datenbank
+		//Datenbank überprüft ob schon vorhanden
 	}
 }
