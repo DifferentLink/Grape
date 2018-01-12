@@ -28,7 +28,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 	@Override
 	public KkGraph getKkGraph() {
-		//Import kk-graph algorithm
+		//TODO: implement me
 		return null;
 	}
 }

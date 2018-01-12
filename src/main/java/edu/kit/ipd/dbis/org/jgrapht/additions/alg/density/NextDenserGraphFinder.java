@@ -30,7 +30,7 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 
 	@Override
 	public Graph getNextDensityGraph() {
-		//Import next denser graph algorithm
+		//TODO: implement me
 		return null;
 	}
 }

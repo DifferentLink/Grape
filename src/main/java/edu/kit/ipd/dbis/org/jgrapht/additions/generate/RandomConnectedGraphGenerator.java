@@ -38,6 +38,6 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator {
 	}
 	@Override
 	public void generateGraph(Graph target, VertexFactory vertexFactory, Map resultMap) {
-
+		//TODO: implement me
 	}
 }

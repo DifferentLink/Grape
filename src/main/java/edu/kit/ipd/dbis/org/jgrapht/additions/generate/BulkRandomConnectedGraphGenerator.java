@@ -22,8 +22,6 @@ public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerat
 	@Override
 	public void generateBulk(Set<Graph> target, int quantity, int minVertices, int maxVertices, int minEdges,
 							 int maxEdges) {
-		//Import algorithm
-		//Generiere Graph -> schicke zu Datenbank
-		//Datenbank überprüft ob schon vorhanden
+		//TODO: implement me
 	}
 }
