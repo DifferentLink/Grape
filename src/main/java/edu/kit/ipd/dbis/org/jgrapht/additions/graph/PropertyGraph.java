@@ -22,6 +22,8 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		super(ef, weighted);
 	}
 
+
+
 	/**
 	 *
 	 */
