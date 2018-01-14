@@ -40,13 +40,10 @@ public class GrapeUI extends GUIWindow {
 		filterUI = new FilterUI(controller, language, theme);
 		correlationUI = new CorrelationUI(controller, language, theme);
 
-		JSplitPane filterCorrelationDivider = new JSplitPane(
-				JSplitPane.VERTICAL_SPLIT,
-				true,
-				filterUI,
-				correlationUI);
-		filterCorrelationDivider.setDividerSize(theme.dividerSize);
-		filterCorrelationDivider.setBorder(null);
+		JPanel filterCorrelationDivider = new JPanel();
+		filterCorrelationDivider.setLayout(new BoxLayout(filterCorrelationDivider, BoxLayout.Y_AXIS));
+		filterCorrelationDivider.add(filterUI, BorderLayout.NORTH);
+		filterCorrelationDivider.add(correlationUI, BorderLayout.SOUTH);
 
 		graphEditorUI = new GraphEditorUI(controller, language, theme);
 
@@ -65,7 +62,6 @@ public class GrapeUI extends GUIWindow {
 		leftUI.add(graphEditorDivider);
 
 		graphEditorDivider.setResizeWeight(.55f);
-		filterCorrelationDivider.setResizeWeight(.5f);
 
 		statusbarUI = new StatusbarUI(controller, language, theme);
 		JPanel rightUI = new JPanel();
