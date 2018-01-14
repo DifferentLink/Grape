@@ -6,7 +6,6 @@ import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 
@@ -27,11 +26,26 @@ public class RandomConnectedGraphGeneratorTest {
 				new RandomConnectedGraphGenerator<>(5, 10, 0, 3);
 	}
 
+	@Test (expected = IllegalArgumentException.class)
+	public void toManyEdgesParameterTest() {
+		GraphGenerator<Integer, DefaultEdge, Integer> gen =
+				new RandomConnectedGraphGenerator<>(5, 10, 100, 120);
+	}
+
+	@Test
+	public void zeroTest() {
+		GraphGenerator<Integer, DefaultEdge, Integer> gen =
+				new RandomConnectedGraphGenerator<>(0, 0, 0, 0);
+		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
+		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+		Assert.assertTrue(graph.vertexSet().size() == 0);
+	}
+
 	@Test
 	public void graphGeneratorTest() {
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(4, 6, 3, 6);
-
 		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
 		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
