@@ -5,7 +5,9 @@ import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 
 /**
  * A random graph generator. It generates a random graph which is strongly connected, but does not create self-loops or
@@ -60,7 +62,8 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 		if (rangeE < 0) {
 			throw new IllegalArgumentException("negative range");
 		}
-		int randomEdges = (this.minVertices - 1) + (int) (Math.random() * (Math.min((rangeE + 1), (maxEdges - minEdges + 1))));
+		int randomEdges = (this.minVertices - 1) + (int) (Math.random() * (Math.min((rangeE + 1),
+				(maxEdges - minEdges + 1))));
 
 		//generate the random number of vertices
 		int minN = (int) (0.5 + Math.sqrt(0.25 + 2 * randomEdges)) + 1;
@@ -84,20 +87,20 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 
 
 		System.out.print("First Array: ");
-		for (int i = 0; i < graphArray.length; i ++) {
+		for (int i = 0; i < graphArray.length; i++) {
 			System.out.print(graphArray[i] + ", ");
 		}
 
 		//TODO: nicht alles durchgehen denn muss ja immer gewisse anzahl an Kanten haben
 		//checks if the graph is connected or has the right number of edges
-		while (!isConnected(graphArray) || (getNumberOfOnes(graphArray) != randomEdges)) {
+		while (!((getNumberOfOnes(graphArray) == randomEdges) && isConnected(graphArray))) {
 			//add 1 if not connected
 			//boolean full = true;
 			int i = graphArray.length - 1;
 			while (i >= 0 && graphArray[i] == 1) {
 				i--;
 			}
-			if ( i < 0) {
+			if (i < 0) {
 				for (int j = 0; j < graphArray.length; j++) {
 					graphArray[j] = 0;
 				}
@@ -109,13 +112,13 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 			}
 			System.out.println("");
 			System.out.print("Änderung Array: ");
-			for (int k = 0; k < graphArray.length; k ++) {
+			for (int k = 0; k < graphArray.length; k++) {
 				System.out.print(graphArray[k] + ", ");
 			}
 		}
 		System.out.println("");
 		System.out.print("End Array: ");
-		for (int i = 0; i < graphArray.length; i ++) {
+		for (int i = 0; i < graphArray.length; i++) {
 			System.out.print(graphArray[i] + ", ");
 		}
 
@@ -141,7 +144,7 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 
 	private int getNumberOfOnes(int[] array) {
 		int count = 0;
-		for (int i = 0; i < array.length; i++) {
+		for (int i : array) {
 			if (array[i] == 1) {
 				count++;
 			}
@@ -151,7 +154,8 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 
 	/**
 	 *Checks, if the graph represented as array is connected.
-	 * The method build the reachable array and checks in the end if the reachable array contains a zero. If the reachable
+	 * The method build the reachable array and checks in the end if the reachable array contains a zero.
+	 * If the reachable
 	 * array contains no zeros, the given graph is connected.
 	 *
 	 * @param graph the input graph array
@@ -181,8 +185,8 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 			}
 			//checks if the calculation already results that the graph is connected
 			int nrOfZero = 0;
-			for (int i = 0; i < reachableArray.length; i++) {
-				if (reachableArray[i] == 0) {
+			for (int i : reachableArray) {
+				if (i == 0) {
 					nrOfZero++;
 				}
 			}
@@ -201,8 +205,8 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 		}
 		System.out.println("");
 
-		for (int i = 0; i < reachableArray.length; i++) {
-			if (reachableArray[i] == 0) {
+		for (int i : reachableArray) {
+			if (i == 0) {
 				return false;
 			}
 		}
@@ -241,9 +245,9 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 			if ((i < k) && (j < k)) {
 				result += (a[getNumberInArray(i, k, n)] * b[getNumberInArray(j, k, n)]);
 
-			} else if ((i < k) && (k < j)){
+			} else if ((i < k) && (k < j)) {
 				result += (a[getNumberInArray(i, k, n)] * b[getNumberInArray(k, j, n)]);
-			} else if ((k < i) && (k < j)){
+			} else if ((k < i) && (k < j)) {
 				result += (a[getNumberInArray(k, i, n)] * b[getNumberInArray(k, j, n)]);
 			} else if ((k < i) && (j < k)) {
 				result += (a[getNumberInArray(k, i, n)] * b[getNumberInArray(j, k, n)]);

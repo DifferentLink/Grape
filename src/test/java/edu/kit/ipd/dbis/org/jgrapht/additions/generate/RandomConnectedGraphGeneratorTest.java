@@ -1,19 +1,12 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyType;
-import org.jgrapht.EdgeFactory;
-import org.jgrapht.Graph;
-import org.jgrapht.VertexFactory;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
-import org.jgrapht.graph.ClassBasedVertexFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 
 public class RandomConnectedGraphGeneratorTest {
 
