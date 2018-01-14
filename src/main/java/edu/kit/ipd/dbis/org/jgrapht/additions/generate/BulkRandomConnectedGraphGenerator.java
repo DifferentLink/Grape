@@ -1,6 +1,11 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.Graph;
+import org.jgrapht.alg.util.IntegerVertexFactory;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.ClassBasedEdgeFactory;
+import org.jgrapht.graph.DefaultEdge;
 
 import java.util.Set;
 
@@ -20,8 +25,24 @@ public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerat
 	public BulkRandomConnectedGraphGenerator() { }
 
 	@Override
-	public void generateBulk(Set<Graph> target, int quantity, int minVertices, int maxVertices, int minEdges,
+	public  void generateBulk(Set<Graph> target, int quantity, int minVertices, int maxVertices, int minEdges,
 							 int maxEdges) {
-		//TODO: implement me
+		if (quantity < 0) {
+			throw new IllegalArgumentException("Invalid quantity");
+		}
+		//TODO: Checken, wie viele Graphen es mit diesen Faktoren schon in der Datenbank gibt.
+		//TODO: Ckecken, ob es noch "quanity" übrige Graphen mit diesen Parametern gibt die noch nicht existieren.
+
+
+		GraphGenerator<Integer, DefaultEdge, Integer> gen =
+				new RandomConnectedGraphGenerator<>(minVertices, maxVertices, minEdges, maxEdges);
+
+		while (target.size() < quantity) {
+			ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
+			PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+			gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+
+			target.add(graph); //set -> only added if not equals to any other graph in the set
+		}
 	}
 }
