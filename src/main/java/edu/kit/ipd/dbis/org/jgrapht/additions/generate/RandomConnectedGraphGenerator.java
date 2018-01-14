@@ -164,7 +164,6 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 	private boolean isConnected(int[] graph) {
 
 		//computes reachable array
-		System.out.println("in");
 		int n = (int) (0.5 + Math.sqrt(0.25 + 2 * graph.length) + 0.1);
 		int[] reachableArray = graph.clone();
 		int[] newExp = reachableArray.clone();
@@ -195,7 +194,6 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 			}
 			k++;
 		}
-		System.out.println("out");
 		for (int i : reachableArray) {
 			if (i == 0) {
 				return false;

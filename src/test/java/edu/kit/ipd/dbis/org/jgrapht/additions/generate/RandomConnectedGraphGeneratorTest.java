@@ -60,8 +60,6 @@ public class RandomConnectedGraphGeneratorTest {
 		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
 		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
-		System.out.println("edge = " + graph.edgeSet().size());
-		System.out.println("vertices = " + graph.vertexSet().size());
 		Assert.assertTrue((graph.edgeSet().size() == 4));
 		Assert.assertTrue((graph.vertexSet().size() == 5));
 	}
