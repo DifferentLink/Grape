@@ -42,8 +42,9 @@ public class GrapeUI extends GUIWindow {
 
 		JPanel filterCorrelationDivider = new JPanel();
 		filterCorrelationDivider.setLayout(new BoxLayout(filterCorrelationDivider, BoxLayout.Y_AXIS));
-		filterCorrelationDivider.add(filterUI, BorderLayout.NORTH);
-		filterCorrelationDivider.add(correlationUI, BorderLayout.SOUTH);
+		filterCorrelationDivider.add(filterUI);
+		filterCorrelationDivider.add(Box.createVerticalGlue());
+		filterCorrelationDivider.add(correlationUI);
 
 		graphEditorUI = new GraphEditorUI(controller, language, theme);
 
