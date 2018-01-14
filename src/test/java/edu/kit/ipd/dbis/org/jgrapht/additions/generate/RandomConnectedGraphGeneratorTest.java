@@ -56,12 +56,12 @@ public class RandomConnectedGraphGeneratorTest {
 	@Test
 	public void graphGeneratorValueTest() {
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
-				new RandomConnectedGraphGenerator<>(5, 5, 4, 4);
+				new RandomConnectedGraphGenerator<>(2, 2, 1, 1);
 		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
 		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
-		Assert.assertTrue((graph.edgeSet().size() == 4));
-		Assert.assertTrue((graph.vertexSet().size() == 5));
+		Assert.assertTrue((graph.edgeSet().size() == 1));
+		Assert.assertTrue((graph.vertexSet().size() == 2));
 	}
 
 	@Test

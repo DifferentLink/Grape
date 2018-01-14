@@ -62,40 +62,36 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 		//generate the random number of edges in the interval the is possible according to the vertex interval
 		int rangeE = (this.maxVertices * (this.maxVertices - 1) / 2) - (this.minVertices - 1);
 		if (rangeE < 0) {
-			throw new IllegalArgumentException("negative range");
+			throw new IllegalArgumentException("negative edge range");
 		}
 		int numberOfEdges = (this.minVertices - 1) + (int) (Math.random() * (Math.min((rangeE + 1),
 				(this.maxEdges - this.minEdges + 1))));
 
 		//generate the random number of vertices
-		int minV = Math.max((int) (0.5 + Math.sqrt(0.25 + 2 * numberOfEdges)) + 1, this.minVertices);
+		int minV = Math.max((int) ((0.5 + Math.sqrt(0.25 + 2 * numberOfEdges)) + (1 - 0.0000001)), this.minVertices);
 		int rangeV = (numberOfEdges + 1) - minV;
 		if (rangeV < 0) {
-			throw new IllegalArgumentException("negative range");
+			throw new IllegalArgumentException("negative vertex range");
 		}
 
 		int numberOfVertices = minV + (int) (Math.random() * (Math.min((rangeV + 1),
 				(this.maxVertices - minV + 1))));
 
+		//generate the graphArray
 		int[] graphArray = new int[numberOfVertices * (numberOfVertices - 1) / 2];
 
-		//allocates the array the number 1 or 0 randomly (random graph)
+		//allocates the array the number 1 or 0 randomly but the number of 1 is equal the number of edges
 		int edgeCnt = 0;
 		int h = 0;
 		while (edgeCnt < numberOfEdges) {
-			int value = (int) (Math.random() * 20);
 			if (graphArray[h] == 0) {
+				int value = (int) (Math.random() * 20);
 				if (value > 9) {
 					graphArray[h] = 1;
 					edgeCnt++;
-				} else {
-					graphArray[h] = 0;
 				}
 			}
-			h++;
-			if (h >= graphArray.length) {
-				h = 0;
-			}
+			h = ((h + 1) % graphArray.length);
 		}
 
 		//checks if the graph is connected or has the right number of edges
@@ -118,6 +114,7 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 			}
 			graphArray[randomDel] = 0;
 		}
+
 		// create vertices and add to the graph
 		Map<Integer, V> vertices = new LinkedHashMap<>(numberOfVertices);
 		for (int i = 1; i <= numberOfVertices; i++) {
@@ -145,7 +142,7 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 	private int getNumberOfOnes(int[] array) {
 		int count = 0;
 		for (int i : array) {
-			if (array[i] == 1) {
+			if (i == 1) {
 				count++;
 			}
 		}
