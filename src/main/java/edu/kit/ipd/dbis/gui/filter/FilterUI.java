@@ -2,8 +2,10 @@
  * Created by Robin Link
  */
 
-package edu.kit.ipd.dbis.gui;
+package edu.kit.ipd.dbis.gui.filter;
 
+import edu.kit.ipd.dbis.gui.Controller;
+import edu.kit.ipd.dbis.gui.GUIElement;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;

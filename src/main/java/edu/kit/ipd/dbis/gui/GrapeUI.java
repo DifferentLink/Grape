@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
