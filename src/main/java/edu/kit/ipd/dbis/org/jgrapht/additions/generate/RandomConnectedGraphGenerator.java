@@ -55,27 +55,30 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 	}
 	@Override
 	public void generateGraph(Graph<V, E> target, VertexFactory<V> vertexFactory, Map<String, V> resultMap) {
-		//TODO: respect number edges
 
+		if (maxVertices == 0) {
+			return;
+		}
 		//generate the random number of edges in the interval the is possible according to the vertex interval
 		int rangeE = (maxVertices * (maxVertices - 1) / 2) - (minVertices - 1);
 		if (rangeE < 0) {
 			throw new IllegalArgumentException("negative range");
 		}
-		int randomEdges = (this.minVertices - 1) + (int) (Math.random() * (Math.min((rangeE + 1),
+		int numberOfEdges = (this.minVertices - 1) + (int) (Math.random() * (Math.min((rangeE + 1),
 				(maxEdges - minEdges + 1))));
 
 		//generate the random number of vertices
-		int minN = (int) (0.5 + Math.sqrt(0.25 + 2 * randomEdges)) + 1;
-		int rangeV = (randomEdges + 1) - minN;
+		int minN = (int) (0.5 + Math.sqrt(0.25 + 2 * numberOfEdges)) + 1;
+		int rangeV = (numberOfEdges + 1) - minN;
 		if (rangeV < 0) {
 			throw new IllegalArgumentException("negative range");
 		}
-		int randomVertices = minN + (int) (Math.random() * (Math.min((rangeV + 1), (maxVertices - minN + 1))));
+		int numberOfVertices = minN + (int) (Math.random() * (Math.min((rangeV + 1), (maxVertices - minN + 1))));
 
 
-		int[] graphArray = new int[randomVertices * (randomVertices - 1) / 2];
+		int[] graphArray = new int[numberOfVertices * (numberOfVertices - 1) / 2];
 		//allocates the array the number 1 or 0 randomly (random graph)
+
 		for (int i = 0; i < graphArray.length; i++) {
 			int value = (int) (Math.random() * 20);
 			if (value > 9) {
@@ -87,13 +90,13 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 
 
 		System.out.print("First Array: ");
-		for (int i = 0; i < graphArray.length; i++) {
-			System.out.print(graphArray[i] + ", ");
+		for (int k = 0; k < graphArray.length; k++) {
+			System.out.print(graphArray[k] + ", ");
 		}
 
 		//TODO: nicht alles durchgehen denn muss ja immer gewisse anzahl an Kanten haben
 		//checks if the graph is connected or has the right number of edges
-		while (!((getNumberOfOnes(graphArray) == randomEdges) && isConnected(graphArray))) {
+		while (!((getNumberOfOnes(graphArray) == numberOfEdges) && isConnected(graphArray))) {
 			//add 1 if not connected
 			//boolean full = true;
 			int i = graphArray.length - 1;
@@ -123,22 +126,22 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 		}
 
 		// create vertices
-		Map<Integer, V> vertices = new LinkedHashMap<>(randomVertices);
-		for (int i = 1; i <= randomVertices; i++) {
+		Map<Integer, V> vertices = new LinkedHashMap<>(numberOfVertices);
+		for (int i = 1; i <= numberOfVertices; i++) {
 			V v = vertexFactory.createVertex();
 			target.addVertex(v);
 			vertices.put(i, v);
 		}
 		//add edges
-		for (int i = 1; i < randomVertices; i++) {
-			for (int j = i + 1; j <= randomVertices; j++) {
-				if (graphArray[getNumberInArray(i, j, randomVertices)] == 1) {
+		for (int i = 1; i < numberOfVertices; i++) {
+			for (int j = i + 1; j <= numberOfVertices; j++) {
+				if (graphArray[getNumberInArray(i, j, numberOfVertices)] == 1) {
 					target.addEdge(vertices.get(i), vertices.get(j));
 				}
 			}
 		}
 		System.out.println("rangeV: " + rangeV + "  rangeE: " + rangeE);
-		System.out.println("Knoten: " + randomVertices + "  Kanten: " + randomEdges);
+		System.out.println("Knoten: " + numberOfVertices + "  Kanten: " + numberOfEdges);
 		System.out.print(minN);
 	}
 

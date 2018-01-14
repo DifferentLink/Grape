@@ -5,19 +5,37 @@ import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class RandomConnectedGraphGeneratorTest {
 
 
+
+
+	@Test (expected = IllegalArgumentException.class)
+	public void negativeParameterTest() {
+		GraphGenerator<Integer, DefaultEdge, Integer> gen =
+				new RandomConnectedGraphGenerator<>(-1, 6, 3, 6);
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void toLittleEdgesParameterTest() {
+		GraphGenerator<Integer, DefaultEdge, Integer> gen =
+				new RandomConnectedGraphGenerator<>(5, 10, 0, 3);
+	}
+
 	@Test
-	public void graphTest() {
+	public void graphGeneratorTest() {
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(4, 6, 3, 6);
 
-		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<Integer, DefaultEdge>(DefaultEdge.class);
-		PropertyGraph<Integer, DefaultEdge> g = new PropertyGraph<Integer, DefaultEdge>(ef, false);
-		gen.generateGraph(g, new IntegerVertexFactory(1), null);
+		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
+		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+		Assert.assertTrue((graph.edgeSet().size() <= 6) && (graph.edgeSet().size() >= 3));
+		Assert.assertTrue((graph.vertexSet().size() <= 6) && (graph.vertexSet().size() >= 4));
 	}
 }
