@@ -60,78 +60,72 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 			return;
 		}
 		//generate the random number of edges in the interval the is possible according to the vertex interval
-		int rangeE = (maxVertices * (maxVertices - 1) / 2) - (minVertices - 1);
+		int rangeE = (this.maxVertices * (this.maxVertices - 1) / 2) - (this.minVertices - 1);
 		if (rangeE < 0) {
 			throw new IllegalArgumentException("negative range");
 		}
 		int numberOfEdges = (this.minVertices - 1) + (int) (Math.random() * (Math.min((rangeE + 1),
-				(maxEdges - minEdges + 1))));
+				(this.maxEdges - this.minEdges + 1))));
 
 		//generate the random number of vertices
-		int minN = (int) (0.5 + Math.sqrt(0.25 + 2 * numberOfEdges)) + 1;
-		int rangeV = (numberOfEdges + 1) - minN;
+		int minV = Math.max((int) (0.5 + Math.sqrt(0.25 + 2 * numberOfEdges)) + 1, this.minVertices);
+		int rangeV = (numberOfEdges + 1) - minV;
 		if (rangeV < 0) {
 			throw new IllegalArgumentException("negative range");
 		}
-		int numberOfVertices = minN + (int) (Math.random() * (Math.min((rangeV + 1), (maxVertices - minN + 1))));
 
+		int numberOfVertices = minV + (int) (Math.random() * (Math.min((rangeV + 1),
+				(this.maxVertices - minV + 1))));
 
 		int[] graphArray = new int[numberOfVertices * (numberOfVertices - 1) / 2];
-		//allocates the array the number 1 or 0 randomly (random graph)
 
-		for (int i = 0; i < graphArray.length; i++) {
+		//allocates the array the number 1 or 0 randomly (random graph)
+		int edgeCnt = 0;
+		int h = 0;
+		while (edgeCnt < numberOfEdges) {
 			int value = (int) (Math.random() * 20);
-			if (value > 9) {
-				graphArray[i] = 1;
-			} else {
-				graphArray[i] = 0;
+			if (graphArray[h] == 0) {
+				if (value > 9) {
+					graphArray[h] = 1;
+					edgeCnt++;
+				} else {
+					graphArray[h] = 0;
+				}
+			}
+			h++;
+			if (h >= graphArray.length) {
+				h = 0;
 			}
 		}
 
-
-		System.out.print("First Array: ");
-		for (int k = 0; k < graphArray.length; k++) {
-			System.out.print(graphArray[k] + ", ");
-		}
-
-		//TODO: nicht alles durchgehen denn muss ja immer gewisse anzahl an Kanten haben
 		//checks if the graph is connected or has the right number of edges
 		while (!((getNumberOfOnes(graphArray) == numberOfEdges) && isConnected(graphArray))) {
-			//add 1 if not connected
-			//boolean full = true;
-			int i = graphArray.length - 1;
-			while (i >= 0 && graphArray[i] == 1) {
-				i--;
-			}
-			if (i < 0) {
-				for (int j = 0; j < graphArray.length; j++) {
-					graphArray[j] = 0;
-				}
-			} else {
-				graphArray[i] = 1;
-				for (int j = i + 1; j < graphArray.length; j++) {
-					graphArray[j] = 0;
+			//adds a 1 at a random place and deletes a 1 at a random place -> every time the correct number of edges
+			int randomAdd = (int) (Math.random() * graphArray.length);
+			while (graphArray[randomAdd] != 0) {
+				randomAdd++;
+				if (randomAdd >= graphArray.length) {
+					randomAdd = 0;
 				}
 			}
-			System.out.println("");
-			System.out.print("Änderung Array: ");
-			for (int k = 0; k < graphArray.length; k++) {
-				System.out.print(graphArray[k] + ", ");
+			graphArray[randomAdd] = 1;
+			int randomDel = (int) (Math.random() * graphArray.length);
+			while (graphArray[randomDel] != 1) {
+				randomDel++;
+				if (randomDel >= graphArray.length) {
+					randomDel = 0;
+				}
 			}
+			graphArray[randomDel] = 0;
 		}
-		System.out.println("");
-		System.out.print("End Array: ");
-		for (int i = 0; i < graphArray.length; i++) {
-			System.out.print(graphArray[i] + ", ");
-		}
-
-		// create vertices
+		// create vertices and add to the graph
 		Map<Integer, V> vertices = new LinkedHashMap<>(numberOfVertices);
 		for (int i = 1; i <= numberOfVertices; i++) {
 			V v = vertexFactory.createVertex();
 			target.addVertex(v);
 			vertices.put(i, v);
 		}
+
 		//add edges
 		for (int i = 1; i < numberOfVertices; i++) {
 			for (int j = i + 1; j <= numberOfVertices; j++) {
@@ -140,11 +134,14 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 				}
 			}
 		}
-		System.out.println("rangeV: " + rangeV + "  rangeE: " + rangeE);
-		System.out.println("Knoten: " + numberOfVertices + "  Kanten: " + numberOfEdges);
-		System.out.print(minN);
 	}
 
+	/**
+	 * calculates the number of ones in the array. Each one represents an edge in the array.
+	 *
+	 * @param array the input array
+	 * @return the number of ones
+	 */
 	private int getNumberOfOnes(int[] array) {
 		int count = 0;
 		for (int i : array) {
@@ -165,9 +162,9 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 	 * @return if the graph is connected
 	 */
 	private boolean isConnected(int[] graph) {
-		//TODO: implement me
 
 		//computes reachable array
+		System.out.println("in");
 		int n = (int) (0.5 + Math.sqrt(0.25 + 2 * graph.length) + 0.1);
 		int[] reachableArray = graph.clone();
 		int[] newExp = reachableArray.clone();
@@ -175,7 +172,7 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 		int k = 1;
 		boolean connected = false;
 		while (k <= graph.length + 1 && !connected) {
-			int[] result = new int[graph.length];
+			int[] result = new int[graph.length]; //Adjazenzmatrix ^ k
 			for (int i = 1; i <= n; i++) {
 				for (int j = i + 1; j <= n; j++) {
 					result[getNumberInArray(i, j, n)] = getMultValue(i, j, n, newExp, graph);
@@ -196,18 +193,9 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 			if (nrOfZero == 0) {
 				connected = true;
 			}
-
 			k++;
 		}
-
-
-		System.out.println("");
-		System.out.print("Reachable Array: ");
-		for (int h = 0; h < reachableArray.length; h++) {
-			System.out.print(reachableArray[h] + ", ");
-		}
-		System.out.println("");
-
+		System.out.println("out");
 		for (int i : reachableArray) {
 			if (i == 0) {
 				return false;
@@ -217,7 +205,7 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 	}
 
 	/**
-	 * Computes the place in the array of the place in the matrix
+	 * Computes the place in the array of the place in the matrix.
 	 *
 	 * @param i the column count
 	 * @param j the row count
@@ -242,7 +230,7 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 	 * @param b the second matrix (array)
 	 * @return the multiplication value
 	 */
-	public int getMultValue(int i, int j, int n, int[] a, int[] b) {
+	private int getMultValue(int i, int j, int n, int[] a, int[] b) {
 		int result = 0;
 		for (int k = 1; k <= n; k++) {
 			if ((i < k) && (j < k)) {
