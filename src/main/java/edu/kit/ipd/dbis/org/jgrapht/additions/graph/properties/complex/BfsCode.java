@@ -11,7 +11,7 @@ import org.kohsuke.MetaInfServices;
 public class BfsCode extends ComplexProperty {
 	@Override
 	protected BfsCodeAlgorithm.BfsCode calculateAlgorithm(PropertyGraph graph) {
-		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm(graph);
-		return alg.getBfsCode();
+		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
+		return alg.getBfsCode(graph);
 	}
 }

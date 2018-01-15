@@ -64,4 +64,8 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 			return false;
 		}
 	}
+
+	public Integer getNumberOfEdges() {
+		return null;
+	}
 }

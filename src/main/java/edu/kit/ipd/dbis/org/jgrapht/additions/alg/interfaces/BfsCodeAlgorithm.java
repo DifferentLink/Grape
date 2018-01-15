@@ -1,6 +1,8 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public interface BfsCodeAlgorithm<V, E> {
 	 *
 	 * @return the bfs code
 	 */
-	BfsCode<V, E> getBfsCode();
+	BfsCode<V, E> getBfsCode(PropertyGraph graph);
 
 	/**
 	 * A bfs code. A bfs code is an array of integer values.
@@ -23,7 +25,7 @@ public interface BfsCodeAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	interface BfsCode<V, E> {
+	interface BfsCode<V, E> extends Comparable {
 		/**
 		 * Get the length of the bfs code
 		 * @return the length of the bfs code
@@ -47,6 +49,8 @@ public interface BfsCodeAlgorithm<V, E> {
 		 * @return set of backward edges
 		 */
 		List<E> getBackwardEdges();
+
+
 	}
 	/**
 	 * Default implementation of the bfs code.
@@ -79,7 +83,6 @@ public interface BfsCodeAlgorithm<V, E> {
 
 		@Override
 		public int getNumberOfBackwardEdges() {
-			// TODO: implement me
 			return 0;
 		}
 
@@ -87,6 +90,31 @@ public interface BfsCodeAlgorithm<V, E> {
 		public List<E> getBackwardEdges() {
 			// TODO: implement me
 			return null;
+		}
+
+		/**
+		 *
+		 * @param o other BfsCode
+		 * @return -1, 0, 1 if this is less than, equal to, or greater than o.
+		 */
+		@Override
+		public int compareTo(Object o) {
+			int[] b2 = ((BfsCode) o).getCode();
+			for (int i = 0; i < Math.min(this.code.length, b2.length); i++) {
+				if (this.code[i] < b2[i]) {
+					return -1;
+				} else if (this.code[i] > b2[i]) {
+					return 1;
+				}
+			}
+
+			if (this.code.length > b2.length) {
+				return 1;
+			} else if (this.code.length < b2.length) {
+				return -1;
+			} else {
+				return 0;
+			}
 		}
 	}
 }
