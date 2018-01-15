@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
