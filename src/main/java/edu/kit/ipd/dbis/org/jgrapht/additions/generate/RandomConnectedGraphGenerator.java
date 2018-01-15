@@ -17,14 +17,10 @@ import java.util.Map;
  * @param <E> the graph edge type
  */
 public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
-
-
-
 	private final int minVertices;
 	private final int maxVertices;
 	private final int minEdges;
 	private final int maxEdges;
-
 
 	/**
 	 * Construct a new radom connected graph generator.
@@ -37,15 +33,12 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 	public RandomConnectedGraphGenerator(int minVertices, int maxVertices, int minEdges, int maxEdges) {
 		if (minVertices < 0 || minEdges < 0 || maxVertices < 0 || maxEdges < 0) {
 			throw new IllegalArgumentException("No negative values allowed");
-		}
-		if (minVertices > maxVertices || minEdges > maxEdges) {
+		} else if (minVertices > maxVertices || minEdges > maxEdges) {
 			throw new IllegalArgumentException("no valid interval");
-		}
-		if ((minVertices - 1) > maxEdges) {
+		} else if ((minVertices - 1) > maxEdges) {
 			throw new IllegalArgumentException(("The graph cannot be connected"));
-		}
-		if ((minEdges > (maxVertices * (maxVertices - 1) / 2))) {
-			throw new IllegalArgumentException(("To many edges"));
+		} else if ((minEdges > (maxVertices * (maxVertices - 1) / 2))) {
+			throw new IllegalArgumentException(("Too many edges"));
 		}
 
 		this.minVertices = minVertices;
@@ -53,29 +46,33 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 		this.minEdges = minEdges;
 		this.maxEdges = maxEdges;
 	}
+
 	@Override
 	public void generateGraph(Graph<V, E> target, VertexFactory<V> vertexFactory, Map<String, V> resultMap) {
 
 		if (maxVertices == 0) {
 			return;
 		}
+
 		//generate the random number of edges in the interval the is possible according to the vertex interval
 		int rangeE = (this.maxVertices * (this.maxVertices - 1) / 2) - (this.minVertices - 1);
 		if (rangeE < 0) {
 			throw new IllegalArgumentException("negative edge range");
 		}
-		int numberOfEdges = (this.minVertices - 1) + (int) (Math.random() * (Math.min((rangeE + 1),
-				(this.maxEdges - this.minEdges + 1))));
+		int numberOfEdges = (this.minVertices - 1)
+				+ (int) (Math.random()
+				* (Math.min((rangeE + 1), (this.maxEdges - this.minEdges + 1))));
 
 		//generate the random number of vertices
-		int minV = Math.max((int) ((0.5 + Math.sqrt(0.25 + 2 * numberOfEdges)) + (1 - 0.0000001)), this.minVertices);
+		int minV = Math.max((int) (
+				(0.5 + Math.sqrt(0.25 + 2 * numberOfEdges))
+				+ (1 - 0.0000001)), this.minVertices);
 		int rangeV = (numberOfEdges + 1) - minV;
 		if (rangeV < 0) {
 			throw new IllegalArgumentException("negative vertex range");
 		}
 
-		int numberOfVertices = minV + (int) (Math.random() * (Math.min((rangeV + 1),
-				(this.maxVertices - minV + 1))));
+		int numberOfVertices = minV + (int) (Math.random() * (Math.min((rangeV + 1), (this.maxVertices - minV + 1))));
 
 		//generate the graphArray
 		int[] graphArray = new int[numberOfVertices * (numberOfVertices - 1) / 2];
