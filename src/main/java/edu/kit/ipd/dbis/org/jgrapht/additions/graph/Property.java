@@ -1,37 +1,38 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
+import org.kohsuke.MetaInfServices;
+
 /**
  * Represents a graph's property
  */
-public class Property {
+public abstract class Property {
 	private Object value;
-	protected PropertyType type;
-
-	/**
-	 * Standard constructor
-	 * @param type the property's type
-	 */
-	public Property(PropertyType type) {
-		this.type = type;
-	}
 
 	/**
 	 * Method which induces the calculation
 	 * of the property
 	 *
-	 * @param graph graph for which the property is calculated
+	 * @param graph target graph
 	 */
 	public void calculate(PropertyGraph graph) {
-		this.value = this.type.calculate(graph);
+		this.value = this.calculateAlgorithm(graph);
 	}
+
+	/**
+	 * The implementation of the calculation algorithm.
+	 *
+	 * @param graph target graph
+	 * @return the result
+	 */
+	protected abstract Object calculateAlgorithm(PropertyGraph graph);
 
 	/**
 	 * Getter method for value
 	 *
-	 * @return value
+	 * @return attribute value
 	 */
 	public Object getValue() {
 		return this.value;
 	}
-
 }
