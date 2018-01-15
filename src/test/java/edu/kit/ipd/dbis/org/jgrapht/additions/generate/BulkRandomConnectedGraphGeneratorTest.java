@@ -1,9 +1,14 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.Graph;
+import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
+import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -17,16 +22,17 @@ public class BulkRandomConnectedGraphGeneratorTest {
 		BulkGraphGenerator<Integer, DefaultEdge> bulkGen =
 				new BulkRandomConnectedGraphGenerator<>();
 
-		HashSet<Graph> target = new HashSet<>();
+		HashSet<PropertyGraph> target = new HashSet<>();
 		bulkGen.generateBulk(target,-1, 2, 2, 1, 1);
 	}
 
-	@Test
-	public void smallParameterTest() {
+	@Test (expected = IllegalArgumentException.class)
+	public void quantityTooBigTest() {
 		BulkGraphGenerator<Integer, DefaultEdge> bulkGen =
 				new BulkRandomConnectedGraphGenerator<>();
 
-		HashSet<Graph> target = new HashSet<>();
-		bulkGen.generateBulk(target,1, 2, 2, 1, 1);
+		HashSet<PropertyGraph> target = new HashSet<>();
+		bulkGen.generateBulk(target,10, 2, 2, 1, 1);
+		Assert.assertTrue(target.size() == 1000);
 	}
 }

@@ -1,7 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import org.jgrapht.Graph;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
@@ -19,30 +18,40 @@ import java.util.Set;
  */
 public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerator<V, E> {
 
-	/**
-	 * Constructs a new bulk random connected graph generator
-	 */
-	public BulkRandomConnectedGraphGenerator() { }
-
 	@Override
-	public  void generateBulk(Set<Graph> target, int quantity, int minVertices, int maxVertices, int minEdges,
+	public  void generateBulk(Set<PropertyGraph> target, int quantity, int minVertices, int maxVertices, int minEdges,
 							 int maxEdges) {
 		if (quantity < 0) {
-			throw new IllegalArgumentException("Invalid quantity");
+			throw new IllegalArgumentException("negative quantity not valid");
 		}
-		//TODO: Checken, wie viele Graphen es mit diesen Faktoren schon in der Datenbank gibt.
+
 		//TODO: Ckecken, ob es noch "quanity" übrige Graphen mit diesen Parametern gibt die noch nicht existieren.
 
 
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(minVertices, maxVertices, minEdges, maxEdges);
 
+		int cnt = 0;
 		while (target.size() < quantity) {
+			cnt++;
 			ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
 			PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
 			gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 
-			target.add(graph); //set -> only added if not equals to any other graph in the set
+			boolean isDuplicat = false;
+			for (PropertyGraph g : target) {
+				if (g.equals(graph)) {
+					isDuplicat = true;
+				}
+			}
+			if (!isDuplicat) {
+				target.add(graph);
+			}
+			//TODO: temporary solution (find a better one)
+			if (cnt > 5 * quantity) {
+				throw new IllegalArgumentException("Only " + target.size() + " graphs found. Quantity: " + quantity +
+						" too big.");
+			}
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 
-import org.jgrapht.Graph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.Set;
 
@@ -12,7 +12,8 @@ import java.util.Set;
  */
 public interface BulkGraphGenerator<V, E> {
 	/**
-	 *Generates a set of graphs with the given restrictions.
+	 *Generates a set of graphs with the given restrictions. The target set does not contains any isomorphic graphs.
+	 * That means that all graphs are not isomorph to each other.
 	 *
 	 * @param target the target set
 	 * @param quantity the number of generating graphs
@@ -21,5 +22,6 @@ public interface BulkGraphGenerator<V, E> {
 	 * @param minEdges the minimal number of edges
 	 * @param maxEdges the maximal number of edges
 	 */
-	void generateBulk(Set<Graph> target, int quantity, int minVertices, int maxVertices, int minEdges, int maxEdges);
+	void generateBulk(Set<PropertyGraph> target, int quantity, int minVertices, int maxVertices, int minEdges,
+					  int maxEdges);
 }

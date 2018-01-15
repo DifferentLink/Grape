@@ -77,6 +77,7 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 		int numberOfVertices = minV + (int) (Math.random() * (Math.min((rangeV + 1),
 				(this.maxVertices - minV + 1))));
 
+
 		//generate the graphArray
 		int[] graphArray = new int[numberOfVertices * (numberOfVertices - 1) / 2];
 
