@@ -20,12 +20,18 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 * @param ef
 	 * @param weighted
 	 */
-	public PropertyGraph(EdgeFactory ef, boolean weighted, int id) {
+	public PropertyGraph(EdgeFactory ef, boolean weighted) {
 		super(ef, weighted);
-		this.id = id;
 		this.properties = PropertyFactory.createAllProperties();
 	}
 
+	/**
+	 * Setter method for id.
+	 * @param id
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
 
 
 	/**
