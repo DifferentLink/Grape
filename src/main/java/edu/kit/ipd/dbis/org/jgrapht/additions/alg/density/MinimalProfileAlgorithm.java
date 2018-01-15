@@ -29,7 +29,7 @@ public class MinimalProfileAlgorithm<V, E> implements ProfileDensityAlgorithm {
 
 	@Override
 	public Profile getProfile() {
-		//Import profile algorithm
+		//TODO: implement me
 		return null;
 	}
 }

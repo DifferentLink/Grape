@@ -31,7 +31,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	}
 	@Override
 	public Coloring<V> getColoring() {
-		//Computes the coloring
+		//TODO: implement me
 		return null;
 	}
 }

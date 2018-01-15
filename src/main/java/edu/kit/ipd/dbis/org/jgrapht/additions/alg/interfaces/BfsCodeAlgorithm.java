@@ -1,6 +1,8 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 
+import java.util.List;
+
 /**
  * An algorithm which computes a bfs code of a graph.
  *
@@ -39,6 +41,12 @@ public interface BfsCodeAlgorithm<V, E> {
 		 * @return number of backward edges
 		 */
 		int getNumberOfBackwardEdges();
+
+		/**
+		 * Determines the backward edges
+		 * @return set of backward edges
+		 */
+		List<E> getBackwardEdges();
 	}
 	/**
 	 * Default implementation of the bfs code.
@@ -73,6 +81,12 @@ public interface BfsCodeAlgorithm<V, E> {
 		public int getNumberOfBackwardEdges() {
 			// TODO: implement me
 			return 0;
+		}
+
+		@Override
+		public List<E> getBackwardEdges() {
+			// TODO: implement me
+			return null;
 		}
 	}
 }

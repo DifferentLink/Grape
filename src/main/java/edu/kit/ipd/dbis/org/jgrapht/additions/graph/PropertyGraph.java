@@ -1,5 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 import org.jgrapht.EdgeFactory;
+import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
+import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 import java.util.Set;
@@ -24,6 +26,8 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		this.properties = PropertyFactory.createAllProperties();
 	}
 
+
+
 	/**
 	 * TODO: design change (name)
 	 */
@@ -36,5 +40,22 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 */
 	public int getId() {
 		return this.id;
+	}
+
+
+	/**
+	 * checks if two graphs are equals
+	 *
+	 * @param graph the input graph
+	 * @return if this graph is equals to the input graph
+	 */
+
+	public boolean equals(PropertyGraph graph) {
+		VF2GraphIsomorphismInspector<Integer, DefaultEdge> iI = new VF2GraphIsomorphismInspector<Integer, DefaultEdge>(graph, this);
+		if (iI.isomorphismExists()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

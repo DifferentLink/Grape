@@ -28,7 +28,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 
 	@Override
 	public BfsCode getBfsCode() {
-		//Import the bfs code algorithm
+		//TODO: implement me
 		return null;
 	}
 }

@@ -30,6 +30,9 @@ public class AverageDegreeFinder<V> implements DegreeAlgorithm {
 			sum += this.graph.degreeOf(it.next());
 			number++;
 		}
+		if (number == 0) {
+			return 0.0;
+		}
 		return sum / number;
 	}
 }
