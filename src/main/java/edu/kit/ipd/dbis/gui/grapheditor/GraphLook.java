@@ -10,7 +10,7 @@ import java.awt.*;
  * This class simply lists default render values for RenderableGraphs.
  */
 public class GraphLook {
-	public static final int vertexDiameter = 20;
+	public static final int vertexDiameter = 25;
 	public static final Color vertexFillColor = Color.WHITE;
 	public static final int vertexOutLineThickness = 1;
 	public static final Color vertexOutlineColor = Color.BLACK;
