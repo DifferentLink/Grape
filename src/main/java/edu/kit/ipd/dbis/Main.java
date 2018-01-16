@@ -10,6 +10,6 @@ public class Main {
      * @param args arguments provided when run using the command line.
      */
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        System.out.println("Hello!");
     }
 }
