@@ -4,9 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
+import java.sql.*;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -85,8 +83,10 @@ public class FileManager implements Connector {
 	 * @param password
 	 * @return
 	 */
-	private Connection getConnection(String url, String user, String password) {
-		return null;
+	private Connection getConnection(String url, String user, String password) throws ClassNotFoundException, SQLException {
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection connection = DriverManager.getConnection(url, user, password);
+		return connection;
 	}
 
 	/**
