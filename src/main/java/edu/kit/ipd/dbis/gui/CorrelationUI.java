@@ -4,10 +4,13 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.gui.popups.CorrelationRequestUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class CorrelationUI extends GUIElement {
@@ -25,6 +28,7 @@ public class CorrelationUI extends GUIElement {
 		correlationInput.setBackground(theme.backgroundColor);
 		correlationInput.setSize(10, 30);
 		JButton go = new JButton("Go..."); // todo replaces with text from language resource
+		go.addActionListener(new CorrelationRequestAction(language, theme));
 		theme.style(go);
 		this.add(go, BorderLayout.EAST);
 		this.add(correlationInput, BorderLayout.WEST);
@@ -37,4 +41,22 @@ public class CorrelationUI extends GUIElement {
 	public void update() {
 
 	}
+
+	private static class CorrelationRequestAction implements ActionListener {
+
+		ResourceBundle language;
+		Theme theme;
+
+		public CorrelationRequestAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			JFrame correlationRequest = new CorrelationRequestUI(language, theme);
+			correlationRequest.setVisible(true);
+		}
+	}
+
 }

@@ -95,5 +95,4 @@ public class MenuUI extends GUIMenu {
 			readBFSCodeUI.setVisible(true);
 		}
 	}
-
 }
