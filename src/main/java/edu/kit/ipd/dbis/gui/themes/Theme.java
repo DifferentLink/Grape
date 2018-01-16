@@ -45,4 +45,9 @@ public abstract class Theme {
 		comboBox.setForeground(foregroundColor);
 		comboBox.setBorder(BorderFactory.createLineBorder(outlineColor, outlineThickness));
 	}
+
+	public void style(JLabel label) {
+		label.setBackground(backgroundColor);
+		label.setForeground(foregroundColor);
+	}
 }
