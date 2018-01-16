@@ -18,7 +18,7 @@ public abstract class Filtersegment implements Serializable {
      * filter in this group is now used to filter graphs. Every filter of a filtergroup which
      * was disabled stays disabled even if the filtergroup gets enabled.
      */
-    void activate() {
+    public void activate() {
         this.isActivated = true;
     }
 
@@ -27,7 +27,7 @@ public abstract class Filtersegment implements Serializable {
      * the filter are now ignored when filtering graphs. If a filtergroup gets disabled,
      * every filter of the group gets disabled even if the filter of the group are enabled.
      */
-    void deactivate() {
+    public void deactivate() {
         this.isActivated = false;
     }
 
@@ -37,7 +37,7 @@ public abstract class Filtersegment implements Serializable {
      * = 10
      * @param name name of the filtersegment
      */
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -45,7 +45,7 @@ public abstract class Filtersegment implements Serializable {
      * allows to get the name of a specific filtersegment
      * @return name of filtersegment
      */
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -53,7 +53,11 @@ public abstract class Filtersegment implements Serializable {
      * allows to get the identifier of a specific filtersegment
      * @return identifier of a specific filtersegment
      */
-    int getID() {
+    public int getID() {
         return id;
+    }
+
+    public boolean getIsActivated() {
+        return isActivated;
     }
 }
