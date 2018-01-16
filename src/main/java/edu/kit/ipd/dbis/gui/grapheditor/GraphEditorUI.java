@@ -126,14 +126,23 @@ public class GraphEditorUI extends GUIElement {
 				public void mouseReleased(MouseEvent mouseEvent) {
 					mTarget = mouseEvent.getPoint();
 
-					if (mouseEvent.getButton() == MouseEvent.BUTTON1) { // Linke Maustaste losgelassen
+					if (mouseEvent.getButton() == MouseEvent.BUTTON1) { // Released left mouse button
 						Vertex vertex = graph.getVertexAt(mouseEvent.getPoint());
 						if (vertex != null) {
-							graph.add(new Edge(new Vertex(mStart), new Vertex(mTarget)));
+							Vertex start = graph.getVertexAt(mStart);
+							if (start == null) {
+								start = new Vertex(mStart);
+							}
+
+							Vertex target = graph.getVertexAt(mTarget);
+							if (target == null) {
+								target = new Vertex(mTarget);
+							}
+							graph.add(new Edge(start, target));
 						} else {
 							graph.add(new Vertex(mTarget));
 						}
-					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Rechte Maustaste losgelassen
+					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Released right mouse button
 						graph.remove(mTarget);
 					}
 

@@ -41,7 +41,9 @@ public class RenderableGraph {
 	}
 
 	public void add(Vertex vertex) {
-		vertices.add(vertex);
+		if (getVertexAt(vertex.getPosition()) == null) {
+			vertices.add(vertex);
+		}
 	}
 
 	public void remove(Vertex vertex) {

@@ -78,4 +78,13 @@ public class Vertex {
 	public void setOutlineThickness(float outlineThickness) {
 		this.outlineThickness = outlineThickness;
 	}
+
+	public Point getPosition() {
+		return new Point(x, y);
+	}
+
+	public void setPosition(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
 }
