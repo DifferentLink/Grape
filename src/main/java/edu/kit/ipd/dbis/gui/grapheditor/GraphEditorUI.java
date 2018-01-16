@@ -77,6 +77,10 @@ public class GraphEditorUI extends GUIElement {
 		theme.style(bottomBarButtons);
 		center = new JButton("Center");
 		theme.style(center);
+		center.addActionListener((e) -> {
+			GraphLook.arrangeInCircle(graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+			repaint();
+		});
 		preview = new JButton("Preview");
 		theme.style(preview);
 		apply = new JButton("Apply");

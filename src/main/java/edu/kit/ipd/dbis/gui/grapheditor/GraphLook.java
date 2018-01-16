@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import java.awt.*;
+import java.util.Set;
 
 /**
  * This class simply lists default render values for RenderableGraphs.
@@ -15,7 +16,7 @@ public class GraphLook {
 	public static final int vertexOutLineThickness = 1;
 	public static final Color vertexOutlineColor = Color.BLACK;
 
-	public static final int edgeThickness = 3;
+	public static final int edgeThickness = 2;
 	public static final Color edgeColor = Color.BLACK;
 
 	/**
@@ -36,7 +37,19 @@ public class GraphLook {
 		return colors;
 	}
 
-	public void arrangeInCircle(Vertex[] vertices) { // todo implement dummy method
+	public static void arrangeInCircle(Set<Vertex> vertices, Point upperLeft, Point lowerRight) { // todo implement dummy method
 
+		final Point center =
+				new Point(Math.abs(upperLeft.x - lowerRight.x) / 2, Math.abs(upperLeft.y - lowerRight.y) / 2);
+		final double radius = Math.min(center.x, center.y) * .4;
+		final double angle = Math.toRadians(360d / (double) vertices.size());
+		int i = 0;
+
+		for (Vertex vertex : vertices) {
+			vertex.setPosition(
+					(int) (radius * Math.cos(i * angle) + center.x),
+					(int) (radius * Math.sin(i * angle) + center.y));
+			i++;
+		}
 	}
 }
