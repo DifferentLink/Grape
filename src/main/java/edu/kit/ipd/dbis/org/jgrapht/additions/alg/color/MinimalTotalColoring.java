@@ -1,29 +1,37 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
-import org.jgrapht.Graph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import java.util.Objects;
 
 /**
+ * The minimal coloring algorithm.
  *
- * @param <V>
- * @param <E>
+ * <p>
+ * Description of the algorithm
+ *
+ * @param <V> the graph vertex type
+ * @param <E> the graph edge type
+ *
  */
 public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> {
-
-	protected final Graph<V, E> graph;
+	/**
+	 * The input graph
+	 */
+	protected final PropertyGraph<V, E> graph;
 
 	/**
-	 * A minimal total coloring
+	 * Constructs a new minimal total coloring algorithm
 	 *
-	 * @param graph the corresponding graph
+	 * @param graph the input graph
 	 */
-	public MinimalTotalColoring(Graph<V, E> graph) {
+	public MinimalTotalColoring(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
+
 	@Override
 	public TotalColoring getColoring() {
-		//Compute Coloring
+		//TODO: implement me
 		return null;
 	}
 }
