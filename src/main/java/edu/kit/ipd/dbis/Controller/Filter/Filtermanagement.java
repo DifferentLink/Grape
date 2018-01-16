@@ -1,5 +1,7 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
+import edu.kit.ipd.dbis.database.GraphDatabase;
+
 import java.util.List;
 
 /**
@@ -9,13 +11,16 @@ public class Filtermanagement {
 
     private List<Filtergroup> availableFilterGroups;
     private List<Filter> availableFilter;
+    private GraphDatabase database;
 
     /**
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
      * @param filtergroup filtersegment which should be added
      */
-    private void addFilterGroup(Filtergroup filtergroup) {
+    private int addFilterGroup(Filtergroup filtergroup) throws Exception {
+        database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
+        return filtergroup.getID();
     }
 
     /**
