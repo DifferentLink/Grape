@@ -11,7 +11,7 @@ public class DatabaseController {
 	private GenerateController generate;
 	private CalculationController calculation;
 	private GraphEditorController editor;
-
+	private FilterController filter;
 
 	private Connector connector;
 	private GraphDatabase database;
@@ -21,6 +21,7 @@ public class DatabaseController {
 		generate = GenerateController.getInstance();
 		calculation = CalculationController.getInstance();
 		editor = GraphEditorController.getInstance();
+		filter = FilterController.getInstance();
 		connector = new FileManager();
 	}
 
@@ -37,8 +38,9 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the database.
 	 */
-	public void newDatabase(String filepath) {
-
+	public void loadDatabase(String filepath) throws Exception {
+		database = connector.loadGraphDatabase(filepath);
+		this.updateDatabases();
 	}
 
 	/**
@@ -46,8 +48,11 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the Database.
 	 */
-	public void mergeDatabase(String filepath) {
-
+	public void mergeDatabase(String filepath) throws Exception {
+		GraphDatabase mergeDatabase;
+		mergeDatabase = connector.loadGraphDatabase(filepath);
+		database.merge(mergeDatabase);
+		this.updateDatabases();
 	}
 
 	/**
@@ -56,7 +61,7 @@ public class DatabaseController {
 	 * @param filepath the file path of the Database.
 	 */
 	public void saveDatabase(String filepath) {
-
+		database.setDirectory(filepath);
 	}
 
 	/**
@@ -76,6 +81,7 @@ public class DatabaseController {
 		generate.setDatabase(database);
 		calculation.setDatabase(database);
 		editor.setDatabase(database);
+		filter.setDatabase(database);
 	}
 
 }

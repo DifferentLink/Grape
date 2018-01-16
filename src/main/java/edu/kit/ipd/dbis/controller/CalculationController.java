@@ -47,7 +47,7 @@ public class CalculationController {
 			if (calculationStatus == true) {
 				graph.calculateRemainingProperties();
 				// Deleting graphs from list of not calculated graphs
-				//database.deleteGraphFromList(graph.getId());
+				database.repleaceGraph(graph.getId(), graph);
 			} else {
 				return;
 			}
