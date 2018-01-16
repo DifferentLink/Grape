@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.database;
 
+import edu.kit.ipd.dbis.Controller.Filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.ByteArrayInputStream;
@@ -8,6 +9,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashSet;
 import java.util.Set;
 
 public class FilterTable extends Table {
@@ -23,7 +25,7 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	public FilterSegment getContent(int id) throws Exception {
+	public Filtersegment getContent(int id) throws Exception {
 		Connection connection = this.getConnection();
 		String sql = "SELECT filter FROM " + this.name + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -33,18 +35,18 @@ public class FilterTable extends Table {
 		if (result.next()) {
 			byteInput = new ByteArrayInputStream(result.getBytes("filter"));
 			objectInput = new ObjectInputStream(byteInput);
-			return (FilterSegment) objectInput.readObject();
+			return (Filtersegment) objectInput.readObject();
 		}
 		return null;
 	}
 
 	@Override
-	public Set<FilterSegment> getContent() throws Exception{
+	public Set<Filtersegment> getContent() throws Exception{
 		Connection connection = this.getConnection();
 		String sql = "SELECT filter FROM " + this.name;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
-		Set<FilterSegment> filters = new Set<>();
+		Set<Filtersegment> filters = new HashSet<>();
 		ByteArrayInputStream byteInput;
 		ObjectInputStream objectInput;
 
@@ -52,7 +54,7 @@ public class FilterTable extends Table {
 			byteInput = new ByteArrayInputStream(result.getBytes("filter"));
 			objectInput = new ObjectInputStream(byteInput);
 			try {
-				filters.add((FilterSegment) objectInput.readObject());
+				filters.add((Filtersegment) objectInput.readObject());
 			} catch(Exception e) {
 
 			}
@@ -62,7 +64,7 @@ public class FilterTable extends Table {
 
 	@Override
 	public void insert(Serializable object) throws Exception {
-		FilterSegment filter = this.getInstanceOf(object);
+		Filtersegment filter = this.getInstanceOf(object);
 		String sql = "INSERT INTO " + this.name + " (filter, id, isActivated) VALUES (?, ?, ?)";
 		PreparedStatement statement = this.getConnection().prepareStatement(sql);
 		statement.setObject(1, this.objectToByteArray(filter));
@@ -72,8 +74,8 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	protected FilterSegment getInstanceOf(Serializable object) throws Exception {
-		FilterSegment filter = (object instanceof  PropertyGraph) ? (FilterSegment) object : null;
+	protected Filtersegment getInstanceOf(Serializable object) throws Exception {
+		Filtersegment filter = (object instanceof  PropertyGraph) ? (Filtersegment) object : null;
 		filter.setId(this.getId());
 		return filter;
 	}
