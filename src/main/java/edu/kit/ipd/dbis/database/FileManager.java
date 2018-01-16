@@ -1,6 +1,13 @@
 package edu.kit.ipd.dbis.database;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 public class FileManager implements Connector {
 
@@ -24,18 +31,27 @@ public class FileManager implements Connector {
 
 	@Override
 	public void saveGraphDatabase(String directory, GraphDatabase database) throws Exception {
-		if (database.getDirectory() == null) {
-			SaveParser save = new SaveParser(database);
-			save.parse();
-
-		} else {
+		File file = new File(directory);
+		if (database.getDirectory() != null) {
 			throw new Exception();
+		} else if (file.exists()) {
+			throw new Exception();
+		} else {
+			Parser save = new SaveParser(database);
+			save.parse();
+			Files.write(Paths.get(directory), save.getInformation().getBytes());
 		}
 	}
 
 	@Override
 	public GraphDatabase loadGraphDatabase(String directory) throws Exception {
-		return null;
+		FileReader file = new FileReader(directory);
+		BufferedReader reader = new BufferedReader(file);
+		Parser load = new LoadParser(reader.readLine());
+		load.parse();
+		file.close();
+		reader.close();
+		return load.getDatabase();
 	}
 
 	@Override
