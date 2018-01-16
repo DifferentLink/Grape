@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
+import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
@@ -37,6 +38,7 @@ public class MenuUI extends GUIMenu {
 		generateGraphs.addActionListener(new GenerateGraphAction(language, theme));
 		JMenuItem emptyGraph = new JMenuItem(language.getString("emptyGraph"));
 		JMenuItem readBFSCode = new JMenuItem(language.getString("readBFSCode"));
+		readBFSCode.addActionListener(new ReadBFSCodeAction(language, theme));
 		JMenuItem Undo = new JMenuItem(language.getString("undo"));
 		JMenuItem Redo = new JMenuItem(language.getString("redo"));
 		edit.add(generateGraphs);
@@ -76,4 +78,22 @@ public class MenuUI extends GUIMenu {
 			generateGraphUI.setVisible(true);
 		}
 	}
+
+	private static class ReadBFSCodeAction implements ActionListener {
+
+		ResourceBundle language;
+		Theme theme;
+
+		public ReadBFSCodeAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			JFrame readBFSCodeUI = new ReadBFSCodeUI(language, theme);
+			readBFSCodeUI.setVisible(true);
+		}
+	}
+
 }
