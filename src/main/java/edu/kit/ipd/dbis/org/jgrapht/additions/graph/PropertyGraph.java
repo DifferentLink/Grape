@@ -66,4 +66,6 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	public Integer getNumberOfEdges() {
 		return null;
 	}
+
+	public Set<Property> getProperties() {return this.properties; }
 }
