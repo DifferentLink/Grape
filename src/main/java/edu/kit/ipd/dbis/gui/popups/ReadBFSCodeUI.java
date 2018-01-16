@@ -7,7 +7,6 @@ package edu.kit.ipd.dbis.gui.popups;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ResourceBundle;
 
 public class ReadBFSCodeUI extends JFrame{
