@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -56,7 +58,7 @@ public class FileManager implements Connector {
 
 	@Override
 	public void deleteGraphDatabase(GraphDatabase database) {
-
+		//TODO: implementieren?
 	}
 
 	/**
@@ -65,8 +67,15 @@ public class FileManager implements Connector {
 	 * @param name
 	 * @return
 	 */
-	private boolean tableExists(Connection connection, String name) {
-		return true;
+	private boolean tableExists(Connection connection, String name) throws Exception {
+		DatabaseMetaData meta = connection.getMetaData();
+		ResultSet resultSet = meta.getTables(null, null, null, null);
+		while (resultSet.next()) {
+			if (resultSet.getString(3).equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
