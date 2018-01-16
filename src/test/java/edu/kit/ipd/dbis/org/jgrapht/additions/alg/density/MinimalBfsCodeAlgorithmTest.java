@@ -13,8 +13,7 @@ public class MinimalBfsCodeAlgorithmTest {
 
 	@Test
 	public void getBfsCode() {
-		EdgeFactory ef = new ClassBasedEdgeFactory(DefaultEdge.class);
-		PropertyGraph graph = new PropertyGraph(ef, false);
+		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
 		graph.addVertex("c");

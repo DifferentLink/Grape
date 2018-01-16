@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
-import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 
 import java.util.Set;
@@ -34,8 +33,7 @@ public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerat
 		int cnt = 0;
 		while (target.size() < quantity) {
 			cnt++;
-			ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
-			PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+			PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>();
 			gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 
 			boolean isDuplicat = false;
