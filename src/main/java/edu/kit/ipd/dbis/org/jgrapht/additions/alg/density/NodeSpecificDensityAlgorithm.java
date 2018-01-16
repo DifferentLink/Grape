@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.NumberDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyType;
 
 import java.util.Objects;
 
@@ -29,9 +28,11 @@ public class NodeSpecificDensityAlgorithm<V, E> implements NumberDensityAlgorith
 
 	@Override
 	public double getDensity() {
-		BfsCodeAlgorithm.BfsCode bfsCode = (BfsCodeAlgorithm.BfsCode) graph.getProperty(PropertyType.BFSCODE).getValue();
-		double numberOfBackwardEdges = bfsCode.getNumberOfBackwardEdges();
-		int numEdges = graph.edgeSet().size();
-		return numberOfBackwardEdges / numEdges;
+		// TODO: implement me
+		// BfsCodeAlgorithm.BfsCode bfsCode = (BfsCodeAlgorithm.BfsCode) graph.getProperty(PropertyType.BFSCODE).getValue();
+		// double numberOfBackwardEdges = bfsCode.getNumberOfBackwardEdges();
+		// int numEdges = graph.edgeSet().size();
+		// return numberOfBackwardEdges / numEdges;
+		return 0.0;
 	}
 }
