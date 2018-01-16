@@ -1,6 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
-import org.jgrapht.EdgeFactory;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
+import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -16,12 +16,10 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	private Set<Property> properties;
 
 	/**
-	 *
-	 * @param ef
-	 * @param weighted
+	 * Standard constructor
 	 */
-	public PropertyGraph(EdgeFactory ef, boolean weighted) {
-		super(ef, weighted);
+	public PropertyGraph() {
+		super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false);
 		this.properties = PropertyFactory.createAllProperties();
 	}
 
