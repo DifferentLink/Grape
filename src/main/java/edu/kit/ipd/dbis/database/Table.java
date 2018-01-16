@@ -27,7 +27,7 @@ public abstract class Table {
 	 * @param password
 	 * @param name
 	 */
-	public Table(String url, String user, String password, String name) {
+	public Table(String url, String user, String password, String name) throws Exception {
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -85,7 +85,7 @@ public abstract class Table {
 	 * @param id
 	 * @return
 	 */
-	public abstract Serializable getContent(int id);
+	public abstract Serializable getContent(int id) throws Exception;
 
 	public abstract Set<Serializable> getContent() throws Exception;
 

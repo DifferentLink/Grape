@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -46,7 +47,7 @@ public class GraphTable extends Table {
 		String sql = "SELECT graph FROM " + this.name;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
-		Set<PropertyGraph> graphs = new Set<>();
+		Set<PropertyGraph> graphs = new HashSet<>();
 		ByteArrayInputStream byteInput;
 		ObjectInputStream objectInput;
 		while (result.next()) {
