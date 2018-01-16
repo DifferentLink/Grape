@@ -6,33 +6,32 @@ import org.jgrapht.Graph;
 import java.util.Iterator;
 
 /**
- * Determines the average degree of all nodes
+ * Finds the smallest degree of all nodes
  * in a graph.
  * @param <V>
  */
-public class AverageDegreeFinder<V> implements DegreeAlgorithm {
+public class MinDegreeFinder<V> implements DegreeAlgorithm {
 	private Graph graph;
 
 	/**
-	 * standard constructor
+	 * Standard constructor
 	 * @param graph target graph
 	 */
-	public AverageDegreeFinder(Graph graph) {
+	public MinDegreeFinder(Graph graph) {
 		this.graph = graph;
 	}
 
 	@Override
-	public Double getDegree() {
+	public Integer getDegree() {
 		Iterator it = this.graph.vertexSet().iterator();
-		double sum = 0;
-		int number = 0;
+		int minDegree = Integer.MAX_VALUE;
+		int tmp = 0;
 		while (it.hasNext()) {
-			sum += this.graph.degreeOf(it.next());
-			number++;
+			tmp = this.graph.degreeOf(it.next());
+			if (tmp < minDegree) {
+				minDegree = tmp;
+			}
 		}
-		if (number == 0) {
-			return 0.0;
-		}
-		return sum / number;
+		return minDegree;
 	}
 }

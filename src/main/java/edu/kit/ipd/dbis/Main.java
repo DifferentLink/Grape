@@ -1,15 +1,15 @@
 package edu.kit.ipd.dbis;
 
-
-import edu.kit.ipd.dbis.Controller.Filter.Filtergroup;
-import edu.kit.ipd.dbis.Controller.Filter.Filtermanagement;
-
+/**
+ * Grape's main class.
+ */
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        Filtermanagement manager = new Filtermanagement();
-        Filtergroup myGroup = new Filtergroup("test", true, 1);
-        manager.addFiltergroup(myGroup);
+    /**
+     * Grape's main method.
+     * @param args arguments provided when run using the command line.
+     */
+    public static void main(String[] args) {
+        System.out.println("Hello!");
     }
-
 }

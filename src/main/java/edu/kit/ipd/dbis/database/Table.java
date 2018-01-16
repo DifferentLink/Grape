@@ -1,8 +1,16 @@
 package edu.kit.ipd.dbis.database;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public abstract class Table {
 
@@ -19,11 +27,12 @@ public abstract class Table {
 	 * @param password
 	 * @param name
 	 */
-	public Table(String url, String user, String password, String name) {
+	public Table(String url, String user, String password, String name) throws Exception {
 		this.url = url;
 		this.user = user;
 		this.password = password;
 		this.name = name;
+		this.createTable();
 	}
 
 	/**
@@ -64,8 +73,11 @@ public abstract class Table {
 	 *
 	 * @param object
 	 */
-	public void insert(Serializable object) throws Exception {
-
+	public byte[] objectToByteArray(Serializable object) throws Exception {
+		ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+		ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
+		objectOutput.writeObject(object);
+		return byteOutput.toByteArray();
 	}
 
 	/**
@@ -73,13 +85,15 @@ public abstract class Table {
 	 * @param id
 	 * @return
 	 */
-	public abstract Serializable getContent(int id);
+	public abstract Serializable getContent(int id) throws Exception;
+
+	public abstract Set<Serializable> getContent() throws Exception;
 
 	/**
 	 *
 	 * @param object
 	 */
-	public abstract void insertColumns(Serializable object);
+	public abstract void insert(Serializable object) throws Exception;
 
 	/**
 	 *
@@ -88,5 +102,6 @@ public abstract class Table {
 	 */
 	protected abstract Serializable getInstanceOf(Serializable object) throws Exception;
 
+	protected abstract void createTable() throws Exception;
 
 }

@@ -1,11 +1,5 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,47 +10,19 @@ public class Filtermanagement {
     private List<Filtergroup> availableFilterGroups;
     private List<Filter> availableFilter;
 
-    public Filtermanagement() {
-        availableFilterGroups = new ArrayList<>();
-        availableFilter = new ArrayList<>();
-    }
-
-    public static Connection getConnection() throws java.sql.SQLException, java.lang.ClassNotFoundException {
-        String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/world";
-        String username = "Collin Lorbeer";
-        String password = "zwei2flaschen";
-        Class.forName(driver);
-        Connection connection = DriverManager.getConnection(url, username, password);
-        System.out.println("Connected.");
-        return connection;
-    }
-
-    private static int addFilterGroupToDB(Filtergroup filtergroup) throws java.sql.SQLException, java.lang.ClassNotFoundException {
-        int n = 0;
-        Connection conn = getConnection();
-        PreparedStatement create = conn.prepareStatement(
-                "CREATE TABLE IF NOT EXISTS graphs (id int NOT NULL AUTO_INCREMENT, filtergroup Filtergroup, PRIMARY KEY(id))");
-        create.executeUpdate();
-        PreparedStatement post = conn.prepareStatement("INSERT INTO graphs (filtergroup) VALUES (filtergroup)");
-        post.executeUpdate();
-        return n;
-    }
-
     /**
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
      * @param filtergroup filtersegment which should be added
      */
-    public void addFiltergroup(Filtergroup filtergroup) throws java.sql.SQLException, java.lang.ClassNotFoundException {
+    private void addFilterGroup(Filtergroup filtergroup) {
         availableFilterGroups.add(filtergroup);
-        Filtermanagement.addFilterGroupToDB(filtergroup);
     }
 
     /**
      * adds a filter to the list availableFilter of class Filtermanagement
      * @param filter filtersegment which should be added
      */
-    public void addFilter(Filter filter) {
+    private void addFilter(Filter filter) {
         availableFilter.add(filter);
     }
 
@@ -157,11 +123,9 @@ public class Filtermanagement {
      * @param id unique identifier of the new filterobject
      * @throws InvalidInputException this exception is thrown if the input string
      * does not code a valid filter
-     * @throws DoubledIdentifierException this exception is thrown if there is already
      * a filter with same identifier
      */
-    public void checkFilterInput(String input, int id) throws DoubledIdentifierException,
-            InvalidInputException {
+    public void checkFilterInput(String input, int id) throws InvalidInputException {
 
     }
 
