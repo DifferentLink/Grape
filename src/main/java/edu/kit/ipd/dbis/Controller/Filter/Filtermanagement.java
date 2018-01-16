@@ -27,27 +27,32 @@ public class Filtermanagement {
      * adds a filter to the list availableFilter of class Filtermanagement
      * @param filter filtersegment which should be added
      */
-    private void addFilter(Filter filter) {
+    private int addFilter(Filter filter) throws Exception {
+        database.addFilter(filter);
         availableFilter.add(filter);
+        return filter.getID();
     }
 
     /**
      * removes a filtersegment out of the list of class Filtermanagement
      * @param id unique identifier of the filtersegment which should be removed
      */
-    public void removeFiltersegment(int id) {
+    public void removeFiltersegment(int id) throws Exception {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 availableFilter.remove(element);
+                database.deleteFilter(id);
                 return;
             }
         }
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 availableFilterGroups.remove(element);
+                database.deleteFilter(id);
                 return;
             }
             element.removeFilter(id);
+            database.repleaceFilter(id, element);
         }
     }
 
@@ -57,20 +62,25 @@ public class Filtermanagement {
      * @param id unique identifier of the filtersegment which should be enabled
 
      */
-    public void activate(int id) {
+    public void activate(int id) throws Exception {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 element.activate();
+                database.repleaceFilter(id, element);
                 return;
             }
         }
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 element.activate();
+                database.repleaceFilter(id, element);
+                return;
             }
             for (Filter currentFilter: element.availableFilter) {
                 if (currentFilter.id == id) {
                     currentFilter.activate();
+                    //needs to be added to database
+                    return;
                 }
             }
         }
@@ -81,20 +91,25 @@ public class Filtermanagement {
      * ignored while filtering graphs
      * @param id unique identifier of the filtersegment which should be disabled
      */
-    public void deactivate(int id) {
+    public void deactivate(int id) throws Exception {
             for (Filter element: availableFilter) {
                 if (element.id == id) {
                     element.deactivate();
+                    database.repleaceFilter(id, element);
                     return;
                 }
             }
             for (Filtergroup currentElement: availableFilterGroups) {
                 if (currentElement.id == id) {
                     currentElement.deactivate();
+                    database.repleaceFilter(id, currentElement);
+                    return;
                 }
                 for (Filter currentFilter : currentElement.availableFilter) {
                     if (currentFilter.id == id) {
                         currentFilter.deactivate();
+                        //Aktualisieren in der Datenbank
+                        return;
                     }
                 }
             }
