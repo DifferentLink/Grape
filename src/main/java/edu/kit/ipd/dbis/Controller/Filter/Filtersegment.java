@@ -1,10 +1,12 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
+import java.io.Serializable;
+
 /**
  * class Filtersegment allows to handle objects of class Filter and Filtergroup as
  * same objects
  */
-public abstract class Filtersegment {
+public abstract class Filtersegment implements Serializable {
 
     protected String name;
     protected boolean isActivated;
