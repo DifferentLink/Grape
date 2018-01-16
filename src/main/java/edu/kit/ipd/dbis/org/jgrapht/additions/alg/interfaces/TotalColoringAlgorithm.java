@@ -1,13 +1,41 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
-public interface TotalColoringAlgorithm<V,E> {
+/**
+ * An algorithm which computes a graph total coloring.
+ *
+ * @param <V> the graph vertex type
+ * @param <E> the graph edge type
+ */
+public interface TotalColoringAlgorithm<V, E> {
+	/**
+	 * Get a total coloring.
+	 *
+	 * @return a total coloring
+	 */
 	TotalColoring getColoring();
 
-	public interface TotalColoring<V,E> {
+	/**
+	 * A total coloring.
+	 *
+	 * @param <V> the graph vertex type
+	 * @param <E> the graph edge type
+	 */
+	interface TotalColoring<V, E> {
+		/**
+		 * Get the number of colors.
+		 *
+		 * @return the number of colors
+		 */
 		int getNumberColors();
 	}
 
-	public class TotalColoringImplementation<V,E> implements TotalColoring {
+	/**
+	 * Default implementation of the total coloring interface
+	 *
+	 * @param <V> the graph vertex type
+	 * @param <E> the graph edge type
+	 */
+	class TotalColoringImplementation<V, E> implements TotalColoring<V, E> {
 
 		@Override
 		public int getNumberColors() {

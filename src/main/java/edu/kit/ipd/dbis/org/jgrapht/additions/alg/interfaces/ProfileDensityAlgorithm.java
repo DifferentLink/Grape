@@ -2,18 +2,52 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 import java.util.List;
 
-public interface ProfileDensityAlgorithm<V,E> {
+/**
+ * An algorithm that computes a profile of a graph.
+ *
+ * @param <V> the graph vertex type
+ * @param <E> the graph edge type
+ */
+public interface ProfileDensityAlgorithm<V, E> {
+	/**
+	 * Get the profile.
+	 *
+	 * @return the profile
+	 */
 	Profile getProfile();
 
-	public interface Profile<V,E> {
+	/**
+	 * A profile. The profile is list of bfs codes.
+	 *
+	 * @param <V> the graph vertex type
+	 * @param <E> the graph edge type
+	 */
+	interface Profile<V, E> {
+		/**
+		 * Get the profile.
+		 *
+		 * @return the profile
+		 */
 		List<BfsCodeAlgorithm.BfsCode> getProfile();
 	}
 
-	public class ProfileImpl<V,E> implements Profile {
+	/**
+	 * Default implementation of the profile interface.
+	 *
+	 * @param <V> the graph vertex type
+	 * @param <E> the graph edge type
+	 */
+	class ProfileImpl<V, E> implements Profile<V, E> {
+		private List<BfsCodeAlgorithm.BfsCode> profile;
+
+		public ProfileImpl(List<BfsCodeAlgorithm.BfsCode> profile) {
+			//TODO: clone profile
+			this.profile = profile;
+		}
 
 		@Override
 		public List<BfsCodeAlgorithm.BfsCode> getProfile() {
-			return null;
+			return this.profile;
 		}
 	}
 }
