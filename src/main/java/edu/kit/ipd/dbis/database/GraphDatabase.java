@@ -16,6 +16,7 @@ public class GraphDatabase implements DatabaseManager {
 	public GraphDatabase(GraphTable graphTable, FilterTable filterTable) {
 		this.graphTable = graphTable;
 		this.filterTable = filterTable;
+		this.directory = null;
 	}
 
 	/**
@@ -32,6 +33,10 @@ public class GraphDatabase implements DatabaseManager {
 	 */
 	public FilterTable getFilterTable() {
 		return this.filterTable;
+	}
+
+	public String getDirectory() {
+		return this.directory;
 	}
 
 	/**

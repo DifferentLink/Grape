@@ -13,12 +13,24 @@ public class FileManager implements Connector {
 
 	@Override
 	public GraphDatabase createGraphDatabase(String url, String user, String password, String name) throws Exception {
-		return null;
+		Connection connection = getConnection(url, user, password);
+		if (tableExists(connection, name)) {
+			throw new Exception();
+		}
+		FilterTable filterTable = new FilterTable(url, user, password, name);
+		GraphTable graphTable = new GraphTable(url, user, password, getValidFilterTableName(connection, name));
+		return new GraphDatabase(graphTable, filterTable);
 	}
 
 	@Override
 	public void saveGraphDatabase(String directory, GraphDatabase database) throws Exception {
+		if (database.getDirectory() == null) {
+			SaveParser save = new SaveParser(database);
+			save.parse();
 
+		} else {
+			throw new Exception();
+		}
 	}
 
 	@Override
