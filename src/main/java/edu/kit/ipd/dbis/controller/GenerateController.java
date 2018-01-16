@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Controller;
+package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
@@ -50,8 +50,8 @@ public class GenerateController {
 	 * @param amount the number of graphs
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws Exception {
-		Set<PropertyGraph<Integer,Integer>> graphs = new HashSet<PropertyGraph<Integer,Integer>>();
-		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<PropertyGraph<Integer,Integer>>();
+		//generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
 	}
 

@@ -1,7 +1,8 @@
-package edu.kit.ipd.dbis.Controller;
+package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OutputController {
@@ -23,7 +24,21 @@ public class OutputController {
 	 * @return a list of PropertyGraph<V,E>.
 	 */
 	public List<PropertyGraph<Integer, Integer>> getFilteredAndSortedGraphs() {
-		return null;
+
+		List<PropertyGraph<Integer,Integer>> graphs = new ArrayList<PropertyGraph<Integer,Integer>>();
+
+		/*
+		Filtermanagement filter = new Filtermanagement();
+		TableRequest sortionRequest = new TableRequest(ID);
+
+		while(filter.hasNextValidGraph()) {
+			graphs.add(filter.getNextValidGraph());
+		}
+		// Liste sortieren
+		sortionRequest.sortDescending(graphs);
+		 */
+
+		return graphs;
 	}
 
 	/**

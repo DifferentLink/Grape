@@ -1,6 +1,10 @@
-package edu.kit.ipd.dbis.Controller;
+package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class CalculationController {
 
@@ -11,10 +15,11 @@ public class CalculationController {
 	//TODO: Singleton pattern
 	private static CalculationController calculation;
 
-	private CalculationController(){}
+	private CalculationController() {
+	}
 
 	public static CalculationController getInstance() {
-		if(calculation == null) {
+		if (calculation == null) {
 			calculation = new CalculationController();
 		}
 		return calculation;
@@ -33,15 +38,29 @@ public class CalculationController {
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
 	 */
-	private void calculateGraphProperties() {
+	private void calculateGraphProperties() throws Exception {
+		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<PropertyGraph<Integer, Integer>>();
+		//graphs = database.getUncalculatedGraphs();
 
+		// Trigger Graph calculation
+		for (PropertyGraph<Integer, Integer> graph : graphs) {
+			if (calculationStatus == true) {
+				graph.calculateRemainingProperties();
+				// Deleting graphs from list of not calculated graphs
+				//database.deleteGraphFromList(graph.getId());
+			} else {
+				return;
+			}
+		}
 	}
 
 	/**
 	 * @return the length of the graphlist of CalculationController.
 	 */
 	public int getNumberNotCalculatedGraphs() {
-		return 9999;
+		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<PropertyGraph<Integer, Integer>>();
+		//graphs = database.getUncalculatedGraphs();
+		return graphs.size();
 	}
 
 	/**
@@ -58,14 +77,15 @@ public class CalculationController {
 	 * pauses the method calculateGraphProperties().
 	 */
 	public void pauseCalculation() {
-
+		calculationStatus = false;
 	}
 
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public void continueCalculation() {
-
+	public void continueCalculation() throws Exception {
+		calculationStatus = true;
+		this.calculateGraphProperties();
 	}
 
 

@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Controller;
+package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.Connector;
 import edu.kit.ipd.dbis.database.FileManager;
