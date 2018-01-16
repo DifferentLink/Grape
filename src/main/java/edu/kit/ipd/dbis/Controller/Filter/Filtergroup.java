@@ -15,12 +15,10 @@ public class Filtergroup extends Filtersegment {
      * input)
      * @param isActivated true if the filter of this group are currently used to filter
      * graphs
-     * @param id unique identifier of the filter group
      */
-    Filtergroup(String name, boolean isActivated, int id) {
+    Filtergroup(String name, boolean isActivated) {
         this.name = name;
         this.isActivated = isActivated;
-        this.id = id;
     }
 
     /**
@@ -39,21 +37,4 @@ public class Filtergroup extends Filtersegment {
 
     }
 
-    /**
-     * helps to prevent a NullPointerException by checking if there is any filter left
-     * @return returns true if there is a filter which was not returned yet
-     */
-    boolean hasNextFilter() {
-        return false;
-    }
-
-    /**
-     * used to get all filter of a specific filtergroup
-     * @return returns a filter which was not returned yet
-     * @throws NullPointerException this exception is thrown if all filter of the specific
-     * group were already returned
-     */
-    Filter getNextFilter() throws NullPointerException {
-        throw new NullPointerException();
-    }
 }

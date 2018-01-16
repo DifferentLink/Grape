@@ -1,12 +1,14 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+
 /**
  * class which checks a specific attribute of a graph
  */
 public class BasicFilter extends Filter {
     private int minimalValue;
     private int maximalValue;
-    private Attribute attribute;
+    private Property property;
 
     /**
      * Constructor of class BasicFilter
@@ -20,7 +22,7 @@ public class BasicFilter extends Filter {
      * @param attribute attribute which should be checked by the filter
      */
     BasicFilter(String name, boolean isActivated, int maximalValue,
-    int minimalValue, Attribute attribute) {
+    int minimalValue, Property property) {
 
     }
 

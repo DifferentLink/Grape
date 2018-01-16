@@ -123,11 +123,9 @@ public class Filtermanagement {
      * @param id unique identifier of the new filterobject
      * @throws InvalidInputException this exception is thrown if the input string
      * does not code a valid filter
-     * @throws DoubledIdentifierException this exception is thrown if there is already
      * a filter with same identifier
      */
-    public void checkFilterInput(String input, int id) throws DoubledIdentifierException,
-            InvalidInputException {
+    public void checkFilterInput(String input, int id) throws InvalidInputException {
 
     }
 
