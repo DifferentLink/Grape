@@ -36,8 +36,9 @@ public class BulkRandomConnectedGraphGeneratorTest {
 
 		HashSet<PropertyGraph> target = new HashSet<>();
 		try {
-			bulkGen.generateBulk(target, 1000, 5, 5, 1, 1000);
+			bulkGen.generateBulk(target, 2000, 5, 5, 1, 1000);
 		} catch (IllegalArgumentException e) {
+			System.out.println(target.size());
 			Assert.assertTrue(target.size() == 21);
 		}
 	}
