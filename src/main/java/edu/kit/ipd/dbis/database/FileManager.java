@@ -33,7 +33,7 @@ public class FileManager implements Connector {
 		} else if (file.exists()) {
 			throw new Exception();
 		} else {
-			Parser save = new SaveParser(database);
+			SaveParser save = new SaveParser(database);
 			save.parse();
 			Files.write(Paths.get(directory), save.getInformation().getBytes());
 		}
@@ -43,11 +43,14 @@ public class FileManager implements Connector {
 	public GraphDatabase loadGraphDatabase(String directory) throws Exception {
 		FileReader file = new FileReader(directory);
 		BufferedReader reader = new BufferedReader(file);
-		Parser load = new LoadParser(reader.readLine());
-		load.parse();
+		LoadParser load = new LoadParser(reader.readLine());
 		file.close();
 		reader.close();
-		return load.getDatabase();
+
+		load.parse();
+		GraphDatabase database = load.getDatabase();
+		database.setDirectory(directory);
+		return database;
 	}
 
 	@Override
