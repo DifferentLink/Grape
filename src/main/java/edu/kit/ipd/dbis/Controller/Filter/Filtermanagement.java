@@ -160,13 +160,30 @@ public class Filtermanagement {
 
     }
 
-    /**
+    /* /**
      * used when initializing Grape or switching a database. The methode clears the current
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
      * Filtersegment): void for every Filter element of the new database
      * @param database new database which should be used in future
      */
-    /* public void switchDB(Database database) {
+    /*public void switchDB(Database database) {
 
     } */
+
+    public void parseFilterList() {
+        int arrayLenght = availableFilter.size() + availableFilterGroups.size();
+        String[][] stringArray = new String[7][arrayLenght];
+        int currentColumn = 0;
+        for (Filter element: availableFilter) {
+            if (element.getClass() == BasicFilter.class) {
+                stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
+                stringArray[1][currentColumn] = "+";
+                stringArray[2][currentColumn] = "0";
+                stringArray[3][currentColumn] = String.valueOf(element.getRelation1());
+                stringArray[4][currentColumn] = "0";
+                stringArray[5][currentColumn] = "+";
+                stringArray[6][currentColumn] = String.valueOf(element.getValue1());
+            }
+        }
+    }
 }

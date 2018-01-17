@@ -15,7 +15,7 @@ public abstract class Filter extends Filtersegment {
      * getter of attribute value1
      * @return integer value of attribute value1
      */
-    public int getValue() {
+    public int getValue1() {
         return value1;
     }
 
@@ -31,7 +31,7 @@ public abstract class Filter extends Filtersegment {
      * getter of attribute property1
      * @return value of attribute property1
      */
-    public Property getProperty() {
+    public Property getProperty1() {
         return property1;
     }
 
