@@ -95,8 +95,16 @@ public class FileManager implements Connector {
 	 * @param name
 	 * @return
 	 */
-	private String getValidFilterTableName(Connection connection, String name) {
-		return null;
+	private String getValidFilterTableName(Connection connection, String name) throws Exception {
+		String filterTable = name + "Filters";
+		String s = filterTable;
+		int i = 0;
+
+		while (tableExists(connection, s)) {
+			s  = filterTable + i;
+			i++;
+		}
+		return s;
 	}
 
 }
