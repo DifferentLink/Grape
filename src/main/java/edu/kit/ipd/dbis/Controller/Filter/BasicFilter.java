@@ -6,8 +6,8 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
  * class which checks a specific attribute of a graph
  */
 public class BasicFilter extends Filter {
-    private int minimalValue;
-    private int maximalValue;
+    private int value;
+    private Relation relation;
     private Property property;
 
     /**
@@ -15,13 +15,13 @@ public class BasicFilter extends Filter {
      * @param name name of the BasicFilter (the name should be identical to the user
      * input)
      * @param isActivated boolean which shows if the specific filter is activated
-     * @param maximalValue argest value which an attribute of a graph can have to
+     * @param value largest or smallest value which an attribute of a graph can have to
      * meet the criteria of the filter
-     * @param minimalValue smallest value which an attribute of a graph can have to
-     * meet the criteria of the filter
+     * @param relation describes the relation between the property and the value
+     * @param property property the current filter inspects
      */
-    BasicFilter(String name, boolean isActivated, int maximalValue,
-    int minimalValue, Property property) {
+    BasicFilter(String name, boolean isActivated, int value,
+                Relation relation, Property property) {
 
     }
 
