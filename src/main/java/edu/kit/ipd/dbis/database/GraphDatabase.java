@@ -150,5 +150,4 @@ public class GraphDatabase implements DatabaseManager {
 		return true;
 	}
 
-
 }
