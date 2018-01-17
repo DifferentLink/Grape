@@ -35,9 +35,9 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 * Determine the BFS-Code starting
 	 * from the specified start node.
 	 * @param startNode
-	 * @return
+	 * @return the local bfs code
 	 */
-	public BfsCode getLocalBfsCode(PropertyGraph graph, V startNode) {
+	public BfsCodeImpl getLocalBfsCode(PropertyGraph graph, V startNode) {
 		int nextNode = 2;
 		int nodeCnt = 0; //Von welchem Knoten berechnet man grade Permutation (index im perm Array)
 		Map<Integer,V> bfsIds = new HashMap<>();
@@ -128,8 +128,27 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 * @param index start of Bfs -> if index = 4 -> starts with edges 14,24,34,15,...
 	 * @return
 	 */
-	private int[] calculateBFS(PropertyGraph graph, V[] permutation, int index) {
-		return null;
+	public int[] calculateBFS(PropertyGraph graph, V[] permutation, int index) {
+		int[] result = new int[graph.edgeSet().size() * 3];
+		int cnt = 0;
+		for (int i = 2; i <= graph.vertexSet().size(); i++) {
+			boolean backward = false;
+			for (int j = 1; j < i; j++) {
+				if (graph.containsEdge(permutation[i - 1], permutation[j - 1]) ||
+						graph.containsEdge(permutation[j - 1], permutation[i - 1])) {
+					if(backward) {
+						result[cnt] = -1;
+					} else {
+						result[cnt] = 1;
+						backward = true;
+					}
+					result[cnt + 1] = j;
+					result[cnt + 2] = i;
+					cnt = cnt + 3;
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -137,7 +156,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 * @param list
 	 * @return
 	 */
-	private Set<V[]> getPermutations(List<V> list) {
+	public Set<V[]> getPermutations(List<V> list) {
 		return null;
 	}
 

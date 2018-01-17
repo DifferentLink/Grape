@@ -15,19 +15,58 @@ import static org.junit.Assert.*;
 public class MinimalBfsCodeAlgorithmTest {
 
 	@Test
-	public void getBfsCode() {
+	public void getlocalBfsCode() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
 		graph.addVertex("c");
 		graph.addVertex("d");
-		graph.addEdge("a", "b");
-		graph.addEdge("a", "c");
-		graph.addEdge("b", "c");
-		graph.addEdge("b", "d");
-		graph.addEdge("c", "d");
+		graph.addVertex("e");
+		graph.addVertex("f");
+		graph.addVertex("g");
+		graph.addEdge("d", "a");
+		graph.addEdge("d", "e");
+		graph.addEdge("d", "b");
+		graph.addEdge("a", "f");
+		graph.addEdge("e", "f");
+		graph.addEdge("e", "b");
+		graph.addEdge("e", "g");
+		graph.addEdge("e", "c");
+		graph.addEdge("g", "c");
 
-		BfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
-		assertArrayEquals(new int[] {1,1,2,1,1,3,-1,2,3,1,1,4,-1,2,4}, alg.getBfsCode(graph).getCode());
+		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
+		assertArrayEquals(new int[] {1,1,2,1,1,3,-1,2,3,1,1,4,1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7}, alg.getLocalBfsCode(graph, "d").getCode());
+	}
+
+	@Test
+	public void bfsCodeTest() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addVertex("e");
+		graph.addVertex("f");
+		graph.addVertex("g");
+		graph.addEdge("d", "a");
+		graph.addEdge("d", "e");
+		graph.addEdge("d", "b");
+		graph.addEdge("a", "f");
+		graph.addEdge("e", "f");
+		graph.addEdge("e", "b");
+		graph.addEdge("e", "g");
+		graph.addEdge("e", "c");
+		graph.addEdge("g", "c");
+		graph.addEdge("g", "a");
+
+		String[] perm = {"d", "e", "b", "a", "g", "f", "c"};
+		System.out.println(graph.edgeSet().size() + "  === " + perm.length);
+		MinimalBfsCodeAlgorithm<String, DefaultEdge> alg = new MinimalBfsCodeAlgorithm<>();
+		int[] result = alg.calculateBFS(graph, perm, 1);
+		System.out.print("[");
+		for (int i = 0; i < result.length; i++) {
+			System.out.print(result[i] + ", ");
+		}
+		System.out.println("]");
 	}
 }
