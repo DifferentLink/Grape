@@ -3,11 +3,7 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  The minimal bfs code algorithm.
@@ -26,14 +22,12 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		BfsCode bestCode = new BfsCodeImpl(worstCode);
 
 		for (Object v : graph.vertexSet()) {
-			// BfsCode localCode = this.getLocalBfsCode(graph, (V) v);
+			 BfsCode localCode = this.getLocalBfsCode(graph, (V) v);
 			// TODO: create Profile object and add to graph
-			//if (localCode.compareTo(bestCode) < 0) {
-			//	bestCode = localCode;
-			//}
+			if (localCode.compareTo(bestCode) < 0) {
+				bestCode = localCode;
+			}
 		}
-
-
 		return bestCode;
 	}
 
@@ -44,63 +38,76 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 * @return
 	 */
 	public BfsCode getLocalBfsCode(PropertyGraph graph, V startNode) {
-		int nodeCounter = 1;
+		int nextNode = 2;
+		int nodeCnt = 0; //Von welchem Knoten berechnet man grade Permutation (index im perm Array)
+		Map<Integer,V> bfsIds = new HashMap<>();
+		bfsIds.put(1, startNode);
+		Set<V> startNodes = new HashSet<>();
+		startNodes.add(startNode);
 
-		Map<V,Integer> bfsIds = new HashMap<>();
-		bfsIds.put(startNode, 1);
+		List<V[]> startPermutations = new LinkedList<>();
+		Object[] start = {startNode};
+		startPermutations.add((V[]) start);
+		//V actualNode = startNode;
 
-		V actualNode = startNode;
+		List<V[]> bestPermutationsEnd = new ArrayList<>();
 
-		while(nodeCounter < graph.vertexSet().size() && bfsIds.size() < graph.vertexSet().size()) {
+		while(nodeCnt <  (graph.vertexSet().size() - 1) && bfsIds.size() < graph.vertexSet().size()) {
+			List<V[]> nextPerms = new LinkedList<>();
+			for(V[] perm : startPermutations) {
 
-			List<V> adjacentNotCheckedNodes = new ArrayList<>();
-			//computes the adjacent nodes that are not checked yet
-			for (Object e : graph.outgoingEdgesOf(actualNode)) {
-				Object adjacentNode1 = graph.getEdgeTarget(e);
-				Object adjacentNode2 = graph.getEdgeSource(e);
-				if (!bfsIds.containsValue(adjacentNode1)) {
-					adjacentNotCheckedNodes.add((V) adjacentNode1);
+				List<V> adjacentNotCheckedNodes = new ArrayList<>();
+				//computes the adjacent nodes that are not checked yet
+				for (Object e : graph.outgoingEdgesOf(perm[nodeCnt])) {
+					Object adjacentNode1 = graph.getEdgeTarget(e);
+					Object adjacentNode2 = graph.getEdgeSource(e);
+					if (adjacentNode1 != perm[nodeCnt]) {
+						adjacentNotCheckedNodes.add((V) adjacentNode1);
+					}
+					if (adjacentNode2 != perm[nodeCnt]) {
+						adjacentNotCheckedNodes.add((V) adjacentNode2);
+					}
 				}
-				if (!bfsIds.containsValue(adjacentNode2)) {
-					adjacentNotCheckedNodes.add((V) adjacentNode2);
+
+				List<V[]> bestPermutations = new ArrayList<>();
+
+				int[] bestCode = new int[3 * graph.edgeSet().size()];
+				for (int i : bestCode) {
+					i = Integer.MAX_VALUE;
 				}
+				//calculate bfs code for the subgraph of adjacentNodes + nodes from bfsIds;
+				Set<V[]> allPermutations = getPermutations(adjacentNotCheckedNodes);
+				for (V[] p : allPermutations) {
+					Object[] completePerm = new Object[perm.length + p.length];
+					for (int i = 0; i < completePerm.length; i++) {
+						if (i < perm.length) {
+							completePerm[i] = perm[i];
+						} else {
+							completePerm[i] = p[i - perm.length];
+						}
+					}
+					int[] bfsCode = calculateBFS(graph, (V[]) completePerm, perm.length + 1); //calculate BFS code
+					if (compareLocal(bfsCode, bestCode) == 1) {
+						bestCode = bfsCode;
+						bestPermutations.clear();
+						bestPermutations.add(p);
+					} else if (compareLocal(bfsCode, bestCode) == 0) {
+						bestPermutations.add(p);
+					}
+				}
+				for (V[] p : bestPermutations) {
+					nextPerms.add(p);
+				}
+				bestPermutationsEnd = bestPermutations;
+				//jetzt hat man die besten Permutationen in einer Liste "bestPermutations"
 			}
-	/**
-			List<List<V>> bestPermutations = new ArrayList<>();
-			int[] bestCode = new int[3 * graph.edgeSet().size()];
-			for (int i : bestCode) {
-				i = Integer.MAX_VALUE;
-			}
-			//calculate bfs code for the subgraph of adjacentNodes + nodes from bfsIds;
-			for (List<V> perm : getPermutations(adjacentNodes)) {
-				//new map for subgraph
-				Map<V, Integer> subgraphMap = new HashMap<>();
-				subgraphMap.putAll(bfsIds);
-				for(int i = 0; i < perm.size(); i++) {
-					subgraphMap.put(perm.get(i), i + 1 + nodeCounter);
-				}
-				int[] bfsCode = calculateBFS(graph, subgraphMap);
-				if (compareLocal(bfsCode, bestCode) == 1) {
-					bestCode = bfsCode;
-					bestPermutations.clear();
-					bestPermutations.add(perm);
-				} else if (compareLocal(bfsCode, bestCode) == 0) {
-					bestPermutations.add(perm);
-				}
-			}
-
-			for (List<V> bestperm : bestPermutations) {
-				Map<V, Integer> subgraphMap = new HashMap<>();
-				subgraphMap.putAll(bfsIds);
-				for(int i = 0; i < bestperm.size(); i++) {
-					subgraphMap.put(bestperm.get(i), i + 1 + nodeCounter);
-				}
-
-			}
-			 */
+			nextNode++;
+			startPermutations = nextPerms;
 		}
-		return new BfsCodeImpl(calculateBFS(graph, bfsIds));
+
+		return new BfsCodeImpl(calculateBFS(graph, bestPermutationsEnd.get(0), 1));
 	}
+
 
 	private int compareLocal(int[] bfs1, int[] bfs2) {
 		for (int i = 0; i < Math.min(bfs1.length, bfs2.length); i++) {
@@ -114,12 +121,23 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		return Integer.compare(bfs1.length, bfs2.length);
 	}
 
-
-	private int[] calculateBFS(PropertyGraph graph, Map<V,Integer> bfsIds) {
+	/**
+	 *
+	 * @param graph the graph
+	 * @param permutation the permutation for the bfs code
+	 * @param index start of Bfs -> if index = 4 -> starts with edges 14,24,34,15,...
+	 * @return
+	 */
+	private int[] calculateBFS(PropertyGraph graph, V[] permutation, int index) {
 		return null;
 	}
 
-	private Set<List<V>> getPermutations(List<V> list) {
+	/**
+	 * calculates all permutations from the list
+	 * @param list
+	 * @return
+	 */
+	private Set<V[]> getPermutations(List<V> list) {
 		return null;
 	}
 
