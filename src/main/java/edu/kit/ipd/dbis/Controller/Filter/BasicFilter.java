@@ -25,6 +25,30 @@ public class BasicFilter extends Filter {
 
     }
 
+    /**
+     * getter of attribute value
+     * @return integer value of attribute value
+     */
+    public int getValue() {
+        return value;
+    }
+
+    /**
+     * getter of attribute relation
+     * @return value of attribute relation
+     */
+    public Relation getRelation() {
+        return relation;
+    }
+
+    /**
+     * getter of attribute property
+     * @return value of attribute property
+     */
+    public Property getProperty() {
+        return property;
+    }
+
     @Override
     boolean fulfillFilter(PropertyGraph graph) {
         return false;
