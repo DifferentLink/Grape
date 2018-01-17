@@ -179,7 +179,7 @@ public class Filtermanagement {
                 stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
                 stringArray[1][currentColumn] = "+";
                 stringArray[2][currentColumn] = "0";
-                stringArray[3][currentColumn] = String.valueOf(element.getRelation1());
+                stringArray[3][currentColumn] = String.valueOf(element.getRelation());
                 stringArray[4][currentColumn] = "0";
                 stringArray[5][currentColumn] = "+";
                 stringArray[6][currentColumn] = String.valueOf(element.getValue1());

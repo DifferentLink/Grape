@@ -7,9 +7,37 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
  */
 public abstract class Filter extends Filtersegment {
 
-    protected int value1;
-    protected Relation relation1;
     protected Property property1;
+    protected Operator operator1;
+    protected int value1;
+    protected Relation relation;
+    protected Property property2;
+    protected Operator operator2;
+    protected int value2;
+
+    /**
+     * getter of attribute operator2
+     * @return value of attribute operator2
+     */
+    public Operator getOperator2() {
+        return operator2;
+    }
+
+    /**
+     * getter of attribute property2
+     * @return value of attribute property1
+     */
+    public Property getProperty2() {
+        return property2;
+    }
+
+    /**
+     * getter of attribute operator1
+     * @return value of attribute operator1;
+     */
+    public Operator getOperator1() {
+        return operator1;
+    }
 
     /**
      * getter of attribute value1
@@ -20,11 +48,11 @@ public abstract class Filter extends Filtersegment {
     }
 
     /**
-     * getter of attribute relation1
-     * @return value of attribute relation1
+     * getter of attribute relation
+     * @return value of attribute relation
      */
-    public Relation getRelation1() {
-        return relation1;
+    public Relation getRelation() {
+        return relation;
     }
 
     /**

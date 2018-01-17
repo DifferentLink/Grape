@@ -5,14 +5,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 /**
  * class which connectes two objects of class BasicFilter to a new filter
  */
-public class ConnectedFilter {
-    Property property1;
-    Property property2;
-    Operator operator1;
-    Operator operator2;
-    int value1;
-    int value2;
-    Relation realation;
+public class ConnectedFilter extends Filter {
 
     /**
      * Constructor of class ConnectedFilter
@@ -30,6 +23,21 @@ public class ConnectedFilter {
                            Property property1, Property property2,
                            Operator operator1, Operator operator2,
                            int value1, int value2, Relation relation) {
+        this.name = name;
+        this.isActivated = isActivated;
+        this.property1 = property1;
+        this.property2 = property2;
+        this.operator1 = operator1;
+        this.operator2 = operator2;
+        this.value1 = value1;
+        this.value2 = value2;
+        this.relation = relation;
 
+
+    }
+
+    @Override
+    boolean fulfillFilter(PropertyGraph graph) {
+        return false;
     }
 }
