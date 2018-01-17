@@ -60,9 +60,8 @@ public class MinimalBfsCodeAlgorithmTest {
 		graph.addEdge("g", "a");
 
 		String[] perm = {"d", "e", "b", "a", "g", "f", "c"};
-		System.out.println(graph.edgeSet().size() + "  === " + perm.length);
 		MinimalBfsCodeAlgorithm<String, DefaultEdge> alg = new MinimalBfsCodeAlgorithm<>();
-		int[] result = alg.calculateBFS(graph, perm, 1);
+		int[] result = alg.calculateBFS(graph, perm, 5);
 		System.out.print("[");
 		for (int i = 0; i < result.length; i++) {
 			System.out.print(result[i] + ", ");

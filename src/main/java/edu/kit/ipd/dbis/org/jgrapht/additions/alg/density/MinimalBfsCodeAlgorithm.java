@@ -56,7 +56,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 			List<V[]> nextPerms = new LinkedList<>();
 			for(V[] perm : startPermutations) {
 
-				List<V> adjacentNotCheckedNodes = new ArrayList<>();
+				ArrayList<V> adjacentNotCheckedNodes = new ArrayList<>();
 				//computes the adjacent nodes that are not checked yet
 				for (Object e : graph.outgoingEdgesOf(perm[nodeCnt])) {
 					Object adjacentNode1 = graph.getEdgeTarget(e);
@@ -129,9 +129,15 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 * @return
 	 */
 	public int[] calculateBFS(PropertyGraph graph, V[] permutation, int index) {
-		int[] result = new int[graph.edgeSet().size() * 3];
+		if (index < 0) {
+			throw new IllegalArgumentException();
+		} else if (index >= graph.vertexSet().size()) {
+			return new int[0];
+		}
 		int cnt = 0;
-		for (int i = 2; i <= graph.vertexSet().size(); i++) {
+		int vertexSetSize = graph.vertexSet().size();
+		int[] result = new int[graph.edgeSet().size() * 3];
+		for (int i = index; i <= vertexSetSize; i++) {
 			boolean backward = false;
 			for (int j = 1; j < i; j++) {
 				if (graph.containsEdge(permutation[i - 1], permutation[j - 1]) ||
@@ -154,13 +160,18 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	/**
 	 * calculates all permutations from the list
 	 * @param list
-	 * @return
+	 * @return a set of all permutations
 	 */
-	public Set<V[]> getPermutations(List<V> list) {
-		return null;
-	}
+	public Set<V[]> getPermutations(ArrayList<V> list) {
+		Set<V[]> result = new HashSet<>();
+		int size = list.size();
+		Object[] start = new Object[size];
+		for (int i = 0; i < size; i++) {
+			start[i] = list.get(i);
+		}
+		result.add((V[]) start);
 
-	private int[][] getAdjacencyMatrix(PropertyGraph graph) {
-		return null;
+		
+		return result;
 	}
 }
