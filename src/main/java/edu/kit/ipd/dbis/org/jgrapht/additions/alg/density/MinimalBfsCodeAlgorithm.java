@@ -41,6 +41,10 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 */
 	public BfsCode getLocalBfsCode(PropertyGraph graph, V startNode, int nodeCounter, Map<V,Integer> bfsIds) {
 		nodeCounter++;
+		BfsCode target = new BfsCodeImpl(new int[0]);
+		if (nodeCounter >= graph.vertexSet().size()) {
+			return new BfsCodeImpl(calculateBFS(graph, bfsIds));
+		}
 		List<V> adjacentNodes = new ArrayList<>();
 		for (Object e : graph.outgoingEdgesOf(startNode)) {
 			if (!bfsIds.containsValue(graph.getEdgeTarget(e))) {
@@ -61,7 +65,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 			for(int i = 0; i < perm.size(); i++) {
 				subgraphMap.put(perm.get(i), i + 1 + nodeCounter);
 			}
-			int[] bfsCode = calculateBFS(subgraphMap);
+			int[] bfsCode = calculateBFS(graph, subgraphMap);
 			if (compareLocal(bfsCode, bestCode) == 1) {
 				bestCode = bfsCode;
 				bestPermutations.clear();
@@ -70,22 +74,21 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 				bestPermutations.add(perm);
 			}
 		}
+
 		for (List<V> bestperm : bestPermutations) {
 			Map<V, Integer> subgraphMap = new HashMap<>();
 			subgraphMap.putAll(bfsIds);
 			for(int i = 0; i < bestperm.size(); i++) {
 				subgraphMap.put(bestperm.get(i), i + 1 + nodeCounter);
 			}
-			//getLocalBfsCode(graph, subgraphMap., nodeCounter,subgraphMap);
+			if (bfsIds.size() >= graph.vertexSet().size()) {
+				return new BfsCodeImpl(calculateBFS(graph, subgraphMap));
+			}
+
+			target = getLocalBfsCode(graph, bestperm.get(0), nodeCounter,subgraphMap);
 		}
 
-
-
-
-
-
-
-		return null;
+		return target;
 	}
 
 	private int compareLocal(int[] bfs1, int[] bfs2) {
@@ -101,7 +104,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	}
 
 
-	private int[] calculateBFS(Map<V,Integer> bfsIds) {
+	private int[] calculateBFS(PropertyGraph graph, Map<V,Integer> bfsIds) {
 		return null;
 	}
 
