@@ -16,6 +16,14 @@ public abstract class Filter extends Filtersegment {
     protected int value2;
 
     /**
+     * getter of attribute value2
+     * @return value of attribute value2
+     */
+    public int getValue2() {
+        return value2;
+    }
+
+    /**
      * getter of attribute operator2
      * @return value of attribute operator2
      */

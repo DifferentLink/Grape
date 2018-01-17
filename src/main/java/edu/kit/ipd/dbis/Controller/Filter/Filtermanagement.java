@@ -183,6 +183,14 @@ public class Filtermanagement {
                 stringArray[4][currentColumn] = "0";
                 stringArray[5][currentColumn] = "+";
                 stringArray[6][currentColumn] = String.valueOf(element.getValue1());
+            } else if (element.getClass() == ConnectedFilter.class) {
+                stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
+                stringArray[1][currentColumn] = String.valueOf(element.getOperator1());
+                stringArray[2][currentColumn] = String.valueOf(element.getValue1());
+                stringArray[3][currentColumn] = String.valueOf(element.getRelation());
+                stringArray[4][currentColumn] = String.valueOf(element.getProperty2());
+                stringArray[5][currentColumn] = String.valueOf(element.getOperator2());
+                stringArray[6][currentColumn] = String.valueOf(element.getValue2());
             }
         }
     }
