@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.Controller.Filter;
 import edu.kit.ipd.dbis.database.GraphDatabase;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * class which communicates with other packages of Grpape
@@ -17,7 +18,7 @@ public class Filtermanagement {
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
      * @param filtergroup filtersegment which should be added
      */
-    private int addFilterGroup(Filtergroup filtergroup) throws Exception {
+    int addFilterGroup(Filtergroup filtergroup) throws Exception {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
         return filtergroup.getID();
@@ -27,7 +28,7 @@ public class Filtermanagement {
      * adds a filter to the list availableFilter of class Filtermanagement
      * @param filter filtersegment which should be added
      */
-    private int addFilter(Filter filter) throws Exception {
+    int addFilter(Filter filter) throws Exception {
         database.addFilter(filter);
         availableFilter.add(filter);
         return filter.getID();
@@ -160,15 +161,20 @@ public class Filtermanagement {
 
     }
 
-    /* /**
+    /**
      * used when initializing Grape or switching a database. The methode clears the current
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
      * Filtersegment): void for every Filter element of the new database
-     * @param database new database which should be used in future
      */
-    /*public void switchDB(Database database) {
-
-    } */
+    public void switchDB() throws Exception {
+        availableFilterGroups.clear();
+        availableFilter.clear();
+        Set<Filtersegment> activatedFilter = database.getActivatedFilters();
+        for (Filtersegment element: activatedFilter) {
+            if (element.getClass() == Filtergroup.class) {
+            }
+        }
+    }
 
     public void parseFilterList() {
         int arrayLenght = availableFilter.size() + availableFilterGroups.size();
