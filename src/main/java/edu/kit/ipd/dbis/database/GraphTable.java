@@ -39,7 +39,7 @@ public class GraphTable extends Table {
 		return null;
 	}
 
-	@Override
+
 	public Set<PropertyGraph> getContent() throws Exception {
 		Connection connection = this.getConnection();
 		String sql = "SELECT graph FROM " + this.name;
