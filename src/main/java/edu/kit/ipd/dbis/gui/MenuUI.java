@@ -20,11 +20,17 @@ public class MenuUI extends GUIMenu {
 
 		JMenu file = new JMenu(language.getString("file"));
 		JMenuItem newDatabase = new JMenuItem(language.getString("newDatabase"));
+		newDatabase.addActionListener(new NewDatabaseAction(language, theme));
 		JMenuItem openDatabase = new JMenuItem(language.getString("openDatabase"));
+		openDatabase.addActionListener(new OpenDatabaseAction(language, theme));
 		JMenuItem saveDatabase = new JMenuItem(language.getString("saveDatabase"));
+		saveDatabase.addActionListener(new SaveAction(language, theme));
 		JMenuItem saveSelection = new JMenuItem(language.getString("saveSelection"));
+		saveSelection.addActionListener(new SaveSelectionAction(language, theme));
 		JMenuItem importDatabase = new JMenuItem(language.getString("importDatabase"));
+		importDatabase.addActionListener(new ImportDatabaseAction(language, theme));
 		JMenuItem saveDatabaseAs = new JMenuItem(language.getString("saveDatabaseAs"));
+		saveDatabaseAs.addActionListener(new SaveAsAction(language, theme));
 		file.add(newDatabase);
 		file.add(openDatabase);
 		file.add(importDatabase);
@@ -64,8 +70,8 @@ public class MenuUI extends GUIMenu {
 
 	private static class GenerateGraphAction implements ActionListener {
 
-		ResourceBundle language;
-		Theme theme;
+		private final ResourceBundle language;
+		private final Theme theme;
 
 		public GenerateGraphAction(ResourceBundle language, Theme theme) {
 			this.language = language;
@@ -79,10 +85,10 @@ public class MenuUI extends GUIMenu {
 		}
 	}
 
-	private static class ReadBFSCodeAction implements ActionListener {
+	private class ReadBFSCodeAction implements ActionListener {
 
-		ResourceBundle language;
-		Theme theme;
+		private final ResourceBundle language;
+		private final Theme theme;
 
 		public ReadBFSCodeAction(ResourceBundle language, Theme theme) {
 			this.language = language;
@@ -93,6 +99,102 @@ public class MenuUI extends GUIMenu {
 		public void actionPerformed(ActionEvent actionEvent) {
 			JFrame readBFSCodeUI = new ReadBFSCodeUI(language, theme);
 			readBFSCodeUI.setVisible(true);
+		}
+	}
+
+	private class NewDatabaseAction implements ActionListener {
+
+		private final ResourceBundle language;
+		private final Theme theme;
+
+		public NewDatabaseAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+
+		}
+	}
+
+	private class OpenDatabaseAction implements ActionListener {
+
+		private final ResourceBundle language;
+		private final Theme theme;
+
+		public OpenDatabaseAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+
+		}
+	}
+
+	private class ImportDatabaseAction implements ActionListener {
+
+		private final ResourceBundle language;
+		private final Theme theme;
+
+		public ImportDatabaseAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+
+		}
+	}
+
+	private class SaveAction implements ActionListener {
+
+		private final ResourceBundle language;
+		private final Theme theme;
+
+		public SaveAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+
+		}
+	}
+
+	private class SaveAsAction implements ActionListener {
+
+		private final ResourceBundle language;
+		private final Theme theme;
+
+		public SaveAsAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+
+		}
+	}
+
+	private class SaveSelectionAction implements ActionListener {
+
+		private final ResourceBundle language;
+		private final Theme theme;
+
+		public SaveSelectionAction(ResourceBundle language, Theme theme) {
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+
 		}
 	}
 }
