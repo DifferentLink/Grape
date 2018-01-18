@@ -13,9 +13,12 @@ import java.awt.*;
 import java.util.ResourceBundle;
 
 public class FilterUI extends GUIElement {
+	private FilterManagement filterManagement;
 
 	public FilterUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
+
+		filterManagement = new FilterManagement();
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBackground(theme.backgroundColor);
@@ -33,9 +36,6 @@ public class FilterUI extends GUIElement {
 
 		this.add(filterMenu, BorderLayout.NORTH);
 
-		SimpleFilter emptyFilter = new SimpleFilter(language, theme);
-		this.add(emptyFilter, BorderLayout.CENTER);
-
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		buttons.setBackground(theme.backgroundColor);
@@ -48,5 +48,20 @@ public class FilterUI extends GUIElement {
 	@Override
 	public void update() {
 
+		for (FilterGroup filterGroup : filterManagement.getFilterGroups()) {
+			drawFilterGroup(filterGroup);
+		}
+
+		for (SimpleFilter simpleFilter : filterManagement.getSimpleFilter()) {
+			drawSimpleFilter(simpleFilter);
+		}
+	}
+
+	private JPanel drawSimpleFilter(SimpleFilter simpleFilter) {
+		return new JPanel();
+	}
+
+	private JPanel drawFilterGroup(FilterGroup filterGroup) {
+		return new JPanel();
 	}
 }
