@@ -11,9 +11,9 @@ import java.util.Set;
  */
 public class Filtermanagement {
 
-    private List<Filtergroup> availableFilterGroups;
-    private List<Filter> availableFilter;
-    private GraphDatabase database;
+    public List<Filtergroup> availableFilterGroups;
+    public List<Filter> availableFilter;
+    public GraphDatabase database;
 
     public Filtermanagement() {
         availableFilterGroups = new ArrayList<>();
