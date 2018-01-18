@@ -212,14 +212,16 @@ public class Filtermanagement {
                 stringArray[4][currentColumn] = "0";
                 stringArray[5][currentColumn] = "+";
                 stringArray[6][currentColumn] = String.valueOf(element.getValue1());
+                currentColumn++;
             } else if (element.getClass() == ConnectedFilter.class && element.isActivated) {
                 stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
-                stringArray[1][currentColumn] = String.valueOf(element.getOperator1());
+                stringArray[1][currentColumn] = Filtermanagement.transformFirstOperatorToString(element);
                 stringArray[2][currentColumn] = String.valueOf(element.getValue1());
-                stringArray[3][currentColumn] = String.valueOf(element.getRelation());
+                stringArray[3][currentColumn] = Filtermanagement.transformRelationToString(element);
                 stringArray[4][currentColumn] = String.valueOf(element.getProperty2());
-                stringArray[5][currentColumn] = String.valueOf(element.getOperator2());
+                stringArray[5][currentColumn] = Filtermanagement.transformSecondOperatorToString(element);
                 stringArray[6][currentColumn] = String.valueOf(element.getValue2());
+                currentColumn++;
             }
         }
         for (Filtergroup element: availableFilterGroups) {
@@ -233,14 +235,16 @@ public class Filtermanagement {
                         stringArray[4][currentColumn] = "0";
                         stringArray[5][currentColumn] = "+";
                         stringArray[6][currentColumn] = String.valueOf(groupElement.getValue1());
+                        currentColumn++;
                     } else if (groupElement.getClass() == ConnectedFilter.class && element.isActivated) {
                         stringArray[0][currentColumn] = String.valueOf(groupElement.getProperty1());
-                        stringArray[1][currentColumn] = String.valueOf(groupElement.getOperator1());
+                        stringArray[1][currentColumn] = Filtermanagement.transformFirstOperatorToString(groupElement);
                         stringArray[2][currentColumn] = String.valueOf(groupElement.getValue1());
-                        stringArray[3][currentColumn] = String.valueOf(groupElement.getRelation());
+                        stringArray[3][currentColumn] = Filtermanagement.transformRelationToString(groupElement);
                         stringArray[4][currentColumn] = String.valueOf(groupElement.getProperty2());
-                        stringArray[5][currentColumn] = String.valueOf(groupElement.getOperator2());
+                        stringArray[5][currentColumn] = Filtermanagement.transformSecondOperatorToString(groupElement);
                         stringArray[6][currentColumn] = String.valueOf(groupElement.getValue2());
+                        currentColumn++;
                     }
                 }
             }

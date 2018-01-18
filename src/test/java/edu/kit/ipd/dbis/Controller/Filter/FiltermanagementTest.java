@@ -133,7 +133,7 @@ public class FiltermanagementTest {
         Filter activeFilter = new BasicFilter("Filter", true, 1, Relation.EQUAL, myProperty, 3);
         Filter inactiveFilter = new BasicFilter("InactiveFilter", false, 1, Relation.EQUAL, myProperty, 4);
         Filter activeFilterInactiveGroup = new BasicFilter("ActiveFilterOfInactiveGroup", true, 5, Relation.EQUAL, myProperty, 5);
-        Filter activeFilterActiveGroup = new BasicFilter("ActiveFilterInactiveGroup", true, 1, Relation.EQUAL, myProperty, 6);
+        Filter activeFilterActiveGroup = new BasicFilter("ActiveFilterInactiveGroup", true, 6, Relation.LESSTHAN, myProperty, 6);
         manager.addFilterGroup(activeGroup);
         manager.addFilterGroup(inactiveGroup);
         manager.addFilter(activeFilter);
@@ -149,6 +149,14 @@ public class FiltermanagementTest {
         assert (resultString[4][0].equals("0"));
         assert (resultString[5][0].equals("+"));
         assert (resultString[6][0].equals("1"));
+
+        assert (resultString[0][1].equals(myProperty.toString()));
+        assert (resultString[1][1].equals("+"));
+        assert (resultString[2][1].equals("0"));
+        assert (resultString[3][1].equals("<"));
+        assert (resultString[4][1].equals("0"));
+        assert (resultString[5][1].equals("+"));
+        assert (resultString[6][1].equals("6"));
         for(int j = 0; j < 5; j++) {
 
         }
