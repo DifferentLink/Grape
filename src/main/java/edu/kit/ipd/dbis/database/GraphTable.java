@@ -6,10 +6,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 public class GraphTable extends Table {
@@ -101,8 +98,40 @@ public class GraphTable extends Table {
 	 *
 	 * @param table
 	 */
-	public void merge(GraphTable table) {
+	public void merge(GraphTable table) throws Exception {
+		Connection current = this.getConnection();
+		Connection other = table.getConnection();
 
+		if (this.isMergeableWith(table)) {
+			LinkedList<Integer> ids = table.getIds();
+			for (int i : ids) {
+				if (!this.graphExists(table.getContent(i))) {
+					PropertyGraph graph = table.getContent(i);
+					graph.setId(this.getId());
+					this.insert(graph);
+				}
+			}
+		} else {
+			throw new Exception();
+		}
+	}
+
+	private boolean isMergeableWith(GraphTable table) throws Exception {
+		Connection current = this.getConnection();
+		Connection other = table.getConnection();
+
+		String sql = "SHOW COLUMNS FROM ";
+		ResultSet currentResult = current.prepareStatement(sql + this.name).executeQuery();
+
+		while (currentResult.next()) {
+			ResultSet otherResult = other.prepareStatement(sql + table.getName()).executeQuery();
+			boolean found = false;
+			while ((otherResult.next()) && (!found)) {
+				found = (currentResult.toString().equals(otherResult.toString())) ? (true) : (false);
+			}
+			if (!found) return false;
+		}
+		return true;
 	}
 
 	/**
