@@ -45,7 +45,6 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 * @return the local bfs code
 	 */
 	public BfsCodeImpl getLocalBfsCode(PropertyGraph graph, V startNode) {
-		int nextNode = 2;
 		int nodeCnt = 0; //Von welchem Knoten berechnet man grade Permutation (index im perm Array)
 		Map<Integer,V> bfsIds = new HashMap<>();
 		bfsIds.put(1, startNode);
@@ -55,18 +54,16 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		List<V[]> startPermutations = new LinkedList<>();
 		Object[] start = {startNode};
 		startPermutations.add((V[]) start);
-		//V actualNode = startNode;
 
 		List<V[]> bestPermutationsEnd = new ArrayList<>();
 
-		//while(nodeCnt <  (graph.vertexSet().size() - 1) && bfsIds.size() < graph.vertexSet().size() && startPermutations.get(0).length < graph.vertexSet().size()) {
+
 		while(startPermutations.get(0).length < graph.vertexSet().size()) {
 			List<V[]> nextPerms = new LinkedList<>();
 			for(V[] perm : startPermutations) {
 
 				ArrayList<V> adjacentNotCheckedNodes = new ArrayList<>();
 				//computes the adjacent nodes that are not checked yet
-				System.out.println("nC: " + nodeCnt);
 
 				for (Object e : graph.outgoingEdgesOf(perm[nodeCnt])) {
 					Object adjacentNode1 = graph.getEdgeTarget(e);
@@ -77,11 +74,6 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 							if (perm[i] == adjacentNode1) {
 								checked = true;
 							}
-							/**
-							if ((i != nodeCnt)  && graph.containsEdge((V) adjacentNode1, perm[i])) {
-								checked = true;
-							}
-							 */
 						}
 						if (!checked) {
 							adjacentNotCheckedNodes.add((V) adjacentNode1);
@@ -92,28 +84,12 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 							if (perm[i] == adjacentNode1) {
 								checked = true;
 							}
-							/**
-							if ((i != nodeCnt) && graph.containsEdge((V) adjacentNode2, perm[i])) {
-								checked = true;
-							}
-							 */
 						}
 						if (!checked) {
 							adjacentNotCheckedNodes.add((V) adjacentNode2);
 						}
 					}
 				}
-				System.out.println("START PER:");
-				for (int i = 0; i < perm.length; i++) {
-					System.out.print(perm[i] + " ");
-				}
-				System.out.println();
-				System.out.println("adjacent not checked nodes: ");
-				for (V v: adjacentNotCheckedNodes) {
-					System.out.print(v + " ");
-				}
-				System.out.println();
-
 				List<V[]> bestPermutations = new ArrayList<>();
 
 				int[] bestCode = new int[3 * graph.edgeSet().size()];
@@ -135,21 +111,6 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 					int[] bfsCode = calculateBFS(graph, (V[]) completePerm, perm.length + 1); //calculate BFS code
 
 
-					System.out.println("permutation:");
-					for (int i = 0; i < p.length; i++) {
-						System.out.print(p[i] + " ");
-					}
-					System.out.println("");
-					System.out.println("Bfs");
-					for (int i = 0; i < bfsCode.length; i++) {
-						System.out.print(bfsCode[i] + " ");
-					}
-					System.out.println("bestCode");
-					for (int i = 0; i < bestCode.length; i++) {
-						System.out.print(bestCode[i] + " ");
-					}
-					System.out.println();
-					System.out.println(compareLocal(bfsCode, bestCode));
 
 					if (compareLocal(bfsCode, bestCode) == 1) {
 						bestCode = bfsCode;
@@ -171,33 +132,10 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 						bestPermutationsEnd = bestPermutations;
 					}
 				}
-
-
-
-
-				System.out.println("BestPerEnd:  ");
-				for (V[] p : bestPermutationsEnd) {
-					for (int i = 0; i < p.length; i++) {
-						System.out.print(p[i] + ", ");
-					}
-					System.out.println("    ;;;;    ");
-				}
 			}
-			nextNode++;
 			startPermutations = nextPerms;
-
-			System.out.println("Best:");
-			for (V[] p : bestPermutationsEnd) {
-				System.out.println("[");
-				for (int i = 0; i < p.length; i++) {
-					System.out.print(p[i] + ", ");
-				}
-			}
-			System.out.println("end");
 			nodeCnt++;
 		}
-		System.out.println("fertig");
-
 		return new BfsCodeImpl(calculateBFS(graph, bestPermutationsEnd.get(0), 1));
 	}
 
