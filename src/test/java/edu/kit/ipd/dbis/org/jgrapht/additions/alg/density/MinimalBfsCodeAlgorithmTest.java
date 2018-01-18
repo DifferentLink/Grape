@@ -6,6 +6,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class MinimalBfsCodeAlgorithmTest {
 		graph.addEdge("e", "g");
 		graph.addEdge("e", "c");
 		graph.addEdge("g", "c");
+		graph.addEdge("a", "g");
 		return graph;
 	}
 
@@ -50,11 +52,8 @@ public class MinimalBfsCodeAlgorithmTest {
 		String[] perm = {"d", "e", "b", "a", "g", "f", "c"};
 		MinimalBfsCodeAlgorithm<String, DefaultEdge> alg = new MinimalBfsCodeAlgorithm<>();
 		int[] result = alg.calculateBFS(graph, perm, 5);
-		System.out.print("[");
-		for (int i = 0; i < result.length; i++) {
-			System.out.print(result[i] + ", ");
-		}
-		System.out.println("]");
+		int[] result2 = {1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7};
+		Assert.assertTrue(alg.compareLocal(result, result2) == 0);
 	}
 
 	@Test
