@@ -23,7 +23,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	@Override
 	public BfsCode getBfsCode(PropertyGraph graph) {
 		int[] worstCode = new int[graph.edgeSet().size() * 3];
-		for (int i = 1; i < worstCode.length; i++) {
+		for (int i = 0; i < worstCode.length; i++) {
 			worstCode[i] = graph.vertexSet().size() + 1;
 		}
 		BfsCode bestCode = new BfsCodeImpl(worstCode);
@@ -31,7 +31,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		for (Object v : graph.vertexSet()) {
 			 BfsCode localCode = this.getLocalBfsCode(graph, (V) v);
 			// TODO: create Profile object and add to graph
-			if (localCode.compareTo(bestCode) < 0) {
+			if (localCode.compareTo(bestCode) == -1) {
 				bestCode = localCode;
 			}
 		}

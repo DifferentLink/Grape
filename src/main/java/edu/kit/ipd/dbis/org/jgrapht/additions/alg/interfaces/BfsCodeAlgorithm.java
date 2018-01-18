@@ -99,7 +99,7 @@ public interface BfsCodeAlgorithm<V, E> {
 		 */
 		@Override
 		public int compareTo(Object o) {
-			int[] b2 = ((BfsCode) o).getCode();
+			int[] b2 = ((BfsCodeImpl) o).getCode();
 			for (int i = 0; i < Math.min(this.code.length, b2.length); i++) {
 				if (this.code[i] < b2[i]) {
 					return -1;

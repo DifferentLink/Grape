@@ -57,6 +57,7 @@ public class MinimalBfsCodeAlgorithmTest {
 		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
 		assertArrayEquals(new int[] {1,1,2,1,1,3,-1,2,3,1,1,4,1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7}, alg.getLocalBfsCode(graph, "d").getCode());
 		assertArrayEquals(new int[] {1,1,2,1,1,3,1,1,4,1,2,5,-1,3,5,-1,4,5,1,2,6,-1,5,6,1,3,7,-1,5,7}, alg.getLocalBfsCode(graph, "a").getCode());
+		assertArrayEquals(new int[] {1,1,2,1,1,3,-1,2,3,1,2,4,1,2,5,-1,4,5,1,2,6,1,3,7,-1,4,7,-1,6,7}, alg.getLocalBfsCode(graph, "b").getCode());
 	}
 
 	@Test
@@ -67,6 +68,16 @@ public class MinimalBfsCodeAlgorithmTest {
 		int[] result = alg.calculateBFS(graph, perm, 5);
 		int[] result2 = {1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7};
 		Assert.assertTrue(alg.compareLocal(result, result2) == 0);
+	}
+
+	@Test
+	public void minimalBfsCodeTest() {
+		PropertyGraph graph = generateSimpleTestGraph2();
+		MinimalBfsCodeAlgorithm<String, DefaultEdge> alg = new MinimalBfsCodeAlgorithm<>();
+		int[] minimalBfsCode = alg.getBfsCode(graph).getCode();
+		int[] minCode = {1, 1, 2, 1, 1, 3, -1, 2, 3, 1, 1, 4, 1, 1, 5, -1, 4, 5, 1, 1, 6, 1, 2, 7, -1, 4, 7, -1, 6, 7};
+		BfsCodeAlgorithm.BfsCodeImpl result = new BfsCodeAlgorithm.BfsCodeImpl(minCode);
+		Assert.assertTrue(result.compareTo(new BfsCodeAlgorithm.BfsCodeImpl<>(minimalBfsCode)) == 0);
 	}
 
 	@Test
