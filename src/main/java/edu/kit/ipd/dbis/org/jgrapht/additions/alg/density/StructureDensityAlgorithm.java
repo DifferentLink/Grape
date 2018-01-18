@@ -30,7 +30,6 @@ public class StructureDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
 
 	@Override
 	public double getDensity() {
-		//TODO: implement me
-		return 0;
+		return 0.0;
 	}
 }
