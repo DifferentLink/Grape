@@ -2,52 +2,80 @@ package edu.kit.ipd.dbis.Controller.Filter;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * class which communicates with other packages of Grpape
  */
 public class Filtermanagement {
 
-    private List<Filtergroup> availableFilterGroups;
-    private List<Filter> availableFilter;
-    private GraphDatabase database;
+    public List<Filtergroup> availableFilterGroups;
+    public List<Filter> availableFilter;
+    public GraphDatabase database;
+
+    public Filtermanagement() {
+        availableFilterGroups = new ArrayList<>();
+        availableFilter = new ArrayList<>();
+    }
 
     /**
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
      * @param filtergroup filtersegment which should be added
      */
-    private int addFilterGroup(Filtergroup filtergroup) throws Exception {
+    void addFilterGroup(Filtergroup filtergroup) throws Exception {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
-        return filtergroup.getID();
     }
 
     /**
      * adds a filter to the list availableFilter of class Filtermanagement
      * @param filter filtersegment which should be added
      */
-    private void addFilter(Filter filter) {
+    void addFilter(Filter filter) throws Exception {
+        database.addFilter(filter);
         availableFilter.add(filter);
+    }
+
+    /**
+     * adds a filter to a specific filtergroup
+     * @param filter filter which should be added to a specific filtergroup
+     * @param groupID ID of the filtergroup
+     */
+    void addFilterToFiltergroup(Filter filter, int groupID) throws Exception {
+        for (Filtergroup element: availableFilterGroups) {
+            if (element.id == groupID) {
+                element.availableFilter.add(filter);
+                database.repleaceFilter(groupID, element);
+            }
+        }
     }
 
     /**
      * removes a filtersegment out of the list of class Filtermanagement
      * @param id unique identifier of the filtersegment which should be removed
      */
-    public void removeFiltersegment(int id) {
+    public void removeFiltersegment(int id) throws Exception {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 availableFilter.remove(element);
+                database.deleteFilter(id);
                 return;
             }
         }
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 availableFilterGroups.remove(element);
+                database.deleteFilter(id);
                 return;
             }
-            element.removeFilter(id);
+            for (Filter filterInGroup: element.availableFilter) {
+                if (filterInGroup.id == id) {
+                    element.availableFilter.remove(filterInGroup);
+                    database.repleaceFilter(element.id, element);
+                }
+            }
         }
     }
 
@@ -57,20 +85,25 @@ public class Filtermanagement {
      * @param id unique identifier of the filtersegment which should be enabled
 
      */
-    public void activate(int id) {
+    public void activate(int id) throws Exception {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 element.activate();
+                database.repleaceFilter(id, element);
                 return;
             }
         }
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 element.activate();
+                database.repleaceFilter(id, element);
+                return;
             }
             for (Filter currentFilter: element.availableFilter) {
                 if (currentFilter.id == id) {
                     currentFilter.activate();
+                    database.repleaceFilter(element.id, element);
+                    return;
                 }
             }
         }
@@ -81,20 +114,25 @@ public class Filtermanagement {
      * ignored while filtering graphs
      * @param id unique identifier of the filtersegment which should be disabled
      */
-    public void deactivate(int id) {
+    public void deactivate(int id) throws Exception {
             for (Filter element: availableFilter) {
                 if (element.id == id) {
                     element.deactivate();
+                    database.repleaceFilter(id, element);
                     return;
                 }
             }
             for (Filtergroup currentElement: availableFilterGroups) {
                 if (currentElement.id == id) {
                     currentElement.deactivate();
+                    database.repleaceFilter(id, currentElement);
+                    return;
                 }
                 for (Filter currentFilter : currentElement.availableFilter) {
                     if (currentFilter.id == id) {
                         currentFilter.deactivate();
+                        database.repleaceFilter(currentElement.id, currentElement);
+                        return;
                     }
                 }
             }
@@ -149,9 +187,39 @@ public class Filtermanagement {
      * used when initializing Grape or switching a database. The methode clears the current
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
      * Filtersegment): void for every Filter element of the new database
-     * @param database new database which should be used in future
      */
-    /* public void switchDB(Database database) {
+    public void switchDB() throws Exception {
+        availableFilterGroups.clear();
+        availableFilter.clear();
+        Set<Filtersegment> activatedFilter = database.getActivatedFilters();
+        for (Filtersegment element: activatedFilter) {
+            if (element.getClass() == Filtergroup.class) {
+            }
+        }
+    }
 
-    } */
+    public void parseFilterList() {
+        int arrayLenght = availableFilter.size() + availableFilterGroups.size();
+        String[][] stringArray = new String[7][arrayLenght];
+        int currentColumn = 0;
+        for (Filter element: availableFilter) {
+            if (element.getClass() == BasicFilter.class && element.isActivated) {
+                stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
+                stringArray[1][currentColumn] = "+";
+                stringArray[2][currentColumn] = "0";
+                stringArray[3][currentColumn] = String.valueOf(element.getRelation());
+                stringArray[4][currentColumn] = "0";
+                stringArray[5][currentColumn] = "+";
+                stringArray[6][currentColumn] = String.valueOf(element.getValue1());
+            } else if (element.getClass() == ConnectedFilter.class && element.isActivated) {
+                stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
+                stringArray[1][currentColumn] = String.valueOf(element.getOperator1());
+                stringArray[2][currentColumn] = String.valueOf(element.getValue1());
+                stringArray[3][currentColumn] = String.valueOf(element.getRelation());
+                stringArray[4][currentColumn] = String.valueOf(element.getProperty2());
+                stringArray[5][currentColumn] = String.valueOf(element.getOperator2());
+                stringArray[6][currentColumn] = String.valueOf(element.getValue2());
+            }
+        }
+    }
 }

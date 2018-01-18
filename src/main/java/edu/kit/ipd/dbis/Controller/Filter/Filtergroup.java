@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,10 +16,13 @@ public class Filtergroup extends Filtersegment {
      * input)
      * @param isActivated true if the filter of this group are currently used to filter
      * graphs
+     * @param id unique identifier the filtergroup should have
      */
-    Filtergroup(String name, boolean isActivated) {
+    Filtergroup(String name, boolean isActivated, int id) {
         this.name = name;
         this.isActivated = isActivated;
+        this.id = id;
+        availableFilter = new ArrayList<>();
     }
 
     /**
