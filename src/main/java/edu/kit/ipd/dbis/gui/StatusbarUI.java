@@ -9,7 +9,8 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
@@ -52,19 +53,33 @@ public class StatusbarUI extends GUIElement {
 		pauseButton.setBackground(theme.backgroundColor);
 		pauseButton.setForeground(theme.foregroundColor);
 		pauseButton.setBorder(BorderFactory.createEmptyBorder());
+		pauseButton.addActionListener(new PauseRunAction(pauseButton));
 
 		try {
 			Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Pause.png"));
 			image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
 			pauseButton.setIcon(new ImageIcon(image));
 		} catch (IOException e) {
-			System.out.println("Missing icon of button run!");
 			pauseButton.setText("P");
 			pauseButton.setFont(theme.defaultFont);
 		}
 
 		pauseButton.setSize(size);
 		return pauseButton;
+	}
+
+	private class PauseRunAction implements ActionListener {
+
+		private final JButton button;
+
+		private PauseRunAction(JButton button) {
+			this.button = button;
+		}
+
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+		}
 	}
 
 	/**
