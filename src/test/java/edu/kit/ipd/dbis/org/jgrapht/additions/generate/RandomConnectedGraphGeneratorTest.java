@@ -37,8 +37,7 @@ public class RandomConnectedGraphGeneratorTest {
 	public void zeroTest() {
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(0, 0, 0, 0);
-		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
-		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 		Assert.assertTrue(graph.vertexSet().size() == 0);
 	}
@@ -48,7 +47,7 @@ public class RandomConnectedGraphGeneratorTest {
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(4, 6, 3, 6);
 		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
-		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 		Assert.assertTrue((graph.edgeSet().size() <= 6) && (graph.edgeSet().size() >= 3));
 		Assert.assertTrue((graph.vertexSet().size() <= 6) && (graph.vertexSet().size() >= 4));
@@ -58,8 +57,7 @@ public class RandomConnectedGraphGeneratorTest {
 	public void graphGeneratorValueTest() {
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(2, 2, 1, 1);
-		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
-		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 		Assert.assertTrue((graph.edgeSet().size() == 1));
 		Assert.assertTrue((graph.vertexSet().size() == 2));
@@ -69,8 +67,7 @@ public class RandomConnectedGraphGeneratorTest {
 	public void graphGeneratorHighValueTest() {
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(20, 20, 0, 400);
-		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
-		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 		Assert.assertTrue((graph.edgeSet().size() >= 0));
 		Assert.assertTrue((graph.vertexSet().size() == 20));
@@ -80,8 +77,7 @@ public class RandomConnectedGraphGeneratorTest {
 	public void graphGeneratorHighIntervalTest() {
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(0, 20, 0, 400);
-		ClassBasedEdgeFactory<Integer, DefaultEdge> ef = new ClassBasedEdgeFactory<>(DefaultEdge.class);
-		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>(ef, false);
+		PropertyGraph<Integer, DefaultEdge> graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 		Assert.assertTrue((graph.vertexSet().size() >= 0) && (graph.vertexSet().size() <= 20));
 		Assert.assertTrue((graph.edgeSet().size() >= 0) && (graph.edgeSet().size() <= 400));

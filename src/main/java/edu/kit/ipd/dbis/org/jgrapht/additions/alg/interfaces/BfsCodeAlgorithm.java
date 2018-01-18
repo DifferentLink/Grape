@@ -108,13 +108,7 @@ public interface BfsCodeAlgorithm<V, E> {
 				}
 			}
 
-			if (this.code.length > b2.length) {
-				return 1;
-			} else if (this.code.length < b2.length) {
-				return -1;
-			} else {
-				return 0;
-			}
+			return Integer.compare(this.code.length, b2.length);
 		}
 	}
 }
