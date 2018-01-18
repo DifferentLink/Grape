@@ -52,25 +52,6 @@ public class MinimalBfsCodeAlgorithmTest {
 	}
 
 	@Test
-	public void getlocalBfsCode() {
-		PropertyGraph graph = generateSimpleTestGraph2();
-		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
-		assertArrayEquals(new int[] {1,1,2,1,1,3,-1,2,3,1,1,4,1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7}, alg.getLocalBfsCode(graph, "d").getCode());
-		assertArrayEquals(new int[] {1,1,2,1,1,3,1,1,4,1,2,5,-1,3,5,-1,4,5,1,2,6,-1,5,6,1,3,7,-1,5,7}, alg.getLocalBfsCode(graph, "a").getCode());
-		assertArrayEquals(new int[] {1,1,2,1,1,3,-1,2,3,1,2,4,1,2,5,-1,4,5,1,2,6,1,3,7,-1,4,7,-1,6,7}, alg.getLocalBfsCode(graph, "b").getCode());
-	}
-
-	@Test
-	public void bfsCodeTest() {
-		PropertyGraph graph = generateSimpleTestGraph2();
-		String[] perm = {"d", "e", "b", "a", "g", "f", "c"};
-		MinimalBfsCodeAlgorithm<String, DefaultEdge> alg = new MinimalBfsCodeAlgorithm<>();
-		int[] result = alg.calculateBFS(graph, perm, 5);
-		int[] result2 = {1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7};
-		Assert.assertTrue(alg.compareLocal(result, result2) == 0);
-	}
-
-	@Test
 	public void minimalBfsCodeTest() {
 		PropertyGraph graph = generateSimpleTestGraph2();
 		MinimalBfsCodeAlgorithm<String, DefaultEdge> alg = new MinimalBfsCodeAlgorithm<>();
@@ -195,23 +176,6 @@ public class MinimalBfsCodeAlgorithmTest {
  			for (int j = 0; j < expectedLine.length; j++) {
  				assertEquals(expectedLine[j], resultLine[j]);
 			}
-		}
-	}
-
-	@Test
-	public void permutationTest() {
-		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
-		ArrayList<String> a = new ArrayList();
-		a.add("a");
-		a.add("b");
-		a.add("c");
-		Set<Object[]> perm = alg.getPermutations(a);
-		for (Object[] p : perm) {
-			System.out.print("[");
-			for (int i = 0; i < p.length; i++) {
-				System.out.print(p[i] + ", ");
-			}
-			System.out.println("]");
 		}
 	}
 }

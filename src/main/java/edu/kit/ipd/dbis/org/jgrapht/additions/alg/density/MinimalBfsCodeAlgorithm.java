@@ -3,10 +3,8 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,37 +39,30 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	/**
 	 * Determine the BFS-Code starting
 	 * from the specified start node.
-	 * @param startNode
+	 * @param graph the input graph
+	 * @param startNode the start node
 	 * @return the local bfs code
 	 */
-	public BfsCodeImpl getLocalBfsCode(PropertyGraph graph, V startNode) {
-		int nodeCnt = 0; //Von welchem Knoten berechnet man grade Permutation (index im perm Array)
-		Map<Integer,V> bfsIds = new HashMap<>();
-		bfsIds.put(1, startNode);
-		Set<V> startNodes = new HashSet<>();
-		startNodes.add(startNode);
+	private BfsCodeImpl getLocalBfsCode(PropertyGraph graph, V startNode) {
 
-		List<V[]> startPermutations = new LinkedList<>();
+		int nodeCnt = 0; //the actual nod from which the algorithm searches permutations
+		List<V[]> startPermutations = new LinkedList<>(); //actual permutations with best bfs code
 		Object[] start = {startNode};
 		startPermutations.add((V[]) start);
 
-		List<V[]> bestPermutationsEnd = new ArrayList<>();
-
-
-		while(startPermutations.get(0).length < graph.vertexSet().size()) {
-			List<V[]> nextPerms = new LinkedList<>();
-			for(V[] perm : startPermutations) {
-
+		while (startPermutations.get(0).length < graph.vertexSet().size()) {
+			List<V[]> nextPerms = new LinkedList<>(); //actual best permutations for this loop
+			for (V[] perm : startPermutations) {
 				ArrayList<V> adjacentNotCheckedNodes = new ArrayList<>();
-				//computes the adjacent nodes that are not checked yet
 
+				//computes the adjacent nodes that are not checked yet
 				for (Object e : graph.outgoingEdgesOf(perm[nodeCnt])) {
 					Object adjacentNode1 = graph.getEdgeTarget(e);
 					Object adjacentNode2 = graph.getEdgeSource(e);
 					if (adjacentNode1 != perm[nodeCnt]) {
 						boolean checked = false;
-						for (int i = 0; i < perm.length; i++) {
-							if (perm[i] == adjacentNode1) {
+						for (V v : perm) {
+							if (v == adjacentNode1) {
 								checked = true;
 							}
 						}
@@ -80,8 +71,8 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 						}
 					} else {
 						boolean checked = false;
-						for (int i = 0; i < perm.length; i++) {
-							if (perm[i] == adjacentNode2) {
+						for (V v : perm) {
+							if (v == adjacentNode2) {
 								checked = true;
 							}
 						}
@@ -91,14 +82,12 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 					}
 				}
 				List<V[]> bestPermutations = new ArrayList<>();
-
 				int[] bestCode = new int[3 * graph.edgeSet().size()];
 				for (int i = 0; i < bestCode.length; i++) {
 					bestCode[i] = graph.vertexSet().size();
 				}
-				//calculate bfs code for the subgraph of adjacentNodes + nodes from bfsIds;
-				//calculate the best permutations from per
 				Set<V[]> allPermutations = getPermutations(adjacentNotCheckedNodes);
+				//calculate bfs code for the subgraph of adjacent nodes + previous nodes;
 				for (V[] p : allPermutations) {
 					Object[] completePerm = new Object[perm.length + p.length];
 					for (int i = 0; i < completePerm.length; i++) {
@@ -109,9 +98,6 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 						}
 					}
 					int[] bfsCode = calculateBFS(graph, (V[]) completePerm, perm.length); //calculate BFS code
-
-
-
 					if (compareLocal(bfsCode, bestCode) == 1) {
 						bestCode = bfsCode;
 						bestPermutations.clear();
@@ -122,34 +108,16 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 				}
 				//Set the nextPerms
 				if (bestPermutations.size() > 0) {
-					if (nextPerms.size() == 0){
-						for (V[] p : bestPermutations) {
-							nextPerms.add(p);
-						}
+					if (nextPerms.size() == 0) {
+						nextPerms.addAll(bestPermutations);
 					} else {
-						int comp = compareLocal(calculateBFS(graph, nextPerms.get(0), 1),calculateBFS(graph, bestPermutations.get(0), 1));
+						int comp = compareLocal(calculateBFS(graph, nextPerms.get(0), 1), calculateBFS(graph,
+								bestPermutations.get(0), 1));
 						if (comp < 0) {
 							nextPerms.clear();
-							for (V[] p : bestPermutations) {
-								nextPerms.add(p);
-							}
+							nextPerms.addAll(bestPermutations);
 						} else if (comp == 0) {
-							for (V[] p : bestPermutations) {
-								nextPerms.add(p);
-							}
-						}
-					}
-				}
-
-				//bestPermutationsEnd vergleichen mit bestPermutations
-				if (bestPermutations.size() > 0) {
-					if (bestPermutations.get(0).length == graph.vertexSet().size()) {
-						if (bestPermutationsEnd.size() == 0) {
-							bestPermutationsEnd = bestPermutations;
-						} else if(bestPermutations.size() > 0) {
-							if (compareLocal(calculateBFS(graph, bestPermutationsEnd.get(0), 1), calculateBFS(graph, bestPermutations.get(0), 1)) <= 0) {
-								bestPermutationsEnd = bestPermutations;
-							}
+							nextPerms.addAll(bestPermutations);
 						}
 					}
 				}
@@ -160,8 +128,13 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		return new BfsCodeImpl(calculateBFS(graph, startPermutations.get(0), 1));
 	}
 
-
-	public int compareLocal(int[] bfs1, int[] bfs2) {
+	/**
+	 * compares two bfs arrays for the algorithm
+	 * @param bfs1 first array
+	 * @param bfs2 second array
+	 * @return -1, 0, 1 if bfs1 is worse than, equal to, or better than bfs2.
+	 */
+	private int compareLocal(int[] bfs1, int[] bfs2) {
 		for (int i = 0; i < Math.min(bfs1.length, bfs2.length); i++) {
 			if (bfs1[i] < bfs2[i]) {
 				return 1;
@@ -177,9 +150,9 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 * @param graph the graph
 	 * @param permutation the permutation for the bfs code
 	 * @param index start of Bfs -> if index = 4 -> starts with edges 14,24,34,15,...
-	 * @return
+	 * @return the bfs array of the permutation on the graph
 	 */
-	public int[] calculateBFS(PropertyGraph graph, V[] permutation, int index) {
+	private int[] calculateBFS(PropertyGraph graph, V[] permutation, int index) {
 
 		if (index < 0) {
 			throw new IllegalArgumentException();
@@ -192,9 +165,9 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		for (int i = index; i <= vertexSetSize; i++) {
 			boolean backward = false;
 			for (int j = 1; j < i; j++) {
-				if (graph.containsEdge(permutation[i - 1], permutation[j - 1]) ||
-						graph.containsEdge(permutation[j - 1], permutation[i - 1])) {
-					if(backward) {
+				if (graph.containsEdge(permutation[i - 1], permutation[j - 1])
+						|| graph.containsEdge(permutation[j - 1], permutation[i - 1])) {
+					if (backward) {
 						result[cnt] = -1;
 					} else {
 						result[cnt] = 1;
@@ -206,53 +179,50 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 				}
 			}
 		}
-		int[] endResult = new int[cnt];
-		for (int i = 0; i < endResult.length; i++) {
-			endResult[i] = result[i];
-		}
+		int[] endResult = result.clone();
 		return endResult;
 	}
 
 	/**
 	 * calculates all permutations from the list
-	 * @param list
+	 * @param list list of nodes
 	 * @return a set of all permutations
 	 */
-	public Set<V[]> getPermutations(ArrayList<V> list) {
+	private Set<V[]> getPermutations(ArrayList<V> list) {
 		Set<V[]> result = new HashSet<>();
 		if (list.size() == 0) {
 			return result;
 		}
 		int size = list.size();
 		//Heap algorithm
-		Object[] A = new Object[size]; //Array of any
+		Object[] array = new Object[size]; //Array of any
 		for (int i = 0; i < size; i++) {
-			A[i] = list.get(i);
+			array[i] = list.get(i);
 		}
 
-		int n = A.length;
+		int n = array.length;
 
 		int[] c = new int[n];
 		for (int i = 0; i < n; i++) {
 			c[i] = 0;
 		}
-		result.add((V[]) A.clone());
+		result.add((V[]) array.clone());
 
 		int i = 0;
 		while (i < n) {
 			if (c[i] < i) {
 				if ((i % 2) == 0) {
 					//swap(A[0], A[i])
-					Object a = A[0];
-					A[0] = A[i];
-					A[i] = a;
+					Object a = array[0];
+					array[0] = array[i];
+					array[i] = a;
 				} else {
 					//swap(A[c[i]], A[i])
-					Object a = A[c[i]];
-					A[c[i]] = A[i];
-					A[i] = a;
+					Object a = array[c[i]];
+					array[c[i]] = array[i];
+					array[i] = a;
 				}
-				result.add((V[]) A.clone());
+				result.add((V[]) array.clone());
 				c[i] = c[i] + 1;
 				i = 0;
 			} else {
