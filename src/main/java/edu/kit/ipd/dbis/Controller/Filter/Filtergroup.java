@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,7 @@ public class Filtergroup extends Filtersegment {
     Filtergroup(String name, boolean isActivated) {
         this.name = name;
         this.isActivated = isActivated;
+        availableFilter = new ArrayList<>();
     }
 
     /**

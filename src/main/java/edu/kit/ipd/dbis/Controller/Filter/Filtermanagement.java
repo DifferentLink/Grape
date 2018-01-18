@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.Controller.Filter;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,11 @@ public class Filtermanagement {
     private List<Filtergroup> availableFilterGroups;
     private List<Filter> availableFilter;
     private GraphDatabase database;
+
+    public Filtermanagement() {
+        availableFilterGroups = new ArrayList<>();
+        availableFilter = new ArrayList<>();
+    }
 
     /**
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
@@ -80,7 +86,8 @@ public class Filtermanagement {
             for (Filter currentFilter: element.availableFilter) {
                 if (currentFilter.id == id) {
                     currentFilter.activate();
-                    //needs to be added to database
+                    int groupID = element.id;
+                    database.repleaceFilter(groupID, element);
                     return;
                 }
             }
