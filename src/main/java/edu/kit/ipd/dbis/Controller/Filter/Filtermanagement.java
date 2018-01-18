@@ -222,6 +222,29 @@ public class Filtermanagement {
                 stringArray[6][currentColumn] = String.valueOf(element.getValue2());
             }
         }
+        for (Filtergroup element: availableFilterGroups) {
+            if (element.isActivated) {
+                for (Filter groupElement : element.availableFilter) {
+                    if (groupElement.getClass() == BasicFilter.class && groupElement.isActivated) {
+                        stringArray[0][currentColumn] = String.valueOf(groupElement.getProperty1());
+                        stringArray[1][currentColumn] = "+";
+                        stringArray[2][currentColumn] = "0";
+                        stringArray[3][currentColumn] = Filtermanagement.transformRelationToString(groupElement);
+                        stringArray[4][currentColumn] = "0";
+                        stringArray[5][currentColumn] = "+";
+                        stringArray[6][currentColumn] = String.valueOf(groupElement.getValue1());
+                    } else if (groupElement.getClass() == ConnectedFilter.class && element.isActivated) {
+                        stringArray[0][currentColumn] = String.valueOf(groupElement.getProperty1());
+                        stringArray[1][currentColumn] = String.valueOf(groupElement.getOperator1());
+                        stringArray[2][currentColumn] = String.valueOf(groupElement.getValue1());
+                        stringArray[3][currentColumn] = String.valueOf(groupElement.getRelation());
+                        stringArray[4][currentColumn] = String.valueOf(groupElement.getProperty2());
+                        stringArray[5][currentColumn] = String.valueOf(groupElement.getOperator2());
+                        stringArray[6][currentColumn] = String.valueOf(groupElement.getValue2());
+                    }
+                }
+            }
+        }
         return stringArray;
     }
 
