@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 /**
  * class which connectes two objects of class BasicFilter to a new filter

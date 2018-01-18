@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.ArrayList;
 import java.util.List;
