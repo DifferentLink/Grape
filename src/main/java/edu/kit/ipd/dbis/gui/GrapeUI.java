@@ -68,7 +68,7 @@ public class GrapeUI extends GUIWindow {
 		statusbarUI = new StatusbarUI(controller, language, theme);
 		JPanel rightUI = new JPanel();
 		rightUI.setLayout(new BoxLayout(rightUI, BoxLayout.Y_AXIS));
-		String[] columns = {"ID", "#Vertices", "#Edges"};
+		String[] columns = {"ID", "#Vertices", "#Edges"}; // todo remove with dynamic columns/rows
 		Object[][] data = {{"001", "5", "6"},
 				{"002", "3", "5"},
 				{"003", "2", "4"}};
