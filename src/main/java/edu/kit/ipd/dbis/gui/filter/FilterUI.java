@@ -27,36 +27,54 @@ public class FilterUI extends GUIElement {
 		this.setForeground(theme.foregroundColor);
 
 		filterMenu = new JPanel();
-		filterMenu.setLayout(new BoxLayout(filterMenu, BoxLayout.X_AXIS));
+		filterMenu.setLayout(new GridBagLayout());
+
 		String[] filterMenuEntries = {"Save selected filter...", "Load Filter..."}; // todo use language resource
 		JComboBox<String> filterDropdown = new JComboBox<>(filterMenuEntries);
 		filterDropdown.setMaximumSize(new Dimension(100, 100));
 		filterDropdown.setMinimumSize(new Dimension(100, 0));
 		filterDropdown.setBackground(theme.backgroundColor);
 		filterDropdown.setForeground(theme.foregroundColor);
-		filterMenu.add(filterDropdown);
 
+		GridBagConstraints menuConstraints = new GridBagConstraints();
+		menuConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		menuConstraints.anchor = GridBagConstraints.CENTER;
+		menuConstraints.fill = GridBagConstraints.VERTICAL;
+		menuConstraints.weightx = 1;
+		filterMenu.add(filterDropdown, menuConstraints);
+		theme.style(filterMenu);
+		filterMenu.setBorder(null);
 		this.add(filterMenu, BorderLayout.NORTH);
 
 		filter = new JPanel();
 		this.add(filter, BorderLayout.CENTER);
 
-		JPanel buttons = new JPanel();
+		JPanel buttons = new JPanel(new GridBagLayout());
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		buttons.setBackground(theme.backgroundColor);
 		buttons.setForeground(theme.foregroundColor);
 
+		JPanel buttonsAlignment = new JPanel(new GridBagLayout());
+		GridBagConstraints buttonConstraints = new GridBagConstraints();
+		buttonConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		buttonConstraints.anchor = GridBagConstraints.CENTER;
+		buttonConstraints.fill = GridBagConstraints.VERTICAL;
+		buttonConstraints.weightx = 1;
+
 		JButton newFilter = new JButton(" New Filter "); // todo replace with string from language
-		JButton newFilterGroup = new JButton(" New Group "); // todo replace with string from language
 		theme.style(newFilter);
+		JButton newFilterGroup = new JButton(" New Group "); // todo replace with string from language
 		theme.style(newFilterGroup);
-		buttons.add(newFilter);
+		buttons.add(newFilter, buttonConstraints);
 		buttons.add(Box.createHorizontalStrut(5));
-		buttons.add(newFilterGroup);
+		buttons.add(newFilterGroup, buttonConstraints);
 		buttons.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 
+		buttonsAlignment.add(buttons);
+		theme.style(buttonsAlignment);
+
 		this.add(Box.createVerticalGlue());
-		this.add(buttons, BorderLayout.SOUTH);
+		this.add(buttonsAlignment, BorderLayout.SOUTH);
 
 		this.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
 	}
