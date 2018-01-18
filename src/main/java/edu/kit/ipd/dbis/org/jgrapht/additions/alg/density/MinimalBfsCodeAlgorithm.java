@@ -170,10 +170,12 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 
 		Set<V[]> result = new HashSet<>();
 		int size = list.size();
+		//Heap algorithm
 		Object[] A = new Object[size]; //Array of any
 		for (int i = 0; i < size; i++) {
 			A[i] = list.get(i);
 		}
+
 		int n = A.length;
 
 		int[] c = new int[n];
@@ -185,16 +187,16 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		int i = 0;
 		while (i < n) {
 			if (c[i] < i) {
-				if (i == 0) {
+				if ((i % 2) == 0) {
 					//swap(A[0], A[i])
 					Object a = A[0];
 					A[0] = A[i];
 					A[i] = a;
 				} else {
 					//swap(A[c[i]], A[i])
-					Object a = A[i];
-					A[i] = A[c[i]];
-					A[c[i]] = a;
+					Object a = A[c[i]];
+					A[c[i]] = A[i];
+					A[i] = a;
 				}
 				result.add((V[]) A.clone());
 				c[i] = c[i] + 1;
@@ -204,9 +206,6 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 				i += 1;
 			}
 		}
-
-
-
 		return result;
 	}
 

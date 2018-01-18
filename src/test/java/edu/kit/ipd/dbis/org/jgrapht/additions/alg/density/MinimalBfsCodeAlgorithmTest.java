@@ -9,9 +9,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -88,6 +86,22 @@ public class MinimalBfsCodeAlgorithmTest {
  				assertEquals(expectedLine[j], resultLine[j]);
 			}
 		}
+	}
 
+	@Test
+	public void permutationTest() {
+		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
+		ArrayList<String> a = new ArrayList();
+		a.add("a");
+		a.add("b");
+		a.add("c");
+		Set<Object[]> perm = alg.getPermutations(a);
+		for (Object[] p : perm) {
+			System.out.print("[");
+			for (int i = 0; i < p.length; i++) {
+				System.out.print(p[i] + ", ");
+			}
+			System.out.println("]");
+		}
 	}
 }
