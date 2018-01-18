@@ -14,7 +14,7 @@ public class NewDatabaseUI extends JFrame {
 
 	public NewDatabaseUI(ResourceBundle language, Theme theme) {
 
-		super.setTitle("New Database");
+		super.setTitle("New Database"); // todo use language resource
 
 		JPanel inputContainer = new JPanel();
 		inputContainer.setLayout(new GridLayout(3, 2, 2, 10));
@@ -36,7 +36,7 @@ public class NewDatabaseUI extends JFrame {
 
 		JPanel buttonContainer = new JPanel();
 		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
-		JButton createButton = new JButton("Create");
+		JButton createButton = new JButton("Create"); // todo use language resource
 		theme.style(createButton);
 		createButton.setMaximumSize(new Dimension(50, 30));
 		buttonContainer.add(Box.createHorizontalGlue());
