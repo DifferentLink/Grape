@@ -67,10 +67,10 @@ public class FilterUI extends GUIElement {
 		buttonConstraints.weightx = 1;
 
 		JButton newFilter = new JButton(" New Filter "); // todo replace with string from language
-		theme.style(newFilter);
+		newFilter.setBackground(theme.assertiveBackground);
 		newFilter.addActionListener(new NewFilterAction());
 		JButton newFilterGroup = new JButton(" New Group "); // todo replace with string from language
-		theme.style(newFilterGroup);
+		newFilterGroup.setBackground(theme.assertiveBackground);
 		newFilterGroup.addActionListener(new NewFilterGroupAction());
 		buttons.add(newFilter, buttonConstraints);
 		buttons.add(Box.createHorizontalStrut(5));
