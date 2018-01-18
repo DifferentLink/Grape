@@ -18,4 +18,8 @@ public class FilterGroup extends Filter {
 	public void add(SimpleFilter filter) {
 		simpleFilter.add(filter);
 	}
+
+	public Set<SimpleFilter> getSimpleFilter() {
+		return simpleFilter;
+	}
 }
