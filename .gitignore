@@ -24,3 +24,6 @@
 
 # Unignore Icons
 !/src/main/resources/icons/*
+
+!/.travis.yml
+src/test/java/
