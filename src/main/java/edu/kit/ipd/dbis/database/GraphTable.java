@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*;
 
 public class GraphTable extends Table {
@@ -68,7 +69,6 @@ public class GraphTable extends Table {
 	@Override
 	protected PropertyGraph getInstanceOf(Serializable object) throws Exception {
 		PropertyGraph graph = (object instanceof  PropertyGraph) ? (PropertyGraph) object : null;
-		if (graph != null) graph.setId(this.getId());
 		return graph;
 	}
 
@@ -95,16 +95,6 @@ public class GraphTable extends Table {
 		Connection connection = this.getConnection();
 		PreparedStatement create = connection.prepareStatement(sql);
 		create.executeUpdate();
-	}
-
-	/**
-	 *
-	 * @param vertices
-	 * @return
-	 */
-	public Set<PropertyGraph> getGraphsByVertex(int vertices) {
-		//TODO: Gereon und Felix fragen, ob diese Methode gebraucht wird
-		return null;
 	}
 
 	/**
@@ -156,8 +146,11 @@ public class GraphTable extends Table {
 	 *
 	 * @return
 	 */
-	public boolean graphExists(PropertyGraph graph) {
-		return true;
+	public boolean graphExists(PropertyGraph graph) throws Exception {
+		Connection connection = this.getConnection();
+		String sql = "SELECT * FROM " + this.name + " WHERE bfsCode = " + this.minimalBfsCodeToString(graph);
+		ResultSet result = connection.prepareStatement(sql).executeQuery();
+		return (result.next()) ? (true) : (false);
 	}
 
 	/**
