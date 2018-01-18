@@ -19,7 +19,7 @@ public class LightTheme extends Theme {
 		super.dividerSize = 2;
 		super.outlineColor = Color.BLACK;
 		super.outlineThickness = 1;
-		super.assertiveBackground = Color.GREEN;
+		super.assertiveBackground = new Color(0xA3FF9A);
 		super.tableSelectionColor = Color.YELLOW;
 		super.buttonTextColor = Color.BLACK;
 		super.buttonBackgorundColor = Color.WHITE;
