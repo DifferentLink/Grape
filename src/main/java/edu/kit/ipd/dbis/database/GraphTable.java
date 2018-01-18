@@ -99,8 +99,6 @@ public class GraphTable extends Table {
 	 * @param table
 	 */
 	public void merge(GraphTable table) throws Exception {
-		Connection current = this.getConnection();
-		Connection other = table.getConnection();
 
 		if (this.isMergeableWith(table)) {
 			LinkedList<Integer> ids = table.getIds();
