@@ -75,7 +75,6 @@ public class FilterTable extends Table {
 	@Override
 	protected Filtersegment getInstanceOf(Serializable object) throws Exception {
 		Filtersegment filter = (object instanceof  PropertyGraph) ? (Filtersegment) object : null;
-		filter.setId(this.getId());
 		return filter;
 	}
 

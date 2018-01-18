@@ -78,7 +78,8 @@ public class GraphTable extends Table {
 		String sql = "CREATE TABLE IF NOT EXISTS "
 				+ this.name +" ("
 				+ "graph longblob, "
-				+ "id int NOT NULL";
+				+ "id int NOT NULL"
+				+ "bfsCode String";
 		PropertyGraph graph = new PropertyGraph();
 		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
 
@@ -108,7 +109,7 @@ public class GraphTable extends Table {
 
 	/**
 	 *
-	 * @param graphTable
+	 * @param table
 	 */
 	public void merge(GraphTable table) {
 
@@ -136,9 +137,17 @@ public class GraphTable extends Table {
 	 */
 	private String minimalBfsCodeToString(PropertyGraph graph) {
 		String s = "";
-		int[] array = graph.getBfsCode().getValue();
-		for (int i = 0; i < array.length; i++) {
-			s += (i != array.length - 1) ? (array[i] + ";") : (array[i]);
+		int[] bfsCode = new int[0];
+		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+
+		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
+			if (entry.getKey().toString().equals("BfsCode")) {
+				bfsCode = (int[]) entry.getValue().getValue();
+			}
+		}
+
+		for (int i = 0; i < bfsCode.length; i++) {
+			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
 		}
 		return s;
 	}
