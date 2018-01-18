@@ -18,11 +18,12 @@ public class ConnectedFilter extends Filter {
      * @param value1 integer value which modifies an attribute value of f1
      * @param value2 integer value which modifies an attribute value of f2
      * @param relation relation which connects the two filter
+     * @param id unique identifier the connected filter should have
      */
     public ConnectedFilter(String name, boolean isActivated,
                            Property property1, Property property2,
                            Operator operator1, Operator operator2,
-                           int value1, int value2, Relation relation) {
+                           int value1, int value2, Relation relation, int id) {
         this.name = name;
         this.isActivated = isActivated;
         this.property1 = property1;
@@ -32,7 +33,7 @@ public class ConnectedFilter extends Filter {
         this.value1 = value1;
         this.value2 = value2;
         this.relation = relation;
-
+        this.id = id;
 
     }
 
