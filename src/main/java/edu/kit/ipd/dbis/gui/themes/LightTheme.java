@@ -4,7 +4,6 @@
 
 package edu.kit.ipd.dbis.gui.themes;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class LightTheme extends Theme {
