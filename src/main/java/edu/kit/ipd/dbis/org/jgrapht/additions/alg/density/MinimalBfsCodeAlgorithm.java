@@ -171,7 +171,36 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		}
 		result.add((V[]) start);
 
-		
+
 		return result;
+	}
+	/**
+	 * Generates an adjacency matrix for a given graph
+	 * @return the adjacency matrix
+	 */
+	protected List<int[]> getAdjacencyMatrix(PropertyGraph graph) {
+		List<int[]> matrix = new ArrayList<>();
+		List<Object> sortedVertices = new ArrayList<>(new TreeSet<>(graph.vertexSet()));
+		for (Object v1 : sortedVertices) {
+			int[] line = new int[sortedVertices.size()];
+			Set<E> outgoingEdges = graph.outgoingEdgesOf((V) v1);
+			for (Object e : outgoingEdges) {
+				V edgeTarget = (V) graph.getEdgeTarget(e);
+
+				// problem with JGraphT implementation:
+				// edges are treated as they should be in
+				// an undirected graph. But depending on
+				// how they were added, getEdgeTarget(e)
+				// actually returns the sourceNode, as
+				// this is how it is stored in JGraphT.
+				if (edgeTarget.equals(v1)) {
+					edgeTarget = (V) graph.getEdgeSource(e);
+				}
+				int index = sortedVertices.indexOf(edgeTarget);
+				line[index] = 1;
+			}
+			matrix.add(line);
+		}
+		return matrix;
 	}
 }
