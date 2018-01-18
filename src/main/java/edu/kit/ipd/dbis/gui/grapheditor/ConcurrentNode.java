@@ -13,7 +13,7 @@ public class ConcurrentNode<T> {
 		this.element = element;
 	}
 
-	public ConcurrentNode<T> getNext() {
+	public synchronized ConcurrentNode<T> getNext() {
 		return next;
 	}
 
@@ -25,15 +25,15 @@ public class ConcurrentNode<T> {
 		return previous;
 	}
 
-	public void setElement(T element) {
+	public synchronized void setElement(T element) {
 		this.element = element;
 	}
 
-	public void setPrevious(ConcurrentNode<T> previous) {
+	public synchronized void setPrevious(ConcurrentNode<T> previous) {
 		this.previous = previous;
 	}
 
-	public void setNext(ConcurrentNode<T> next) {
+	public synchronized void setNext(ConcurrentNode<T> next) {
 		this.next = next;
 	}
 }
