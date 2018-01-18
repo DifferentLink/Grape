@@ -5,11 +5,8 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 public class ConcurrentLinkedList<T> {
-	private ConcurrentNode<T> head;
+	private ConcurrentNode<T> head = new ConcurrentNode<>(null);
 
-	public ConcurrentLinkedList() {
-
-	}
 
 	public synchronized T getFirst() {
 		return head.getNext().get();
