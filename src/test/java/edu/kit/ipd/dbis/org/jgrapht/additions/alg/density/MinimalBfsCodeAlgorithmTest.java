@@ -23,6 +23,20 @@ public class MinimalBfsCodeAlgorithmTest {
 		graph.addVertex("b");
 		graph.addVertex("c");
 		graph.addVertex("d");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("b", "c");
+		graph.addEdge("b", "d");
+		graph.addEdge("c", "d");
+		return graph;
+	}
+
+	private PropertyGraph generateSimpleTestGraph2() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
 		graph.addVertex("e");
 		graph.addVertex("f");
 		graph.addVertex("g");
@@ -41,14 +55,14 @@ public class MinimalBfsCodeAlgorithmTest {
 
 	@Test
 	public void getlocalBfsCode() {
-		PropertyGraph graph = generateSimpleTestGraph1();
+		PropertyGraph graph = generateSimpleTestGraph2();
 		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
 		assertArrayEquals(new int[] {1,1,2,1,1,3,-1,2,3,1,1,4,1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7}, alg.getLocalBfsCode(graph, "d").getCode());
 	}
 
 	@Test
 	public void bfsCodeTest() {
-		PropertyGraph graph = generateSimpleTestGraph1();
+		PropertyGraph graph = generateSimpleTestGraph2();
 		String[] perm = {"d", "e", "b", "a", "g", "f", "c"};
 		MinimalBfsCodeAlgorithm<String, DefaultEdge> alg = new MinimalBfsCodeAlgorithm<>();
 		int[] result = alg.calculateBFS(graph, perm, 5);
