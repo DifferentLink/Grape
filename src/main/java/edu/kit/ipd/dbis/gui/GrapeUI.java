@@ -43,6 +43,7 @@ public class GrapeUI extends GUIWindow {
 
 		JPanel filterCorrelationDivider = new JPanel();
 		filterCorrelationDivider.setLayout(new BoxLayout(filterCorrelationDivider, BoxLayout.Y_AXIS));
+		filterCorrelationDivider.setBackground(theme.backgroundColor);
 		filterCorrelationDivider.add(filterUI);
 		filterCorrelationDivider.add(Box.createVerticalGlue());
 		filterCorrelationDivider.add(correlationUI);
@@ -68,6 +69,7 @@ public class GrapeUI extends GUIWindow {
 		statusbarUI = new StatusbarUI(controller, language, theme);
 		JPanel rightUI = new JPanel();
 		rightUI.setLayout(new BoxLayout(rightUI, BoxLayout.Y_AXIS));
+		rightUI.setBackground(theme.backgroundColor);
 		String[] columns = {"ID", "#Vertices", "#Edges"}; // todo remove with dynamic columns/rows
 		Object[][] data = {{"001", "5", "6"},
 				{"002", "3", "5"},
