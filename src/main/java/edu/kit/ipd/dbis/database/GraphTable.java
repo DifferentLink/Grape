@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.database;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.ByteArrayInputStream;
@@ -8,10 +9,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public class GraphTable extends Table {
 
@@ -75,8 +73,27 @@ public class GraphTable extends Table {
 	}
 
 	@Override
-	protected void createTable() {
-		//TODO: warte auf das Graphenpaket
+	protected void createTable() throws Exception {
+
+		String sql = "CREATE TABLE IF NOT EXISTS "
+				+ this.name +" ("
+				+ "graph longblob, "
+				+ "id int NOT NULL";
+		PropertyGraph graph = new PropertyGraph();
+		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+
+		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
+			if (entry.getKey().getSuperclass().toString().equals("IntegerProperty")) {
+				sql += ", " + entry.getKey().toString() + " int";
+			} else if (entry.getKey().getSuperclass().toString().equals("DoubleProperty")) {
+				sql += ", " + entry.getKey().toString() + " double";
+			}
+		}
+
+		sql += ", nothing int, PRIMARY KEY(id))";
+		Connection connection = this.getConnection();
+		PreparedStatement create = connection.prepareStatement(sql);
+		create.executeUpdate();
 	}
 
 	/**
