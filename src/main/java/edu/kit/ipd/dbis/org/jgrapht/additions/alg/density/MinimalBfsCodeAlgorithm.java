@@ -81,7 +81,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 					} else {
 						boolean checked = false;
 						for (int i = 0; i < perm.length; i++) {
-							if (perm[i] == adjacentNode1) {
+							if (perm[i] == adjacentNode2) {
 								checked = true;
 							}
 						}
@@ -97,7 +97,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 					bestCode[i] = graph.vertexSet().size();
 				}
 				//calculate bfs code for the subgraph of adjacentNodes + nodes from bfsIds;
-
+				//calculate the best permutations from per
 				Set<V[]> allPermutations = getPermutations(adjacentNotCheckedNodes);
 				for (V[] p : allPermutations) {
 					Object[] completePerm = new Object[perm.length + p.length];
@@ -108,7 +108,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 							completePerm[i] = p[i - perm.length];
 						}
 					}
-					int[] bfsCode = calculateBFS(graph, (V[]) completePerm, perm.length + 1); //calculate BFS code
+					int[] bfsCode = calculateBFS(graph, (V[]) completePerm, perm.length); //calculate BFS code
 
 
 
@@ -120,23 +120,44 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 						bestPermutations.add((V[]) completePerm);
 					}
 				}
-				for (V[] p : bestPermutations) {
-					nextPerms.add(p);
+				//Set the nextPerms
+				if (bestPermutations.size() > 0) {
+					if (nextPerms.size() == 0){
+						for (V[] p : bestPermutations) {
+							nextPerms.add(p);
+						}
+					} else {
+						int comp = compareLocal(calculateBFS(graph, nextPerms.get(0), 1),calculateBFS(graph, bestPermutations.get(0), 1));
+						if (comp < 0) {
+							nextPerms.clear();
+							for (V[] p : bestPermutations) {
+								nextPerms.add(p);
+							}
+						} else if (comp == 0) {
+							for (V[] p : bestPermutations) {
+								nextPerms.add(p);
+							}
+						}
+					}
 				}
 
 				//bestPermutationsEnd vergleichen mit bestPermutations
-				if (bestPermutationsEnd.size() == 0) {
-					bestPermutationsEnd = bestPermutations;
-				} else if(bestPermutations.size() > 0) {
-					if (compareLocal(calculateBFS(graph, bestPermutationsEnd.get(0), 1), calculateBFS(graph, bestPermutations.get(0), 1)) <= 0) {
-						bestPermutationsEnd = bestPermutations;
+				if (bestPermutations.size() > 0) {
+					if (bestPermutations.get(0).length == graph.vertexSet().size()) {
+						if (bestPermutationsEnd.size() == 0) {
+							bestPermutationsEnd = bestPermutations;
+						} else if(bestPermutations.size() > 0) {
+							if (compareLocal(calculateBFS(graph, bestPermutationsEnd.get(0), 1), calculateBFS(graph, bestPermutations.get(0), 1)) <= 0) {
+								bestPermutationsEnd = bestPermutations;
+							}
+						}
 					}
 				}
 			}
 			startPermutations = nextPerms;
 			nodeCnt++;
 		}
-		return new BfsCodeImpl(calculateBFS(graph, bestPermutationsEnd.get(0), 1));
+		return new BfsCodeImpl(calculateBFS(graph, startPermutations.get(0), 1));
 	}
 
 

@@ -56,6 +56,7 @@ public class MinimalBfsCodeAlgorithmTest {
 		PropertyGraph graph = generateSimpleTestGraph2();
 		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
 		assertArrayEquals(new int[] {1,1,2,1,1,3,-1,2,3,1,1,4,1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7}, alg.getLocalBfsCode(graph, "d").getCode());
+		assertArrayEquals(new int[] {1,1,2,1,1,3,1,1,4,1,2,5,-1,3,5,-1,4,5,1,2,6,-1,5,6,1,3,7,-1,5,7}, alg.getLocalBfsCode(graph, "a").getCode());
 	}
 
 	@Test
