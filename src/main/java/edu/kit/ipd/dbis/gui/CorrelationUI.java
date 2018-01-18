@@ -18,20 +18,34 @@ public class CorrelationUI extends GUIElement {
 	public CorrelationUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
 
-		this.setLayout(new BorderLayout());
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBackground(theme.backgroundColor);
 		this.setForeground(theme.foregroundColor);
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
+		JPanel title = new JPanel();
+		title.setLayout(new BorderLayout());
+		title.setBackground(theme.lightNeutralColor);
+		JLabel correlationLabel = new JLabel("Correlation Request"); // todo use language resource
+		title.add(correlationLabel);
+
+		JPanel inputContainer = new JPanel(new BorderLayout());
+		inputContainer.add(Box.createHorizontalStrut(8), BorderLayout.WEST);
 		JTextField correlationInput = new JTextField("Correlation request...");
-		correlationInput.setColumns(1000);
+		correlationInput.setColumns(10000);
 		correlationInput.setBackground(theme.backgroundColor);
-		correlationInput.setSize(10, 30);
 		JButton go = new JButton("Go..."); // todo replaces with text from language resource
 		go.addActionListener(new CorrelationRequestAction(language, theme));
-		theme.style(go);
-		this.add(go, BorderLayout.EAST);
-		this.add(correlationInput, BorderLayout.WEST);
+		go.setBackground(theme.assertiveBackground);
+		go.setMinimumSize(new Dimension(120, 30));
+		inputContainer.add(correlationInput, BorderLayout.CENTER);
+		inputContainer.add(go, BorderLayout.EAST);
+
+		this.add(Box.createVerticalStrut(4));
+		this.add(title);
+		this.add(inputContainer);
+		this.add(Box.createVerticalStrut(4));
+		this.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, theme.foregroundColor));
 	}
 
 	/**
