@@ -208,7 +208,7 @@ public class Filtermanagement {
                 stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
                 stringArray[1][currentColumn] = "+";
                 stringArray[2][currentColumn] = "0";
-                stringArray[3][currentColumn] = String.valueOf(element.getRelation());
+                stringArray[3][currentColumn] = Filtermanagement.transformRelationToString(element);
                 stringArray[4][currentColumn] = "0";
                 stringArray[5][currentColumn] = "+";
                 stringArray[6][currentColumn] = String.valueOf(element.getValue1());
@@ -226,44 +226,44 @@ public class Filtermanagement {
     }
 
     private static String transformFirstOperatorToString(Filter filter) {
-        String returnString = "";
-        if (filter.getOperator1().equals("ADD")) {
+        String returnString = String.valueOf(filter.getOperator1());
+        if (String.valueOf(filter.getOperator1()).equals("ADD")) {
             returnString = "+";
-        } else if (filter.getOperator1().equals("SUB")) {
+        } else if (String.valueOf(filter.getOperator1()).equals("SUB")) {
             returnString = "-";
-        } else if (filter.getOperator1().equals("MULT")) {
+        } else if (String.valueOf(filter.getOperator1()).equals("MULT")) {
             returnString = "*";
-        } else if (filter.getOperator1().equals("DIV")) {
+        } else if (String.valueOf(filter.getOperator1()).equals("DIV")) {
             returnString = "/";
         }
         return returnString;
     }
 
     private static String transformSecondOperatorToString(Filter filter) {
-        String returnString = "";
-        if (filter.getOperator2().equals("ADD")) {
+        String returnString = String.valueOf(filter.getOperator2());
+        if (String.valueOf(filter.getOperator2()).equals("ADD")) {
             returnString = "+";
-        } else if (filter.getOperator2().equals("SUB")) {
+        } else if (String.valueOf(filter.getOperator2()).equals("SUB")) {
             returnString = "-";
-        } else if (filter.getOperator2().equals("MULT")) {
+        } else if (String.valueOf(filter.getOperator2()).equals("MULT")) {
             returnString = "*";
-        } else if (filter.getOperator2().equals("DIV")) {
+        } else if (String.valueOf(filter.getOperator2()).equals("DIV")) {
             returnString = "/";
         }
         return returnString;
     }
 
     private static String transformRelationToString(Filter filter) {
-        String returnString = "";
-        if (filter.getRelation().equals("EQUAL")) {
+        String returnString = String.valueOf(filter.getRelation());
+        if (String.valueOf(filter.getRelation()).equals("EQUAL")) {
             returnString = "=";
-        } else if (filter.getRelation().equals("GREATHERTHAN")) {
+        } else if (String.valueOf(filter.getRelation()).equals("GREATHERTHAN")) {
             returnString = ">";
-        } else if (filter.getRelation().equals("LESSTHAN")) {
+        } else if (String.valueOf(filter.getRelation()).equals("LESSTHAN")) {
             returnString = "<";
-        } else if (filter.getRelation().equals("GREATHEROREQUAL")) {
+        } else if (String.valueOf(filter.getRelation()).equals("GREATHEROREQUAL")) {
             returnString = ">=";
-        } else if (filter.getRelation().equals("LESSOREQUAL")) {
+        } else if (String.valueOf(filter.getRelation()).equals("LESSOREQUAL")) {
             returnString = "<=";
         }
         return returnString;

@@ -1,5 +1,7 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -42,6 +44,7 @@ public class FiltermanagementTest {
         Filter filter = new BasicFilter("Testfilter", true, 1, Relation.EQUAL, null, 3);
         Filtergroup group = new Filtergroup("Testgroup", true, 4);
         try {
+            manager.addFilterGroup(group);
             manager.addFilterToFiltergroup(filter, 4);
             if (!manager.availableFilterGroups.contains(group)) throw new AssertionError();
             if (!group.availableFilter.contains(filter)) throw new AssertionError();
@@ -63,8 +66,8 @@ public class FiltermanagementTest {
             manager.addFilter(standartFilter);
             manager.addFilterToFiltergroup(groupFilter, 6);
             manager.removeFiltersegment(5);
-            manager.removeFiltersegment(6);
             manager.removeFiltersegment(7);
+            manager.removeFiltersegment(6);
             if (group.availableFilter.size() != 0) throw new AssertionError();
             if (manager.availableFilterGroups.size() != 0) throw new AssertionError();
             if (manager.availableFilter.size() != 0) throw new AssertionError();
@@ -118,6 +121,36 @@ public class FiltermanagementTest {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testDBParser() throws Exception {
+        Filtermanagement manager = new Filtermanagement();
+        Filtergroup activeGroup = new Filtergroup("Test", true, 1);
+        Filtergroup inactiveGroup = new Filtergroup("InactiveFilter", false, 2);
+        Property myProperty = new GreatestDegree();
+        Filter activeFilter = new BasicFilter("Filter", true, 1, Relation.EQUAL, myProperty, 3);
+        Filter inactiveFilter = new BasicFilter("InactiveFilter", false, 1, Relation.EQUAL, myProperty, 4);
+        Filter activeFilterInactiveGroup = new BasicFilter("ActiveFilterOfInactiveGroup", true, 5, Relation.EQUAL, myProperty, 5);
+        Filter activeFilterActiveGroup = new BasicFilter("ActiveFilterInactiveGroup", true, 1, Relation.EQUAL, myProperty, 6);
+        manager.addFilterGroup(activeGroup);
+        manager.addFilterGroup(inactiveGroup);
+        manager.addFilter(activeFilter);
+        manager.addFilter(inactiveFilter);
+        manager.addFilterToFiltergroup(activeFilterInactiveGroup, 2);
+        manager.addFilterToFiltergroup(activeFilterActiveGroup, 1);
+        String[][] resultString = manager.parseFilterList();
+
+        assert (resultString[0][0].equals(myProperty.toString()));
+        assert (resultString[1][0].equals("+"));
+        assert (resultString[2][0].equals("0"));
+        assert (resultString[3][0].equals("="));
+        assert (resultString[4][0].equals("0"));
+        assert (resultString[5][0].equals("+"));
+        assert (resultString[6][0].equals("1"));
+        for(int j = 0; j < 5; j++) {
+
         }
     }
 
