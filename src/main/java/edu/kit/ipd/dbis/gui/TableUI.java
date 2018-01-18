@@ -31,7 +31,7 @@ public class TableUI extends GUIElement {
 		tableScrollPane.setForeground(theme.foregroundColor);
 		tableScrollPane.setFont(theme.defaultFont);
 		tableScrollPane.setViewportView(table);
-		tableScrollPane.setPreferredSize(size);
+		//tableScrollPane.setPreferredSize(size);
 
 		this.add(tableScrollPane);
 	}

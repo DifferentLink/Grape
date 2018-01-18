@@ -18,14 +18,14 @@ public class GrapeUI extends GUIWindow {
 	private MenuUI menuUI;
 	private GUIElement filterUI;
 	private GUIElement correlationUI;
-	private GUIElement tableUI;
+	private JTable tableUI;
 	private GUIElement statusbarUI;
 	private GUIElement logUI;
 
 	private String programName = "Grape";
 	private JFrame mainWindow;
 
-	private float verticalSplitRatio = .22f;
+	private float verticalSplitRatio = .1f;
 
 	public GrapeUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
@@ -68,8 +68,13 @@ public class GrapeUI extends GUIWindow {
 		statusbarUI = new StatusbarUI(controller, language, theme);
 		JPanel rightUI = new JPanel();
 		rightUI.setLayout(new BoxLayout(rightUI, BoxLayout.Y_AXIS));
-		tableUI = new TableUI(controller, language, theme, new Dimension(1000, 1080));
-		rightUI.add(tableUI, BorderLayout.NORTH);
+		String[] columns = {"ID", "#Vertices", "#Edges"};
+		Object[][] data = {{"001", "5", "6"},
+				{"002", "3", "5"},
+				{"003", "2", "4"}};
+		tableUI = new JTable(new NonEditableTableModel(columns, data));
+		rightUI.add(tableUI, BorderLayout.CENTER);
+		rightUI.add(Box.createVerticalGlue());
 		rightUI.add(statusbarUI, BorderLayout.SOUTH);
 
 		JSplitPane verticalDivider;
@@ -112,7 +117,6 @@ public class GrapeUI extends GUIWindow {
 	}
 
 	public void updateTable() {
-		tableUI.update();
 	}
 
 	public void updateStatusbar() {
