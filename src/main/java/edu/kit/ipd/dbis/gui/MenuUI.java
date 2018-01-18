@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
+import edu.kit.ipd.dbis.gui.popups.NewDatabaseUI;
 import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
@@ -114,7 +115,8 @@ public class MenuUI extends GUIMenu {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-
+			JFrame newDatabaseUI = new NewDatabaseUI(language, theme);
+			newDatabaseUI.setVisible(true);
 		}
 	}
 
