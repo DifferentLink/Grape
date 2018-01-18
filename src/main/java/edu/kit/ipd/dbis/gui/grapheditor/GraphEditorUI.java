@@ -31,8 +31,8 @@ public class GraphEditorUI extends GUIElement {
 	private JComboBox<String> coloringType;
 
 	private int barHeight = 25;
-	private Dimension buttonHeight = new Dimension(barHeight - 2, barHeight - 2);
-	private int buttonSeparation = 1;
+	private Dimension buttonSize = new Dimension(barHeight - 2, barHeight - 2);
+	private int buttonSeparation = 2;
 
 	public GraphEditorUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
@@ -44,37 +44,51 @@ public class GraphEditorUI extends GUIElement {
 		topBarButtons.setLayout(new BoxLayout(topBarButtons, BoxLayout.X_AXIS));
 		topBarButtons.setPreferredSize(new Dimension(Integer.MAX_VALUE, barHeight));
 		theme.style(topBarButtons);
+		topBarButtons.setBorder(null);
 		undo = new JButton("U");
 		undo.addActionListener((e) -> graph = history.moveBack());
 		theme.style(undo);
-		undo.setPreferredSize(buttonHeight);
+		undo.setMinimumSize(buttonSize);
+		undo.setPreferredSize(buttonSize);
+		undo.setMaximumSize(buttonSize);
 		redo = new JButton("R");
 		redo.addActionListener((e) -> graph = history.moveForward());
 		theme.style(redo);
-		redo.setPreferredSize(buttonHeight);
+		redo.setMinimumSize(buttonSize);
+		redo.setPreferredSize(buttonSize);
+		redo.setMaximumSize(buttonSize);
 		denser = new JButton("D+");
 		theme.style(denser);
-		denser.setPreferredSize(buttonHeight);
+		denser.setMinimumSize(buttonSize);
+		denser.setPreferredSize(buttonSize);
+		denser.setMaximumSize(buttonSize);
 		switchColor = new JButton("<>");
 		theme.style(switchColor);
-		switchColor.setPreferredSize(buttonHeight);
+		switchColor.setMinimumSize(buttonSize);
+		switchColor.setPreferredSize(buttonSize);
+		switchColor.setMaximumSize(buttonSize);
 		String[] availableColorings = {"Total Coloring", "Vertex Coloring"};
 		coloringType = new JComboBox<>();
 		coloringType.addItem(availableColorings[0]);
 		coloringType.addItem(availableColorings[1]);
 		theme.style(coloringType);
 
+		topBarButtons.add(Box.createHorizontalStrut(buttonSeparation));
 		topBarButtons.add(undo);
+		topBarButtons.add(Box.createHorizontalStrut(buttonSeparation));
 		topBarButtons.add(redo);
 		topBarButtons.add(Box.createHorizontalGlue());
 		topBarButtons.add(denser);
+		topBarButtons.add(Box.createHorizontalStrut(buttonSeparation));
 		topBarButtons.add(switchColor);
+		topBarButtons.add(Box.createHorizontalStrut(buttonSeparation));
 		topBarButtons.add(coloringType);
 
 		JPanel bottomBarButtons = new JPanel();
 		bottomBarButtons.setLayout(new BoxLayout(bottomBarButtons, BoxLayout.X_AXIS));
 		bottomBarButtons.setPreferredSize(new Dimension(Integer.MAX_VALUE, barHeight));
 		theme.style(bottomBarButtons);
+		bottomBarButtons.setBorder(null);
 		center = new JButton("Center");
 		theme.style(center);
 		center.addActionListener((e) -> {
