@@ -24,20 +24,18 @@ public class Filtermanagement {
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
      * @param filtergroup filtersegment which should be added
      */
-    int addFilterGroup(Filtergroup filtergroup) throws Exception {
+    void addFilterGroup(Filtergroup filtergroup) throws Exception {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
-        return filtergroup.getID();
     }
 
     /**
      * adds a filter to the list availableFilter of class Filtermanagement
      * @param filter filtersegment which should be added
      */
-    int addFilter(Filter filter) throws Exception {
+    void addFilter(Filter filter) throws Exception {
         database.addFilter(filter);
         availableFilter.add(filter);
-        return filter.getID();
     }
 
     /**
@@ -205,7 +203,7 @@ public class Filtermanagement {
         String[][] stringArray = new String[7][arrayLenght];
         int currentColumn = 0;
         for (Filter element: availableFilter) {
-            if (element.getClass() == BasicFilter.class) {
+            if (element.getClass() == BasicFilter.class && element.isActivated) {
                 stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
                 stringArray[1][currentColumn] = "+";
                 stringArray[2][currentColumn] = "0";
@@ -213,7 +211,7 @@ public class Filtermanagement {
                 stringArray[4][currentColumn] = "0";
                 stringArray[5][currentColumn] = "+";
                 stringArray[6][currentColumn] = String.valueOf(element.getValue1());
-            } else if (element.getClass() == ConnectedFilter.class) {
+            } else if (element.getClass() == ConnectedFilter.class && element.isActivated) {
                 stringArray[0][currentColumn] = String.valueOf(element.getProperty1());
                 stringArray[1][currentColumn] = String.valueOf(element.getOperator1());
                 stringArray[2][currentColumn] = String.valueOf(element.getValue1());
