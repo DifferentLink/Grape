@@ -20,7 +20,7 @@ public class FilterTable extends Table {
 	 * @param password
 	 * @param name
 	 */
-	public FilterTable(String url, String user, String password, String name) {
+	public FilterTable(String url, String user, String password, String name) throws Exception {
 		super(url, user, password, name);
 	}
 
@@ -40,7 +40,6 @@ public class FilterTable extends Table {
 		return null;
 	}
 
-	@Override
 	public Set<Filtersegment> getContent() throws Exception{
 		Connection connection = this.getConnection();
 		String sql = "SELECT filter FROM " + this.name;
@@ -76,7 +75,6 @@ public class FilterTable extends Table {
 	@Override
 	protected Filtersegment getInstanceOf(Serializable object) throws Exception {
 		Filtersegment filter = (object instanceof  PropertyGraph) ? (Filtersegment) object : null;
-		filter.setId(this.getId());
 		return filter;
 	}
 

@@ -103,8 +103,6 @@ public abstract class Table {
 	 */
 	public abstract Serializable getContent(int id) throws Exception;
 
-	public abstract Set<Serializable> getContent() throws Exception;
-
 	/**
 	 *
 	 * @param object

@@ -9,28 +9,31 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-public class StatusbarUI {
-	public static JPanel makeStatusbarUI(ResourceBundle language, Theme theme) {
+public class StatusbarUI extends GUIElement {
 
-		final int statusbarHeight = 15;
+	private final int statusbarHeight = 15;
 
-		JPanel statusbarUI = new JPanel();
-		statusbarUI.setLayout(new BoxLayout(statusbarUI, BoxLayout.X_AXIS));
-		statusbarUI.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
-		statusbarUI.add(Box.createHorizontalStrut(5));
+	public StatusbarUI(Controller controller, ResourceBundle language, Theme theme) {
+		super(controller, language, theme);
+
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.add(Box.createHorizontalStrut(2));
+		this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
+		this.add(Box.createHorizontalStrut(5));
 
 		JLabel statusText = new JLabel(language.getString("noDatabaseLoaded"));
-		statusbarUI.add(statusText);
+		this.add(statusText);
 
-		statusbarUI.setMaximumSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
-		statusbarUI.setMinimumSize(new Dimension(Integer.MIN_VALUE, statusbarHeight));
-		statusbarUI.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
-		statusbarUI.setBackground(theme.backgroundColor);
-		statusbarUI.setForeground(theme.foregroundColor);
+		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
+		this.setMinimumSize(new Dimension(Integer.MIN_VALUE, statusbarHeight));
+		this.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
+		this.setBackground(theme.backgroundColor);
+		this.setForeground(theme.foregroundColor);
 
 		JButton log = new JButton("Log");
 		log.setBackground(theme.backgroundColor);
@@ -39,28 +42,51 @@ public class StatusbarUI {
 		log.getSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
 		log.setBorder(BorderFactory.createEmptyBorder());
 
-		statusbarUI.add(Box.createHorizontalGlue());
-		statusbarUI.add(log);
+		this.add(Box.createHorizontalGlue());
+		this.add(log);
 
-		return statusbarUI;
 	}
 
-	private static JButton makePauseButton(Dimension size, Theme theme) {
+	private JButton makePauseButton(Dimension size, Theme theme) {
 		JButton pauseButton = new JButton();
 		pauseButton.setMaximumSize(size);
 		pauseButton.setBackground(theme.backgroundColor);
 		pauseButton.setForeground(theme.foregroundColor);
 		pauseButton.setBorder(BorderFactory.createEmptyBorder());
+		pauseButton.addActionListener(new PauseRunAction(pauseButton));
 
 		try {
-			Image icon = ImageIO.read(new File("src/main/resources/ButtonRun_Continue.png"));
-			pauseButton.setIcon(new ImageIcon(icon));
+			Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Pause.png"));
+			image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
+			pauseButton.setIcon(new ImageIcon(image));
 		} catch (IOException e) {
-			System.out.println("Missing icon of button run!");
 			pauseButton.setText("P");
 			pauseButton.setFont(theme.defaultFont);
 		}
 
+		pauseButton.setSize(size);
 		return pauseButton;
+	}
+
+	private class PauseRunAction implements ActionListener {
+
+		private final JButton button;
+
+		private PauseRunAction(JButton button) {
+			this.button = button;
+		}
+
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+		}
+	}
+
+	/**
+	 * Updates the GUIWindow element.
+	 */
+	@Override
+	public void update() {
+
 	}
 }

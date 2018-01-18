@@ -1,9 +1,15 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,14 +19,17 @@ import java.util.Set;
  */
 public class PropertyGraph<V, E> extends SimpleGraph {
 	private int id;
-	private Set<Property> properties;
+	private Map<Class<?>, Property> properties;
 
 	/**
 	 * Standard constructor
 	 */
 	public PropertyGraph() {
 		super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false);
-		this.properties = PropertyFactory.createAllProperties();
+		this.properties = new HashMap<>();
+		for (Property p : PropertyFactory.createAllProperties()) {
+			this.properties.put(p.getClass(), p);
+		}
 	}
 
 	/**
@@ -48,13 +57,13 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 
 
 	/**
-	 * checks if two graphs are equals
+	 * checks if two graphs are equal
 	 *
 	 * @param graph the input graph
-	 * @return if this graph is equals to the input graph
+	 * @return if this graph is equal to the input graph
 	 */
-
 	public boolean equals(PropertyGraph graph) {
+		// TODO: implement with BFS-Code
 		VF2GraphIsomorphismInspector<Integer, DefaultEdge> iI = new VF2GraphIsomorphismInspector<Integer, DefaultEdge>(graph, this);
 		if (iI.isomorphismExists()) {
 			return true;
@@ -63,7 +72,17 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		}
 	}
 
-	public Integer getNumberOfEdges() {
-		return null;
+	public int getNumberOfVertices() {
+		return (int) this.properties.get(NumberOfVertices.class).getValue();
 	}
+
+	public int getNumberOfEdges() {
+		return (int) this.properties.get(NumberOfEdges.class).getValue();
+	}
+
+	public int getGreatestDegree() {
+		return (int) this.properties.get(GreatestDegree.class).getValue();
+	}
+
+	public Collection<Property> getProperties() {return this.properties.values(); }
 }
