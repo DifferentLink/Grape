@@ -170,10 +170,9 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 			start[i] = list.get(i);
 		}
 		result.add((V[]) start);
-
-
 		return result;
 	}
+
 	/**
 	 * Generates an adjacency matrix for a given graph
 	 * @return the adjacency matrix
