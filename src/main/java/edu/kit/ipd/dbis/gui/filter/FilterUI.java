@@ -25,7 +25,7 @@ public class FilterUI extends GUIElement {
 		filterMenu.setLayout(new BoxLayout(filterMenu, BoxLayout.X_AXIS));
 		String[] filterMenuEntries = {"Save selected filter...", "Load Filter..."}; // todo use language resource
 		JComboBox<String> filter = new JComboBox<>(filterMenuEntries);
-		filter.setMaximumSize(new Dimension(100, 30));
+		filter.setMaximumSize(new Dimension(100, 100));
 		filter.setMinimumSize(new Dimension(100, 0));
 		filter.setBackground(theme.backgroundColor);
 		filter.setForeground(theme.foregroundColor);
