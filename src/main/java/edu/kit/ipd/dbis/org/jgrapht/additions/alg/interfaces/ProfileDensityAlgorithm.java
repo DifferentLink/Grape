@@ -1,5 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 	 *
 	 * @return the profile
 	 */
-	Profile getProfile();
+	Profile getProfile(PropertyGraph<V, E> graph);
 
 	/**
 	 * A profile. The profile is list of bfs codes.
@@ -28,7 +30,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 		 *
 		 * @return the profile
 		 */
-		List<BfsCodeAlgorithm.BfsCode> getProfile();
+		int[][] getProfile();
 	}
 
 	/**
@@ -38,15 +40,14 @@ public interface ProfileDensityAlgorithm<V, E> {
 	 * @param <E> the graph edge type
 	 */
 	class ProfileImpl<V, E> implements Profile<V, E> {
-		private List<BfsCodeAlgorithm.BfsCode> profile;
+		private int[][] profile;
 
-		public ProfileImpl(List<BfsCodeAlgorithm.BfsCode> profile) {
-			//TODO: clone profile
+		public ProfileImpl(int[][] profile) {
 			this.profile = profile;
 		}
 
 		@Override
-		public List<BfsCodeAlgorithm.BfsCode> getProfile() {
+		public int[][] getProfile() {
 			return this.profile;
 		}
 	}
