@@ -23,7 +23,7 @@ public class BasicFilter extends Filter {
         this.property1 = property1;
         this.isActivated = isActivated;
         this.value1 = value1;
-        this.relation1 = relation1;
+        this.relation = relation;
 
     }
 
