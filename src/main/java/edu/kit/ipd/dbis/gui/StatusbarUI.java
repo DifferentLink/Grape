@@ -45,7 +45,7 @@ public class StatusbarUI extends GUIElement {
 
 	}
 
-	private static JButton makePauseButton(Dimension size, Theme theme) {
+	private JButton makePauseButton(Dimension size, Theme theme) {
 		JButton pauseButton = new JButton();
 		pauseButton.setMaximumSize(size);
 		pauseButton.setBackground(theme.backgroundColor);
@@ -53,14 +53,16 @@ public class StatusbarUI extends GUIElement {
 		pauseButton.setBorder(BorderFactory.createEmptyBorder());
 
 		try {
-			Image icon = ImageIO.read(new File("src/main/resources/ButtonRun_Continue.png"));
-			pauseButton.setIcon(new ImageIcon(icon));
+			Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Pause.png"));
+			image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
+			pauseButton.setIcon(new ImageIcon(image));
 		} catch (IOException e) {
 			System.out.println("Missing icon of button run!");
 			pauseButton.setText("P");
 			pauseButton.setFont(theme.defaultFont);
 		}
 
+		pauseButton.setSize(size);
 		return pauseButton;
 	}
 
