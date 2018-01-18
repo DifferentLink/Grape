@@ -13,4 +13,11 @@ public abstract class Parser {
 	 */
 	public abstract void parse();
 
+	public String getInformation() {
+		return information;
+	}
+
+	public GraphDatabase getDatabase() {
+		return database;
+	}
 }

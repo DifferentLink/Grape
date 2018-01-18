@@ -35,6 +35,22 @@ public abstract class Table {
 		this.createTable();
 	}
 
+	public String getUrl() {
+		return this.url;
+	}
+
+	public String getUser() {
+		return this.user;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
 	/**
 	 *
 	 * @param id

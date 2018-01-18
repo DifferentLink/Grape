@@ -68,7 +68,7 @@ public class FilterTable extends Table {
 		String sql = "INSERT INTO " + this.name + " (filter, id, isActivated) VALUES (?, ?, ?)";
 		PreparedStatement statement = this.getConnection().prepareStatement(sql);
 		statement.setObject(1, this.objectToByteArray(filter));
-		statement.setObject(2, filter.getId());
+		statement.setObject(2, filter.getID());
 		statement.setObject(3, filter.getIsActivated());
 		statement.executeUpdate();
 	}
