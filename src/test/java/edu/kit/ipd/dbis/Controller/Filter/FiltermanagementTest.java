@@ -125,7 +125,7 @@ public class FiltermanagementTest {
     }
 
     @Test
-    public void testDBParser() throws Exception {
+    public void testDBParserBasicFilter() throws Exception {
         Filtermanagement manager = new Filtermanagement();
         Filtergroup activeGroup = new Filtergroup("Test", true, 1);
         Filtergroup inactiveGroup = new Filtergroup("InactiveFilter", false, 2);
@@ -157,9 +157,41 @@ public class FiltermanagementTest {
         assert (resultString[4][1].equals("0"));
         assert (resultString[5][1].equals("+"));
         assert (resultString[6][1].equals("6"));
-        for(int j = 0; j < 5; j++) {
+    }
 
-        }
+    @Test
+    public void testDBParserConnectedFilter() throws Exception {
+        Filtermanagement manager = new Filtermanagement();
+        Filtergroup activeGroup = new Filtergroup("Test", true, 1);
+        Filtergroup inactiveGroup = new Filtergroup("InactiveFilter", false, 2);
+        Property myProperty = new GreatestDegree();
+        Filter activeFilter = new ConnectedFilter("First", true, myProperty, myProperty, Operator.MULT, Operator.DIV, 1, 2, Relation.LESSOREQUAL,3);
+        Filter inactiveFilter = new ConnectedFilter("Second", false, myProperty, myProperty, Operator.MULT, Operator.DIV, 1, 2, Relation.LESSOREQUAL,4);
+        Filter activeFilterInactiveGroup = new ConnectedFilter("Third", true, myProperty, myProperty, Operator.MULT, Operator.SUB, 1, 2, Relation.GREATHEROREQUAL,5);
+        Filter activeFilterActiveGroup = new ConnectedFilter("Third", true, myProperty, myProperty, Operator.MULT, Operator.SUB, 1, 2, Relation.GREATHEROREQUAL,6);
+        manager.addFilterGroup(activeGroup);
+        manager.addFilterGroup(inactiveGroup);
+        manager.addFilter(activeFilter);
+        manager.addFilter(inactiveFilter);
+        manager.addFilterToFiltergroup(activeFilterInactiveGroup, 2);
+        manager.addFilterToFiltergroup(activeFilterActiveGroup, 1);
+        String[][] resultString = manager.parseFilterList();
+
+        assert (resultString[0][0].equals(myProperty.toString()));
+        assert (resultString[1][0].equals("*"));
+        assert (resultString[2][0].equals("1"));
+        assert (resultString[3][0].equals("<="));
+        assert (resultString[4][0].equals(myProperty.toString()));
+        assert (resultString[5][0].equals("/"));
+        assert (resultString[6][0].equals("2"));
+
+        assert (resultString[0][1].equals(myProperty.toString()));
+        assert (resultString[1][1].equals("*"));
+        assert (resultString[2][1].equals("1"));
+        assert (resultString[3][1].equals(">="));
+        assert (resultString[4][1].equals(myProperty.toString()));
+        assert (resultString[5][1].equals("-"));
+        assert (resultString[6][1].equals("2"));
     }
 
 }
