@@ -26,5 +26,7 @@ public class LightTheme extends Theme {
 		super.buttonHighlightColor = Color.GREEN;
 		super.buttonDisabledColor = Color.GRAY;
 		super.disabledTextColor = Color.DARK_GRAY;
+		super.neutralColor = Color.LIGHT_GRAY;
+		super.lightNeutralColor = new Color(222, 222, 222);
 	}
 }

@@ -27,6 +27,8 @@ public abstract class Theme {
 	public Color buttonTextColor;
 	public Color outlineColor;
 	public int outlineThickness;
+	public Color neutralColor;
+	public Color lightNeutralColor;
 
 	public void style(JPanel panel) {
 		panel.setBackground(backgroundColor);
