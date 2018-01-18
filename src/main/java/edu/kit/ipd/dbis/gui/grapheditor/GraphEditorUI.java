@@ -10,9 +10,7 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.util.ResourceBundle;
 
 public class GraphEditorUI extends GUIElement {
@@ -45,13 +43,13 @@ public class GraphEditorUI extends GUIElement {
 		topBarButtons.setPreferredSize(new Dimension(Integer.MAX_VALUE, barHeight));
 		theme.style(topBarButtons);
 		topBarButtons.setBorder(null);
-		undo = new JButton("U");
-		undo.addActionListener((e) -> graph = history.moveBack());
+		undo = new JButton("U"); // todo replace with icon
+		undo.addActionListener(new UndoAction());
 		theme.style(undo);
 		undo.setMinimumSize(buttonSize);
 		undo.setPreferredSize(buttonSize);
 		undo.setMaximumSize(buttonSize);
-		redo = new JButton("R");
+		redo = new JButton("R"); // todo replace with icon
 		redo.addActionListener((e) -> graph = history.moveForward());
 		theme.style(redo);
 		redo.setMinimumSize(buttonSize);
@@ -205,6 +203,18 @@ public class GraphEditorUI extends GUIElement {
 				kanvas.setStroke(new BasicStroke(vertex.getOutlineThickness()));
 				kanvas.setPaint(vertex.getOutlineColor());
 				kanvas.draw(vertexShape);
+			}
+		}
+	}
+
+	private class UndoAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			RenderableGraph previousGraph = history.moveBack();
+
+			if (previousGraph != null) {
+				graph = previousGraph;
 			}
 		}
 	}
