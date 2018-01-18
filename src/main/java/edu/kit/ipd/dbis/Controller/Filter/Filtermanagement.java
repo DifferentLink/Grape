@@ -41,6 +41,20 @@ public class Filtermanagement {
     }
 
     /**
+     * adds a filter to a specific filtergroup
+     * @param filter filter which should be added to a specific filtergroup
+     * @param groupID ID of the filtergroup
+     */
+    void addFilterToFiltergroup(Filter filter, int groupID) throws Exception {
+        for (Filtergroup element: availableFilterGroups) {
+            if (element.id == groupID) {
+                element.availableFilter.add(filter);
+                database.repleaceFilter(groupID, element);
+            }
+        }
+    }
+
+    /**
      * removes a filtersegment out of the list of class Filtermanagement
      * @param id unique identifier of the filtersegment which should be removed
      */
