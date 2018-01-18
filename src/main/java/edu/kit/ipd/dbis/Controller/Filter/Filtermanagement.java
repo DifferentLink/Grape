@@ -72,8 +72,12 @@ public class Filtermanagement {
                 database.deleteFilter(id);
                 return;
             }
-            element.removeFilter(id);
-            database.repleaceFilter(id, element);
+            for (Filter filterInGroup: element.availableFilter) {
+                if (filterInGroup.id == id) {
+                    element.availableFilter.remove(filterInGroup);
+                    database.repleaceFilter(element.id, element);
+                }
+            }
         }
     }
 
@@ -100,8 +104,7 @@ public class Filtermanagement {
             for (Filter currentFilter: element.availableFilter) {
                 if (currentFilter.id == id) {
                     currentFilter.activate();
-                    int groupID = element.id;
-                    database.repleaceFilter(groupID, element);
+                    database.repleaceFilter(element.id, element);
                     return;
                 }
             }
@@ -130,7 +133,7 @@ public class Filtermanagement {
                 for (Filter currentFilter : currentElement.availableFilter) {
                     if (currentFilter.id == id) {
                         currentFilter.deactivate();
-                        //Aktualisieren in der Datenbank
+                        database.repleaceFilter(currentElement.id, currentElement);
                         return;
                     }
                 }
