@@ -25,7 +25,7 @@ public class Filtermanagement {
      * @param filtergroup filtersegment which should be added
      */
     void addFilterGroup(Filtergroup filtergroup) throws Exception {
-        database.addFilter(filtergroup);
+        //database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
     }
 
@@ -34,7 +34,7 @@ public class Filtermanagement {
      * @param filter filtersegment which should be added
      */
     void addFilter(Filter filter) throws Exception {
-        database.addFilter(filter);
+        //database.addFilter(filter);
         availableFilter.add(filter);
     }
 
@@ -47,7 +47,7 @@ public class Filtermanagement {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == groupID) {
                 element.availableFilter.add(filter);
-                database.repleaceFilter(groupID, element);
+                //database.repleaceFilter(groupID, element);
             }
         }
     }
@@ -60,20 +60,21 @@ public class Filtermanagement {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 availableFilter.remove(element);
-                database.deleteFilter(id);
+                //database.deleteFilter(id);
                 return;
             }
         }
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 availableFilterGroups.remove(element);
-                database.deleteFilter(id);
+                //database.deleteFilter(id);
                 return;
             }
             for (Filter filterInGroup: element.availableFilter) {
                 if (filterInGroup.id == id) {
                     element.availableFilter.remove(filterInGroup);
-                    database.repleaceFilter(element.id, element);
+                    //database.repleaceFilter(element.id, element);
+                    return;
                 }
             }
         }
@@ -89,20 +90,20 @@ public class Filtermanagement {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 element.activate();
-                database.repleaceFilter(id, element);
+                //database.repleaceFilter(id, element);
                 return;
             }
         }
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 element.activate();
-                database.repleaceFilter(id, element);
+                //database.repleaceFilter(id, element);
                 return;
             }
             for (Filter currentFilter: element.availableFilter) {
                 if (currentFilter.id == id) {
                     currentFilter.activate();
-                    database.repleaceFilter(element.id, element);
+                    //database.repleaceFilter(element.id, element);
                     return;
                 }
             }
@@ -118,20 +119,20 @@ public class Filtermanagement {
             for (Filter element: availableFilter) {
                 if (element.id == id) {
                     element.deactivate();
-                    database.repleaceFilter(id, element);
+                    //database.repleaceFilter(id, element);
                     return;
                 }
             }
             for (Filtergroup currentElement: availableFilterGroups) {
                 if (currentElement.id == id) {
                     currentElement.deactivate();
-                    database.repleaceFilter(id, currentElement);
+                    //database.repleaceFilter(id, currentElement);
                     return;
                 }
                 for (Filter currentFilter : currentElement.availableFilter) {
                     if (currentFilter.id == id) {
                         currentFilter.deactivate();
-                        database.repleaceFilter(currentElement.id, currentElement);
+                        //database.repleaceFilter(currentElement.id, currentElement);
                         return;
                     }
                 }
@@ -198,7 +199,7 @@ public class Filtermanagement {
         }
     }
 
-    public void parseFilterList() {
+    public String[][] parseFilterList() {
         int arrayLenght = availableFilter.size() + availableFilterGroups.size();
         String[][] stringArray = new String[7][arrayLenght];
         int currentColumn = 0;
@@ -221,5 +222,50 @@ public class Filtermanagement {
                 stringArray[6][currentColumn] = String.valueOf(element.getValue2());
             }
         }
+        return stringArray;
+    }
+
+    private static String transformFirstOperatorToString(Filter filter) {
+        String returnString = "";
+        if (filter.getOperator1().equals("ADD")) {
+            returnString = "+";
+        } else if (filter.getOperator1().equals("SUB")) {
+            returnString = "-";
+        } else if (filter.getOperator1().equals("MULT")) {
+            returnString = "*";
+        } else if (filter.getOperator1().equals("DIV")) {
+            returnString = "/";
+        }
+        return returnString;
+    }
+
+    private static String transformSecondOperatorToString(Filter filter) {
+        String returnString = "";
+        if (filter.getOperator2().equals("ADD")) {
+            returnString = "+";
+        } else if (filter.getOperator2().equals("SUB")) {
+            returnString = "-";
+        } else if (filter.getOperator2().equals("MULT")) {
+            returnString = "*";
+        } else if (filter.getOperator2().equals("DIV")) {
+            returnString = "/";
+        }
+        return returnString;
+    }
+
+    private static String transformRelationToString(Filter filter) {
+        String returnString = "";
+        if (filter.getRelation().equals("EQUAL")) {
+            returnString = "=";
+        } else if (filter.getRelation().equals("GREATHERTHAN")) {
+            returnString = ">";
+        } else if (filter.getRelation().equals("LESSTHAN")) {
+            returnString = "<";
+        } else if (filter.getRelation().equals("GREATHEROREQUAL")) {
+            returnString = ">=";
+        } else if (filter.getRelation().equals("LESSOREQUAL")) {
+            returnString = "<=";
+        }
+        return returnString;
     }
 }
