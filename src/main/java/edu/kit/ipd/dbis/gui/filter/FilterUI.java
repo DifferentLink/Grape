@@ -14,6 +14,9 @@ import java.util.ResourceBundle;
 
 public class FilterUI extends GUIElement {
 	private FilterManagement filterManagement;
+	private JPanel filterMenu;
+	private JPanel filterGroupsUI;
+	private JPanel simpleFilterUI;
 
 	public FilterUI(Controller controller, ResourceBundle language, Theme theme) {
 		super(controller, language, theme);
@@ -24,7 +27,7 @@ public class FilterUI extends GUIElement {
 		this.setBackground(theme.backgroundColor);
 		this.setForeground(theme.foregroundColor);
 
-		JPanel filterMenu = new JPanel();
+		filterMenu = new JPanel();
 		filterMenu.setLayout(new BoxLayout(filterMenu, BoxLayout.X_AXIS));
 		String[] filterMenuEntries = {"Save selected filter...", "Load Filter..."}; // todo use language resource
 		JComboBox<String> filter = new JComboBox<>(filterMenuEntries);
@@ -48,12 +51,15 @@ public class FilterUI extends GUIElement {
 	@Override
 	public void update() {
 
+		filterGroupsUI = new JPanel();
+		filterGroupsUI.setLayout(new BoxLayout(filterGroupsUI, BoxLayout.Y_AXIS));
+
 		for (FilterGroup filterGroup : filterManagement.getFilterGroups()) {
-			drawFilterGroup(filterGroup);
+			filterGroupsUI.add(drawFilterGroup(filterGroup));
 		}
 
 		for (SimpleFilter simpleFilter : filterManagement.getSimpleFilter()) {
-			drawSimpleFilter(simpleFilter);
+			simpleFilterUI.add(drawSimpleFilter(simpleFilter));
 		}
 	}
 
