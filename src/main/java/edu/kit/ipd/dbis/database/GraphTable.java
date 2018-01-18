@@ -19,7 +19,7 @@ public class GraphTable extends Table {
 	 * @param password
 	 * @param name
 	 */
-	public GraphTable(String url, String user, String password, String name) {
+	public GraphTable(String url, String user, String password, String name) throws Exception {
 		super(url, user, password, name);
 	}
 
@@ -49,7 +49,7 @@ public class GraphTable extends Table {
 		ByteArrayInputStream byteInput;
 		ObjectInputStream objectInput;
 		while (result.next()) {
-			byteInput = new ByteArrayInputStream(result.getBytes("filter"));
+			byteInput = new ByteArrayInputStream(result.getBytes("graph"));
 			objectInput = new ObjectInputStream(byteInput);
 			try {
 				graphs.add((PropertyGraph) objectInput.readObject());
@@ -68,7 +68,7 @@ public class GraphTable extends Table {
 	@Override
 	protected PropertyGraph getInstanceOf(Serializable object) throws Exception {
 		PropertyGraph graph = (object instanceof  PropertyGraph) ? (PropertyGraph) object : null;
-		graph.setId(this.getId());
+		if (graph != null) graph.setId(this.getId());
 		return graph;
 	}
 
