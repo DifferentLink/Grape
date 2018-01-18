@@ -76,6 +76,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 					i = Integer.MAX_VALUE;
 				}
 				//calculate bfs code for the subgraph of adjacentNodes + nodes from bfsIds;
+
 				Set<V[]> allPermutations = getPermutations(adjacentNotCheckedNodes);
 				for (V[] p : allPermutations) {
 					Object[] completePerm = new Object[perm.length + p.length];
@@ -99,7 +100,6 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 					nextPerms.add(p);
 				}
 				bestPermutationsEnd = bestPermutations;
-				//jetzt hat man die besten Permutationen in einer Liste "bestPermutations"
 			}
 			nextNode++;
 			startPermutations = nextPerms;
@@ -109,7 +109,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	}
 
 
-	private int compareLocal(int[] bfs1, int[] bfs2) {
+	public int compareLocal(int[] bfs1, int[] bfs2) {
 		for (int i = 0; i < Math.min(bfs1.length, bfs2.length); i++) {
 			if (bfs1[i] < bfs2[i]) {
 				return -1;
@@ -154,7 +154,11 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 				}
 			}
 		}
-		return result;
+		int[] endResult = new int[cnt];
+		for (int i = 0; i < endResult.length; i++) {
+			endResult[i] = result[i];
+		}
+		return endResult;
 	}
 
 	/**
@@ -163,13 +167,45 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	 * @return a set of all permutations
 	 */
 	public Set<V[]> getPermutations(ArrayList<V> list) {
+
 		Set<V[]> result = new HashSet<>();
 		int size = list.size();
-		Object[] start = new Object[size];
+		//Heap algorithm
+		Object[] A = new Object[size]; //Array of any
 		for (int i = 0; i < size; i++) {
-			start[i] = list.get(i);
+			A[i] = list.get(i);
 		}
-		result.add((V[]) start);
+
+		int n = A.length;
+
+		int[] c = new int[n];
+		for (int i = 0; i < n; i++) {
+			c[i] = 0;
+		}
+		result.add((V[]) A.clone());
+
+		int i = 0;
+		while (i < n) {
+			if (c[i] < i) {
+				if ((i % 2) == 0) {
+					//swap(A[0], A[i])
+					Object a = A[0];
+					A[0] = A[i];
+					A[i] = a;
+				} else {
+					//swap(A[c[i]], A[i])
+					Object a = A[c[i]];
+					A[c[i]] = A[i];
+					A[i] = a;
+				}
+				result.add((V[]) A.clone());
+				c[i] = c[i] + 1;
+				i = 0;
+			} else {
+				c[i] = 0;
+				i += 1;
+			}
+		}
 		return result;
 	}
 
