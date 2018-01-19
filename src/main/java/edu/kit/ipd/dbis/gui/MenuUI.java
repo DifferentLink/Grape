@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.gui.popups.AboutUI;
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.NewDatabaseUI;
 import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
@@ -57,7 +58,8 @@ public class MenuUI extends GUIMenu {
 		this.add(edit);
 
 		JMenu help = new JMenu(language.getString("help"));
-		JMenuItem info = new JMenuItem(language.getString("info"));
+		JMenuItem info = new JMenuItem(language.getString("about"));
+		info.addActionListener(new ShowAboutAction());
 		JMenuItem documentation = new JMenuItem(language.getString("documentation"));
 		help.add(info);
 		help.add(documentation);
@@ -197,6 +199,15 @@ public class MenuUI extends GUIMenu {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 
+		}
+	}
+
+	private class ShowAboutAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			JFrame aboutUI = new AboutUI(theme);
+			aboutUI.setVisible(true);
 		}
 	}
 }
