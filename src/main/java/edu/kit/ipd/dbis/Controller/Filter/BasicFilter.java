@@ -6,7 +6,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 /**
  * class which checks a specific attribute of a graph
  */
-public class BasicFilter extends Filter {
+class BasicFilter extends Filter {
 
     /**
      * Constructor of class BasicFilter
@@ -17,6 +17,7 @@ public class BasicFilter extends Filter {
      * meet the criteria of the filter
      * @param relation describes the relation between the property and the value
      * @param property1 property the current filter inspects
+     * @param id unique identifier the current filter has
      */
     BasicFilter(String name, boolean isActivated, int value1,
                 Relation relation, Property property1, int id) {
