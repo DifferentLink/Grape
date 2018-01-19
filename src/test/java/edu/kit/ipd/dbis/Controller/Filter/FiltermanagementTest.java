@@ -151,20 +151,20 @@ public class FiltermanagementTest {
         String[][] resultString = manager.parseFilterList();
 
         assert (resultString[0][0].equals(myProperty.toString()));
-        assert (resultString[1][0].equals("+"));
-        assert (resultString[2][0].equals("0"));
-        assert (resultString[3][0].equals("="));
-        assert (resultString[4][0].equals("0"));
-        assert (resultString[5][0].equals("+"));
-        assert (resultString[6][0].equals("1"));
+        assert (resultString[0][1].equals("+"));
+        assert (resultString[0][2].equals("0"));
+        assert (resultString[0][3].equals("="));
+        assert (resultString[0][4].equals("nothing"));
+        assert (resultString[0][5].equals("+"));
+        assert (resultString[0][6].equals("1"));
 
-        assert (resultString[0][1].equals(myProperty.toString()));
+        assert (resultString[1][0].equals(myProperty.toString()));
         assert (resultString[1][1].equals("+"));
-        assert (resultString[2][1].equals("0"));
-        assert (resultString[3][1].equals("<"));
-        assert (resultString[4][1].equals("0"));
-        assert (resultString[5][1].equals("+"));
-        assert (resultString[6][1].equals("6"));
+        assert (resultString[1][2].equals("0"));
+        assert (resultString[1][3].equals("<"));
+        assert (resultString[1][4].equals("nothing"));
+        assert (resultString[1][5].equals("+"));
+        assert (resultString[1][6].equals("6"));
     }
 
     @Test
@@ -187,20 +187,20 @@ public class FiltermanagementTest {
         String[][] resultString = manager.parseFilterList();
 
         assert (resultString[0][0].equals(myProperty.toString()));
-        assert (resultString[1][0].equals("*"));
-        assert (resultString[2][0].equals("1"));
-        assert (resultString[3][0].equals("<="));
-        assert (resultString[4][0].equals(myProperty.toString()));
-        assert (resultString[5][0].equals("/"));
-        assert (resultString[6][0].equals("2"));
+        assert (resultString[0][1].equals("*"));
+        assert (resultString[0][2].equals("1"));
+        assert (resultString[0][3].equals("<="));
+        assert (resultString[0][4].equals(myProperty.toString()));
+        assert (resultString[0][5].equals("/"));
+        assert (resultString[0][6].equals("2"));
 
-        assert (resultString[0][1].equals(myProperty.toString()));
+        assert (resultString[1][0].equals(myProperty.toString()));
         assert (resultString[1][1].equals("*"));
-        assert (resultString[2][1].equals("1"));
-        assert (resultString[3][1].equals(">="));
-        assert (resultString[4][1].equals(myProperty.toString()));
-        assert (resultString[5][1].equals("-"));
-        assert (resultString[6][1].equals("2"));
+        assert (resultString[1][2].equals("1"));
+        assert (resultString[1][3].equals(">="));
+        assert (resultString[1][4].equals(myProperty.toString()));
+        assert (resultString[1][5].equals("-"));
+        assert (resultString[1][6].equals("2"));
     }
 
     @Test
