@@ -6,9 +6,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.*;
 
 public class GraphTable extends Table {
@@ -68,7 +66,6 @@ public class GraphTable extends Table {
 	@Override
 	protected PropertyGraph getInstanceOf(Serializable object) throws Exception {
 		PropertyGraph graph = (object instanceof  PropertyGraph) ? (PropertyGraph) object : null;
-		if (graph != null) graph.setId(this.getId());
 		return graph;
 	}
 
@@ -99,20 +96,40 @@ public class GraphTable extends Table {
 
 	/**
 	 *
-	 * @param vertices
-	 * @return
-	 */
-	public Set<PropertyGraph> getGraphsByVertex(int vertices) {
-		//TODO: Gereon und Felix fragen, ob diese Methode gebraucht wird
-		return null;
-	}
-
-	/**
-	 *
 	 * @param table
 	 */
-	public void merge(GraphTable table) {
+	public void merge(GraphTable table) throws Exception {
 
+		if (this.isMergeableWith(table)) {
+			LinkedList<Integer> ids = table.getIds();
+			for (int i : ids) {
+				if (!this.graphExists(table.getContent(i))) {
+					PropertyGraph graph = table.getContent(i);
+					graph.setId(this.getId());
+					this.insert(graph);
+				}
+			}
+		} else {
+			throw new Exception();
+		}
+	}
+
+	private boolean isMergeableWith(GraphTable table) throws Exception {
+		Connection current = this.getConnection();
+		Connection other = table.getConnection();
+
+		String sql = "SHOW COLUMNS FROM ";
+		ResultSet currentResult = current.prepareStatement(sql + this.name).executeQuery();
+
+		while (currentResult.next()) {
+			ResultSet otherResult = other.prepareStatement(sql + table.getName()).executeQuery();
+			boolean found = false;
+			while ((otherResult.next()) && (!found)) {
+				found = (currentResult.toString().equals(otherResult.toString())) ? (true) : (false);
+			}
+			if (!found) return false;
+		}
+		return true;
 	}
 
 	/**
@@ -156,8 +173,11 @@ public class GraphTable extends Table {
 	 *
 	 * @return
 	 */
-	public boolean graphExists(PropertyGraph graph) {
-		return true;
+	public boolean graphExists(PropertyGraph graph) throws Exception {
+		Connection connection = this.getConnection();
+		String sql = "SELECT * FROM " + this.name + " WHERE bfsCode = " + this.minimalBfsCodeToString(graph);
+		ResultSet result = connection.prepareStatement(sql).executeQuery();
+		return (result.next()) ? (true) : (false);
 	}
 
 	/**
