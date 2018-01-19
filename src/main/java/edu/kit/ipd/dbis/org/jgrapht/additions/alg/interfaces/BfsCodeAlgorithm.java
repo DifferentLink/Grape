@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,9 +47,9 @@ public interface BfsCodeAlgorithm<V, E> {
 
 		/**
 		 * Determines the backward edges
-		 * @return set of backward edges
+		 * @return list of int array
 		 */
-		List<E> getBackwardEdges();
+		List<int[]> getBackwardEdges();
 
 
 	}
@@ -83,13 +84,24 @@ public interface BfsCodeAlgorithm<V, E> {
 
 		@Override
 		public int getNumberOfBackwardEdges() {
-			return 0;
+			int cnt = 0;
+			for (int i = 0; i < code.length; i++) {
+				if (code[i] == -1) {
+					cnt++;
+				}
+			}
+			return cnt;
 		}
 
 		@Override
-		public List<E> getBackwardEdges() {
-			// TODO: implement me
-			return null;
+		public List<int[]> getBackwardEdges() {
+			List<int[]> edges = new ArrayList();
+			for (int i = 0; i < code.length; i++) {
+				if (code[i] == -1) {
+					int[] edge = {code[i + 1], code[i + 2]};
+				}
+			}
+			return edges;
 		}
 
 		/**

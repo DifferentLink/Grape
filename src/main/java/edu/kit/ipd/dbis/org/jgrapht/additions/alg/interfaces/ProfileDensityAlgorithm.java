@@ -58,7 +58,6 @@ public interface ProfileDensityAlgorithm<V, E> {
 		 */
 		@Override
 		public int compareTo(Object o) {
-			//TODO: implement me
 			int[][] p2 = ((ProfileImpl) o).getMatrix();
 			if (this.getMatrix().length == 0 && p2.length == 0) {
 				return 0;

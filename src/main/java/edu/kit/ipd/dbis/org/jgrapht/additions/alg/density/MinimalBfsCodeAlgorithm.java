@@ -29,7 +29,6 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		for (Object v : graph.vertexSet()) {
 			LocalBfsCodeAlgorithm local = new LocalBfsCodeAlgorithm((V) v);
 			BfsCode localCode = local.getBfsCode(graph);
-			// TODO: create Profile object and add to graph
 			if (localCode.compareTo(bestCode) == -1) {
 				bestCode = localCode;
 			}
