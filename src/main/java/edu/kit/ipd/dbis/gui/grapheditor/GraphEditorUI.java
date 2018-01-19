@@ -50,7 +50,7 @@ public class GraphEditorUI extends GUIElement {
 		undo.setPreferredSize(buttonSize);
 		undo.setMaximumSize(buttonSize);
 		redo = new JButton("R"); // todo replace with icon
-		redo.addActionListener((e) -> graph = history.moveForward());
+		redo.addActionListener(new RedoAction());
 		theme.style(redo);
 		redo.setMinimumSize(buttonSize);
 		redo.setPreferredSize(buttonSize);
@@ -155,14 +155,16 @@ public class GraphEditorUI extends GUIElement {
 								target = new Vertex(mTarget);
 							}
 							graph.add(new Edge(start, target));
+							graph = graph.deepCopy();
+							history.addToHistory(graph);
 						} else {
 							graph.add(new Vertex(mTarget));
+							graph = graph.deepCopy();
+							history.addToHistory(graph);
 						}
 					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Released right mouse button
 						graph.remove(mTarget);
 					}
-
-					history.addToHistory(graph);
 					repaint();
 				}
 			});
@@ -215,6 +217,20 @@ public class GraphEditorUI extends GUIElement {
 
 			if (previousGraph != null) {
 				graph = previousGraph;
+				repaint();
+			}
+		}
+	}
+
+	private class RedoAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			RenderableGraph nextGraph = history.moveForward();
+
+			if (nextGraph != null) {
+				graph = nextGraph;
+				repaint();
 			}
 		}
 	}

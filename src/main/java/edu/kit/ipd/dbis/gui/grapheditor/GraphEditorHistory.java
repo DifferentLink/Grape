@@ -4,12 +4,12 @@
 
 package edu.kit.ipd.dbis.gui.grapheditor;
 
-import java.util.LinkedList;
-import java.util.ListIterator;
+import edu.kit.ipd.dbis.gui.grapheditor.util.ConcurrentLinkedList;
+import edu.kit.ipd.dbis.gui.grapheditor.util.ConcurrentNode;
 
 public class GraphEditorHistory {
-	private LinkedList<RenderableGraph> history = new LinkedList<>();
-	private ListIterator<RenderableGraph> activeState = history.listIterator();
+	private ConcurrentLinkedList<RenderableGraph> history = new ConcurrentLinkedList<>();
+	private ConcurrentNode<RenderableGraph> activeState;
 	private int maxHistorySize;
 
 	public GraphEditorHistory() {
@@ -20,22 +20,25 @@ public class GraphEditorHistory {
 	}
 
 	public void addToHistory(RenderableGraph graph) {
-		history.add(graph);
-		maintainHistorySize();
+		history.pushBack(graph);
+		activeState = history.last();
+		// maintainHistorySize();
 	}
 
 	public RenderableGraph moveBack() {
-		return activeState.previous();
+		activeState = activeState.getPrevious();
+		return activeState.get();
 	}
 
 	public RenderableGraph moveForward() {
-		return activeState.next();
+		activeState = activeState.getNext();
+		return activeState.get();
 	}
 
 	private void maintainHistorySize() {
 		final int historyOverflow = Math.abs(maxHistorySize - history.size());
 		for (int i = 0; i < historyOverflow; i++) {
-			history.removeFirst();
+			history.popFront();
 		}
 	}
 
