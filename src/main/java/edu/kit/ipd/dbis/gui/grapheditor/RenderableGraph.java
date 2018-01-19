@@ -4,6 +4,8 @@
 
 package edu.kit.ipd.dbis.gui.grapheditor;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
