@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.database;
 
+import edu.kit.ipd.dbis.Controller.Filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.Set;
@@ -19,7 +20,7 @@ public interface DatabaseManager {
 	 *
 	 * @param filter
 	 */
-	void addFilter(FilterSegment filter) throws Exception;
+	void addFilter(Filtersegment filter) throws Exception;
 
 	/**
 	 *
@@ -62,7 +63,7 @@ public interface DatabaseManager {
 	 * @param id
 	 * @param filter
 	 */
-	void repleaceFilter(int id, FilterSegment filter) throws Exception;
+	void repleaceFilter(int id, Filtersegment filter) throws Exception;
 
 	/**
 	 *
@@ -81,20 +82,20 @@ public interface DatabaseManager {
 	 *
 	 * @return
 	 */
-	Set<FilterSegment> getFilters() throws Exception;
+	Set<Filtersegment> getFilters() throws Exception;
 
 	/**
 	 *
 	 * @param id
 	 * @return
 	 */
-	FilterSegment getFilterById(int id) throws Exception;
+	Filtersegment getFilterById(int id) throws Exception;
 
 	/**
 	 *
 	 * @return
 	 */
-	Set<FilterSegment> getActivatedFilters() throws Exception;
+	Set<Filtersegment> getActivatedFilters() throws Exception;
 
 	/**
 	 *

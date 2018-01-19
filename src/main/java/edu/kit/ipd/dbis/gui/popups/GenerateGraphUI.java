@@ -53,5 +53,6 @@ public class GenerateGraphUI extends JFrame {
 		generate.add(generateGraphsButton);
 
 		content.add(generate);
+		this.add(content);
 	}
 }

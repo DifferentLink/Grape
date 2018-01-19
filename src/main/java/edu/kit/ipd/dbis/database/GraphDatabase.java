@@ -1,5 +1,7 @@
 package edu.kit.ipd.dbis.database;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.Controller.Filter.Filtersegment;
 import java.util.Set;
 
 public class GraphDatabase implements DatabaseManager {
@@ -14,6 +16,7 @@ public class GraphDatabase implements DatabaseManager {
 	public GraphDatabase(GraphTable graphTable, FilterTable filterTable) {
 		this.graphTable = graphTable;
 		this.filterTable = filterTable;
+		this.directory = null;
 	}
 
 	/**
@@ -32,6 +35,10 @@ public class GraphDatabase implements DatabaseManager {
 		return this.filterTable;
 	}
 
+	public String getDirectory() {
+		return this.directory;
+	}
+
 	/**
 	 *
 	 */
@@ -45,7 +52,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void addFilter(FilterSegment filter) throws Exception {
+	public void addFilter(Filtersegment filter) throws Exception {
 
 	}
 
@@ -80,7 +87,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void repleaceFilter(int id, FilterSegment filter) throws Exception {
+	public void repleaceFilter(int id, Filtersegment filter) throws Exception {
 
 	}
 
@@ -95,17 +102,17 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public Set<FilterSegment> getFilters() throws Exception {
+	public Set<Filtersegment> getFilters() throws Exception {
 		return null;
 	}
 
 	@Override
-	public FilterSegment getFilterById(int id) throws Exception {
+	public Filtersegment getFilterById(int id) throws Exception {
 		return null;
 	}
 
 	@Override
-	public Set<FilterSegment> getActivatedFilters() throws Exception {
+	public Set<Filtersegment> getActivatedFilters() throws Exception {
 		return null;
 	}
 
@@ -142,6 +149,5 @@ public class GraphDatabase implements DatabaseManager {
 	private boolean isCalculated(PropertyGraph graph) {
 		return true;
 	}
-
 
 }

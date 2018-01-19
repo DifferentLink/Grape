@@ -4,51 +4,57 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
-import edu.kit.ipd.dbis.gui.themes.LightTheme;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ResourceBundle;
 
-public class GrapeUI extends JFrame {
+public class GrapeUI extends GUIWindow {
 
-	private ResourceBundle language;
-	private Theme theme = new LightTheme();
+	private GUIElement graphEditorUI;
+	private MenuUI menuUI;
+	private GUIElement filterUI;
+	private GUIElement correlationUI;
+	private JTable tableUI;
+	private GUIElement statusbarUI;
+	private GUIElement logUI;
 
-	public GrapeUI(final ResourceBundle language) {
-		this.language = language;
-		run();
-	}
+	private String programName = "Grape";
+	private JFrame mainWindow;
 
-	private void run() {
-		String programName = "Grape";
-		JFrame mainWindow = new JFrame(programName);
+	private float verticalSplitRatio = .1f;
+
+	public GrapeUI(Controller controller, ResourceBundle language, Theme theme) {
+		super(controller, language, theme);
+
+		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setMinimumSize(new Dimension(600, 400));
+		mainWindow.setMinimumSize(new Dimension(400, 400));
 		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-		mainWindow.setJMenuBar(MenuUI.makeMenuBar(language, theme));
+		menuUI = new MenuUI(language, theme);
+		mainWindow.setJMenuBar(menuUI);
 
-		JPanel filterUI = FilterUI.makeFilterUI(language, theme);
-		JPanel correlationUI = CorrelationUI.makeCorrelationUI(language, theme);
+		filterUI = new FilterUI(controller, language, theme);
+		correlationUI = new CorrelationUI(controller, language, theme);
 
-		JSplitPane filterCorrelationDivider = new JSplitPane(
-				JSplitPane.VERTICAL_SPLIT,
-				true,
-				filterUI,
-				correlationUI);
-		filterCorrelationDivider.setDividerSize(theme.dividerSize);
-		filterCorrelationDivider.setBorder(null);
+		JPanel filterCorrelationDivider = new JPanel();
+		filterCorrelationDivider.setLayout(new BoxLayout(filterCorrelationDivider, BoxLayout.Y_AXIS));
+		filterCorrelationDivider.setBackground(theme.backgroundColor);
+		filterCorrelationDivider.add(filterUI);
+		filterCorrelationDivider.add(Box.createVerticalGlue());
+		filterCorrelationDivider.add(correlationUI);
 
-		JPanel graphEditor = GraphEditorUI.makeGraphEditorUI(language, theme);
+		graphEditorUI = new GraphEditorUI(controller, language, theme);
 
 		JSplitPane graphEditorDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
 				true,
 				filterCorrelationDivider,
-				graphEditor);
+				graphEditorUI);
 		graphEditorDivider.setDividerSize(theme.dividerSize);
 		graphEditorDivider.setBorder(null);
 
@@ -59,26 +65,67 @@ public class GrapeUI extends JFrame {
 		leftUI.add(graphEditorDivider);
 
 		graphEditorDivider.setResizeWeight(.55f);
-		filterCorrelationDivider.setResizeWeight(.5f);
 
-		JPanel tableUI = TableUI.makeTableUI(language, theme);
-		JPanel statusbarUI = StatusbarUI.makeStatusbarUI(language, theme);
+		statusbarUI = new StatusbarUI(controller, language, theme);
 		JPanel rightUI = new JPanel();
-
 		rightUI.setLayout(new BoxLayout(rightUI, BoxLayout.Y_AXIS));
-		rightUI.add(tableUI, BorderLayout.NORTH);
+		rightUI.setBackground(theme.backgroundColor);
+		String[] columns = {"ID", "#Vertices", "#Edges"}; // todo remove with dynamic columns/rows
+		Object[][] data = {{"001", "5", "6"},
+				{"002", "3", "5"},
+				{"003", "2", "4"}};
+		tableUI = new JTable(new NonEditableTableModel(columns, data));
+		rightUI.add(tableUI, BorderLayout.CENTER);
+		rightUI.add(Box.createVerticalGlue());
 		rightUI.add(statusbarUI, BorderLayout.SOUTH);
 
-		JSplitPane verticalDivider = new JSplitPane(
+		JSplitPane verticalDivider;
+		verticalDivider = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT,
 				true,
 				leftUI,
 				rightUI);
 		verticalDivider.setDividerSize(theme.dividerSize);
-		verticalDivider.setResizeWeight(.2f);
+		verticalDivider.setResizeWeight(verticalSplitRatio);
 
 		mainWindow.add(verticalDivider);
 
 		mainWindow.setVisible(true);
+	}
+
+	/**
+	 * Updates the GUIWindow element.
+	 */
+	@Override
+	public void update() {
+		updateGraphEditor();
+		updateFilter();
+		updateCorrelation();
+		updateTable();
+		updateStatusbar();
+		updateLog();
+	}
+
+	public void updateGraphEditor() {
+		graphEditorUI.update();
+	}
+
+	public void updateFilter() {
+		filterUI.update();
+	}
+
+	public void updateCorrelation() {
+		correlationUI.update();
+	}
+
+	public void updateTable() {
+	}
+
+	public void updateStatusbar() {
+		statusbarUI.update();
+	}
+
+	public void updateLog() {
+		logUI.update();
 	}
 }

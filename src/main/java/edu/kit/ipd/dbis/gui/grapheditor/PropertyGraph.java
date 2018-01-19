@@ -4,5 +4,8 @@
 
 package edu.kit.ipd.dbis.gui.grapheditor;
 
-public class Memento {
+/**
+ * Dummy class todo: remove
+ */
+public class PropertyGraph {
 }
