@@ -10,7 +10,7 @@ import org.kohsuke.MetaInfServices;
 public class Profile extends ComplexProperty {
 	@Override
 	protected ProfileDensityAlgorithm.Profile calculateAlgorithm(PropertyGraph graph) {
-		MinimalProfileAlgorithm alg = new MinimalProfileAlgorithm();
-		return alg.getProfile(graph);
+		MinimalProfileAlgorithm alg = new MinimalProfileAlgorithm(graph);
+		return alg.getProfile();
 	}
 }
