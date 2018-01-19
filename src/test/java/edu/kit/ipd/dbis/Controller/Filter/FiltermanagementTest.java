@@ -14,7 +14,7 @@ public class FiltermanagementTest {
     @Test
     public void insertGroupToTable() throws Exception {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         Filtergroup group = new Filtergroup("Testgroup", true, 1);
         try {
             manager.addFilterGroup(group);
@@ -29,7 +29,7 @@ public class FiltermanagementTest {
     @Test
     public void insertFilterToTable() throws Exception {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         Filter filter = new BasicFilter("Testfilter", true, 1, Relation.GREATHEROREQUAL, null, 2);
         try {
             manager.addFilter(filter);
@@ -44,7 +44,7 @@ public class FiltermanagementTest {
     @Test
     public void insertFilterToGroupTable() throws Exception {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         Filter filter = new BasicFilter("Testfilter", true, 1, Relation.EQUAL, null, 3);
         Filtergroup group = new Filtergroup("Testgroup", true, 4);
         try {
@@ -62,7 +62,7 @@ public class FiltermanagementTest {
     @Test
     public void removeFiltersegmentTest() throws Exception {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         Filter standartFilter = new BasicFilter("Testfilter", true, 1, Relation.LESSOREQUAL, null,5);
         Filtergroup group = new Filtergroup("Testgroup", true, 6);
         Filter groupFilter = new BasicFilter("Testfilter", true, 1, Relation.LESSTHAN, null, 7);
@@ -86,7 +86,7 @@ public class FiltermanagementTest {
     @Test
     public void activationTest() throws Exception {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         Filter standartFilter = new BasicFilter("Testfilter", false, 1, Relation.LESSOREQUAL, null, 1);
         Filtergroup group = new Filtergroup("Testgroup", false, 2);
         Filter groupFilter = new BasicFilter("Testfilter", false, 1, Relation.EQUAL, null, 3);
@@ -110,7 +110,7 @@ public class FiltermanagementTest {
     @Test
     public void deactivationTest() throws Exception {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         Filter standartFilter = new BasicFilter("Testfilter", true, 1, Relation.EQUAL, null, 1);
         Filtergroup group = new Filtergroup("Testgroup", true, 2);
         Filter groupFilter = new BasicFilter("Testfilter", true, 1, Relation.LESSTHAN, null, 3);
@@ -134,7 +134,7 @@ public class FiltermanagementTest {
     @Test
     public void testDBParserBasicFilter() throws Exception {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         Filtergroup activeGroup = new Filtergroup("Test", true, 1);
         Filtergroup inactiveGroup = new Filtergroup("InactiveFilter", false, 2);
         Property myProperty = new GreatestDegree();
@@ -170,7 +170,7 @@ public class FiltermanagementTest {
     @Test
     public void testDBParserConnectedFilter() throws Exception {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         Filtergroup activeGroup = new Filtergroup("Test", true, 1);
         Filtergroup inactiveGroup = new Filtergroup("InactiveFilter", false, 2);
         Property myProperty = new GreatestDegree();
@@ -206,7 +206,7 @@ public class FiltermanagementTest {
     @Test
     public void testRemoveCapitalLetters() {
         GraphDatabase database = new GraphDatabase(null, null);
-        Filtermanagement manager = new Filtermanagement(database);
+        Filtermanagement manager = new Filtermanagement();
         String testString = "thisISaTeSTstRing#42";
         String resultString = manager.removeCapitalLetters(testString);
         System.out.println(resultString);

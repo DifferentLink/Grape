@@ -16,10 +16,9 @@ public class Filtermanagement {
     public List<Filter> availableFilter;
     public GraphDatabase database;
 
-    public Filtermanagement(GraphDatabase database) {
+    public Filtermanagement() {
         availableFilterGroups = new ArrayList<>();
         availableFilter = new ArrayList<>();
-        this.database = database;
     }
 
     /**
@@ -206,7 +205,7 @@ public class Filtermanagement {
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
      * Filtersegment): void for every Filter element of the new database
      */
-    public void switchDB(GraphDatabase newDatabase) throws Exception {
+    public void setDatabase(GraphDatabase newDatabase) throws Exception {
         availableFilterGroups.clear();
         availableFilter.clear();
         Set<Filtersegment> activatedFilter = newDatabase.getFilters();
