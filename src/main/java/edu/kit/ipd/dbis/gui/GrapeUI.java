@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ResourceBundle;
 
-public class GrapeUI extends GUIWindow {
+public class GrapeUI {
 
 	private GUIElement graphEditorUI;
 	private MenuUI menuUI;
@@ -28,7 +28,6 @@ public class GrapeUI extends GUIWindow {
 	private float verticalSplitRatio = .1f;
 
 	public GrapeUI(Controller controller, ResourceBundle language, Theme theme) {
-		super(controller, language, theme);
 
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,41 +90,5 @@ public class GrapeUI extends GUIWindow {
 		mainWindow.add(verticalDivider);
 
 		mainWindow.setVisible(true);
-	}
-
-	/**
-	 * Updates the GUIWindow element.
-	 */
-	@Override
-	public void update() {
-		updateGraphEditor();
-		updateFilter();
-		updateCorrelation();
-		updateTable();
-		updateStatusbar();
-		updateLog();
-	}
-
-	public void updateGraphEditor() {
-		graphEditorUI.update();
-	}
-
-	public void updateFilter() {
-		filterUI.update();
-	}
-
-	public void updateCorrelation() {
-		correlationUI.update();
-	}
-
-	public void updateTable() {
-	}
-
-	public void updateStatusbar() {
-		statusbarUI.update();
-	}
-
-	public void updateLog() {
-		logUI.update();
 	}
 }
