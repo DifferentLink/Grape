@@ -41,13 +41,9 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		// a minimal vertex coloring.
 		// needs to be optimized!
 		int numberOfVertices = this.graph.getNumberOfVertices();
+		// give vertices an order
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
 		int[] colors = new int[numberOfVertices];
-
-		// give vertices an order
-		for (int i = 0; i < sortedVertices.size(); i++) {
-			colors[i] = 0;
-		}
 
 		if (numberOfVertices == 1) {
 			return createColoringObject(new int[] {0}, sortedVertices);
