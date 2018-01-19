@@ -1,10 +1,10 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
-import org.junit.jupiter.api.Test;
+
+
+import org.junit.Test;
 
 import java.sql.SQLException;
-
-import static org.junit.Assert.*;
 
 public class FiltermanagementTest {
 
