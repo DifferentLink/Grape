@@ -114,6 +114,7 @@ public class GraphTable extends Table {
 		}
 	}
 
+	//TODO: löschen
 	private boolean isMergeableWith(GraphTable table) throws Exception {
 		Connection current = this.getConnection();
 		Connection other = table.getConnection();

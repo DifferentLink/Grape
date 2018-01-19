@@ -1,9 +1,15 @@
 package edu.kit.ipd.dbis.database;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class FileManager implements Connector {
 
@@ -49,8 +55,11 @@ public class FileManager implements Connector {
 
 		load.parse();
 		GraphDatabase database = load.getDatabase();
-		database.setDirectory(directory);
-		return database;
+		if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
+			database.setDirectory(directory);
+			return database;
+		}
+		throw new Exception();
 	}
 
 	@Override
@@ -104,6 +113,43 @@ public class FileManager implements Connector {
 			i++;
 		}
 		return s;
+	}
+
+	private boolean validFilterTable(FilterTable filterTable) throws Exception {
+		HashSet<String> columns = filterTable.getColumns();
+		HashSet<String> names = new HashSet<>();
+		names.add("id");
+		names.add("isValid");
+		names.add("filter");
+		if (columns.containsAll(names) && names.containsAll(names)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean validGraphTable(GraphTable graphTable) throws Exception {
+		HashSet<String> columns = graphTable.getColumns();
+		HashSet<String> names = new HashSet<>();
+		names.add("id");
+		names.add("graph");
+		names.add("bfsCode");
+		names.add("nothing");
+
+		PropertyGraph graph = new PropertyGraph();
+		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+
+		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
+			if (entry.getKey().getSuperclass().toString().equals("IntegerProperty")) {
+				names.add(entry.getKey().toString());
+			} else if (entry.getKey().getSuperclass().toString().equals("DoubleProperty")) {
+				names.add(entry.getKey().toString());
+			}
+		}
+
+		if (columns.containsAll(names) && names.containsAll(columns)) {
+			return true;
+		}
+		return false;
 	}
 
 }

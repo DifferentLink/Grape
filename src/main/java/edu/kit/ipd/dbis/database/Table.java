@@ -5,9 +5,8 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.*;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -94,6 +93,17 @@ public abstract class Table {
 		ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
 		objectOutput.writeObject(object);
 		return byteOutput.toByteArray();
+	}
+
+	public HashSet<String> getColumns() throws Exception {
+		Connection connection = this.getConnection();
+		String sql = "SHOW COLUMNS FROM " + this.name;
+		ResultSet result = connection.prepareStatement(sql).executeQuery();
+		HashSet<String> columns = new HashSet<>();
+		while (result.next()) {
+			columns.add(result.toString());
+		}
+		return columns;
 	}
 
 	/**
