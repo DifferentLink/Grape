@@ -2,7 +2,6 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.*;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.NodeSpecificDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
@@ -23,7 +22,6 @@ public class PropertyFactory {
 		properties.add(new TotalColorings());
 		properties.add(new VertexColorings());
 		properties.add(new AverageDegree());
-		properties.add(new NodeSpecificDensity());
 		properties.add(new ProportionDensity());
 		properties.add(new StructureDensity());
 		properties.add(new GreatestDegree());
