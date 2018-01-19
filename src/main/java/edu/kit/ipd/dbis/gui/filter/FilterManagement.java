@@ -37,26 +37,8 @@ public class FilterManagement {
 	}
 
 	public void remove(int id) {
-
-		Filter filterToRemove = null;
-
-		for (Filter filter : simpleFilter) {
-			if (filter.getID() == id) {
-				filterToRemove = filter;
-			}
-		}
-		if (filterToRemove != null) {
-			simpleFilter.remove(filterToRemove);
-		}
-
-		for (Filter filter : filterGroups) {
-			if (filter.getID() == id) {
-				filterToRemove = filter;
-				return;
-			}
-		}
-		if (filterToRemove != null) {
-			filterGroups.remove(filterToRemove);
-		}
+		simpleFilter.removeIf(simpleFilter -> simpleFilter.getID() == id);
+		filterGroups.removeIf(filterGroup -> filterGroup.getID() == id);
+		filterGroups.forEach(filterGroup -> filterGroup.getSimpleFilter().removeIf(simpleFilter1 -> simpleFilter1.getID() == id));
 	}
 }
