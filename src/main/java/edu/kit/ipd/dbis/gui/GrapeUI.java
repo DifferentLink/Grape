@@ -9,8 +9,10 @@ import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class GrapeUI {
@@ -42,6 +44,12 @@ public class GrapeUI {
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(400, 400));
 		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		try {
+			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
+			mainWindow.setIconImage(logo);
+		} catch (IOException e) {}
+
 
 		menuUI = new MenuUI(language, theme);
 		mainWindow.setJMenuBar(menuUI);
