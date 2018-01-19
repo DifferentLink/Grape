@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.ArrayList;
@@ -142,22 +143,14 @@ public class Filtermanagement {
     }
 
     /**
-     * allows to prevent a NullPointerException by asking if there is a graph to return
-     * @return returns true if there is a graph which meets the current filter criteria
-     * but was not returned yet
+     * method which returns all graphs sorted by a specific property
+     * @param property property to sort after
+     * @param upwards true if you want to sort graphs upwards
+     * @return returns all graphs sorted by a specific property
+     * @throws Exception thrown if an exception in database occured
      */
-    public boolean hasNextValidGraph() {
-        return false;
-    }
-
-    /**
-     * allows to get only graphs from database which meet the current filter criteria
-     * @return graph which meets all current filter criteria
-     * @throws NullPointerException this exception is thrown if all graphs of database
-     * which meet the current criteria were already returned
-     */
-    public PropertyGraph getNextValidGraph() throws NullPointerException {
-        return null;
+    public Set<PropertyGraph> getGraphs(Property property, boolean upwards) throws Exception {
+        return database.getGraphs();
     }
 
     /**
