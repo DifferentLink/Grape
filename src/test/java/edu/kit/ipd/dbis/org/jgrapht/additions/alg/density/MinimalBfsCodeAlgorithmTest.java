@@ -178,29 +178,4 @@ public class MinimalBfsCodeAlgorithmTest {
 			}
 		}
 	}
-
-	@Test
-	public void listTest() {
-		int[] number = {2,5,4,1};
-		LinkedList<Integer> list = new LinkedList<>();
-		for (int i : number) {
-
-			//adds the localCode at the right sorted order
-			Iterator<Integer> iterator = list.iterator();
-			int index = 0;
-			while (iterator.hasNext()) {
-				int a = iterator.next();
-				if ((a - i) < 0) {
-					index++;
-				}
-			}
-			list.add(index, i);
-		}
-
-		Iterator<Integer> iterator = list.iterator();
-		while(iterator.hasNext()) {
-			System.out.print(iterator.next() + " ");
-		}
-	}
-
 }
