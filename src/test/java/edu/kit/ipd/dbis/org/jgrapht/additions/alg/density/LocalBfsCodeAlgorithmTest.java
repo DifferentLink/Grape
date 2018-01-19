@@ -32,7 +32,7 @@ public class LocalBfsCodeAlgorithmTest {
 
 
 	@Test
-	public void minimalBfsCodeTest() {
+	public void localBfsCodeTest() {
 		PropertyGraph graph = generateSimpleTestGraph();
 		LocalBfsCodeAlgorithm<String, DefaultEdge> alg = new LocalBfsCodeAlgorithm<>("e");
 		int[] result = alg.getBfsCode(graph).getCode();

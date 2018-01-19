@@ -26,11 +26,11 @@ public interface ProfileDensityAlgorithm<V, E> {
 	 */
 	interface Profile<V, E> extends Comparable {
 		/**
-		 * Get the profile.
+		 * Get the profile matrix.
 		 *
-		 * @return the profile
+		 * @return the profile matrix
 		 */
-		int[][] getProfile();
+		int[][] getMatrix();
 	}
 
 	/**
@@ -47,7 +47,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 		}
 
 		@Override
-		public int[][] getProfile() {
+		public int[][] getMatrix() {
 			return this.profile;
 		}
 
@@ -59,19 +59,19 @@ public interface ProfileDensityAlgorithm<V, E> {
 		@Override
 		public int compareTo(Object o) {
 			//TODO: implement me
-			int[][] p2 = ((ProfileImpl) o).getProfile();
-			if (this.getProfile().length == 0 && p2.length == 0) {
+			int[][] p2 = ((ProfileImpl) o).getMatrix();
+			if (this.getMatrix().length == 0 && p2.length == 0) {
 				return 0;
-			} else if (this.getProfile()[0].length == 0 && p2[0].length == 0) {
+			} else if (this.getMatrix()[0].length == 0 && p2[0].length == 0) {
 				return 0;
-			} else if (this.getProfile().length == 0) {
+			} else if (this.getMatrix().length == 0) {
 				return -1;
 			} else if (p2.length == 0) {
 				return 1;
 			}
 
-			for (int i = 0; i < Math.min(this.getProfile()[0].length, p2[0].length); i++) {
-				for (int j = 0; j < Math.min(this.getProfile().length, p2.length); j++) {
+			for (int i = 0; i < Math.min(this.getMatrix()[0].length, p2[0].length); i++) {
+				for (int j = 0; j < Math.min(this.getMatrix().length, p2.length); j++) {
 					if (this.profile[j][i] < p2[j][i]) {
 						return -1;
 					} else if (this.profile[j][i] > p2[j][i]) {
