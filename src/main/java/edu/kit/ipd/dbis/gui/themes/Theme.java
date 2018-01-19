@@ -14,6 +14,7 @@ public abstract class Theme {
 	public Color fontColor;
 	public int defaultFontSize;
 	public Font defaultFont;
+	public Font smallFont;
 	public Color foregroundColor;
 	public Color backgroundColor;
 	public int dividerSize;
