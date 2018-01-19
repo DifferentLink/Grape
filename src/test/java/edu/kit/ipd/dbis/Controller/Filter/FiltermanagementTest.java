@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.Controller.Filter;
 import edu.kit.ipd.dbis.database.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfTotalColorings;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -209,8 +210,20 @@ public class FiltermanagementTest {
         Filtermanagement manager = new Filtermanagement();
         String testString = "thisISaTeSTstRing#42";
         String resultString = manager.removeCapitalLetters(testString);
-        System.out.println(resultString);
-        System.out.println("Test stattgefunden");
-        //assert resultString.equals("thisisateststring#42");
+        assert resultString.equals("thisisateststring#42");
+    }
+
+    @Test
+    public void testCheckFilterInputCut() throws Exception, InvalidInputException {
+        String testString = "numberoftotalcolorings TestString";
+        Filtermanagement manager = new Filtermanagement();
+        String resultString = manager.checkFilterInput(testString, 42);
+        assert resultString.equals("numberoftotalcolorings");
+    }
+
+    @Test
+    public void testPropertyParserInCheckFilterInput() throws Exception, InvalidInputException {
+        Property testProperty = Filtermanagement.testProperty("numberoftotalcolorings");
+        assert testProperty.getClass() == NumberOfTotalColorings.class;
     }
 }

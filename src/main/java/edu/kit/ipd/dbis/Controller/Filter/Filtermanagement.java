@@ -1,8 +1,14 @@
 package edu.kit.ipd.dbis.Controller.Filter;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,8 +169,35 @@ public class Filtermanagement {
      * does not code a valid filter
      * a filter with same identifier
      */
-    public void checkFilterInput(String input, int id) throws InvalidInputException {
+    public String checkFilterInput(String input, int id) throws InvalidInputException {
+        int i = 0;
+        String filterName = input;
+        String propertyString = "";
+        while (input.charAt(i) != ' ') {
+            propertyString = propertyString + (char) input.charAt(i);
+            i++;
+        }
+        Property filterProperty = Filtermanagement.testProperty(propertyString);
+        return propertyString;
+    }
 
+    static Property testProperty(String input) throws InvalidInputException {
+        Property property;
+        switch (input) {
+            case "profile": property = new Profile(); return property;
+            case "averagedegree": property = new AverageDegree(); return property;
+            case "proportiondensity": property = new ProportionDensity(); return property;
+            case "structuredensity": property = new StructureDensity(); return property;
+            case "greatestDegree": property = new GreatestDegree(); return property;
+            case "kkgraphnumberofsubgraphs": property = new KkGraphNumberOfSubgraphs(); return property;
+            case "numberofcliques": property = new NumberOfCliques(); return property;
+            case "numberofedges": property = new NumberOfEdges(); return property;
+            case "numberoftotalcolorings": property = new NumberOfTotalColorings(); return property;
+            case "numberofvertexcolorings": property = new NumberOfVertexColorings(); return property;
+            case "numberofvertices": property = new NumberOfVertices(); return property;
+            case "smallestdegree": property = new SmallestDegree(); return property;
+            default: throw new InvalidInputException();
+        }
     }
 
     /**
@@ -178,7 +211,7 @@ public class Filtermanagement {
 
     }
 
-    String removeCapitalLetters(String input) {
+    static String removeCapitalLetters(String input) {
         int i = 0;
         String output = "";
         while (i < input.length()) {
@@ -187,7 +220,6 @@ public class Filtermanagement {
             } else {
                 output = output + input.charAt(i);
             }
-            System.out.println("Aktueller Ausgabestring: " + output);
             i++;
         }
         return output;
@@ -204,6 +236,11 @@ public class Filtermanagement {
         Set<Filtersegment> activatedFilter = newDatabase.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
+                if (element.getClass() == Filtergroup.class) {
+                    availableFilterGroups.add((Filtergroup) element);
+                } else {
+                    availableFilter.add((Filter) element);
+                }
             }
         }
     }
