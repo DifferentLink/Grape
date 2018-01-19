@@ -72,10 +72,4 @@ public abstract class Filter extends Filtersegment {
         return property1;
     }
 
-    /**
-     * checks if a specific graph meets every criteria of the current filter
-     * @param graph graph which should be checked for the criteria of the filter
-     * @return returns true if the graph meets every criteria of the filter
-     */
-    abstract boolean fulfillFilter(PropertyGraph graph);
 }

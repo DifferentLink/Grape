@@ -16,9 +16,10 @@ public class Filtermanagement {
     public List<Filter> availableFilter;
     public GraphDatabase database;
 
-    public Filtermanagement() {
+    public Filtermanagement(GraphDatabase database) {
         availableFilterGroups = new ArrayList<>();
         availableFilter = new ArrayList<>();
+        this.database = database;
     }
 
     /**
@@ -185,15 +186,30 @@ public class Filtermanagement {
 
     }
 
+    String removeCapitalLetters(String input) {
+        int i = 0;
+        String output = "";
+        while (i < input.length()) {
+            if (input.charAt(i) > 64 && input.charAt(i) < 91) {
+                output = output + (char) (input.charAt(i) + 32);
+            } else {
+                output = output + input.charAt(i);
+            }
+            System.out.println("Aktueller Ausgabestring: " + output);
+            i++;
+        }
+        return output;
+    }
+
     /**
      * used when initializing Grape or switching a database. The methode clears the current
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
      * Filtersegment): void for every Filter element of the new database
      */
-    public void switchDB() throws Exception {
+    public void switchDB(GraphDatabase newDatabase) throws Exception {
         availableFilterGroups.clear();
         availableFilter.clear();
-        Set<Filtersegment> activatedFilter = database.getActivatedFilters();
+        Set<Filtersegment> activatedFilter = newDatabase.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
             }
