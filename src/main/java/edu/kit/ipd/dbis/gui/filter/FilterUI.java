@@ -52,7 +52,6 @@ public class FilterUI extends JPanel {
 		this.add(filterMenu, BorderLayout.NORTH);
 
 		filter = new JPanel();
-		// filter.setLayout(new BoxLayout(filter, BoxLayout.Y_AXIS)); todo remove this old layout
 		filter.setLayout(new BorderLayout());
 		theme.style(filter);
 		filter.setBorder(null);
