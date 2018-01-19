@@ -37,9 +37,4 @@ class ConnectedFilter extends Filter {
         this.id = id;
 
     }
-
-    @Override
-    boolean fulfillFilter(PropertyGraph graph) {
-        return false;
-    }
 }
