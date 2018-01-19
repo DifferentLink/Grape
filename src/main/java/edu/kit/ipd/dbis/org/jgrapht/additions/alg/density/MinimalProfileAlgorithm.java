@@ -22,15 +22,15 @@ public class MinimalProfileAlgorithm<V, E> implements ProfileDensityAlgorithm {
 			BfsCodeAlgorithm.BfsCode localCode = local.getBfsCode(graph);
 			allLocalCodes.add(localCode);
 		}
-		sort(allLocalCodes);
-		return new ProfileImpl(allLocalCodes);
+		return new ProfileImpl(getProfile(allLocalCodes));
 	}
 
 	/**
-	 * sorts the list of bfs codes -> on position 0 is the minimal bfs code
+	 * get the profil of the list of bfs codes -> on position 0 is the minimal bfs code
 	 * @param list the list
+	 * @return the profil
 	 */
-	public void sort(ArrayList<BfsCodeAlgorithm.BfsCode> list) {
-
+	public int[][] getProfile(ArrayList<BfsCodeAlgorithm.BfsCode> list) {
+		return null;
 	}
 }

@@ -24,7 +24,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	interface Profile<V, E> {
+	interface Profile<V, E> extends Comparable {
 		/**
 		 * Get the profile.
 		 *
@@ -49,6 +49,37 @@ public interface ProfileDensityAlgorithm<V, E> {
 		@Override
 		public int[][] getProfile() {
 			return this.profile;
+		}
+
+		/**
+		 *
+		 * @param o other BfsCode
+		 * @return -1, 0, 1 if this is less than, equal to, or greater than o.
+		 */
+		@Override
+		public int compareTo(Object o) {
+			//TODO: implement me
+			int[][] p2 = ((ProfileImpl) o).getProfile();
+			if (this.getProfile().length == 0 && p2.length == 0) {
+				return 0;
+			} else if (this.getProfile()[0].length == 0 && p2[0].length == 0) {
+				return 0;
+			} else if (this.getProfile().length == 0) {
+				return -1;
+			} else if (p2.length == 0) {
+				return 1;
+			}
+
+			for (int i = 0; i < Math.min(this.getProfile()[0].length, p2[0].length); i++) {
+				for (int j = 0; j < Math.min(this.getProfile().length, p2.length); j++) {
+					if (this.profile[j][i] < p2[j][i]) {
+						return -1;
+					} else if (this.profile[j][i] > p2[j][i]) {
+						return 1;
+					}
+				}
+			}
+			return 0;
 		}
 	}
 }
