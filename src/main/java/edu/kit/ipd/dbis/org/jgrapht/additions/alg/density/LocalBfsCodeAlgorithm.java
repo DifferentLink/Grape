@@ -64,6 +64,11 @@ public class LocalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 				for (int i = 0; i < bestCode.length; i++) {
 					bestCode[i] = graph.vertexSet().size();
 				}
+				//TODO: update: not save all permutations. Instead compute the first , does something with that, compute the next
+				//Alg hier unterbringen: Immer statt zu Set adden, stattdessen den unteren schleifendurchlauf machen
+				//Problem: wenn alle gleich gut -> bestPerm ist auch zu groß
+
+
 				Set<V[]> allPermutations = getPermutations(adjacentNotCheckedNodes);
 				//calculate bfs code for the subgraph of adjacent nodes + previous nodes;
 				for (V[] p : allPermutations) {
@@ -100,7 +105,9 @@ public class LocalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 					}
 				}
 			}
-			startPermutations = nextPerms;
+			if (nextPerms.size() > 0) {
+				startPermutations = nextPerms;
+			}
 			nodeCnt++;
 		}
 		return new BfsCodeImpl(calculateBFS(graph, startPermutations.get(0), 1));
@@ -184,10 +191,14 @@ public class LocalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		for (int i = 0; i < n; i++) {
 			c[i] = 0;
 		}
+
 		result.add((V[]) array.clone());
 
 		int i = 0;
 		while (i < n) {
+			if (result.size() >= Integer.MAX_VALUE - 4) {
+				throw new IllegalArgumentException("Too many permutations");
+			}
 			if (c[i] < i) {
 				if ((i % 2) == 0) {
 					//swap(A[0], A[i])
@@ -200,7 +211,9 @@ public class LocalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 					array[c[i]] = array[i];
 					array[i] = a;
 				}
+
 				result.add((V[]) array.clone());
+
 				c[i] = c[i] + 1;
 				i = 0;
 			} else {
