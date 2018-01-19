@@ -19,6 +19,8 @@ public class FilterUI extends JPanel {
 	private JPanel filter;
 	private Theme theme;
 
+	private final int simpleFilterUIHeight = 22;
+
 	public FilterUI(FilterController controller, ResourceBundle language, Theme theme) {
 
 		this.theme = theme;
@@ -50,7 +52,8 @@ public class FilterUI extends JPanel {
 		this.add(filterMenu, BorderLayout.NORTH);
 
 		filter = new JPanel();
-		filter.setLayout(new BoxLayout(filter, BoxLayout.Y_AXIS));
+		// filter.setLayout(new BoxLayout(filter, BoxLayout.Y_AXIS)); todo remove this old layout
+		filter.setLayout(new BorderLayout());
 		theme.style(filter);
 		filter.setBorder(null);
 		this.add(filter, BorderLayout.CENTER);
@@ -94,6 +97,8 @@ public class FilterUI extends JPanel {
 
 		filter.removeAll();
 		filter.add(Box.createVerticalStrut(2));
+		JPanel container = new JPanel();
+		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
 		if (filterManagement.getFilterGroups().size() > 0) {
 			JPanel textContainerGroup = new JPanel(new BorderLayout());
@@ -102,27 +107,33 @@ public class FilterUI extends JPanel {
 			groupLabel.setFont(theme.smallFont);
 			textContainerGroup.add(groupLabel, BorderLayout.CENTER);
 			textContainerGroup.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
-			filter.add(textContainerGroup);
+			container.add(textContainerGroup);
 
 			for (FilterGroup filterGroup : filterManagement.getFilterGroups()) {
-				filter.add(drawFilterGroup(filterGroup));
+				container.add(drawFilterGroup(filterGroup));
 			}
+			container.add(Box.createVerticalStrut(6));
 		}
 
 		if (filterManagement.getSimpleFilter().size() > 0) {
-			filter.add(Box.createVerticalStrut(4));
 			JPanel textContainerSimple = new JPanel(new BorderLayout());
 			JLabel simpleLabel = new JLabel("Simple Filter:");
 			simpleLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
 			simpleLabel.setFont(theme.smallFont);
 			textContainerSimple.add(simpleLabel, BorderLayout.CENTER);
 			textContainerSimple.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
-			filter.add(textContainerSimple);
+			container.add(textContainerSimple);
 
 			for (SimpleFilter simpleFilter : filterManagement.getSimpleFilter()) {
-				filter.add(drawSimpleFilter(simpleFilter));
+				container.add(drawSimpleFilter(simpleFilter));
+				container.add(Box.createVerticalStrut(2));
 			}
 		}
+
+		JScrollPane scrollPane = new JScrollPane(container);
+		scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		filter.add(scrollPane, BorderLayout.CENTER);
 	}
 
 	private JPanel drawSimpleFilter(SimpleFilter simpleFilter) {
@@ -132,10 +143,15 @@ public class FilterUI extends JPanel {
 		JCheckBox isActive = new JCheckBox();
 		isActive.addActionListener(new ToggleFilterAction(simpleFilter, isActive.isSelected()));
 		simpleFilterUI.add(isActive);
-		JTextArea filterInput = new JTextArea(" ...");
+		JTextArea filterInput = new JTextArea(simpleFilter.getText());
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		simpleFilterUI.add(filterInput);
-		simpleFilterUI.setMaximumSize(new Dimension(Integer.MAX_VALUE, 22));
+		JButton deleteFilter = new JButton("X");
+		deleteFilter.addActionListener(new RemoveFilterAction(simpleFilter.getID()));
+		deleteFilter.setBackground(theme.backgroundColor);
+		deleteFilter.setPreferredSize(new Dimension(simpleFilterUIHeight, simpleFilterUIHeight));
+		simpleFilterUI.add(deleteFilter);
+		simpleFilterUI.setMaximumSize(new Dimension(Integer.MAX_VALUE, simpleFilterUIHeight));
 		simpleFilterUI.setBackground(theme.backgroundColor);
 		return simpleFilterUI;
 	}
@@ -148,7 +164,13 @@ public class FilterUI extends JPanel {
 		JTextArea filterInput = new JTextArea(" Filter Group " + filterGroup.getID());
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		filterGroupHeaderUI.add(filterInput);
-		filterGroupHeaderUI.setMaximumSize(new Dimension(Integer.MAX_VALUE, 22));
+		JButton deleteFilterGroup = new JButton("X");
+		deleteFilterGroup.addActionListener(new RemoveFilterAction(filterGroup.getID()));
+		deleteFilterGroup.setBackground(theme.backgroundColor);
+		deleteFilterGroup.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		deleteFilterGroup.setPreferredSize(new Dimension(simpleFilterUIHeight, simpleFilterUIHeight));
+		filterGroupHeaderUI.add(deleteFilterGroup);
+		filterGroupHeaderUI.setMaximumSize(new Dimension(Integer.MAX_VALUE, simpleFilterUIHeight));
 		filterGroupHeaderUI.setBackground(theme.backgroundColor);
 
 		JPanel simpleFilterContainer = new JPanel();
@@ -201,6 +223,22 @@ public class FilterUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			filter.setActive(isActive);
+		}
+	}
+
+	private class RemoveFilterAction implements ActionListener {
+		private int id;
+
+		public RemoveFilterAction(int id) {
+			this.id = id;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			filterManagement.remove(id);
+			update();
+			repaint();
+			revalidate();
 		}
 	}
 }
