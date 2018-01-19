@@ -5,8 +5,6 @@
 package edu.kit.ipd.dbis.gui.filter;
 
 import edu.kit.ipd.dbis.controller.FilterController;
-import edu.kit.ipd.dbis.gui.Controller;
-import edu.kit.ipd.dbis.gui.GUIElement;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
@@ -89,6 +87,44 @@ public class FilterUI extends JPanel {
 		this.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
 	}
 
+	/**
+	 * Updates the GUIWindow element.
+	 */
+	public void update() {
+
+		filter.removeAll();
+		filter.add(Box.createVerticalStrut(2));
+
+		if (filterManagement.getFilterGroups().size() > 0) {
+			JPanel textContainerGroup = new JPanel(new BorderLayout());
+			JLabel groupLabel = new JLabel("Filter Groups:");
+			groupLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
+			groupLabel.setFont(theme.smallFont);
+			textContainerGroup.add(groupLabel, BorderLayout.CENTER);
+			textContainerGroup.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+			filter.add(textContainerGroup);
+
+			for (FilterGroup filterGroup : filterManagement.getFilterGroups()) {
+				filter.add(drawFilterGroup(filterGroup));
+			}
+		}
+
+		if (filterManagement.getSimpleFilter().size() > 0) {
+			filter.add(Box.createVerticalStrut(4));
+			JPanel textContainerSimple = new JPanel(new BorderLayout());
+			JLabel simpleLabel = new JLabel("Simple Filter:");
+			simpleLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
+			simpleLabel.setFont(theme.smallFont);
+			textContainerSimple.add(simpleLabel, BorderLayout.CENTER);
+			textContainerSimple.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+			filter.add(textContainerSimple);
+
+			for (SimpleFilter simpleFilter : filterManagement.getSimpleFilter()) {
+				filter.add(drawSimpleFilter(simpleFilter));
+			}
+		}
+	}
+
 	private JPanel drawSimpleFilter(SimpleFilter simpleFilter) {
 		JPanel simpleFilterUI = new JPanel();
 		simpleFilterUI.setLayout(new BoxLayout(simpleFilterUI, BoxLayout.X_AXIS));
@@ -135,6 +171,7 @@ public class FilterUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			filterManagement.addNewSimpleFilter();
+			update();
 			repaint();
 			revalidate();
 		}
@@ -145,6 +182,7 @@ public class FilterUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			filterManagement.addNewFilterGroup();
+			update();
 			repaint();
 			revalidate();
 		}
