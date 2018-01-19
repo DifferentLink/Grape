@@ -8,13 +8,13 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
  */
 public abstract class Filter extends Filtersegment {
 
-    protected Property property1;
-    protected Operator operator1;
-    protected int value1;
-    protected Relation relation;
-    protected Property property2;
-    protected Operator operator2;
-    protected int value2;
+    Property property1;
+    Operator operator1;
+    int value1;
+    Relation relation;
+    Property property2;
+    Operator operator2;
+    int value2;
 
     /**
      * getter of attribute value2
