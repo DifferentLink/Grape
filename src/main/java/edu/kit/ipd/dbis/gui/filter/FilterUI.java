@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui.filter;
 
+import edu.kit.ipd.dbis.controller.FilterController;
 import edu.kit.ipd.dbis.gui.Controller;
 import edu.kit.ipd.dbis.gui.GUIElement;
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -14,13 +15,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
-public class FilterUI extends GUIElement {
+public class FilterUI extends JPanel {
 	private FilterManagement filterManagement;
 	private JPanel filterMenu;
 	private JPanel filter;
+	private Theme theme;
 
-	public FilterUI(Controller controller, ResourceBundle language, Theme theme) {
-		super(controller, language, theme);
+	public FilterUI(FilterController controller, ResourceBundle language, Theme theme) {
+
+		this.theme = theme;
 
 		filterManagement = new FilterManagement();
 
@@ -86,24 +89,6 @@ public class FilterUI extends GUIElement {
 		this.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
 	}
 
-	/**
-	 * Updates the GUIWindow element.
-	 */
-	@Override
-	public void update() {
-
-		filter.removeAll();
-		filter.add(Box.createVerticalStrut(2));
-
-		for (FilterGroup filterGroup : filterManagement.getFilterGroups()) {
-			filter.add(drawFilterGroup(filterGroup));
-		}
-
-		for (SimpleFilter simpleFilter : filterManagement.getSimpleFilter()) {
-			filter.add(drawSimpleFilter(simpleFilter));
-		}
-	}
-
 	private JPanel drawSimpleFilter(SimpleFilter simpleFilter) {
 		JPanel simpleFilterUI = new JPanel();
 		simpleFilterUI.setLayout(new BoxLayout(simpleFilterUI, BoxLayout.X_AXIS));
@@ -150,7 +135,6 @@ public class FilterUI extends GUIElement {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			filterManagement.addNewSimpleFilter();
-			update();
 			repaint();
 			revalidate();
 		}
@@ -161,7 +145,6 @@ public class FilterUI extends GUIElement {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			filterManagement.addNewFilterGroup();
-			update();
 			repaint();
 			revalidate();
 		}

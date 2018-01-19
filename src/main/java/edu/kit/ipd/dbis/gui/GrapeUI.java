@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -14,12 +15,12 @@ import java.util.ResourceBundle;
 
 public class GrapeUI {
 
-	private GUIElement graphEditorUI;
+	private GraphEditorUI graphEditorUI;
 	private MenuUI menuUI;
-	private GUIElement filterUI;
-	private GUIElement correlationUI;
+	private FilterUI filterUI;
+	private CorrelationUI correlationUI;
 	private JTable tableUI;
-	private GUIElement statusbarUI;
+	private StatusbarUI statusbarUI;
 	private GUIElement logUI;
 
 	private String programName = "Grape";
@@ -27,7 +28,15 @@ public class GrapeUI {
 
 	private float verticalSplitRatio = .1f;
 
-	public GrapeUI(Controller controller, ResourceBundle language, Theme theme) {
+	public GrapeUI(CalculationController calculationController,
+	               CorrelationController correlationController,
+	               DatabaseController databaseController,
+	               FilterController filterController,
+	               GenerateController generateController,
+	               GraphEditorController graphEditorController,
+	               OutputController outputController,
+	               ResourceBundle language,
+	               Theme theme) {
 
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,8 +46,8 @@ public class GrapeUI {
 		menuUI = new MenuUI(language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
-		filterUI = new FilterUI(controller, language, theme);
-		correlationUI = new CorrelationUI(controller, language, theme);
+		filterUI = new FilterUI(filterController, language, theme);
+		correlationUI = new CorrelationUI(correlationController, language, theme);
 
 		JPanel filterCorrelationDivider = new JPanel();
 		filterCorrelationDivider.setLayout(new BoxLayout(filterCorrelationDivider, BoxLayout.Y_AXIS));
@@ -47,7 +56,7 @@ public class GrapeUI {
 		filterCorrelationDivider.add(Box.createVerticalGlue());
 		filterCorrelationDivider.add(correlationUI);
 
-		graphEditorUI = new GraphEditorUI(controller, language, theme);
+		graphEditorUI = new GraphEditorUI(graphEditorController, language, theme);
 
 		JSplitPane graphEditorDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
@@ -65,7 +74,7 @@ public class GrapeUI {
 
 		graphEditorDivider.setResizeWeight(.55f);
 
-		statusbarUI = new StatusbarUI(controller, language, theme);
+		statusbarUI = new StatusbarUI(language, theme);
 		JPanel rightUI = new JPanel();
 		rightUI.setLayout(new BoxLayout(rightUI, BoxLayout.Y_AXIS));
 		rightUI.setBackground(theme.backgroundColor);

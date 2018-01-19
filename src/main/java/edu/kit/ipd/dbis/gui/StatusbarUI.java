@@ -14,12 +14,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-public class StatusbarUI extends GUIElement {
+public class StatusbarUI extends JPanel {
 
 	private final int statusbarHeight = 15;
 
-	public StatusbarUI(Controller controller, ResourceBundle language, Theme theme) {
-		super(controller, language, theme);
+	public StatusbarUI(ResourceBundle language, Theme theme) {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.add(Box.createHorizontalStrut(2));
@@ -80,13 +79,5 @@ public class StatusbarUI extends GUIElement {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 		}
-	}
-
-	/**
-	 * Updates the GUIWindow element.
-	 */
-	@Override
-	public void update() {
-
 	}
 }

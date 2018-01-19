@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.controller.CorrelationController;
 import edu.kit.ipd.dbis.gui.popups.CorrelationRequestUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
@@ -13,10 +14,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
-public class CorrelationUI extends GUIElement {
+public class CorrelationUI extends JPanel {
 
-	public CorrelationUI(Controller controller, ResourceBundle language, Theme theme) {
-		super(controller, language, theme);
+	public CorrelationUI(CorrelationController controller, ResourceBundle language, Theme theme) {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBackground(theme.backgroundColor);
@@ -46,14 +46,6 @@ public class CorrelationUI extends GUIElement {
 		this.add(inputContainer);
 		this.add(Box.createVerticalStrut(4));
 		this.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, theme.foregroundColor));
-	}
-
-	/**
-	 * Updates the GUIWindow element.
-	 */
-	@Override
-	public void update() {
-
 	}
 
 	private static class CorrelationRequestAction implements ActionListener {

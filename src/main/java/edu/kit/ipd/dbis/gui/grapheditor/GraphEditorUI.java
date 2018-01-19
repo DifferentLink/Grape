@@ -4,8 +4,7 @@
 
 package edu.kit.ipd.dbis.gui.grapheditor;
 
-import edu.kit.ipd.dbis.gui.Controller;
-import edu.kit.ipd.dbis.gui.GUIElement;
+import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
@@ -13,7 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ResourceBundle;
 
-public class GraphEditorUI extends GUIElement {
+public class GraphEditorUI extends JPanel {
 
 	private RenderableGraph graph = new RenderableGraph();
 	private GraphEditorHistory history = new GraphEditorHistory();
@@ -28,13 +27,14 @@ public class GraphEditorUI extends GUIElement {
 	private JLabel graphInfo; // todo add to GUI
 	private JComboBox<String> coloringType;
 
+	private Theme theme;
 	private int barHeight = 25;
 	private Dimension buttonSize = new Dimension(barHeight - 2, barHeight - 2);
 	private int buttonSeparation = 2;
 
-	public GraphEditorUI(Controller controller, ResourceBundle language, Theme theme) {
-		super(controller, language, theme);
+	public GraphEditorUI(GraphEditorController controller, ResourceBundle language, Theme theme) {
 
+		this.theme = theme;
 		this.setLayout(new BorderLayout());
 
 		// todo get text from language resource
@@ -112,14 +112,6 @@ public class GraphEditorUI extends GUIElement {
 		this.add(topBarButtons, BorderLayout.NORTH);
 		this.add(graphEditor, BorderLayout.CENTER); // todo use GridBagLayout Manager for to properly display graph information
 		this.add(bottomBarButtons, BorderLayout.SOUTH);
-	}
-
-	/**
-	 * Updates the GUIWindow element.
-	 */
-	@Override
-	public void update() {
-
 	}
 
 	private class Editor extends JComponent {
