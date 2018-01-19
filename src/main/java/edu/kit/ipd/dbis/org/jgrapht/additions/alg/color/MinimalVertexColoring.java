@@ -39,7 +39,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	public Coloring<V> getColoring() {
 		// brute force algorithm that determines
 		// a minimal vertex coloring.
-		// needs to be made faster!
+		// needs to be optimized!
 		int numberOfVertices = this.graph.getNumberOfVertices();
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
 		int[] colors = new int[numberOfVertices];
@@ -52,18 +52,26 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		if (numberOfVertices == 1) {
 			return createColoringObject(new int[] {0}, sortedVertices);
 		} else {
-			Coloring coloring1 = createColoringObject(colors, sortedVertices);
+			int index = 0;
 			for (int maxColors = 1; maxColors < numberOfVertices; maxColors++) {
-				// load maxColors - 1 different colors into array
-				for (int i = 0; i < maxColors; i++) {
-					colors[i] = i + 1;
+				// this ensures that for every number of different colors,
+				// all combinations are tried. For example:
+				// 2 colors:
+				// 1000
+				// 1100
+				// 1110
+				if (index == colors.length - 1) {
+					index = maxColors;
 				}
-				// try every possible coloring for this number of colors
-				List<int[]> permutations = getPermutations(maxColors, colors);
+				colors[index]++;
+				index++;
+
+				// get all permutations
+				List<int[]> permutations = getPermutations(colors.length, colors);
 				for (int[] perm : permutations) {
-					coloring1 = createColoringObject(perm, sortedVertices);
-					if (isValidVertexColoring(coloring1, graph)) {
-						return coloring1;
+					Coloring coloring = createColoringObject(perm, sortedVertices);
+					if (isValidVertexColoring(coloring, graph)) {
+						return coloring;
 					}
 				}
 			}
