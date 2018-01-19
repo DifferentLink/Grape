@@ -4,12 +4,12 @@
 
 package edu.kit.ipd.dbis.gui.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FilterManagement {
-	private Set<SimpleFilter> simpleFilter = new HashSet<>();
-	private Set<FilterGroup> filterGroups = new HashSet<>();
+	private List<SimpleFilter> simpleFilter = new ArrayList<>();
+	private List<FilterGroup> filterGroups = new ArrayList<>();
 	private int nextUniqueID = 0;
 
 	public void addNewSimpleFilter() {
@@ -28,11 +28,35 @@ public class FilterManagement {
 		return nextUniqueID++;
 	}
 
-	public Set<SimpleFilter> getSimpleFilter() {
+	public List<SimpleFilter> getSimpleFilter() {
 		return simpleFilter;
 	}
 
-	public Set<FilterGroup> getFilterGroups() {
+	public List<FilterGroup> getFilterGroups() {
 		return filterGroups;
+	}
+
+	public void remove(int id) {
+
+		Filter filterToRemove = null;
+
+		for (Filter filter : simpleFilter) {
+			if (filter.getID() == id) {
+				filterToRemove = filter;
+			}
+		}
+		if (filterToRemove != null) {
+			simpleFilter.remove(filterToRemove);
+		}
+
+		for (Filter filter : filterGroups) {
+			if (filter.getID() == id) {
+				filterToRemove = filter;
+				return;
+			}
+		}
+		if (filterToRemove != null) {
+			filterGroups.remove(filterToRemove);
+		}
 	}
 }
