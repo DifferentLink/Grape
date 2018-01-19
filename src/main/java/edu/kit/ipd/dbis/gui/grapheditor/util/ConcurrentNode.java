@@ -2,7 +2,7 @@
  * Created by robinlink
  */
 
-package edu.kit.ipd.dbis.gui.grapheditor;
+package edu.kit.ipd.dbis.gui.grapheditor.util;
 
 public class ConcurrentNode<T> {
 	private T element;
