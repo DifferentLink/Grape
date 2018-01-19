@@ -124,7 +124,7 @@ public abstract class Table {
 	 * @return
 	 * @throws Exception
 	 */
-	protected abstract Serializable getInstanceOf(Serializable object) throws Exception;
+	protected abstract Serializable getInstanceOf(Object object) throws Exception;
 
 	protected abstract void createTable() throws Exception;
 

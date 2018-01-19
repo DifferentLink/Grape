@@ -73,7 +73,7 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	protected Filtersegment getInstanceOf(Serializable object) throws Exception {
+	protected Filtersegment getInstanceOf(Object object) throws Exception {
 		Filtersegment filter = (object instanceof  PropertyGraph) ? (Filtersegment) object : null;
 		return filter;
 	}

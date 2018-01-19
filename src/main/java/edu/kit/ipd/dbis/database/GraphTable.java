@@ -27,13 +27,15 @@ public class GraphTable extends Table {
 		String sql = "SELECT graph FROM " + this.name + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
-		ByteArrayInputStream byteInput;
-		ObjectInputStream objectInput;
+		ByteArrayInputStream byteInput = new ByteArrayInputStream(result.getBytes("graph"));
+		ObjectInputStream objectInput = new ObjectInputStream(byteInput);
 		if (result.next()) {
-			byteInput = new ByteArrayInputStream(result.getBytes("graph"));
-			objectInput = new ObjectInputStream(byteInput);
-			return (PropertyGraph) objectInput.readObject();
+			byteInput.close();
+			objectInput.close();
+			return this.getInstanceOf(objectInput.readObject());
 		}
+		byteInput.close();
+		objectInput.close();
 		return null;
 	}
 
@@ -64,7 +66,7 @@ public class GraphTable extends Table {
 	}
 
 	@Override
-	protected PropertyGraph getInstanceOf(Serializable object) throws Exception {
+	protected PropertyGraph getInstanceOf(Object object) throws Exception {
 		PropertyGraph graph = (object instanceof  PropertyGraph) ? (PropertyGraph) object : null;
 		return graph;
 	}
@@ -75,8 +77,9 @@ public class GraphTable extends Table {
 		String sql = "CREATE TABLE IF NOT EXISTS "
 				+ this.name +" ("
 				+ "graph longblob, "
-				+ "id int NOT NULL"
-				+ "bfsCode String";
+				+ "id int NOT NULL, "
+				+ "bfsCode String, "
+				+ "isDeleted boolean";
 		PropertyGraph graph = new PropertyGraph();
 		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
 
@@ -99,18 +102,17 @@ public class GraphTable extends Table {
 	 * @param table
 	 */
 	public void merge(GraphTable table) throws Exception {
-
-		if (this.isMergeableWith(table)) {
-			LinkedList<Integer> ids = table.getIds();
-			for (int i : ids) {
+		LinkedList<Integer> ids = table.getIds();
+		for (int i : ids) {
+			try {
 				if (!this.graphExists(table.getContent(i))) {
 					PropertyGraph graph = table.getContent(i);
 					graph.setId(this.getId());
 					this.insert(graph);
 				}
+			} catch (Exception e) {
+
 			}
-		} else {
-			throw new Exception();
 		}
 	}
 
@@ -136,8 +138,11 @@ public class GraphTable extends Table {
 	/**
 	 *
 	 */
-	public void deleteAll() {
-
+	public void deleteAll() throws Exception {
+		Connection connection = this.getConnection();
+		String sql = "DELETE * FROM " + this.name + " WHERE isDeleted = true";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
 	}
 
 	/**
