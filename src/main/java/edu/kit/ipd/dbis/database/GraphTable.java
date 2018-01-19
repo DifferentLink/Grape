@@ -78,8 +78,9 @@ public class GraphTable extends Table {
 				+ this.name +" ("
 				+ "graph longblob, "
 				+ "id int NOT NULL, "
-				+ "bfsCode String, "
-				+ "isDeleted boolean";
+				+ "BfsCode String, "
+				+ "state boolean"
+				+ "isCalculated boolean";
 		PropertyGraph graph = new PropertyGraph();
 		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
 
@@ -140,7 +141,7 @@ public class GraphTable extends Table {
 	 */
 	public void deleteAll() throws Exception {
 		Connection connection = this.getConnection();
-		String sql = "DELETE * FROM " + this.name + " WHERE isDeleted = true";
+		String sql = "DELETE * FROM " + this.name + " WHERE state = true";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.executeUpdate();
 	}
@@ -181,7 +182,7 @@ public class GraphTable extends Table {
 	 */
 	public boolean graphExists(PropertyGraph graph) throws Exception {
 		Connection connection = this.getConnection();
-		String sql = "SELECT * FROM " + this.name + " WHERE bfsCode = " + this.minimalBfsCodeToString(graph);
+		String sql = "SELECT * FROM " + this.name + " WHERE BfsCode = " + this.minimalBfsCodeToString(graph);
 		ResultSet result = connection.prepareStatement(sql).executeQuery();
 		return (result.next()) ? (true) : (false);
 	}

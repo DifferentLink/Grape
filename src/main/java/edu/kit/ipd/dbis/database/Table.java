@@ -54,8 +54,11 @@ public abstract class Table {
 	 *
 	 * @param id
 	 */
-	public void delete(int id) {
-
+	public void delete(int id) throws Exception {
+		Connection connection = this.getConnection();
+		String sql = "DELETE * FROM " + this.name + " WHERE id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
 	}
 
 	/**

@@ -64,7 +64,7 @@ public class FilterTable extends Table {
 	@Override
 	public void insert(Serializable object) throws Exception {
 		Filtersegment filter = this.getInstanceOf(object);
-		String sql = "INSERT INTO " + this.name + " (filter, id, isActivated) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, ?, ?)";
 		PreparedStatement statement = this.getConnection().prepareStatement(sql);
 		statement.setObject(1, this.objectToByteArray(filter));
 		statement.setObject(2, filter.getID());
@@ -85,7 +85,7 @@ public class FilterTable extends Table {
 				+ this.name +" ("
 				+ "filter longblob, "
 				+ "id int NOT NULL, "
-				+ "isActivated boolean, "
+				+ "state boolean, "
 				+ "PRIMARY KEY(id))";
 		PreparedStatement create = connection.prepareStatement(sql);
 		create.executeUpdate();

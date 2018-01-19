@@ -119,7 +119,7 @@ public class FileManager implements Connector {
 		HashSet<String> columns = filterTable.getColumns();
 		HashSet<String> names = new HashSet<>();
 		names.add("id");
-		names.add("isValid");
+		names.add("state");
 		names.add("filter");
 		if (columns.containsAll(names) && names.containsAll(names)) {
 			return true;
@@ -132,8 +132,10 @@ public class FileManager implements Connector {
 		HashSet<String> names = new HashSet<>();
 		names.add("id");
 		names.add("graph");
-		names.add("bfsCode");
+		names.add("BfsCode");
 		names.add("nothing");
+		names.add("state");
+		names.add("isCalculated");
 
 		PropertyGraph graph = new PropertyGraph();
 		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
