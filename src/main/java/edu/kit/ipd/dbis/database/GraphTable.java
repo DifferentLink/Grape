@@ -71,6 +71,7 @@ public class GraphTable extends Table {
 
 	@Override
 	protected void createTable() throws Exception {
+/*
 
 		String sql = "CREATE TABLE IF NOT EXISTS "
 				+ this.name +" ("
@@ -92,12 +93,16 @@ public class GraphTable extends Table {
 		Connection connection = this.getConnection();
 		PreparedStatement create = connection.prepareStatement(sql);
 		create.executeUpdate();
+*/
 	}
 
-	/**
+/*
+	*/
+/**
 	 *
 	 * @param table
-	 */
+	 *//*
+
 	public void merge(GraphTable table) throws Exception {
 
 		if (this.isMergeableWith(table)) {
@@ -131,6 +136,7 @@ public class GraphTable extends Table {
 		}
 		return true;
 	}
+*/
 
 	/**
 	 *
@@ -147,11 +153,14 @@ public class GraphTable extends Table {
 		return null;
 	}
 
-	/**
+/*
+	*/
+/**
 	 *
 	 * @param graph
 	 * @return
-	 */
+	 *//*
+
 	private String minimalBfsCodeToString(PropertyGraph graph) {
 		String s = "";
 		int[] bfsCode = new int[0];
@@ -168,17 +177,22 @@ public class GraphTable extends Table {
 		}
 		return s;
 	}
+*/
 
-	/**
+/*
+	*/
+/**
 	 *
 	 * @return
-	 */
+	 *//*
+
 	public boolean graphExists(PropertyGraph graph) throws Exception {
 		Connection connection = this.getConnection();
 		String sql = "SELECT * FROM " + this.name + " WHERE bfsCode = " + this.minimalBfsCodeToString(graph);
 		ResultSet result = connection.prepareStatement(sql).executeQuery();
 		return (result.next()) ? (true) : (false);
 	}
+*/
 
 	/**
 	 *

@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 //TODO:
 public class FilterController {
+/*
 
 	private Filtermanagement filter;
 
@@ -22,11 +23,13 @@ public class FilterController {
 		return filterController;
 	}
 
-	/**
+	*/
+/**
 	 * Replaces the old database with the given in the filter package.
 	 *
 	 * @param database the current database
-	 */
+	 *//*
+
 	public void setDatabase(GraphDatabase database) {
 		filter.setDatabase(database);
 	}
@@ -68,5 +71,6 @@ public class FilterController {
 	public boolean checkGroupInput(String filterInput) {
 		return filter.checkGroupInput(filterInput);
 	}
+*/
 }
 

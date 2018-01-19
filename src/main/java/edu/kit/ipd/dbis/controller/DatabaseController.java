@@ -21,7 +21,7 @@ public class DatabaseController {
 		generate = GenerateController.getInstance();
 		calculation = CalculationController.getInstance();
 		editor = GraphEditorController.getInstance();
-		filter = FilterController.getInstance();
+		// filter = FilterController.getInstance();
 		connector = new FileManager();
 	}
 
@@ -81,7 +81,7 @@ public class DatabaseController {
 		generate.setDatabase(database);
 		calculation.setDatabase(database);
 		editor.setDatabase(database);
-		filter.setDatabase(database);
+		//filter.setDatabase(database);
 	}
 
 }
