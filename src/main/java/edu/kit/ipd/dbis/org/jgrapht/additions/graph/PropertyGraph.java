@@ -47,6 +47,10 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	public void calculateRemainingProperties() {
 	}
 
+	public void updateProperty(Class<? extends Property> propertyClass) {
+		this.properties.get(propertyClass).calculate(this);
+	}
+
 	/**
 	 * Getter method for id
 	 * @return the graph's id
@@ -73,6 +77,9 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	}
 
 	public int getNumberOfVertices() {
+		if (this.properties.get(NumberOfVertices.class).getValue() == null) {
+			this.updateProperty(NumberOfVertices.class);
+		}
 		return (int) this.properties.get(NumberOfVertices.class).getValue();
 	}
 

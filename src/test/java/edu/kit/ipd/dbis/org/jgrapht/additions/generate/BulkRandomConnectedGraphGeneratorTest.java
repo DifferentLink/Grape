@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -43,6 +44,7 @@ public class BulkRandomConnectedGraphGeneratorTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void largeParameterTest() {
 		BulkGraphGenerator<Integer, DefaultEdge> bulkGen =
