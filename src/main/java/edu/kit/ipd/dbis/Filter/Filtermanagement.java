@@ -1,7 +1,6 @@
-package edu.kit.ipd.dbis.Controller.Filter;
+package edu.kit.ipd.dbis.Filter;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
@@ -179,6 +178,29 @@ public class Filtermanagement {
         }
         Property filterProperty = Filtermanagement.testProperty(propertyString);
         return propertyString;
+    }
+
+    static Operator testOperator(String input) throws  InvalidInputException {
+        Operator operator;
+        switch (input) {
+            case "+": operator = Operator.ADD; return operator;
+            case "-": operator = Operator.SUB; return operator;
+            case "/": operator = Operator.DIV; return operator;
+            case "*": operator = Operator.MULT; return operator;
+            default: throw new InvalidInputException();
+        }
+    }
+
+    static Relation testRelation(String input) throws InvalidInputException {
+        Relation relation;
+        switch (input) {
+            case "=": relation = Relation.EQUAL; return relation;
+            case "<": relation = Relation.LESSTHAN; return relation;
+            case ">": relation = Relation.GREATHERTHAN; return relation;
+            case "<=": relation = Relation.LESSOREQUAL; return relation;
+            case ">=": relation = Relation.GREATHEROREQUAL; return relation;
+            default: throw new InvalidInputException();
+        }
     }
 
     static Property testProperty(String input) throws InvalidInputException {

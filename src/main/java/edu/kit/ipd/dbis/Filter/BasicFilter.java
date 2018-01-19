@@ -1,7 +1,6 @@
-package edu.kit.ipd.dbis.Controller.Filter;
+package edu.kit.ipd.dbis.Filter;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 /**
  * class which checks a specific attribute of a graph

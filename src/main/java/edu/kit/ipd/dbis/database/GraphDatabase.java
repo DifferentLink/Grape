@@ -1,7 +1,7 @@
 package edu.kit.ipd.dbis.database;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.Controller.Filter.Filtersegment;
+import edu.kit.ipd.dbis.Filter.Filtersegment;
 import java.util.Set;
 
 public class GraphDatabase implements DatabaseManager {
