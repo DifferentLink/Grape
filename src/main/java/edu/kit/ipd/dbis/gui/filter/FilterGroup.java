@@ -4,12 +4,14 @@
 
 package edu.kit.ipd.dbis.gui.filter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class FilterGroup extends Filter {
 
-	private Set<SimpleFilter> simpleFilter = new HashSet<>();
+	private List<SimpleFilter> simpleFilter = new ArrayList<>();
 
 	public FilterGroup(final int id) {
 		super(id);
@@ -19,7 +21,7 @@ public class FilterGroup extends Filter {
 		simpleFilter.add(filter);
 	}
 
-	public Set<SimpleFilter> getSimpleFilter() {
+	public List<SimpleFilter> getSimpleFilter() {
 		return simpleFilter;
 	}
 }
