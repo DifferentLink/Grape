@@ -26,6 +26,13 @@ public class RenderableGraph {
 		this.id = id;
 	}
 
+	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id, Set<RenderableGraph> subgraphs) {
+		this.vertices = vertices;
+		this.edges = edges;
+		this.id = id;
+		this.subgraphs = subgraphs;
+	}
+
 	public RenderableGraph(PropertyGraph propertyGraph) {
 
 	}
@@ -145,5 +152,12 @@ public class RenderableGraph {
 
 	public void setSubgraphs(Set<RenderableGraph> subgraphs) {
 		this.subgraphs = subgraphs;
+	}
+
+	public RenderableGraph deepCopy() {
+		Set<Vertex> newVertices = (this.vertices == null) ? new HashSet<>() : new HashSet<>(vertices);
+		Set<Edge> newEdges = (this.edges == null) ? new HashSet<>() : new HashSet<>(edges);
+		Set<RenderableGraph> newSubgraphs = (this.subgraphs == null) ? new HashSet<>() : new HashSet<>(subgraphs);
+		return new RenderableGraph(newVertices, newEdges, id, newSubgraphs);
 	}
 }
