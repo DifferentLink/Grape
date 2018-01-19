@@ -83,7 +83,17 @@ public abstract class Table {
 	 *
 	 * @param id
 	 */
-	public void switchState(int id) {
+	public void switchState(int id) throws Exception {
+		Connection connection= this.getConnection();
+		String sql = "SELECT state FROM " + this.name + " WHERE id = " + id;
+		ResultSet result = connection.prepareStatement(sql).executeQuery();
+
+		if (result.next()) {
+			boolean value = (result.toString().equals(1)) ? (false) : (true);
+			sql = "UPDATE " + this.name + " SET state = " + value + " WHERE id = " + id;
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.executeUpdate();
+		}
 
 	}
 
