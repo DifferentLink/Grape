@@ -17,3 +17,6 @@
 
 # Unignore this .gitignore
 !/.gitignore
+
+!/.travis.yml
+src/test/java/
