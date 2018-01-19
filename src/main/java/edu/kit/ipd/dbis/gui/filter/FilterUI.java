@@ -8,12 +8,16 @@ import edu.kit.ipd.dbis.controller.FilterController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class FilterUI extends JPanel {
+	private FilterController controller;
 	private FilterManagement filterManagement;
 	private JPanel filterMenu;
 	private JPanel filter;
@@ -23,6 +27,7 @@ public class FilterUI extends JPanel {
 
 	public FilterUI(FilterController controller, ResourceBundle language, Theme theme) {
 
+		this.controller = controller;
 		this.theme = theme;
 
 		filterManagement = new FilterManagement();
@@ -36,6 +41,7 @@ public class FilterUI extends JPanel {
 
 		String[] filterMenuEntries = {"Save selected filter...", "Load Filter..."}; // todo use language resource
 		JComboBox<String> filterDropdown = new JComboBox<>(filterMenuEntries);
+		filterDropdown.setFocusable(false);
 		filterDropdown.setMaximumSize(new Dimension(100, 100));
 		filterDropdown.setMinimumSize(new Dimension(100, 0));
 		filterDropdown.setBackground(theme.lightNeutralColor);
@@ -238,6 +244,29 @@ public class FilterUI extends JPanel {
 			update();
 			repaint();
 			revalidate();
+		}
+	}
+
+	private class FilterInputChange implements DocumentListener {
+
+		private final Filter filter;
+		private final JTextArea textArea;
+
+		public FilterInputChange(Filter filter, JTextArea textArea) {
+			this.filter = filter;
+			this.textArea = textArea;
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent documentEvent) {
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent documentEvent) {
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent documentEvent) {
 		}
 	}
 }
