@@ -6,10 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Table {
 
@@ -66,7 +63,19 @@ public abstract class Table {
 	 * @return
 	 */
 	public int getId() {
-		return 1;
+		LinkedList<Integer> ids = this.getIds();
+		for (int i = 0; i < ids.size(); i++) {
+			if (!ids.contains(i)) return i;
+		}
+		return ids.size() + 1;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public LinkedList<Integer> getIds() {
+		return null;
 	}
 
 	/**

@@ -148,14 +148,6 @@ public class GraphTable extends Table {
 
 	/**
 	 *
-	 * @return
-	 */
-	public LinkedList getIds() {
-		return null;
-	}
-
-	/**
-	 *
 	 * @param graph
 	 * @return
 	 */
