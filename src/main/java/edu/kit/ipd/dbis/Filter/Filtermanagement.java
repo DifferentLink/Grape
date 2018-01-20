@@ -168,16 +168,80 @@ public class Filtermanagement {
      * does not code a valid filter
      * a filter with same identifier
      */
-    public String checkFilterInput(String input, int id) throws InvalidInputException {
+    public void checkFilterInput(String input, int id) throws Exception, InvalidInputException {
         int i = 0;
         String filterName = input;
-        String propertyString = "";
+        String property1String = "";
         while (input.charAt(i) != ' ') {
-            propertyString = propertyString + (char) input.charAt(i);
+            property1String = property1String + (char) input.charAt(i);
             i++;
         }
-        Property filterProperty = Filtermanagement.testProperty(propertyString);
-        return propertyString;
+        property1String = Filtermanagement.removeCapitalLetters(property1String);
+        Property property1 = Filtermanagement.testProperty(property1String);
+
+        String firstOperator = "";
+        i++;
+        while (i < input.length() && input.charAt(i) != ' ') {
+            firstOperator = firstOperator + (char) input.charAt(i);
+            i++;
+        }
+        try {
+            Operator operator1 = Filtermanagement.testOperator(firstOperator);
+
+            String firstValueString = "";
+            i++;
+            while (i < input.length() && input.charAt(i) != ' ') {
+                firstValueString = firstValueString + (char) input.charAt(i);
+                i++;
+            }
+            int firstValue = Integer.parseInt(firstValueString);
+
+            String relationString = "";
+            i++;
+            while (i < input.length() && input.charAt(i) != ' ') {
+                relationString = relationString + (char) input.charAt(i);
+                i++;
+            }
+            Relation relation = Filtermanagement.testRelation(relationString);
+
+            String property2String = "";
+            i++;
+            while (i < input.length() && input.charAt(i) != ' ') {
+                property2String = property2String + (char) input.charAt(i);
+                i++;
+            }
+            property2String = Filtermanagement.removeCapitalLetters(property2String);
+            Property property2 = Filtermanagement.testProperty(property2String);
+
+            String operator2String = "";
+            i++;
+            while (i < input.length() && input.charAt(i) != ' ') {
+                operator2String = operator2String + (char) input.charAt(i);
+                i++;
+            }
+            Operator operator2 = Filtermanagement.testOperator(operator2String);
+
+            String secondValueString = "";
+            i++;
+            while (i < input.length() && input.charAt(i) != ' ') {
+                secondValueString = secondValueString + (char) input.charAt(i);
+                i++;
+            }
+            int secondValue = Integer.parseInt(secondValueString);
+
+            this.addFilter(new ConnectedFilter(filterName, true, property1, property2, operator1, operator2, firstValue, secondValue, relation, id));
+        } catch (InvalidInputException e) {
+            Relation basicRelation = Filtermanagement.testRelation(firstOperator);
+
+            String valueString = "";
+            i++;
+            while (i < input.length() && input.charAt(i) != ' ') {
+                valueString = valueString + (char) input.charAt(i);
+                i++;
+            }
+            int value = Integer.parseInt(valueString);
+            this.addFilter(new BasicFilter(filterName, true, value, basicRelation, property1, id));
+        }
     }
 
     static Operator testOperator(String input) throws  InvalidInputException {
