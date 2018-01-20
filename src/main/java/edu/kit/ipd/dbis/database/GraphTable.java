@@ -41,6 +41,7 @@ public class GraphTable extends Table {
 
 
 	public Set<PropertyGraph> getContent() throws Exception {
+		//TODO: Das ist die Filtermethode
 		Connection connection = this.getConnection();
 		String sql = "SELECT graph FROM " + this.name;
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -62,7 +63,33 @@ public class GraphTable extends Table {
 
 	@Override
 	public void insert(Serializable object) throws Exception {
-		//TODO: warte auf das Graphenpaket
+		PropertyGraph graph = (PropertyGraph) object;
+		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+		String columns = "(";
+		String values = "(";
+
+		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
+			if (entry.getKey().getSuperclass().getName().equals("IntegerProperty")
+					|| entry.getKey().getSuperclass().getName().equals("DoubleProperty")) {
+				columns += entry.getKey().getName() + ", ";
+				values += entry.getValue().getValue() + ", ";
+			}
+		}
+
+		int id = this.getId();
+		graph.setId(id);
+		columns += "graph, id, BfsCode, state, isCalculated, nothing)";
+		values += "?, ?, ?, ?, ?, ?)";
+
+		String sql = "INSERT INTO " + this.name + " " + columns + " VALUES " + values;
+		PreparedStatement statement = this.getConnection().prepareStatement(sql);
+		statement.setObject(1, this.objectToByteArray(graph));
+		statement.setObject(2, id);
+		statement.setObject(3, this.minimalBfsCodeToString(graph));
+		statement.setObject(4, false);
+		statement.setObject(5, this.isCalculated(graph));
+		statement.setObject(6, 0);
+		statement.executeUpdate();
 	}
 
 	@Override
