@@ -293,8 +293,9 @@ public class Filtermanagement {
      * @param input string which might code a Filter
      * @param id unique identifier of the new Filterobject
      */
-    public void checkGroupInput(String input, int id) {
-
+    public void checkGroupInput(String input, int id) throws Exception {
+        Filtergroup myFiltergroup = new Filtergroup(input, true, id);
+        this.addFilterGroup(myFiltergroup);
     }
 
     static String removeCapitalLetters(String input) {
