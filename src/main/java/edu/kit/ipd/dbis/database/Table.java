@@ -2,9 +2,7 @@ package edu.kit.ipd.dbis.database;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 
@@ -121,7 +119,20 @@ public abstract class Table {
 		ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
 		objectOutput.writeObject(object);
-		return byteOutput.toByteArray();
+		byte[] bytes = byteOutput.toByteArray();
+
+		byteOutput.close();
+		objectOutput.close();
+		return bytes;
+	}
+
+	public Object byteArrayToObject(byte[] bytes) throws Exception {
+		ByteArrayInputStream byteInput = new ByteArrayInputStream(bytes);
+		ObjectInputStream objectInput = new ObjectInputStream(byteInput);
+		Object object = objectInput.readObject();
+		byteInput.close();
+		objectInput.close();
+		return object;
 	}
 
 	public HashSet<String> getColumns() throws Exception {

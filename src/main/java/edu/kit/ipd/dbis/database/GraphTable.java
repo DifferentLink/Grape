@@ -39,25 +39,43 @@ public class GraphTable extends Table {
 		return null;
 	}
 
-
-	public Set<PropertyGraph> getContent() throws Exception {
-		//TODO: Das ist die Filtermethode
+	public void sortTable(String column, boolean ascending) throws Exception {
+		if (column.equals("BfsCode")) return;
 		Connection connection = this.getConnection();
-		String sql = "SELECT graph FROM " + this.name;
+		String s = (ascending) ? ("ASC") : ("DESC");
+		String sql = "ALTER TABLE tablename ORDER BY columnname " + s;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+	}
+
+	public void sortByBfsCode(LinkedList<PropertyGraph> graphs, boolean ascending) {
+
+	}
+
+	public LinkedList<PropertyGraph> getContent(String[][] filters, String column, boolean ascending) throws Exception {
+		Connection connection = this.getConnection();
+		this.sortTable(column, ascending);
+
+		String sql = "SELECT graph FROM " + this.name + " WHERE";
+
+		for (int i = 0; i < filters.length; i++) {
+			for (int j = 0; j < filters[i].length; j++) {
+				sql += " " + filters[i][j];
+			}
+			if (i != filters.length - 1) sql += " AND";
+		}
+
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
-		Set<PropertyGraph> graphs = new HashSet<>();
-		ByteArrayInputStream byteInput;
-		ObjectInputStream objectInput;
+		LinkedList<PropertyGraph> graphs = new LinkedList<>();
 		while (result.next()) {
-			byteInput = new ByteArrayInputStream(result.getBytes("graph"));
-			objectInput = new ObjectInputStream(byteInput);
 			try {
-				graphs.add((PropertyGraph) objectInput.readObject());
+				graphs.add((PropertyGraph) this.byteArrayToObject(result.getBytes("graph")));
 			} catch(Exception e) {
 
 			}
 		}
+		if (column.equals("BfsCode")) this.sortByBfsCode(graphs, ascending);
 		return graphs;
 	}
 
