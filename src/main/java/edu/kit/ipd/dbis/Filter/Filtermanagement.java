@@ -164,11 +164,30 @@ public class Filtermanagement {
      * filter is added to the list of class Filtermanagement
      * @param input string which might code a filter
      * @param id unique identifier of the new filterobject
+     * @param groupID unique identifier of the filtergroup on which the filter should be add to
+     * @throws InvalidInputException this exception is thrown if the input string
+     * does not code a valid filter
+     * a filter with same identifier
+     */
+    public void checkFilterInput(String input, int id, int groupID) throws Exception, InvalidInputException {
+        this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
+    }
+
+    /**
+     * checks whether the input string codes a valid filter. In case of success the method
+     * addFiltersegment(filtersegment: Filtersegment): void is called and a new
+     * filter is added to the list of class Filtermanagement
+     * @param input string which might code a filter
+     * @param id unique identifier of the new filterobject
      * @throws InvalidInputException this exception is thrown if the input string
      * does not code a valid filter
      * a filter with same identifier
      */
     public void checkFilterInput(String input, int id) throws Exception, InvalidInputException {
+        this.addFilter(Filtermanagement.parseToFilter(input, id));
+    }
+
+    static Filter parseToFilter(String input, int id) throws InvalidInputException, Exception {
         int i = 0;
         String filterName = input;
         String property1String = "";
@@ -229,7 +248,7 @@ public class Filtermanagement {
             }
             int secondValue = Integer.parseInt(secondValueString);
 
-            this.addFilter(new ConnectedFilter(filterName, true, property1, property2, operator1, operator2, firstValue, secondValue, relation, id));
+            return new ConnectedFilter(filterName, true, property1, property2, operator1, operator2, firstValue, secondValue, relation, id);
         } catch (InvalidInputException e) {
             Relation basicRelation = Filtermanagement.testRelation(firstOperator);
 
@@ -240,7 +259,7 @@ public class Filtermanagement {
                 i++;
             }
             int value = Integer.parseInt(valueString);
-            this.addFilter(new BasicFilter(filterName, true, value, basicRelation, property1, id));
+            return new BasicFilter(filterName, true, value, basicRelation, property1, id);
         }
     }
 
