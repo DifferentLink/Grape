@@ -1,15 +1,12 @@
 package edu.kit.ipd.dbis.database;
 
 import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
-import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.Exceptions.TableAlreadyExistsException;
+import edu.kit.ipd.dbis.database.Exceptions.*;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.*;
-import java.nio.file.AccessDeniedException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
@@ -27,7 +24,7 @@ public class FileManager implements Connector {
 
 	@Override
 	public GraphDatabase createGraphDatabase(String url, String user, String password, String name)
-			throws TableAlreadyExistsException, DatabaseDoesNotExistException, AccessDeniedForUserException,
+			throws TableAlreadyExistsException, MySQLDatabaseDoesNotExistException, AccessDeniedForUserException,
 			ConnectionFailedException, SQLException {
 
 		Connection connection = getConnection(url, user, password);
@@ -41,16 +38,21 @@ public class FileManager implements Connector {
 	}
 
 	@Override
-	public void saveGraphDatabase(String directory, GraphDatabase database) throws Exception {
+	public void saveGraphDatabase(String directory, GraphDatabase database)
+			throws GraphDatabaseAlreadySavedException, FileNameAlreadyTakenException, FileCouldNotBeSavedException {
 		File file = new File(directory);
 		if (database.getDirectory() != null) {
-			throw new Exception();
+			throw new GraphDatabaseAlreadySavedException();
 		} else if (file.exists()) {
-			throw new Exception();
+			throw new FileNameAlreadyTakenException();
 		} else {
 			SaveParser save = new SaveParser(database);
 			save.parse();
-			Files.write(Paths.get(directory), save.getInformation().getBytes());
+			try {
+				Files.write(Paths.get(directory), save.getInformation().getBytes());
+			} catch (Exception e) {
+				throw new FileCouldNotBeSavedException();
+			}
 		}
 	}
 
@@ -101,13 +103,13 @@ public class FileManager implements Connector {
 	 * @return
 	 */
 	private Connection getConnection(String url, String user, String password)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
+			throws AccessDeniedForUserException, MySQLDatabaseDoesNotExistException, ConnectionFailedException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection connection = DriverManager.getConnection(url, user, password);
 			return connection;
 		} catch (MySQLSyntaxErrorException e) {
-			throw new DatabaseDoesNotExistException();
+			throw new MySQLDatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new AccessDeniedForUserException();
 		} catch (Exception e) {
