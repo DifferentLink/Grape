@@ -62,7 +62,7 @@ public abstract class Table {
 	 *
 	 * @return
 	 */
-	public int getId() {
+	public int getId() throws Exception {
 		LinkedList<Integer> ids = this.getIds();
 		for (int i = 0; i < ids.size(); i++) {
 			if (!ids.contains(i)) return i;
@@ -74,8 +74,15 @@ public abstract class Table {
 	 *
 	 * @return
 	 */
-	public LinkedList<Integer> getIds() {
-		return null;
+	public LinkedList<Integer> getIds() throws Exception {
+		Connection connection = this.getConnection();
+		String sql = "SELECT id FROM " + this.name;
+		ResultSet result = connection.prepareStatement(sql).executeQuery();
+		LinkedList<Integer> ids = new LinkedList<>();
+		while (result.next()) {
+			ids.add(result.getInt("id"));
+		}
+		return ids;
 	}
 
 	/**
