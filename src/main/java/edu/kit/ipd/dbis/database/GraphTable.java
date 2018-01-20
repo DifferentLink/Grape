@@ -185,6 +185,10 @@ public class GraphTable extends Table {
 	 * @return
 	 */
 	private boolean isCalculated(PropertyGraph graph) {
+		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
+			if (entry.getValue().getValue() == null) return false;
+		}
 		return true;
 	}
 
