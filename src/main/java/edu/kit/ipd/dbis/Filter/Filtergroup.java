@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Controller.Filter;
+package edu.kit.ipd.dbis.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,12 @@ public class Filtergroup extends Filtersegment {
      * @param id unique identifier of the filtersegment which should be enabled
      */
     void removeFilter(int id) {
-
+        for (Filter filterInGroup: availableFilter) {
+            if (filterInGroup.id == id) {
+                availableFilter.remove(filterInGroup);
+                return;
+            }
+        }
     }
 
 }

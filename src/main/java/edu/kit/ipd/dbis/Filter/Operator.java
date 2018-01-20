@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Controller.Filter;
+package edu.kit.ipd.dbis.Filter;
 
 public enum Operator {
     ADD,

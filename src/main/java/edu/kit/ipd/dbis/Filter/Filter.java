@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Controller.Filter;
+package edu.kit.ipd.dbis.Filter;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
@@ -7,13 +7,13 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
  */
 public abstract class Filter extends Filtersegment {
 
-    protected Property property1;
-    protected Operator operator1;
-    protected int value1;
-    protected Relation relation;
-    protected Property property2;
-    protected Operator operator2;
-    protected int value2;
+    Property property1;
+    Operator operator1;
+    int value1;
+    Relation relation;
+    Property property2;
+    Operator operator2;
+    int value2;
 
     /**
      * getter of attribute value2
@@ -71,10 +71,4 @@ public abstract class Filter extends Filtersegment {
         return property1;
     }
 
-    /**
-     * checks if a specific graph meets every criteria of the current filter
-     * @param graph graph which should be checked for the criteria of the filter
-     * @return returns true if the graph meets every criteria of the filter
-     */
-    abstract boolean fulfillFilter(PropertyGraph graph);
 }

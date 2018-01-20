@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Controller.Filter;
+package edu.kit.ipd.dbis.Filter;
 
 import java.io.Serializable;
 
@@ -57,6 +57,10 @@ public abstract class Filtersegment implements Serializable {
         return id;
     }
 
+    /**
+     * allows to check if a specific filtersegment is activated
+     * @return returns true if the filtersegment is activated
+     */
     public boolean getIsActivated() {
         return isActivated;
     }
