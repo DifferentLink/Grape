@@ -27,15 +27,15 @@ public class GraphTable extends Table {
 		String sql = "SELECT graph FROM " + this.name + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
-		ByteArrayInputStream byteInput = new ByteArrayInputStream(result.getBytes("graph"));
-		ObjectInputStream objectInput = new ObjectInputStream(byteInput);
+
 		if (result.next()) {
+			ByteArrayInputStream byteInput = new ByteArrayInputStream(result.getBytes("graph"));
+			ObjectInputStream objectInput = new ObjectInputStream(byteInput);
+			PropertyGraph graph = this.getInstanceOf(objectInput.readObject());
 			byteInput.close();
 			objectInput.close();
-			return this.getInstanceOf(objectInput.readObject());
+			return graph;
 		}
-		byteInput.close();
-		objectInput.close();
 		return null;
 	}
 
@@ -129,7 +129,8 @@ public class GraphTable extends Table {
 			ResultSet otherResult = other.prepareStatement(sql + table.getName()).executeQuery();
 			boolean found = false;
 			while ((otherResult.next()) && (!found)) {
-				found = (currentResult.toString().equals(otherResult.toString())) ? (true) : (false);
+				found = (currentResult.getString(1) == (otherResult.getString(1))) ?
+						(true) : (false);
 			}
 			if (!found) return false;
 		}
@@ -176,7 +177,7 @@ public class GraphTable extends Table {
 		Connection connection = this.getConnection();
 		String sql = "SELECT * FROM " + this.name + " WHERE BfsCode = " + this.minimalBfsCodeToString(graph);
 		ResultSet result = connection.prepareStatement(sql).executeQuery();
-		return (result.next()) ? (true) : (false);
+		return result.next();
 	}
 
 	/**

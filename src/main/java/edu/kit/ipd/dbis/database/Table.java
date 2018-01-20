@@ -105,7 +105,7 @@ public abstract class Table {
 		ResultSet result = connection.prepareStatement(sql).executeQuery();
 
 		if (result.next()) {
-			boolean value = (result.toString().equals(1)) ? (false) : (true);
+			boolean value = (result.getInt("state") == 1) ? (false) : (true);
 			sql = "UPDATE " + this.name + " SET state = " + value + " WHERE id = " + id;
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
@@ -130,7 +130,7 @@ public abstract class Table {
 		ResultSet result = connection.prepareStatement(sql).executeQuery();
 		HashSet<String> columns = new HashSet<>();
 		while (result.next()) {
-			columns.add(result.toString());
+			columns.add(result.getString(1));
 		}
 		return columns;
 	}
