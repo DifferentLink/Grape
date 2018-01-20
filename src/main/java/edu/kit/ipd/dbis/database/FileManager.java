@@ -1,15 +1,20 @@
 package edu.kit.ipd.dbis.database;
 
+import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
+import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.Exceptions.TableAlreadyExistsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.*;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 public class FileManager implements Connector {
 
@@ -21,14 +26,18 @@ public class FileManager implements Connector {
 	}
 
 	@Override
-	public GraphDatabase createGraphDatabase(String url, String user, String password, String name) throws Exception {
+	public GraphDatabase createGraphDatabase(String url, String user, String password, String name)
+			throws TableAlreadyExistsException, DatabaseDoesNotExistException, AccessDeniedForUserException,
+			ConnectionFailedException, SQLException {
+
 		Connection connection = getConnection(url, user, password);
 		if (tableExists(connection, name)) {
-			throw new Exception();
+			throw new TableAlreadyExistsException();
 		}
 		GraphTable graphTable = new GraphTable(url, user, password, name);
 		FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
 		return new GraphDatabase(graphTable, filterTable);
+
 	}
 
 	@Override
@@ -73,7 +82,7 @@ public class FileManager implements Connector {
 	 * @param name
 	 * @return
 	 */
-	private boolean tableExists(Connection connection, String name) throws Exception {
+	private boolean tableExists(Connection connection, String name) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
 		ResultSet resultSet = meta.getTables(null, null, null, null);
 		while (resultSet.next()) {
@@ -91,10 +100,19 @@ public class FileManager implements Connector {
 	 * @param password
 	 * @return
 	 */
-	private Connection getConnection(String url, String user, String password) throws ClassNotFoundException, SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection(url, user, password);
-		return connection;
+	private Connection getConnection(String url, String user, String password)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection connection = DriverManager.getConnection(url, user, password);
+			return connection;
+		} catch (MySQLSyntaxErrorException e) {
+			throw new DatabaseDoesNotExistException();
+		} catch (SQLException e) {
+			throw new AccessDeniedForUserException();
+		} catch (Exception e) {
+			throw new ConnectionFailedException();
+		}
 	}
 
 	/**
@@ -103,7 +121,7 @@ public class FileManager implements Connector {
 	 * @param name
 	 * @return
 	 */
-	private String getValidFilterTableName(Connection connection, String name) throws Exception {
+	private String getValidFilterTableName(Connection connection, String name) throws SQLException {
 		String filterTable = name + "Filters";
 		String s = filterTable;
 		int i = 0;
@@ -116,6 +134,7 @@ public class FileManager implements Connector {
 	}
 
 	private boolean validFilterTable(FilterTable filterTable) throws Exception {
+
 		HashSet<String> columns = filterTable.getColumns();
 		HashSet<String> names = new HashSet<>();
 		names.add("id");
@@ -128,6 +147,7 @@ public class FileManager implements Connector {
 	}
 
 	private boolean validGraphTable(GraphTable graphTable) throws Exception {
+		//TODO: columns
 		HashSet<String> columns = graphTable.getColumns();
 		HashSet<String> names = new HashSet<>();
 		names.add("id");

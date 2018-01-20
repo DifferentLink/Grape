@@ -1,6 +1,9 @@
 package edu.kit.ipd.dbis.database;
 
 import edu.kit.ipd.dbis.Filter.Filtersegment;
+import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.ByteArrayInputStream;
@@ -9,6 +12,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +24,8 @@ public class FilterTable extends Table {
 	 * @param password
 	 * @param name
 	 */
-	public FilterTable(String url, String user, String password, String name) throws Exception {
+	public FilterTable(String url, String user, String password, String name)
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException, ConnectionFailedException {
 		super(url, user, password, name);
 	}
 
@@ -75,7 +80,8 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	protected void createTable() throws Exception{
+	protected void createTable()
+			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
 		Connection connection = this.getConnection();
 		String sql = "CREATE TABLE IF NOT EXISTS "
 				+ this.name +" ("

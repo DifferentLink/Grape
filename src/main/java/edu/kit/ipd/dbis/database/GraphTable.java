@@ -1,5 +1,9 @@
 package edu.kit.ipd.dbis.database;
 
+import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
+import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
@@ -18,7 +22,8 @@ public class GraphTable extends Table {
 	 * @param password
 	 * @param name
 	 */
-	public GraphTable(String url, String user, String password, String name) throws Exception {
+	public GraphTable(String url, String user, String password, String name)
+			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 		super(url, user, password, name);
 	}
 
@@ -118,14 +123,15 @@ public class GraphTable extends Table {
 	}
 
 	@Override
-	protected void createTable() throws Exception {
+	protected void createTable()
+			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
 
 		String sql = "CREATE TABLE IF NOT EXISTS "
 				+ this.name +" ("
 				+ "graph longblob, "
 				+ "id int NOT NULL, "
-				+ "BfsCode String, "
-				+ "state boolean"
+				+ "BfsCode VARCHAR(255), "
+				+ "state boolean, "
 				+ "isCalculated boolean";
 		PropertyGraph graph = new PropertyGraph();
 		Collection<Property> properties = graph.getProperties();

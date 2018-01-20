@@ -1,5 +1,9 @@
 package edu.kit.ipd.dbis.database;
 
+import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
+import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.*;
@@ -21,7 +25,8 @@ public abstract class Table {
 	 * @param password
 	 * @param name
 	 */
-	public Table(String url, String user, String password, String name) throws Exception {
+	public Table(String url, String user, String password, String name)
+			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -87,10 +92,20 @@ public abstract class Table {
 	 *
 	 * @return
 	 */
-	public Connection getConnection() throws Exception {
-		Class.forName(this.DRIVER);
-		Connection connection = DriverManager.getConnection(this.url, this.user, this.password);
-		return connection;
+	public Connection getConnection()
+			throws ConnectionFailedException, AccessDeniedForUserException, DatabaseDoesNotExistException {
+
+		try {
+			Class.forName(this.DRIVER);
+			Connection connection = DriverManager.getConnection(this.url, this.user, this.password);
+			return connection;
+		} catch (MySQLSyntaxErrorException e) {
+			throw new DatabaseDoesNotExistException();
+		} catch (SQLException e) {
+			throw new AccessDeniedForUserException();
+		} catch (Exception e) {
+			throw new ConnectionFailedException();
+		}
 	}
 
 	/**
@@ -166,6 +181,6 @@ public abstract class Table {
 	 */
 	protected abstract Serializable getInstanceOf(Object object) throws Exception;
 
-	protected abstract void createTable() throws Exception;
+	protected abstract void createTable() throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException;
 
 }
