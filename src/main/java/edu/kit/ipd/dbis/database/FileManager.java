@@ -57,12 +57,21 @@ public class FileManager implements Connector {
 	}
 
 	@Override
-	public GraphDatabase loadGraphDatabase(String directory) throws Exception {
+	public GraphDatabase loadGraphDatabase(String directory)
+			throws FileNotFoundException, FileContentNotAsExpectedException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException, MySQLDatabaseDoesNotExistException, FileContentCouldNotBeReadException,
+			TablesNotAsExpectedException {
+
 		FileReader file = new FileReader(directory);
 		BufferedReader reader = new BufferedReader(file);
-		LoadParser load = new LoadParser(reader.readLine());
-		file.close();
-		reader.close();
+		LoadParser load = null;
+		try {
+			load = new LoadParser(reader.readLine());
+			file.close();
+			reader.close();
+		} catch (Exception e) {
+			throw new FileContentCouldNotBeReadException();
+		}
 
 		load.parse();
 		GraphDatabase database = load.getDatabase();
@@ -70,7 +79,7 @@ public class FileManager implements Connector {
 			database.setDirectory(directory);
 			return database;
 		}
-		throw new Exception();
+		throw new TablesNotAsExpectedException();
 	}
 
 	@Override
@@ -135,7 +144,8 @@ public class FileManager implements Connector {
 		return s;
 	}
 
-	private boolean validFilterTable(FilterTable filterTable) throws Exception {
+	private boolean validFilterTable(FilterTable filterTable)
+			throws SQLException, AccessDeniedForUserException, ConnectionFailedException, MySQLDatabaseDoesNotExistException {
 
 		HashSet<String> columns = filterTable.getColumns();
 		HashSet<String> names = new HashSet<>();
@@ -148,7 +158,8 @@ public class FileManager implements Connector {
 		return false;
 	}
 
-	private boolean validGraphTable(GraphTable graphTable) throws Exception {
+	private boolean validGraphTable(GraphTable graphTable)
+			throws SQLException, AccessDeniedForUserException, ConnectionFailedException, MySQLDatabaseDoesNotExistException {
 		//TODO: columns
 		HashSet<String> columns = graphTable.getColumns();
 		HashSet<String> names = new HashSet<>();
