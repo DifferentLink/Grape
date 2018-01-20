@@ -26,8 +26,8 @@ public class FileManager implements Connector {
 		if (tableExists(connection, name)) {
 			throw new Exception();
 		}
-		FilterTable filterTable = new FilterTable(url, user, password, name);
-		GraphTable graphTable = new GraphTable(url, user, password, getValidFilterTableName(connection, name));
+		GraphTable graphTable = new GraphTable(url, user, password, name);
+		FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
 		return new GraphDatabase(graphTable, filterTable);
 	}
 

@@ -109,7 +109,7 @@ public class GraphTable extends Table {
 				+ "state boolean"
 				+ "isCalculated boolean";
 		PropertyGraph graph = new PropertyGraph();
-		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+		HashMap<Class<?>, Property> map = (HashMap<Class<?>, Property>) graph.getProperties();
 
 		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
 			if (entry.getKey().getSuperclass().toString().equals("IntegerProperty")) {
