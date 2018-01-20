@@ -46,14 +46,10 @@ public class FilterTable extends Table {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
 		Set<Filtersegment> filters = new HashSet<>();
-		ByteArrayInputStream byteInput;
-		ObjectInputStream objectInput;
 
 		while (result.next()) {
-			byteInput = new ByteArrayInputStream(result.getBytes("filter"));
-			objectInput = new ObjectInputStream(byteInput);
 			try {
-				filters.add((Filtersegment) objectInput.readObject());
+				filters.add((Filtersegment) this.byteArrayToObject(result.getBytes("filter")));
 			} catch(Exception e) {
 
 			}

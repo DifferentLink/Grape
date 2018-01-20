@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.database;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -49,7 +50,7 @@ public class GraphTable extends Table {
 	}
 
 	public void sortByBfsCode(LinkedList<PropertyGraph> graphs, boolean ascending) {
-
+		//TODO: warte auf Graphenpaket
 	}
 
 	public LinkedList<PropertyGraph> getContent(String[][] filters, String column, boolean ascending) throws Exception {
@@ -82,15 +83,15 @@ public class GraphTable extends Table {
 	@Override
 	public void insert(Serializable object) throws Exception {
 		PropertyGraph graph = (PropertyGraph) object;
-		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+		Collection<Property> properties = graph.getProperties();
 		String columns = "(";
 		String values = "(";
 
-		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
-			if (entry.getKey().getSuperclass().getName().equals("IntegerProperty")
-					|| entry.getKey().getSuperclass().getName().equals("DoubleProperty")) {
-				columns += entry.getKey().getName() + ", ";
-				values += entry.getValue().getValue() + ", ";
+		for (Property property : properties) {
+			if (property.getClass().getSuperclass().getName().equals("IntegerProperty")
+					|| property.getClass().getSuperclass().getName().equals("DoubleProperty")) {
+				columns += property.getClass().getName() + ", ";
+				values += property.getValue() + ", ";
 			}
 		}
 
@@ -127,13 +128,13 @@ public class GraphTable extends Table {
 				+ "state boolean"
 				+ "isCalculated boolean";
 		PropertyGraph graph = new PropertyGraph();
-		HashMap<Class<?>, Property> map = (HashMap<Class<?>, Property>) graph.getProperties();
+		Collection<Property> properties = graph.getProperties();
 
-		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
-			if (entry.getKey().getSuperclass().toString().equals("IntegerProperty")) {
-				sql += ", " + entry.getKey().toString() + " int";
-			} else if (entry.getKey().getSuperclass().toString().equals("DoubleProperty")) {
-				sql += ", " + entry.getKey().toString() + " double";
+		for (Property property : properties) {
+			if (property.getClass().getSuperclass().getName().equals("IntegerProperty")) {
+				sql += ", " + property.getClass().getName() + " int";
+			} else if (property.getClass().getSuperclass().getName().equals("DoubleProperty")) {
+				sql += ", " + property.getClass().getName() + " double";
 			}
 		}
 
@@ -200,11 +201,11 @@ public class GraphTable extends Table {
 	private String minimalBfsCodeToString(PropertyGraph graph) {
 		String s = "";
 		int[] bfsCode = new int[0];
-		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+		Collection<Property> properties = graph.getProperties();
 
-		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
-			if (entry.getKey().toString().equals("BfsCode")) {
-				bfsCode = (int[]) entry.getValue().getValue();
+		for (Property property : properties) {
+			if (property.getClass().getName().equals("BfsCode")) {
+				bfsCode = (int[]) property.getValue();
 			}
 		}
 
@@ -230,9 +231,9 @@ public class GraphTable extends Table {
 	 * @return
 	 */
 	private boolean isCalculated(PropertyGraph graph) {
-		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
-		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
-			if (entry.getValue().getValue() == null) return false;
+		Collection<Property> properties = graph.getProperties();
+		for (Property property : properties) {
+			if (property.getValue() == null) return false;
 		}
 		return true;
 	}
