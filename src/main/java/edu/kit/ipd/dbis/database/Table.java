@@ -4,7 +4,6 @@ import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.*;
 import java.sql.*;
@@ -130,7 +129,7 @@ public abstract class Table {
 	 *
 	 * @param object
 	 */
-	public byte[] objectToByteArray(Serializable object) throws Exception {
+	public byte[] objectToByteArray(Serializable object) throws IOException {
 		ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
 		objectOutput.writeObject(object);
@@ -141,7 +140,7 @@ public abstract class Table {
 		return bytes;
 	}
 
-	public Object byteArrayToObject(byte[] bytes) throws Exception {
+	public Object byteArrayToObject(byte[] bytes) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream byteInput = new ByteArrayInputStream(bytes);
 		ObjectInputStream objectInput = new ObjectInputStream(byteInput);
 		Object object = objectInput.readObject();
@@ -150,7 +149,8 @@ public abstract class Table {
 		return object;
 	}
 
-	public HashSet<String> getColumns() throws Exception {
+	public HashSet<String> getColumns()
+			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException, SQLException {
 		Connection connection = this.getConnection();
 		String sql = "SHOW COLUMNS FROM " + this.name;
 		ResultSet result = connection.prepareStatement(sql).executeQuery();

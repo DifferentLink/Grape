@@ -63,7 +63,7 @@ public class FileManager implements Connector {
 
 		FileReader file = new FileReader(directory);
 		BufferedReader reader = new BufferedReader(file);
-		LoadParser load = null;
+		LoadParser load;
 		try {
 			load = new LoadParser(reader.readLine());
 			file.close();

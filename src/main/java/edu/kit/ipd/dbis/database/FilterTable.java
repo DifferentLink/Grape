@@ -4,10 +4,9 @@ import edu.kit.ipd.dbis.Filter.Filtersegment;
 import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.database.Exceptions.UnexpectedObjectException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,27 +24,29 @@ public class FilterTable extends Table {
 	 * @param name
 	 */
 	public FilterTable(String url, String user, String password, String name)
-			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException, ConnectionFailedException {
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
 		super(url, user, password, name);
 	}
 
 	@Override
-	public Filtersegment getContent(int id) throws Exception {
+	public Filtersegment getContent(int id)
+			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
+			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
 		Connection connection = this.getConnection();
 		String sql = "SELECT filter FROM " + this.name + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
-		ByteArrayInputStream byteInput;
-		ObjectInputStream objectInput;
 		if (result.next()) {
-			byteInput = new ByteArrayInputStream(result.getBytes("filter"));
-			objectInput = new ObjectInputStream(byteInput);
-			return (Filtersegment) objectInput.readObject();
+			return this.getInstanceOf(this.byteArrayToObject(result.getBytes("filter")));
 		}
-		return null;
+		throw new UnexpectedObjectException();
 	}
 
-	public Set<Filtersegment> getContent() throws Exception{
+	public Set<Filtersegment> getContent()
+			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
+			SQLException {
+
 		Connection connection = this.getConnection();
 		String sql = "SELECT filter FROM " + this.name;
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -54,7 +55,7 @@ public class FilterTable extends Table {
 
 		while (result.next()) {
 			try {
-				filters.add((Filtersegment) this.byteArrayToObject(result.getBytes("filter")));
+				filters.add(this.getInstanceOf(this.byteArrayToObject(result.getBytes("filter"))));
 			} catch(Exception e) {
 
 			}
@@ -63,7 +64,9 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	public void insert(Serializable object) throws Exception {
+	public void insert(Serializable object)
+			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
+			SQLException, UnexpectedObjectException, IOException {
 		Filtersegment filter = this.getInstanceOf(object);
 		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, ?, ?)";
 		PreparedStatement statement = this.getConnection().prepareStatement(sql);
@@ -74,14 +77,17 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	protected Filtersegment getInstanceOf(Object object) throws Exception {
-		Filtersegment filter = (object instanceof  PropertyGraph) ? (Filtersegment) object : null;
-		return filter;
+	protected Filtersegment getInstanceOf(Object object) throws UnexpectedObjectException {
+		if (object instanceof Filtersegment) {
+			return (Filtersegment) object;
+		}
+		throw new UnexpectedObjectException();
 	}
 
 	@Override
 	protected void createTable()
-			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
+			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException,
+			ConnectionFailedException {
 		Connection connection = this.getConnection();
 		String sql = "CREATE TABLE IF NOT EXISTS "
 				+ this.name +" ("

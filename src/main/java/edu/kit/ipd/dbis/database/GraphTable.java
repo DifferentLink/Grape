@@ -1,12 +1,10 @@
 package edu.kit.ipd.dbis.database;
 
-import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
