@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class FileManager implements Connector {

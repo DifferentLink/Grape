@@ -12,9 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 public class FilterTable extends Table {
 
@@ -44,6 +42,14 @@ public class FilterTable extends Table {
 		throw new UnexpectedObjectException();
 	}
 
+	/**
+	 *
+	 * @return
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 */
 	public LinkedList<Filtersegment> getContent()
 			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
 			SQLException {
