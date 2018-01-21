@@ -149,8 +149,9 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void changeStateOfFilter(int id) throws AccessDeniedForUserException, DatabaseDoesNotExistException,
-			ConnectionFailedException, TablesNotAsExpectedException {
+	public void changeStateOfFilter(int id)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			TablesNotAsExpectedException {
 		try {
 			this.filterTable.switchState(id);
 		} catch (AccessDeniedForUserException e) {
@@ -165,8 +166,9 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void permanentlyDeleteGraphs() throws AccessDeniedForUserException, DatabaseDoesNotExistException,
-			ConnectionFailedException, TablesNotAsExpectedException {
+	public void permanentlyDeleteGraphs()
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			TablesNotAsExpectedException {
 
 		try {
 			this.graphTable.deleteAll();
@@ -181,8 +183,10 @@ public class GraphDatabase implements DatabaseManager {
 		}
 	}
 
-	public void permanentlyDeleteGraph(int id) throws AccessDeniedForUserException, DatabaseDoesNotExistException,
-			ConnectionFailedException, TablesNotAsExpectedException {
+	@Override
+	public void permanentlyDeleteGraph(int id)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			TablesNotAsExpectedException {
 		try {
 			this.graphTable.delete(id);
 		} catch (AccessDeniedForUserException e) {
@@ -197,8 +201,9 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void replaceGraph(int id, PropertyGraph graph) throws TablesNotAsExpectedException,
-			ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+	public void replaceGraph(int id, PropertyGraph graph)
+			throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException,
+			AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
 		this.permanentlyDeleteGraph(id);
 		graph.setId(id);
 		this.addGraph(graph);
@@ -247,8 +252,9 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<Filtersegment> getFilters() throws DatabaseDoesNotExistException, TablesNotAsExpectedException,
-			AccessDeniedForUserException, ConnectionFailedException {
+	public LinkedList<Filtersegment> getFilters()
+			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
+			ConnectionFailedException {
 		try {
 			return this.filterTable.getContent();
 		} catch (DatabaseDoesNotExistException e) {
@@ -263,8 +269,9 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public Filtersegment getFilterById(int id) throws UnexpectedObjectException, TablesNotAsExpectedException,
-			DatabaseDoesNotExistException, ConnectionFailedException, AccessDeniedForUserException {
+	public Filtersegment getFilterById(int id)
+			throws UnexpectedObjectException, TablesNotAsExpectedException, DatabaseDoesNotExistException,
+			ConnectionFailedException, AccessDeniedForUserException {
 		try {
 			return this.filterTable.getContent(id);
 		} catch (AccessDeniedForUserException e) {
@@ -282,11 +289,6 @@ public class GraphDatabase implements DatabaseManager {
 		} catch (UnexpectedObjectException e) {
 			throw new UnexpectedObjectException();
 		}
-	}
-
-	@Override //TODO: löschen
-	public Set<Filtersegment> getActivatedFilters() {
-		return null;
 	}
 
 	@Override
@@ -307,8 +309,9 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public PropertyGraph getGraphById(int id) throws TablesNotAsExpectedException, ConnectionFailedException,
-			DatabaseDoesNotExistException, AccessDeniedForUserException, UnexpectedObjectException {
+	public PropertyGraph getGraphById(int id)
+			throws TablesNotAsExpectedException, ConnectionFailedException, DatabaseDoesNotExistException,
+			AccessDeniedForUserException, UnexpectedObjectException {
 		try {
 			return this.graphTable.getContent(id);
 		} catch (AccessDeniedForUserException e) {
@@ -328,14 +331,10 @@ public class GraphDatabase implements DatabaseManager {
 		}
 	}
 
-	@Override //TODO: löschen
-	public Set<PropertyGraph> getCalculatedGraphs() throws Exception {
-		return null;
-	}
-
 	@Override
-	public LinkedList<PropertyGraph> getUncalculatedGraphs() throws AccessDeniedForUserException,
-			DatabaseDoesNotExistException, ConnectionFailedException, TablesNotAsExpectedException {
+	public LinkedList<PropertyGraph> getUncalculatedGraphs()
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			TablesNotAsExpectedException {
 		try {
 			return this.graphTable.getUncalculatedGraphs();
 		} catch (AccessDeniedForUserException e) {
@@ -347,11 +346,6 @@ public class GraphDatabase implements DatabaseManager {
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
-	}
-
-	@Override //TODO: löschen
-	public Set<PropertyGraph> getGraphsByVertex(int vertices) throws Exception {
-		return null;
 	}
 
 }
