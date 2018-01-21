@@ -247,7 +247,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public Set<Filtersegment> getFilters() throws DatabaseDoesNotExistException, TablesNotAsExpectedException,
+	public LinkedList<Filtersegment> getFilters() throws DatabaseDoesNotExistException, TablesNotAsExpectedException,
 			AccessDeniedForUserException, ConnectionFailedException {
 		try {
 			return this.filterTable.getContent();
@@ -334,7 +334,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public Set<PropertyGraph> getUncalculatedGraphs() throws AccessDeniedForUserException,
+	public LinkedList<PropertyGraph> getUncalculatedGraphs() throws AccessDeniedForUserException,
 			DatabaseDoesNotExistException, ConnectionFailedException, TablesNotAsExpectedException {
 		try {
 			return this.graphTable.getUncalculatedGraphs();

@@ -15,6 +15,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -167,7 +168,7 @@ public class FileManager implements Connector {
 	private boolean validGraphTable(GraphTable graphTable)
 			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
 			DatabaseDoesNotExistException {
-		//TODO: columns
+
 		HashSet<String> columns = graphTable.getColumns();
 		HashSet<String> names = new HashSet<>();
 		names.add("id");
@@ -178,13 +179,13 @@ public class FileManager implements Connector {
 		names.add("isCalculated");
 
 		PropertyGraph graph = new PropertyGraph();
-		HashMap<Class<?>, Property> map = (HashMap) graph.getProperties();
+		Collection<Property> properties = graph.getProperties();
 
-		for (HashMap.Entry<Class<?>, Property> entry : map.entrySet()) {
-			if (entry.getKey().getSuperclass().toString().equals("IntegerProperty")) {
-				names.add(entry.getKey().toString());
-			} else if (entry.getKey().getSuperclass().toString().equals("DoubleProperty")) {
-				names.add(entry.getKey().toString());
+		for (Property property : properties) {
+			if (property.getClass().getSuperclass().getSimpleName().equals("IntegerProperty")) {
+				names.add(property.toString());
+			} else if (property.getClass().getSuperclass().getSimpleName().equals("DoubleProperty")) {
+				names.add(property.toString());
 			}
 		}
 

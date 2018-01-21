@@ -30,6 +30,7 @@ public class GraphTable extends Table {
 	public PropertyGraph getContent(int id)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
+
 		Connection connection = this.getConnection();
 		String sql = "SELECT graph FROM " + this.name + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -96,9 +97,9 @@ public class GraphTable extends Table {
 		String values = "(";
 
 		for (Property property : properties) {
-			if (property.getClass().getSuperclass().getName().equals("IntegerProperty")
-					|| property.getClass().getSuperclass().getName().equals("DoubleProperty")) {
-				columns += property.getClass().getName() + ", ";
+			if (property.getClass().getSuperclass().getSimpleName().equals("IntegerProperty")
+					|| property.getClass().getSuperclass().getSimpleName().equals("DoubleProperty")) {
+				columns += property.toString() + ", ";
 				values += property.getValue() + ", ";
 			}
 		}
@@ -142,10 +143,10 @@ public class GraphTable extends Table {
 		Collection<Property> properties = graph.getProperties();
 
 		for (Property property : properties) {
-			if (property.getClass().getSuperclass().getName().equals("IntegerProperty")) {
-				sql += ", " + property.getClass().getName() + " int";
-			} else if (property.getClass().getSuperclass().getName().equals("DoubleProperty")) {
-				sql += ", " + property.getClass().getName() + " double";
+			if (property.getClass().getSuperclass().getSimpleName().equals("IntegerProperty")) {
+				sql += ", " + property.toString() + " int";
+			} else if (property.getClass().getSuperclass().getSimpleName().equals("DoubleProperty")) {
+				sql += ", " + property.toString() + " double";
 			}
 		}
 
@@ -219,7 +220,7 @@ public class GraphTable extends Table {
 		Collection<Property> properties = graph.getProperties();
 
 		for (Property property : properties) {
-			if (property.getClass().getName().equals("BfsCode")) {
+			if (property.toString().equals("BfsCode")) {
 				bfsCode = (int[]) property.getValue();
 			}
 		}
@@ -255,12 +256,13 @@ public class GraphTable extends Table {
 		return true;
 	}
 
-	public Set<PropertyGraph> getUncalculatedGraphs( ) throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
+	public LinkedList<PropertyGraph> getUncalculatedGraphs( ) throws AccessDeniedForUserException,
+			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
 		Connection connection = this.getConnection();
 		String sql = "SELECT graph FROM " + this.name + " WHERE isCalculated = false";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
-		Set<PropertyGraph> graphs = new HashSet<>();
+		LinkedList<PropertyGraph> graphs = new LinkedList<>();
 		while (result.next()) {
 			try {
 				graphs.add((PropertyGraph) this.byteArrayToObject(result.getBytes("graph")));

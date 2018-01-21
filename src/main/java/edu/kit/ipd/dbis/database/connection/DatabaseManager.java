@@ -83,7 +83,7 @@ public interface DatabaseManager {
 	 *
 	 * @return
 	 */
-	Set<Filtersegment> getFilters() throws Exception;
+	LinkedList<Filtersegment> getFilters() throws Exception;
 
 	/**
 	 *
@@ -121,7 +121,7 @@ public interface DatabaseManager {
 	 *
 	 * @return
 	 */
-	Set<PropertyGraph> getUncalculatedGraphs() throws Exception;
+	LinkedList<PropertyGraph> getUncalculatedGraphs() throws Exception;
 
 	/**
 	 *

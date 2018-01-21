@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 public class FilterTable extends Table {
@@ -43,7 +44,7 @@ public class FilterTable extends Table {
 		throw new UnexpectedObjectException();
 	}
 
-	public Set<Filtersegment> getContent()
+	public LinkedList<Filtersegment> getContent()
 			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
 			SQLException {
 
@@ -51,7 +52,7 @@ public class FilterTable extends Table {
 		String sql = "SELECT filter FROM " + this.name;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
-		Set<Filtersegment> filters = new HashSet<>();
+		LinkedList<Filtersegment> filters = new LinkedList<>();
 
 		while (result.next()) {
 			try {
@@ -67,6 +68,7 @@ public class FilterTable extends Table {
 	public void insert(Serializable object)
 			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
 			SQLException, UnexpectedObjectException, IOException {
+
 		Filtersegment filter = this.getInstanceOf(object);
 		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, ?, ?)";
 		PreparedStatement statement = this.getConnection().prepareStatement(sql);
