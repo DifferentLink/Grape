@@ -6,7 +6,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.*;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
@@ -24,7 +23,7 @@ public class FileManager implements Connector {
 
 	@Override
 	public GraphDatabase createGraphDatabase(String url, String user, String password, String name)
-			throws TableAlreadyExistsException, MySQLDatabaseDoesNotExistException, AccessDeniedForUserException,
+			throws TableAlreadyExistsException, DatabaseDoesNotExistException, AccessDeniedForUserException,
 			ConnectionFailedException, SQLException {
 
 		Connection connection = getConnection(url, user, password);
@@ -59,7 +58,7 @@ public class FileManager implements Connector {
 	@Override
 	public GraphDatabase loadGraphDatabase(String directory)
 			throws FileNotFoundException, FileContentNotAsExpectedException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException, MySQLDatabaseDoesNotExistException, FileContentCouldNotBeReadException,
+			ConnectionFailedException, DatabaseDoesNotExistException, FileContentCouldNotBeReadException,
 			TablesNotAsExpectedException {
 
 		FileReader file = new FileReader(directory);
@@ -112,13 +111,13 @@ public class FileManager implements Connector {
 	 * @return
 	 */
 	private Connection getConnection(String url, String user, String password)
-			throws AccessDeniedForUserException, MySQLDatabaseDoesNotExistException, ConnectionFailedException {
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection connection = DriverManager.getConnection(url, user, password);
 			return connection;
 		} catch (MySQLSyntaxErrorException e) {
-			throw new MySQLDatabaseDoesNotExistException();
+			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new AccessDeniedForUserException();
 		} catch (Exception e) {
@@ -146,7 +145,7 @@ public class FileManager implements Connector {
 
 	private boolean validFilterTable(FilterTable filterTable)
 			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
-			MySQLDatabaseDoesNotExistException {
+			DatabaseDoesNotExistException {
 
 		HashSet<String> columns = filterTable.getColumns();
 		HashSet<String> names = new HashSet<>();
@@ -161,7 +160,7 @@ public class FileManager implements Connector {
 
 	private boolean validGraphTable(GraphTable graphTable)
 			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
-			MySQLDatabaseDoesNotExistException {
+			DatabaseDoesNotExistException {
 		//TODO: columns
 		HashSet<String> columns = graphTable.getColumns();
 		HashSet<String> names = new HashSet<>();
