@@ -67,7 +67,6 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 * @return if this graph is equal to the input graph
 	 */
 	public boolean equals(PropertyGraph graph) {
-		// TODO: implement with BFS-Code
 		VF2GraphIsomorphismInspector<Integer, DefaultEdge> iI = new VF2GraphIsomorphismInspector<Integer, DefaultEdge>(graph, this);
 		if (iI.isomorphismExists()) {
 			return true;

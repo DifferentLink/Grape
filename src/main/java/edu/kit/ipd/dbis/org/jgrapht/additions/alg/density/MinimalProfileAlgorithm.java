@@ -3,9 +3,9 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Iterator;
 
 /**
  The minimal profile algorithm.
@@ -14,6 +14,7 @@ import java.util.*;
  * @param <E> the graph edge type
  */
 public class MinimalProfileAlgorithm<V, E> implements ProfileDensityAlgorithm {
+	//TODO: minmalProfil.getCode[1] == minimalBfsCode -> muss nicht nochmal extra ausgerechnet werden
 
 	@Override
 	public Profile getProfile(PropertyGraph graph) {
