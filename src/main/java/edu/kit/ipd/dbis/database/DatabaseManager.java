@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.database;
 import edu.kit.ipd.dbis.Filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -56,14 +57,14 @@ public interface DatabaseManager {
 	 * @param id
 	 * @param graph
 	 */
-	void repleaceGraph(int id, PropertyGraph graph) throws Exception;
+	void replaceGraph(int id, PropertyGraph graph) throws Exception;
 
 	/**
 	 *
 	 * @param id
 	 * @param filter
 	 */
-	void repleaceFilter(int id, Filtersegment filter) throws Exception;
+	void replaceFilter(int id, Filtersegment filter) throws Exception;
 
 	/**
 	 *
@@ -101,7 +102,7 @@ public interface DatabaseManager {
 	 *
 	 * @return
 	 */
-	Set<PropertyGraph> getGraphs() throws Exception;
+	LinkedList<PropertyGraph> getGraphs(String[][] filters, String column, boolean ascending) throws Exception;
 
 	/**
 	 *

@@ -92,8 +92,8 @@ public class GraphTable extends Table {
 	@Override
 	public void insert(Serializable object)
 			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException, IOException {
-		PropertyGraph graph = (PropertyGraph) object;
+			ConnectionFailedException, IOException, UnexpectedObjectException {
+		PropertyGraph graph = getInstanceOf(object);
 		Collection<Property> properties = graph.getProperties();
 		String columns = "(";
 		String values = "(";
