@@ -53,7 +53,9 @@ public abstract class Table {
 	 *
 	 * @param id
 	 */
-	public void delete(int id) throws Exception {
+	public void delete(int id)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			SQLException {
 		Connection connection = this.getConnection();
 		String sql = "DELETE * FROM " + this.name + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -64,7 +66,9 @@ public abstract class Table {
 	 *
 	 * @return
 	 */
-	public int getId() throws Exception {
+	public int getId()
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
 		LinkedList<Integer> ids = this.getIds();
 		for (int i = 0; i < ids.size(); i++) {
 			if (!ids.contains(i)) return i;
@@ -76,7 +80,9 @@ public abstract class Table {
 	 *
 	 * @return
 	 */
-	public LinkedList<Integer> getIds() throws Exception {
+	public LinkedList<Integer> getIds()
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			SQLException {
 		Connection connection = this.getConnection();
 		String sql = "SELECT id FROM " + this.name;
 		ResultSet result = connection.prepareStatement(sql).executeQuery();
@@ -111,7 +117,9 @@ public abstract class Table {
 	 *
 	 * @param id
 	 */
-	public void switchState(int id) throws Exception {
+	public void switchState(int id)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			SQLException {
 		Connection connection= this.getConnection();
 		String sql = "SELECT state FROM " + this.name + " WHERE id = " + id;
 		ResultSet result = connection.prepareStatement(sql).executeQuery();
@@ -150,7 +158,8 @@ public abstract class Table {
 	}
 
 	public HashSet<String> getColumns()
-			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException, SQLException {
+			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
+			SQLException {
 		Connection connection = this.getConnection();
 		String sql = "SHOW COLUMNS FROM " + this.name;
 		ResultSet result = connection.prepareStatement(sql).executeQuery();
@@ -181,6 +190,7 @@ public abstract class Table {
 	 */
 	protected abstract Serializable getInstanceOf(Object object) throws Exception;
 
-	protected abstract void createTable() throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException;
+	protected abstract void createTable()
+			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException;
 
 }
