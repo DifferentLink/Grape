@@ -8,8 +8,8 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 public class SaveParser extends Parser {
 
 	/**
-	 *
-	 * @param database
+	 * Creates a SaveParser-Object and sets the given database as attribute.
+	 * @param database contains all the information that should be saved in the text file.
 	 */
 	public SaveParser(GraphDatabase database) {
 		this.database = database;

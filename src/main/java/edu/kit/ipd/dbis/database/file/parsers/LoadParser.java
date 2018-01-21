@@ -11,8 +11,8 @@ import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedExcept
 public class LoadParser extends Parser {
 
 	/**
-	 *
-	 * @param information
+	 * and sets the given information as attribute.
+	 * @param information contains all the information that should be saved in the text file
 	 */
 	public LoadParser(String information) {
 		this.information = information;
