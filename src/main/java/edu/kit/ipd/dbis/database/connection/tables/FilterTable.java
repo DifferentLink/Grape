@@ -1,10 +1,10 @@
-package edu.kit.ipd.dbis.database;
+package edu.kit.ipd.dbis.database.connection.tables;
 
 import edu.kit.ipd.dbis.Filter.Filtersegment;
-import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.Exceptions.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 
 import java.io.IOException;
 import java.io.Serializable;

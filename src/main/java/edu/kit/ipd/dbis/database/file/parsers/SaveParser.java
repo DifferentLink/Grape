@@ -1,4 +1,6 @@
-package edu.kit.ipd.dbis.database;
+package edu.kit.ipd.dbis.database.file.parsers;
+
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 
 /**
  *

@@ -1,9 +1,9 @@
-package edu.kit.ipd.dbis.database;
+package edu.kit.ipd.dbis.database.connection.tables;
 
 import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
-import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 
 import java.io.*;
 import java.sql.*;

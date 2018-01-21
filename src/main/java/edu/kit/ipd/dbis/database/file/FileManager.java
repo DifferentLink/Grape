@@ -1,7 +1,13 @@
-package edu.kit.ipd.dbis.database;
+package edu.kit.ipd.dbis.database.file;
 
 import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
-import edu.kit.ipd.dbis.database.Exceptions.*;
+import edu.kit.ipd.dbis.database.exceptions.files.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.file.parsers.LoadParser;
+import edu.kit.ipd.dbis.database.file.parsers.SaveParser;
+import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 

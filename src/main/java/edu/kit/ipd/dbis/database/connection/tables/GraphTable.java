@@ -1,16 +1,13 @@
-package edu.kit.ipd.dbis.database;
+package edu.kit.ipd.dbis.database.connection.tables;
 
-import edu.kit.ipd.dbis.Filter.Filtersegment;
-import edu.kit.ipd.dbis.database.Exceptions.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.Exceptions.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.Exceptions.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.Exceptions.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.*;

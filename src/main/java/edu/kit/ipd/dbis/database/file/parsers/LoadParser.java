@@ -1,6 +1,9 @@
-package edu.kit.ipd.dbis.database;
+package edu.kit.ipd.dbis.database.file.parsers;
 
-import edu.kit.ipd.dbis.database.Exceptions.FileContentNotAsExpectedException;
+import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
+import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedException;
 
 /**
  *

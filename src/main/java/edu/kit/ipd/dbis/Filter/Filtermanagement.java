@@ -1,6 +1,6 @@
 package edu.kit.ipd.dbis.Filter;
 
-import edu.kit.ipd.dbis.database.GraphDatabase;
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
