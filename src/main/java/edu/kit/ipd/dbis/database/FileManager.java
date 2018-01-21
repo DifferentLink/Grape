@@ -145,7 +145,8 @@ public class FileManager implements Connector {
 	}
 
 	private boolean validFilterTable(FilterTable filterTable)
-			throws SQLException, AccessDeniedForUserException, ConnectionFailedException, MySQLDatabaseDoesNotExistException {
+			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
+			MySQLDatabaseDoesNotExistException {
 
 		HashSet<String> columns = filterTable.getColumns();
 		HashSet<String> names = new HashSet<>();
@@ -159,7 +160,8 @@ public class FileManager implements Connector {
 	}
 
 	private boolean validGraphTable(GraphTable graphTable)
-			throws SQLException, AccessDeniedForUserException, ConnectionFailedException, MySQLDatabaseDoesNotExistException {
+			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
+			MySQLDatabaseDoesNotExistException {
 		//TODO: columns
 		HashSet<String> columns = graphTable.getColumns();
 		HashSet<String> names = new HashSet<>();
