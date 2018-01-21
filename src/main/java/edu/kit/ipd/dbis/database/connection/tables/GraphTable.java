@@ -6,6 +6,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import sun.awt.image.ImageWatched;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -55,7 +56,26 @@ public class GraphTable extends Table {
 	}
 
 	public void sortByBfsCode(LinkedList<PropertyGraph> graphs, boolean ascending) {
-		//TODO: warte auf Graphenpaket
+
+		//TODO: warte auf das Graphenpaket
+		/*
+		if (ascending) {
+			Collections.sort(graphs, new Comparator<PropertyGraph>() {
+				@Override
+				public int compare(PropertyGraph o1, PropertyGraph o2) {
+					return o1.getBfsCode().compareTo(o2.getBfsCode());
+				}
+			});
+		} else {
+			Collections.sort(graphs, new Comparator<PropertyGraph>() {
+				@Override
+				public int compare(PropertyGraph o1, PropertyGraph o2) {
+					return o2.getBfsCode().compareTo(o1.getBfsCode());
+				}
+			});
+		}
+		*/
+
 	}
 
 	public LinkedList<PropertyGraph> getContent(String[][] filters, String column, boolean ascending)
