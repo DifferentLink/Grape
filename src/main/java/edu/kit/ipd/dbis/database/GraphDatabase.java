@@ -56,6 +56,7 @@ public class GraphDatabase implements DatabaseManager {
 			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
 			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
+
 			this.graphTable.insert(graph);
 		} catch (DatabaseDoesNotExistException e) {
 			throw new DatabaseDoesNotExistException();
@@ -194,7 +195,8 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void replaceGraph(int id, PropertyGraph graph) throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+	public void replaceGraph(int id, PropertyGraph graph) throws TablesNotAsExpectedException,
+			ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
 		this.permanentlyDeleteGraph(id);
 		graph.setId(id);
 		this.addGraph(graph);
@@ -306,7 +308,7 @@ public class GraphDatabase implements DatabaseManager {
 	public PropertyGraph getGraphById(int id) throws TablesNotAsExpectedException, ConnectionFailedException,
 			DatabaseDoesNotExistException, AccessDeniedForUserException, UnexpectedObjectException {
 		try {
-			this.graphTable.getContent(id);
+			return this.graphTable.getContent(id);
 		} catch (AccessDeniedForUserException e) {
 			throw new AccessDeniedForUserException();
 		} catch (DatabaseDoesNotExistException e) {
@@ -330,8 +332,19 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public Set<PropertyGraph> getUncalculatedGraphs() throws Exception {
-
+	public Set<PropertyGraph> getUncalculatedGraphs() throws AccessDeniedForUserException,
+			DatabaseDoesNotExistException, ConnectionFailedException, TablesNotAsExpectedException {
+		try {
+			return this.graphTable.getUncalculatedGraphs();
+		} catch (AccessDeniedForUserException e) {
+			throw new AccessDeniedForUserException();
+		} catch (DatabaseDoesNotExistException e) {
+			throw new DatabaseDoesNotExistException();
+		} catch (ConnectionFailedException e) {
+			throw new ConnectionFailedException();
+		} catch (SQLException e) {
+			throw new TablesNotAsExpectedException();
+		}
 	}
 
 	@Override //TODO: löschen

@@ -106,15 +106,14 @@ public class GraphTable extends Table {
 			}
 		}
 
-		int id = this.getId();
-		graph.setId(id);
+		graph.setId(this.getId());
 		columns += "graph, id, BfsCode, state, isCalculated, nothing)";
 		values += "?, ?, ?, ?, ?, ?)";
 
 		String sql = "INSERT INTO " + this.name + " " + columns + " VALUES " + values;
 		PreparedStatement statement = this.getConnection().prepareStatement(sql);
 		statement.setObject(1, this.objectToByteArray(graph));
-		statement.setObject(2, id);
+		statement.setObject(2, graph.getId());
 		statement.setObject(3, this.minimalBfsCodeToString(graph));
 		statement.setObject(4, false);
 		statement.setObject(5, this.isCalculated(graph));
@@ -257,6 +256,23 @@ public class GraphTable extends Table {
 			if (property.getValue() == null) return false;
 		}
 		return true;
+	}
+
+	public Set<PropertyGraph> getUncalculatedGraphs( ) throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
+		Connection connection = this.getConnection();
+		String sql = "SELECT graph FROM " + this.name + " WHERE isCalculated = false";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet result = statement.executeQuery();
+		Set<PropertyGraph> graphs = new HashSet<>();
+		while (result.next()) {
+			try {
+				graphs.add((PropertyGraph) this.byteArrayToObject(result.getBytes("graph")));
+			} catch(Exception e) {
+
+			}
+		}
+		return graphs;
+
 	}
 
 }
