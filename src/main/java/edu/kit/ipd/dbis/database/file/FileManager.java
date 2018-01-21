@@ -21,7 +21,7 @@ import java.util.HashSet;
 public class FileManager implements Connector {
 
 	/**
-	 *
+	 * Constructor
 	 */
 	public FileManager() {
 
@@ -93,10 +93,11 @@ public class FileManager implements Connector {
 	}
 
 	/**
-	 *
-	 * @param connection
-	 * @param name
-	 * @return
+	 * Checks if a MySQL-Table with the given name already exists.
+	 * @param connection the Connection to a MySQL-Database.
+	 * @param name name of a MySQL-Table.
+	 * @return true if there already is a MySQL-Table with the given name
+	 * @throws SQLException
 	 */
 	private boolean tableExists(Connection connection, String name) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
@@ -110,11 +111,14 @@ public class FileManager implements Connector {
 	}
 
 	/**
-	 *
-	 * @param url
-	 * @param user
-	 * @param password
-	 * @return
+	 * Creates and returns a Connection-Objcect.
+	 * @param url localizes the MySQL-Database in which the data should be stored.
+	 * @param user username of the MySQL-Database user.
+	 * @param password password of the user.
+	 * @return the Connection to the MySQL-Database.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
 	 */
 	private Connection getConnection(String url, String user, String password)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
@@ -133,9 +137,10 @@ public class FileManager implements Connector {
 
 	/**
 	 *
-	 * @param connection
-	 * @param name
-	 * @return
+	 * Returns a name for a MySQL-Table that does not already exist.
+	 * @param name name of the GraphTable-Object.
+	 * @return a Valid name that can be used to create a FilterTable-Object.
+	 * @throws SQLException
 	 */
 	private String getValidFilterTableName(Connection connection, String name) throws SQLException {
 		String filterTable = name + "Filters";
@@ -149,6 +154,15 @@ public class FileManager implements Connector {
 		return s;
 	}
 
+	/**
+	 * Determines whether the given FilterTable-Object has the required columns
+	 * @param filterTable the FilterTable-Object
+	 * @return true if filterTable is valid
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 * @throws DatabaseDoesNotExistException
+	 */
 	private boolean validFilterTable(FilterTable filterTable)
 			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
 			DatabaseDoesNotExistException {
@@ -164,6 +178,15 @@ public class FileManager implements Connector {
 		return false;
 	}
 
+	/**
+	 * Determines whether the given GraphTable-Object has the required columns
+	 * @param graphTable the GraphTable-Object
+	 * @return true if filterTable is valid
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 * @throws DatabaseDoesNotExistException
+	 */
 	private boolean validGraphTable(GraphTable graphTable)
 			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
 			DatabaseDoesNotExistException {
