@@ -2,6 +2,8 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
+
 import java.util.Objects;
 
 /**
@@ -32,6 +34,14 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 	@Override
 	public TotalColoring getColoring() {
 		//TODO: implement me
+		PropertyGraph edgeToVertexGraph = this.makeEdgesToVertices();
+		VertexColoringAlgorithm vertexColoringAlgorithm = new MinimalVertexColoring(edgeToVertexGraph);
+		VertexColoringAlgorithm.Coloring coloring = vertexColoringAlgorithm.getColoring();
+		// parse back
+		return null;
+	}
+
+	private PropertyGraph makeEdgesToVertices() {
 		return null;
 	}
 }
