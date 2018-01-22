@@ -1,11 +1,10 @@
 package edu.kit.ipd.dbis.Filter;
 
-import edu.kit.ipd.dbis.Filter.*;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfTotalColorings;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.sql.SQLException;
 

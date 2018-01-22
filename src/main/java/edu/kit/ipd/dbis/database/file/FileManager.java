@@ -10,6 +10,9 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -207,17 +210,13 @@ public class FileManager implements Connector {
 		Collection<Property> properties = graph.getProperties();
 
 		for (Property property : properties) {
-			if (property.getClass().getSuperclass().getSimpleName().equals("IntegerProperty")) {
+			if (property.getClass().getSuperclass() == IntegerProperty.class) {
 				names.add(property.toString());
-			} else if (property.getClass().getSuperclass().getSimpleName().equals("DoubleProperty")) {
+			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
 				names.add(property.toString());
 			}
 		}
-
-		if (columns.containsAll(names) && names.containsAll(columns)) {
-			return true;
-		}
-		return false;
+		return (columns.containsAll(names) && names.containsAll(columns));
 	}
 
 }

@@ -1,12 +1,8 @@
 package edu.kit.ipd.dbis.Filter;
 
-import edu.kit.ipd.dbis.Filter.BasicFilter;
-import edu.kit.ipd.dbis.Filter.Filter;
-import edu.kit.ipd.dbis.Filter.Filtergroup;
-import edu.kit.ipd.dbis.Filter.Relation;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class FiltergroupTest {
 
