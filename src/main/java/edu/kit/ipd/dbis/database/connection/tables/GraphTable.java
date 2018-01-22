@@ -4,6 +4,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
@@ -89,8 +90,8 @@ public class GraphTable extends Table {
 			Collections.sort(graphs, new Comparator<PropertyGraph>() {
 				@Override
 				public int compare(PropertyGraph o1, PropertyGraph o2) {
-					BfsCode bfs1 = (BfsCode) o1.getProperty(BfsCode.class);
-					BfsCode bfs2 = (BfsCode) o2.getProperty(BfsCode.class);
+					BfsCodeAlgorithm.BfsCodeImpl bfs1 = (BfsCodeAlgorithm.BfsCodeImpl) o1.getProperty(BfsCode.class);
+					BfsCodeAlgorithm.BfsCodeImpl bfs2 = (BfsCodeAlgorithm.BfsCodeImpl) o2.getProperty(BfsCode.class);
 					return bfs1.compareTo(bfs2);
 				}
 			});
@@ -98,8 +99,8 @@ public class GraphTable extends Table {
 			Collections.sort(graphs, new Comparator<PropertyGraph>() {
 				@Override
 				public int compare(PropertyGraph o1, PropertyGraph o2) {
-					BfsCode bfs1 = (BfsCode) o1.getProperty(BfsCode.class);
-					BfsCode bfs2 = (BfsCode) o2.getProperty(BfsCode.class);
+					BfsCodeAlgorithm.BfsCodeImpl bfs1 = (BfsCodeAlgorithm.BfsCodeImpl) o1.getProperty(BfsCode.class);
+					BfsCodeAlgorithm.BfsCodeImpl bfs2 = (BfsCodeAlgorithm.BfsCodeImpl) o2.getProperty(BfsCode.class);
 					return bfs2.compareTo(bfs1);
 				}
 			});
@@ -255,7 +256,7 @@ public class GraphTable extends Table {
 			ResultSet otherResult = other.prepareStatement(sql + table.getName()).executeQuery();
 			boolean found = false;
 			while ((otherResult.next()) && (!found)) {
-				found = (currentResult.getString(1) == (otherResult.getString(1))) ?
+				found = (currentResult.getString(1).equals(otherResult.getString(1))) ?
 						(true) : (false);
 			}
 			if (!found) return false;
