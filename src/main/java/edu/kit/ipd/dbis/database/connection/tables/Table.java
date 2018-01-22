@@ -10,6 +10,9 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * This class represents a MySQL-Table.
+ */
 public abstract class Table {
 
 	protected String url;

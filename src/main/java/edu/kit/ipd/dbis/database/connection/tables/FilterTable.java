@@ -14,6 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+/**
+ * This class represents a MySQL-Table where FilterSegment-Objects will be stored.
+ */
 public class FilterTable extends Table {
 
 	/**

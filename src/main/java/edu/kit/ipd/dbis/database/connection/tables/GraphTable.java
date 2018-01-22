@@ -12,13 +12,21 @@ import java.io.Serializable;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * This class represents a MySQL-Table where PropertyGraph-Objects will be stored.
+ */
 public class GraphTable extends Table {
 
 	/**
-	 * @param url
-	 * @param user
-	 * @param password
-	 * @param name
+	 * Creates a new GraphTable.
+	 * @param url location of the MySQL-Database that contains the MySQLTable which is represented by a subclass of Table.
+	 * @param user username of the MySQL-Database user.
+	 * @param password password of the user.
+	 * @param name name of the MySQL-Table which is represented by a subclass of Table.
+	 * @throws SQLException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
 	 */
 	public GraphTable(String url, String user, String password, String name)
 			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException,
@@ -43,6 +51,15 @@ public class GraphTable extends Table {
 		return null;
 	}
 
+	/**
+	 * Sorts the represented MySQL-Table
+	 * @param column the column to sort by
+	 * @param ascending determines if the table should be sorted ascending or descending
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
 	public void sortTable(String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
@@ -54,6 +71,15 @@ public class GraphTable extends Table {
 		statement.executeUpdate();
 	}
 
+	/**
+	 * Sorts a List of PropertyGraphs by BfsCode
+	 * @param graphs the list that should be sorted
+	 * @param ascending determines if the table should be sorted ascending or descending
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
 	public void sortByBfsCode(LinkedList<PropertyGraph> graphs, boolean ascending) {
 
 		//TODO: warte auf das Graphenpaket
@@ -77,6 +103,17 @@ public class GraphTable extends Table {
 
 	}
 
+	/**
+	 * Returns all PropertyGraph-Objects that fulfill the current filters.
+	 * @param filters determines how the GraphTable should be filtered
+	 * @param column determines how the GraphTable should be sorted
+	 * @param ascending determines if the GraphTable should be sorted ascending or descending
+	 * @return all PropertyGraph-Objects in the MySQL-Database that fulfill the current filters.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
 	public LinkedList<PropertyGraph> getContent(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
@@ -176,8 +213,12 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 *
-	 * @param table
+	 * The given content will be inserted into the represented MySQL-Table.
+	 * @param table content of another MySQL-Table.
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
 	 */
 	public void merge(GraphTable table)
 			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
@@ -217,7 +258,12 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 *
+	 * All PropertyGraph-Objects that are marked as deleted will be removed from
+	 * the represented MySQL-Table.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
 	 */
 	public void deleteAll()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
@@ -229,9 +275,9 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 *
-	 * @param graph
-	 * @return
+	 * Parses a BfsCode of a PropertyGraph
+	 * @param graph a PropertyGraph-object
+	 * @return the BfsCode of the given graph as String
 	 */
 	private String minimalBfsCodeToString(PropertyGraph graph) {
 		String s = "";
@@ -251,8 +297,13 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Checks if a PropertyGraph-Object already Exists.
+	 * @param graph PropertyGaph-Object.
+	 * @return true if the given graph already exists in the represented MySQLTable.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
 	 */
 	public boolean graphExists(PropertyGraph graph)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
@@ -264,8 +315,9 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Checks if the given graph is calculated
+	 * @param graph PropertyGraph-objcet
+	 * @return true if all properties of graph have already been calculated
 	 */
 	private boolean isCalculated(PropertyGraph graph) {
 		Collection<Property> properties = graph.getProperties();
@@ -275,6 +327,13 @@ public class GraphTable extends Table {
 		return true;
 	}
 
+	/**
+	 *@return all PropertyGraph-Objects in the represented MySQL-Table that are marked as uncalculated.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
 	public LinkedList<PropertyGraph> getUncalculatedGraphs( ) throws AccessDeniedForUserException,
 			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
 		Connection connection = this.getConnection();
