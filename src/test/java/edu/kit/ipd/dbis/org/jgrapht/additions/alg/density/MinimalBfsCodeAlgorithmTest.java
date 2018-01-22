@@ -4,6 +4,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class MinimalBfsCodeAlgorithmTest {
@@ -79,6 +80,7 @@ public class MinimalBfsCodeAlgorithmTest {
 		Assert.assertTrue(result.compareTo(new BfsCodeAlgorithm.BfsCodeImpl<>(minimalBfsCode)) == 0);
 	}
 	@Test
+	@Ignore
 	public void elvenNodeCliqueBfsCodeTest() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
