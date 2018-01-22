@@ -3,8 +3,6 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.*;
-
 /**
  The minimal bfs code algorithm.
  *
@@ -16,40 +14,18 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	@Override
 	public BfsCode getBfsCode(PropertyGraph graph) {
 		int[] worstCode = new int[graph.edgeSet().size() * 3];
-		for (int i : worstCode) {
-			i = graph.vertexSet().size() + 1;
+		for (int i = 0; i < worstCode.length; i++) {
+			worstCode[i] = graph.vertexSet().size() + 1;
 		}
 		BfsCode bestCode = new BfsCodeImpl(worstCode);
 
 		for (Object v : graph.vertexSet()) {
-			BfsCode localCode = this.getLocalBfsCode(graph, (V) v);
-			// TODO: create Profile object and add to graph
-			if (localCode.compareTo(bestCode) < 0) {
+			LocalBfsCodeAlgorithm local = new LocalBfsCodeAlgorithm((V) v);
+			BfsCode localCode = local.getBfsCode(graph);
+			if (localCode.compareTo(bestCode) == -1) {
 				bestCode = localCode;
 			}
 		}
-
 		return bestCode;
-	}
-
-	/**
-	 * Determine the BFS-Code starting
-	 * from the specified start node.
-	 * @param startNode
-	 * @return
-	 */
-	public BfsCode getLocalBfsCode(PropertyGraph graph, V startNode) {
-		int[] code = new int[graph.edgeSet().size() * 3];
-		Set<E> adjacentEdges = graph.outgoingEdgesOf(startNode);
-		Set<V> adjacentVertices = new HashSet<>();
-		for (E edge : adjacentEdges) {
-			adjacentVertices.add((V) graph.getEdgeTarget(edge));
-		}
-
-		return null;
-	}
-
-	private int[] getAdjacentBfsCode(PropertyGraph graph, V startNode) {
-		return null;
 	}
 }

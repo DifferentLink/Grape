@@ -24,9 +24,6 @@ public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerat
 			throw new IllegalArgumentException("negative quantity not valid");
 		}
 
-		//TODO: Ckecken, ob es noch "quanity" übrige Graphen mit diesen Parametern gibt die noch nicht existieren.
-
-
 		GraphGenerator<Integer, DefaultEdge, Integer> gen =
 				new RandomConnectedGraphGenerator<>(minVertices, maxVertices, minEdges, maxEdges);
 
@@ -45,7 +42,7 @@ public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerat
 			if (!isDuplicat) {
 				target.add(graph);
 			}
-			//TODO: temporary solution (find a better one)
+			//TODO: temporary solution (find a better one) / break after find no new graphs after "value" loops
 			if (cnt > 5 * quantity) {
 				throw new IllegalArgumentException("Only " + target.size() + " graphs found. Quantity: " + quantity +
 						" too big.");

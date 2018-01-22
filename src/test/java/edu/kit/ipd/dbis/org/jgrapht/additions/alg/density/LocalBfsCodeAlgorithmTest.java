@@ -2,9 +2,13 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.jgrapht.alg.clique.BronKerboschCliqueFinder;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Iterator;
+import java.util.Set;
 
 public class LocalBfsCodeAlgorithmTest {
 
@@ -40,4 +44,5 @@ public class LocalBfsCodeAlgorithmTest {
 		BfsCodeAlgorithm.BfsCodeImpl localCode = new BfsCodeAlgorithm.BfsCodeImpl(local);
 		Assert.assertTrue(localCode.compareTo(new BfsCodeAlgorithm.BfsCodeImpl<>(result)) == 0);
 	}
+
 }

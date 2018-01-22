@@ -15,10 +15,10 @@ public class PropertyFactory {
 	 */
 	public static Set<Property> createAllProperties() {
 		Set<Property> properties = new HashSet<>();
+		properties.add(new Profile());
 		properties.add(new BfsCode());
 		properties.add(new Cliques());
 		properties.add(new KkGraph());
-		properties.add(new Profile());
 		properties.add(new TotalColorings());
 		properties.add(new VertexColorings());
 		properties.add(new AverageDegree());
