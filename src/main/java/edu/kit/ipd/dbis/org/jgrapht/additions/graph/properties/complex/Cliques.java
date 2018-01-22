@@ -5,10 +5,22 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 import org.jgrapht.alg.clique.BronKerboschCliqueFinder;
 import org.kohsuke.MetaInfServices;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @MetaInfServices
 public class Cliques extends ComplexProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public Cliques(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected List<Set<Object>> calculateAlgorithm(PropertyGraph graph) {
 		ArrayList<Set<Object>> result = new ArrayList<>();

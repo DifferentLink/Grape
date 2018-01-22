@@ -10,6 +10,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public abstract class ComplexProperty extends Property{
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public ComplexProperty(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected abstract Object calculateAlgorithm(PropertyGraph graph);
 }

@@ -8,6 +8,15 @@ import org.kohsuke.MetaInfServices;
 
 @MetaInfServices
 public class Profile extends ComplexProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public Profile(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected ProfileDensityAlgorithm.Profile calculateAlgorithm(PropertyGraph graph) {
 		MinimalProfileAlgorithm alg = new MinimalProfileAlgorithm();

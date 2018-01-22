@@ -9,6 +9,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public class NumberOfVertices extends IntegerProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public NumberOfVertices(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		return graph.vertexSet().size();

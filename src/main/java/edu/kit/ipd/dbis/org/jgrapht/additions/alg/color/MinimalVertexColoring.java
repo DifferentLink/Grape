@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
@@ -40,7 +41,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		// brute force algorithm that determines
 		// a minimal vertex coloring.
 		// needs to be optimized!
-		int numberOfVertices = this.graph.getNumberOfVertices();
+		int numberOfVertices = (int) this.graph.getProperty(NumberOfVertices.class).getValue();
 		// give vertices an order
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
 		int[] colors = new int[numberOfVertices];

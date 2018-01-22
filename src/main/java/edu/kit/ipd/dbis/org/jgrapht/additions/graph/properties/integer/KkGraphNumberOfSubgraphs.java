@@ -10,6 +10,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public class KkGraphNumberOfSubgraphs extends IntegerProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public KkGraphNumberOfSubgraphs(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		return null;

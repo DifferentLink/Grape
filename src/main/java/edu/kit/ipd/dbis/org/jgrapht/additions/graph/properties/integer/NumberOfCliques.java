@@ -10,6 +10,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public class NumberOfCliques extends IntegerProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public NumberOfCliques(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		return null;

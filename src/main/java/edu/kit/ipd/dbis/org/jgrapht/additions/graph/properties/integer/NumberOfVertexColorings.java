@@ -10,6 +10,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public class NumberOfVertexColorings extends IntegerProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public NumberOfVertexColorings(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		return null;

@@ -7,6 +7,15 @@ import org.kohsuke.MetaInfServices;
 
 @MetaInfServices
 public class KkGraph extends ComplexProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public KkGraph(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected KkGraphAlgorithm.KkGraph calculateAlgorithm(PropertyGraph graph) {
 		return null;

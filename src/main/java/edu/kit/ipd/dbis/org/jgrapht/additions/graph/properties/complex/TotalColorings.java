@@ -7,6 +7,15 @@ import org.kohsuke.MetaInfServices;
 
 @MetaInfServices
 public class TotalColorings extends ComplexProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public TotalColorings(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected TotalColoringAlgorithm.TotalColoring calculateAlgorithm(PropertyGraph graph) {
 		// TODO: need method calculateAllColorings()

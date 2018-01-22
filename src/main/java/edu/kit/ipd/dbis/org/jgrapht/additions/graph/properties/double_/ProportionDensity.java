@@ -6,6 +6,15 @@ import org.kohsuke.MetaInfServices;
 
 @MetaInfServices
 public class ProportionDensity extends DoubleProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public ProportionDensity(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Double calculateAlgorithm(PropertyGraph graph) {
 		return null;

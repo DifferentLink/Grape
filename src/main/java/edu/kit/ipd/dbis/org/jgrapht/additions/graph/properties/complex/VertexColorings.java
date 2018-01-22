@@ -6,6 +6,15 @@ import org.kohsuke.MetaInfServices;
 
 @MetaInfServices
 public class VertexColorings extends ComplexProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public VertexColorings(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Object calculateAlgorithm(PropertyGraph graph) {
 		// TODO: Need method calculateAllColorings()

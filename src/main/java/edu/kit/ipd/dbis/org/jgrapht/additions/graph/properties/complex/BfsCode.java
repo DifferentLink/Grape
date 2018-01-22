@@ -9,6 +9,15 @@ import org.kohsuke.MetaInfServices;
 
 @MetaInfServices(Property.class)
 public class BfsCode extends ComplexProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph
+	 */
+	public BfsCode(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected BfsCodeAlgorithm.BfsCode calculateAlgorithm(PropertyGraph graph) {
 		//TODO: if profile exist, minBfsCode = profile[1][]; else calculate profile
