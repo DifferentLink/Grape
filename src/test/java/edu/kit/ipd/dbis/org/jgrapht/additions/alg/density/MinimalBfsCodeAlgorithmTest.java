@@ -1,17 +1,10 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import org.jgrapht.EdgeFactory;
-import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.*;
-
-import static org.junit.Assert.*;
 
 public class MinimalBfsCodeAlgorithmTest {
 
@@ -158,24 +151,5 @@ public class MinimalBfsCodeAlgorithmTest {
 				1,1,9,-1,2,9,-1,3,9,-1,4,9,-1,5,9,-1,6,9,-1,7,9,-1,8,9,1,1,10,-1,2,10,-1,3,10,-1,4,10,-1,5,10,-1,6,10,-1,7,10,-1,8,10,-1,9,10};
 		BfsCodeAlgorithm.BfsCodeImpl result = new BfsCodeAlgorithm.BfsCodeImpl(minCode);
 		Assert.assertTrue(result.compareTo(new BfsCodeAlgorithm.BfsCodeImpl<>(minimalBfsCode)) == 0);
-	}
-	@Test
-	public void getAdjacencyMatrix() {
-		PropertyGraph graph = this.generateSimpleTestGraph1();
-		MinimalBfsCodeAlgorithm alg = new MinimalBfsCodeAlgorithm();
-		List<Object> sortedVertices = new ArrayList<>(new TreeSet<>(graph.vertexSet()));
-		List<int[]> expected = new ArrayList<>();
-		expected.add(new int[] {0,1,1,0});
-		expected.add(new int[] {1,0,1,1});
-		expected.add(new int[] {1,1,0,1});
-		expected.add(new int[] {0,1,1,0});
-		List<int[]> result = alg.getAdjacencyMatrix(graph);
-		for (int i = 0; i < expected.size(); i++) {
-			int[] expectedLine = expected.get(i);
-			int[] resultLine = result.get(i);
- 			for (int j = 0; j < expectedLine.length; j++) {
- 				assertEquals(expectedLine[j], resultLine[j]);
-			}
-		}
 	}
 }
