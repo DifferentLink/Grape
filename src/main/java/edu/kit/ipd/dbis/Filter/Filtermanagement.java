@@ -10,6 +10,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.Structure
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class Filtermanagement {
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
      * @param filtergroup filtersegment which should be added
      */
-    void addFilterGroup(Filtergroup filtergroup) throws Exception {
+    public void addFilterGroup(Filtergroup filtergroup) throws Exception {
         //database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
     }
@@ -40,7 +41,7 @@ public class Filtermanagement {
      * adds a filter to the list availableFilter of class Filtermanagement
      * @param filter filtersegment which should be added
      */
-    void addFilter(Filter filter) throws Exception {
+    public void addFilter(Filter filter) throws Exception {
         //database.addFilter(filter);
         availableFilter.add(filter);
     }
@@ -50,7 +51,7 @@ public class Filtermanagement {
      * @param filter filter which should be added to a specific filtergroup
      * @param groupID ID of the filtergroup
      */
-    void addFilterToFiltergroup(Filter filter, int groupID) throws Exception {
+    public void addFilterToFiltergroup(Filter filter, int groupID) throws Exception {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == groupID) {
                 element.availableFilter.add(filter);
@@ -148,28 +149,47 @@ public class Filtermanagement {
     }
 
     /**
-     * method which returns all graphs sorted by a specific property
+     * method which returns all graphs sorted by a specific property ascending
      * @param property property to sort after
-     * @param upwards true if you want to sort graphs upwards
      * @return returns all graphs sorted by a specific property
      * @throws Exception thrown if an exception in database occured
      */
-    public Set<PropertyGraph> getGraphs(Property property, boolean upwards) throws Exception {
-        return database.getGraphs();
+    public ArrayList<PropertyGraph> getFilteredAndAscendingSortedGraphs(Property property) throws Exception {
+        return null;//database.getGraphs();
     }
 
     /**
-     * checks whether the input string codes a valid filter. In case of success the method
-     * addFiltersegment(filtersegment: Filtersegment): void is called and a new
-     * filter is added to the list of class Filtermanagement
-     * @param input string which might code a filter
-     * @param id unique identifier of the new filterobject
-     * @param groupID unique identifier of the filtergroup on which the filter should be add to
-     * @throws InvalidInputException this exception is thrown if the input string
-     * does not code a valid filter
-     * a filter with same identifier
+     * method which returns all graphs sorted by a specific property descending
+     * @param property property to sort after
+     * @return returns all graphs sorted by a specific property
+     * @throws Exception thrown if an exception in database occured
      */
-    public void checkFilterInput(String input, int id, int groupID) throws Exception, InvalidInputException {
+    public ArrayList<PropertyGraph> getFilteredAndDescendingSortedGraphs(Property property) throws Exception {
+        return null;//database.getGraphs();
+    }
+
+    /**
+     * method which returns all graphs sorted by a specific property
+     * @param property property to sort after
+     * @return returns all graphs sorted by a specific property
+     * @throws Exception thrown if an exception in database occured
+     */
+    public ArrayList<PropertyGraph> getFilteredAndSortedGraphs(Property property) throws Exception {
+        return null;//database.getGraphs();
+    }
+
+        /**
+         * checks whether the input string codes a valid filter. In case of success the method
+         * addFiltersegment(filtersegment: Filtersegment): void is called and a new
+         * filter is added to the list of class Filtermanagement
+         * @param input string which might code a filter
+         * @param id unique identifier of the new filterobject
+         * @param groupID unique identifier of the filtergroup on which the filter should be add to
+         * @throws InvalidInputException this exception is thrown if the input string
+         * does not code a valid filter
+         * a filter with same identifier
+         */
+    public void addFilterToGroup(String input, int id, int groupID) throws Exception, InvalidInputException {
         this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
     }
 
@@ -183,7 +203,7 @@ public class Filtermanagement {
      * does not code a valid filter
      * a filter with same identifier
      */
-    public void checkFilterInput(String input, int id) throws Exception, InvalidInputException {
+    public void addFilter(String input, int id) throws Exception, InvalidInputException {
         this.addFilter(Filtermanagement.parseToFilter(input, id));
     }
 
@@ -312,7 +332,7 @@ public class Filtermanagement {
      * @param input string which might code a Filter
      * @param id unique identifier of the new Filterobject
      */
-    public void checkGroupInput(String input, int id) throws Exception {
+    public void addFilterGroup(String input, int id) throws Exception {
         Filtergroup myFiltergroup = new Filtergroup(input, true, id);
         this.addFilterGroup(myFiltergroup);
     }
@@ -339,7 +359,7 @@ public class Filtermanagement {
     public void setDatabase(GraphDatabase newDatabase) throws Exception {
         availableFilterGroups.clear();
         availableFilter.clear();
-        Set<Filtersegment> activatedFilter = newDatabase.getFilters();
+        LinkedList<Filtersegment> activatedFilter = newDatabase.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
                 if (element.getClass() == Filtergroup.class) {
