@@ -7,10 +7,7 @@ import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A SimpleGraph which contains Property-objects.
@@ -85,4 +82,35 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	}
 
 	public Collection<Property> getProperties() {return this.properties.values(); }
+
+	/**
+	 * Generates an adjacency matrix
+	 *
+	 * @return the adjacency matrix
+	 */
+	public int[][] getAdjacencyMatrix() {
+		int[][] matrix;
+		List<V> sortedVertices = new ArrayList<>(new TreeSet<>(this.vertexSet()));
+		matrix = new int[sortedVertices.size()][sortedVertices.size()];
+		for (int i = 0; i < sortedVertices.size(); i++) {
+			V v = sortedVertices.get(i);
+			Set<E> outgoingEdges = this.outgoingEdgesOf(v);
+			for (Object e : outgoingEdges) {
+				V edgeTarget = (V) this.getEdgeTarget(e);
+
+				// problem with JGraphT implementation:
+				// edges are treated as they should be in
+				// an undirected graph. But depending on
+				// how they were added, getEdgeTarget(e)
+				// actually returns the sourceNode, as
+				// this is how it is stored in JGraphT.
+				if (edgeTarget.equals(v)) {
+					edgeTarget = (V) this.getEdgeSource(e);
+				}
+				int index = sortedVertices.indexOf(edgeTarget);
+				matrix[i][index] = 1;
+			}
+		}
+		return matrix;
+	}
 }
