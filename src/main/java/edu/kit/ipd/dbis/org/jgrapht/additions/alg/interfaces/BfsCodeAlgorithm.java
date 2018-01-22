@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,9 +46,9 @@ public interface BfsCodeAlgorithm<V, E> {
 
 		/**
 		 * Determines the backward edges
-		 * @return list of int array
+		 * @return set of backward edges
 		 */
-		List<int[]> getBackwardEdges();
+		List<E> getBackwardEdges();
 
 
 	}
@@ -84,24 +83,13 @@ public interface BfsCodeAlgorithm<V, E> {
 
 		@Override
 		public int getNumberOfBackwardEdges() {
-			int cnt = 0;
-			for (int i = 0; i < code.length; i++) {
-				if (code[i] == -1) {
-					cnt++;
-				}
-			}
-			return cnt;
+			return 0;
 		}
 
 		@Override
-		public List<int[]> getBackwardEdges() {
-			List<int[]> edges = new ArrayList();
-			for (int i = 0; i < code.length; i++) {
-				if (code[i] == -1) {
-					int[] edge = {code[i + 1], code[i + 2]};
-				}
-			}
-			return edges;
+		public List<E> getBackwardEdges() {
+			// TODO: implement me
+			return null;
 		}
 
 		/**
@@ -111,7 +99,7 @@ public interface BfsCodeAlgorithm<V, E> {
 		 */
 		@Override
 		public int compareTo(Object o) {
-			int[] b2 = ((BfsCodeImpl) o).getCode();
+			int[] b2 = ((BfsCode) o).getCode();
 			for (int i = 0; i < Math.min(this.code.length, b2.length); i++) {
 				if (this.code[i] < b2[i]) {
 					return -1;
