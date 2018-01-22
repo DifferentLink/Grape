@@ -52,7 +52,7 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 * @param propertyClass the desired property's class
 	 * @return the property
 	 */
-	public Object getProperty(Class<? extends Property> propertyClass) {
+	public Property getProperty(Class<? extends Property> propertyClass) {
 		return this.properties.get(propertyClass);
 	}
 
