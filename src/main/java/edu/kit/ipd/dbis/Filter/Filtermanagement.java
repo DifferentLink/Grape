@@ -10,6 +10,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.Structure
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class Filtermanagement {
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
      * @param filtergroup filtersegment which should be added
      */
-    void addFilterGroup(Filtergroup filtergroup) throws Exception {
+    public void addFilterGroup(Filtergroup filtergroup) throws Exception {
         //database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
     }
@@ -40,7 +41,7 @@ public class Filtermanagement {
      * adds a filter to the list availableFilter of class Filtermanagement
      * @param filter filtersegment which should be added
      */
-    void addFilter(Filter filter) throws Exception {
+    public void addFilter(Filter filter) throws Exception {
         //database.addFilter(filter);
         availableFilter.add(filter);
     }
@@ -50,7 +51,7 @@ public class Filtermanagement {
      * @param filter filter which should be added to a specific filtergroup
      * @param groupID ID of the filtergroup
      */
-    void addFilterToFiltergroup(Filter filter, int groupID) throws Exception {
+    public void addFilterToFiltergroup(Filter filter, int groupID) throws Exception {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == groupID) {
                 element.availableFilter.add(filter);
@@ -358,7 +359,7 @@ public class Filtermanagement {
     public void setDatabase(GraphDatabase newDatabase) throws Exception {
         availableFilterGroups.clear();
         availableFilter.clear();
-        Set<Filtersegment> activatedFilter = newDatabase.getFilters();
+        LinkedList<Filtersegment> activatedFilter = newDatabase.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
                 if (element.getClass() == Filtergroup.class) {
