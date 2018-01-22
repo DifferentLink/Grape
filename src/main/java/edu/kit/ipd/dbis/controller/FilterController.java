@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.controller;
 
+import edu.kit.ipd.dbis.Controller.Filter.Filtermanagement;
 import edu.kit.ipd.dbis.database.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
@@ -28,7 +29,7 @@ public class FilterController {
 	 * @param database the current database
 	 */
 	public void setDatabase(GraphDatabase database) {
-		filter.setDatabase(database);
+		filter.swapDatabase(database);
 	}
 
 
