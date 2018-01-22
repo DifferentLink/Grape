@@ -3,8 +3,18 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.*;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
+/**
+ * The local bfs code algorithm.
+ *
+ * @param <V> the graph vertex type
+ * @param <E> the graph edge type
+ */
 public class LocalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 	/**
 	 * The start vertex

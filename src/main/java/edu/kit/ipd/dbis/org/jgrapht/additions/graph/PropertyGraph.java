@@ -11,8 +11,8 @@ import java.util.*;
 /**
  * A SimpleGraph which contains Property-objects.
  *
- * @param <V>
- * @param <E>
+ * @param <V> the graph vertex type
+ * @param <E> the graph edge type
  */
 public class PropertyGraph<V, E> extends SimpleGraph {
 	private int id;

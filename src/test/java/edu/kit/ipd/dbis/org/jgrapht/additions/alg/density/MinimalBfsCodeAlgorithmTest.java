@@ -79,7 +79,7 @@ public class MinimalBfsCodeAlgorithmTest {
 		Assert.assertTrue(result.compareTo(new BfsCodeAlgorithm.BfsCodeImpl<>(minimalBfsCode)) == 0);
 	}
 	@Test
-	public void elevenNodeCliqueBfsCodeTest() {
+	public void elvenNodeCliqueBfsCodeTest() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -157,6 +157,7 @@ public class MinimalBfsCodeAlgorithmTest {
 		graph.addEdge("i", "k");
 
 		graph.addEdge("j", "k");
+
 
 		MinimalBfsCodeAlgorithm<String, DefaultEdge> alg = new MinimalBfsCodeAlgorithm<>();
 		int[] minimalBfsCode = alg.getBfsCode(graph).getCode();
