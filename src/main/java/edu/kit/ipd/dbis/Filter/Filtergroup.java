@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Controller.Filter;
+package edu.kit.ipd.dbis.Filter;
 
 import java.util.ArrayList;
 import java.util.List;

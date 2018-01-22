@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Controller.Filter;
+package edu.kit.ipd.dbis.controller.Filter;
 
 import edu.kit.ipd.dbis.database.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -6,8 +6,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestD
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-
-import static org.junit.Assert.*;
 
 public class FiltermanagementTest {
 

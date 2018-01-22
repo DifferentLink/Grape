@@ -77,7 +77,7 @@ public class DatabaseController {
 	/**
 	 * Sets the database for all controller classes that have a database connection
 	 */
-	private void updateDatabases() {
+	private void updateDatabases() throws Exception {
 		generate.setDatabase(database);
 		calculation.setDatabase(database);
 		editor.setDatabase(database);
