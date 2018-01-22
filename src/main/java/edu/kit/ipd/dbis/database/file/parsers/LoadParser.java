@@ -6,7 +6,7 @@ import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedException;
 
 /**
- *
+ * Creates a GraphDatabase-Object by setting its Table-Objects and the directory where its text le is saved.
  */
 public class LoadParser extends Parser {
 

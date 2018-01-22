@@ -18,6 +18,9 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * This class creates GraphDatabase-Objects and saves them by creating text files.
+ */
 public class FileManager implements Connector {
 
 	/**

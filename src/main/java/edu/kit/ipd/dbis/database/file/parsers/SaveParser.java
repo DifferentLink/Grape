@@ -3,7 +3,7 @@ package edu.kit.ipd.dbis.database.file.parsers;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 
 /**
- *
+ * Stores all the information that is necessary to load the given GraphDatabaseObject into a String.
  */
 public class SaveParser extends Parser {
 
