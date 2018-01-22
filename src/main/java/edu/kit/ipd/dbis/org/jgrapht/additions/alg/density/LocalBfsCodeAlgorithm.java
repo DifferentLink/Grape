@@ -74,10 +74,6 @@ public class LocalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 				for (int i = 0; i < bestCode.length; i++) {
 					bestCode[i] = graph.vertexSet().size();
 				}
-				//TODO: update: not save all permutations. Instead compute the first , does something with that, compute the next
-				//Alg hier unterbringen: Immer statt zu Set adden, stattdessen den unteren schleifendurchlauf machen
-				//Problem: wenn alle gleich gut -> bestPerm ist auch zu groß
-
 
 				Set<V[]> allPermutations = getPermutations(adjacentNotCheckedNodes);
 				//calculate bfs code for the subgraph of adjacent nodes + previous nodes;
