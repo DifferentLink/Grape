@@ -36,7 +36,6 @@ public class GrapeUI {
 	               FilterController filterController,
 	               GenerateController generateController,
 	               GraphEditorController graphEditorController,
-	               OutputController outputController,
 	               ResourceBundle language,
 	               Theme theme) {
 

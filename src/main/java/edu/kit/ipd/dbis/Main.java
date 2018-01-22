@@ -25,7 +25,6 @@ public class Main {
 				new FilterController(),
 				GenerateController.getInstance(),
 				GraphEditorController.getInstance(),
-				new OutputController(),
 				getLanguage(), new GrapeTheme()));
 	}
 
