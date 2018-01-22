@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.Filter.Filtermanagement;
+import edu.kit.ipd.dbis.Filter.InvalidInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -36,16 +37,16 @@ public class FilterController {
 		filter.setDatabase(database);
 	}
 
-	public void addFilter(String filterInput) throws Exception {
-		filter.addFilter(filterInput);
+	public void addFilter(String filterInput, int id) throws Exception, InvalidInputException {
+		filter.addFilter(filterInput, id);
 	}
 
-	public void addFilterToGroup(String filterInput, int groupId) throws Exception {
-		filter.addFilterToGroup(filterInput, groupId);
+	public void addFilterToGroup(String filterInput, int filterId, int groupId) throws Exception, InvalidInputException {
+		filter.addFilterToGroup(filterInput, filterId, groupId);
 	}
 
-	public void addFiltergroup(String filterInput) throws Exception {
-		filter.addFilterGroup(filterInput);
+	public void addFiltergroup(String filterInput, int id) throws Exception, InvalidInputException {
+		filter.addFiltergroup(filterInput, id);
 	}
 
 	public void removeFiltersegment(int id) throws Exception {
