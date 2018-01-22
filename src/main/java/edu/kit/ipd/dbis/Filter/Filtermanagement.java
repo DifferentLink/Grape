@@ -332,7 +332,7 @@ public class Filtermanagement {
      * @param input string which might code a Filter
      * @param id unique identifier of the new Filterobject
      */
-    public void addFilterGroup(String input, int id) throws Exception {
+    public void addFiltergroup(String input, int id) throws Exception {
         Filtergroup myFiltergroup = new Filtergroup(input, true, id);
         this.addFilterGroup(myFiltergroup);
     }
