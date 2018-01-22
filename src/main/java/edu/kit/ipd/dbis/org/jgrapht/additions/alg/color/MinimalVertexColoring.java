@@ -92,6 +92,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 				} else {
 					int tmp = a[c[i]];
 					a[c[i]] = a[i];
+
 					a[i] = tmp;
 				}
 				int[] aCopy = new int[a.length];
