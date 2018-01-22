@@ -6,6 +6,9 @@ import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -81,25 +84,26 @@ public class GraphTable extends Table {
 	 * @throws SQLException
 	 */
 	public void sortByBfsCode(LinkedList<PropertyGraph> graphs, boolean ascending) {
-
-		//TODO: warte auf das Graphenpaket
-		/*
+		//TODO: 2 Methoden
 		if (ascending) {
 			Collections.sort(graphs, new Comparator<PropertyGraph>() {
 				@Override
 				public int compare(PropertyGraph o1, PropertyGraph o2) {
-					return o1.getBfsCode().compareTo(o2.getBfsCode());
+					BfsCode bfs1 = (BfsCode) o1.getProperty(BfsCode.class);
+					BfsCode bfs2 = (BfsCode) o2.getProperty(BfsCode.class);
+					return bfs1.compareTo(bfs2);
 				}
 			});
 		} else {
 			Collections.sort(graphs, new Comparator<PropertyGraph>() {
 				@Override
 				public int compare(PropertyGraph o1, PropertyGraph o2) {
-					return o2.getBfsCode().compareTo(o1.getBfsCode());
+					BfsCode bfs1 = (BfsCode) o1.getProperty(BfsCode.class);
+					BfsCode bfs2 = (BfsCode) o2.getProperty(BfsCode.class);
+					return bfs2.compareTo(bfs1);
 				}
 			});
 		}
-		*/
 
 	}
 
@@ -153,10 +157,12 @@ public class GraphTable extends Table {
 		String values = "(";
 
 		for (Property property : properties) {
-			if (property.getClass().getSuperclass().getSimpleName().equals("IntegerProperty")
-					|| property.getClass().getSuperclass().getSimpleName().equals("DoubleProperty")) {
+			if (property.getClass().getSuperclass() == IntegerProperty.class) {
 				columns += property.toString() + ", ";
-				values += property.getValue() + ", ";
+				values += (int) property.getValue() + ", ";
+			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
+				columns += property.toString() + ", ";
+				values += (double) property.getValue() + ", ";
 			}
 		}
 
@@ -199,9 +205,9 @@ public class GraphTable extends Table {
 		Collection<Property> properties = graph.getProperties();
 
 		for (Property property : properties) {
-			if (property.getClass().getSuperclass().getSimpleName().equals("IntegerProperty")) {
+			if (property.getClass().getSuperclass() == IntegerProperty.class) {
 				sql += ", " + property.toString() + " int";
-			} else if (property.getClass().getSuperclass().getSimpleName().equals("DoubleProperty")) {
+			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
 				sql += ", " + property.toString() + " double";
 			}
 		}
@@ -281,14 +287,8 @@ public class GraphTable extends Table {
 	 */
 	private String minimalBfsCodeToString(PropertyGraph graph) {
 		String s = "";
-		int[] bfsCode = new int[0];
-		Collection<Property> properties = graph.getProperties();
-
-		for (Property property : properties) {
-			if (property.toString().equals("BfsCode")) {
-				bfsCode = (int[]) property.getValue();
-			}
-		}
+		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
+		int[] bfsCode = (int[]) bfs.getValue();
 
 		for (int i = 0; i < bfsCode.length; i++) {
 			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
