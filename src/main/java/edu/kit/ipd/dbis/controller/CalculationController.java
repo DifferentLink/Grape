@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.controller;
 
-import edu.kit.ipd.dbis.database.GraphDatabase;
+
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.HashSet;
@@ -47,7 +48,7 @@ public class CalculationController {
 			if (calculationStatus == true) {
 				graph.calculateRemainingProperties();
 				// Deleting graphs from list of not calculated graphs
-				database.repleaceGraph(graph.getId(), graph);
+				database.replaceGraph(graph.getId(), graph);
 			} else {
 				return;
 			}
