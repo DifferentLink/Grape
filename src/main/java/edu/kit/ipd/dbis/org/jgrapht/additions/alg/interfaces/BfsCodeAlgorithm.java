@@ -51,6 +51,14 @@ public interface BfsCodeAlgorithm<V, E> {
 		 */
 		List<int[]> getBackwardEdges();
 
+		/**
+		 *
+		 * @param o other BfsCode
+		 * @return -1, 0, 1 if this is less than, equal to, or greater than o.
+		 */
+		@Override
+		int compareTo(Object o);
+
 
 	}
 	/**
