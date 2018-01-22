@@ -1,6 +1,6 @@
 package edu.kit.ipd.dbis.controller;
 
-import edu.kit.ipd.dbis.database.GraphDatabase;
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
@@ -61,7 +61,7 @@ public class GraphEditorController {
 
 	}
 
-/*	*//**
+	/*	*//**
 	 * calculates a valid colorization for a specific graph.
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.
@@ -81,7 +81,7 @@ public class GraphEditorController {
 		return null;
 	}
 
-/*	*//**
+	/*	*//**
 	 * calculates a coloring which is not equivalent to current coloring
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.

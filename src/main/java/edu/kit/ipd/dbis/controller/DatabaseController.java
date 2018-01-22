@@ -1,8 +1,10 @@
 package edu.kit.ipd.dbis.controller;
 
-import edu.kit.ipd.dbis.database.Connector;
-import edu.kit.ipd.dbis.database.FileManager;
-import edu.kit.ipd.dbis.database.GraphDatabase;
+
+
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.file.Connector;
+import edu.kit.ipd.dbis.database.file.FileManager;
 
 import java.util.List;
 
