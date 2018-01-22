@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Set;
 
+/**
+ * This class represents a Graphdatabase that contains graphs and filters.
+ */
 public class GraphDatabase implements DatabaseManager {
 
 	private String directory;
@@ -18,7 +21,9 @@ public class GraphDatabase implements DatabaseManager {
 	private FilterTable filterTable;
 
 	/**
-	 *
+	 * Creates a new GraphDatabase by setting its GraphTable and FilterTable
+	 * @param graphTable a GraphTable
+	 * @param filterTable a FilterTable
 	 */
 	public GraphDatabase(GraphTable graphTable, FilterTable filterTable) {
 		this.graphTable = graphTable;
@@ -27,27 +32,32 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	/**
-	 *
-	 * @return
+	 * getter-method
+	 * @return the GraphTable-object
 	 */
 	public GraphTable getGraphTable() {
 		return this.graphTable;
 	}
 
 	/**
-	 *
-	 * @return
+	 * getter-method
+	 * @return the FilterTable-object
 	 */
 	public FilterTable getFilterTable() {
 		return this.filterTable;
 	}
 
+	/**
+	 * getter-method
+	 * @return the directory
+	 */
 	public String getDirectory() {
 		return this.directory;
 	}
 
 	/**
-	 *
+	 * setter-method
+	 * @param directory the directory
 	 */
 	public void setDirectory(String directory) {
 		this.directory = directory;
