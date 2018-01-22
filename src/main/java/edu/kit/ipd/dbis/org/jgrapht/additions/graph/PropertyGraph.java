@@ -1,6 +1,5 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
+
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
@@ -11,6 +10,7 @@ import java.util.*;
 
 /**
  * A SimpleGraph which contains Property-objects.
+ *
  * @param <V>
  * @param <E>
  */
@@ -37,17 +37,6 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		this.id = id;
 	}
 
-
-	/**
-	 * TODO: design change (name)
-	 */
-	public void calculateRemainingProperties() {
-	}
-
-	public void updateProperty(Class<? extends Property> propertyClass) {
-		this.properties.get(propertyClass).calculate(this);
-	}
-
 	/**
 	 * Getter method for id
 	 * @return the graph's id
@@ -58,13 +47,46 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 
 
 	/**
+	 * Getter method for properties.
+	 *
+	 * @param propertyClass the desired property's class
+	 * @return the property
+	 */
+	public Object getProperty(Class<? extends Property> propertyClass) {
+		return this.properties.get(propertyClass);
+	}
+
+	/**
+	 * Returns set of all properties.
+	 *
+	 * @return the properties
+	 */
+	public Collection<Property> getProperties() {
+		return this.properties.values();
+	}
+
+	/**
+	 * TODO: design change (name)
+	 */
+	public void calculateRemainingProperties() {
+	}
+
+	/**
+	 * Updates a specific property.
+	 *
+	 * @param propertyClass the property's class
+	 */
+	public void updateProperty(Class<? extends Property> propertyClass) {
+		this.properties.get(propertyClass).calculate(this);
+	}
+
+	/**
 	 * checks if two graphs are equal
 	 *
 	 * @param graph the input graph
 	 * @return if this graph is equal to the input graph
 	 */
 	public boolean equals(PropertyGraph graph) {
-		// TODO: implement with BFS-Code
 		VF2GraphIsomorphismInspector<Integer, DefaultEdge> iI = new VF2GraphIsomorphismInspector<Integer, DefaultEdge>(graph, this);
 		if (iI.isomorphismExists()) {
 			return true;
@@ -79,16 +101,6 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		}
 		return (int) this.properties.get(NumberOfVertices.class).getValue();
 	}
-
-	public int getNumberOfEdges() {
-		return (int) this.properties.get(NumberOfEdges.class).getValue();
-	}
-
-	public int getGreatestDegree() {
-		return (int) this.properties.get(GreatestDegree.class).getValue();
-	}
-
-	public Collection<Property> getProperties() {return this.properties.values(); }
 
 	/**
 	 * Generates an adjacency matrix
