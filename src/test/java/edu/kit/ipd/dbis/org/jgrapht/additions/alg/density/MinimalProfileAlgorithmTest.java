@@ -49,7 +49,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("i", "c");
 		return graph;
 	}
-	
+
 	@Test
 	public void profileTest() {
 		PropertyGraph graph = generateSimpleTestGraph1();
