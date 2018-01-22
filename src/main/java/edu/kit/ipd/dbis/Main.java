@@ -22,7 +22,7 @@ public class Main {
 		SwingUtilities.invokeLater(() -> new GrapeUI(CalculationController.getInstance(),
 				new CorrelationController(),
 				new DatabaseController(),
-				new FilterController(),
+				FilterController.getInstance(),
 				GenerateController.getInstance(),
 				GraphEditorController.getInstance(),
 				getLanguage(), new GrapeTheme()));
