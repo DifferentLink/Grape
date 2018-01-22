@@ -20,10 +20,15 @@ import java.util.LinkedList;
 public class FilterTable extends Table {
 
 	/**
-	 * @param url
-	 * @param user
-	 * @param password
-	 * @param name
+	 * Creates a new FilterTable.
+	 * @param url location of the MySQL-Database that contains the MySQLTable which is represented by a subclass of Table.
+	 * @param user username of the MySQL-Database user.
+	 * @param password password of the user.
+	 * @param name name of the MySQL-Table which is represented by a subclass of Table.
+	 * @throws SQLException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
 	 */
 	public FilterTable(String url, String user, String password, String name)
 			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
@@ -46,8 +51,7 @@ public class FilterTable extends Table {
 	}
 
 	/**
-	 *
-	 * @return
+	 * @return every FilterSegment-Object in the represented MySQL-Table.
 	 * @throws AccessDeniedForUserException
 	 * @throws ConnectionFailedException
 	 * @throws DatabaseDoesNotExistException
