@@ -38,78 +38,114 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 
 	@Override
 	public Coloring<V> getColoring() {
-		// brute force algorithm that determines
-		// a minimal vertex coloring.
-		// needs to be optimized!
 		int numberOfVertices = (int) this.graph.getProperty(NumberOfVertices.class).getValue();
 		// give vertices an order
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
-		int[] colors = new int[numberOfVertices];
+		Integer[] colors = new Integer[numberOfVertices];
+		for (int i = 0; i < colors.length; i++) {
+			colors[i] = 0;
+		}
 
 		if (numberOfVertices == 1) {
-			return createColoringObject(new int[] {0}, sortedVertices);
+			return createColoringObject(new Integer[]{0}, sortedVertices);
 		} else {
-			int index = 0;
-			for (int maxColors = 1; maxColors < numberOfVertices; maxColors++) {
+			int index = colors.length - 1;
+			int numberOfColors = 2;
+			for (int i = 0; numberOfColors < numberOfVertices; i++) {
+
 				// this ensures that for every number of different colors,
-				// all combinations are tried. For example:
-				// 2 colors:
-				// 1000
-				// 1100
-				// 1110
-				if (index == colors.length - 1) {
-					index = maxColors;
+				// all combinations are tried.
+				if (index == 0 && colors[numberOfColors - 1] != numberOfColors - 1) {
+					// this case:
+					// 01123
+					// what we need:
+					// 01223
+					// 01233
+					// => we need to iterate over the other
+					//    possible distributions of the colors.
+					int tmp = numberOfColors;
+
+					// increment starting from the smallest element (> 0) that
+					// has the highest index (while ignoring first and last element).
+					for (int j = 1; j < colors.length - 1; j++) {
+						if (colors[j] <= colors[tmp] && colors[j] != j) {
+							tmp = j;
+						}
+					}
+					index = tmp;
+				} else if (index == 0 || numberOfColors == colors.length - 1) {
+					// this case:
+					// 01233
+					// what we need:
+					// 01234
+					// => we need to add a color and return colors to its
+					// 	  beginning state.
+					int tmp = numberOfColors;
+					for (int j = colors.length - 1; j > 0; j--) {
+						if (tmp > 0) {
+							colors[j] = tmp;
+							tmp--;
+						} else {
+							colors[j] = 0;
+						}
+					}
+					numberOfColors++;
+					index = colors.length - numberOfColors;
+				} else if (colors[index] == index) {
+					index = 0;
+				} else {
+					colors[index]++;
+					index--;
 				}
-				colors[index]++;
-				index++;
+
+				Integer[] colorCopy2 = new Integer[colors.length];
+				Integer[] colorCopy = new Integer[colors.length];
+				for (int j = 0; j < colors.length; j++) {
+					colorCopy[j] = colors[j];
+					colorCopy2[j] = colors[j];
+				}
+				Arrays.sort(colorCopy, Collections.reverseOrder());
 
 				// get all permutations
-				List<int[]> permutations = getPermutations(colors.length, colors);
-				for (int[] perm : permutations) {
-					Coloring coloring = createColoringObject(perm, sortedVertices);
+				while (!Arrays.equals(colorCopy, colors)) {
+					colors = getNextPermutation(colors);
+					Coloring coloring = createColoringObject(colors, sortedVertices);
 					if (isValidVertexColoring(coloring, graph)) {
 						return coloring;
 					}
 				}
+				colors = colorCopy2;
 			}
 		}
 		return null;
 	}
 
-	protected List<int[]> getPermutations(int n, int[] a) {
-		List<int[]> result = new ArrayList<>();
-		int[] c = new int[n];
-		for (int i = 0; i < c.length; i++) {
-			c[i] = 0;
-		}
-		result.add(a);
-
-		for (int i = 0; i < n;) {
-			if (c[i] < i) {
-				if (i % 2 == 0) {
-					int tmp = a[0];
-					a[0] = a[i];
-					a[i] = tmp;
-				} else {
-					int tmp = a[c[i]];
-					a[c[i]] = a[i];
-
-					a[i] = tmp;
+	private Integer[] getNextPermutation(Integer[] ascendingArray) {
+		for (int i = ascendingArray.length - 1; i > 0; i--) {
+			if (ascendingArray[i - 1] < ascendingArray[i]) {
+				// find last element which does not exceed ascendingArray[i-1]
+				int s = ascendingArray.length - 1;
+				while (ascendingArray[i - 1] >= ascendingArray[s]) {
+					s--;
 				}
-				int[] aCopy = new int[a.length];
-				System.arraycopy(a, 0, aCopy, 0, a.length);
-				result.add(aCopy);
-				c[i] += 1;
-				i = 0;
-			} else {
-				c[i] = 0;
-				i += 1;
+				swap(ascendingArray, i - 1, s);
+				// reverse order of elements
+				for (int j = i, k = ascendingArray.length - 1; j < k; j++, k--) {
+					swap(ascendingArray, j, k);
+				}
+				break;
 			}
 		}
-		return result;
+		return ascendingArray;
 	}
 
-	private Coloring createColoringObject(int[] coloring, List<V> sortedNodes) {
+	private void swap(Integer[] array, int a, int b) {
+		int tmp = array[a];
+		array[a] = array[b];
+		array[b] = tmp;
+	}
+
+	private Coloring createColoringObject(Integer[] coloring, List<V> sortedNodes) {
 		Map<V, Integer> colors = new HashMap<>();
 		Set<Integer> differentColors = new HashSet<>();
 		for (int j = 0; j < coloring.length; j++) {
@@ -119,6 +155,13 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return new ColoringImpl(colors, differentColors.size());
 	}
 
+	/**
+	 * Checks if a coloring is valid
+	 *
+	 * @param coloring the coloring
+	 * @param graph    the graph
+	 * @return true if valid, false if invalid
+	 */
 	protected boolean isValidVertexColoring(Coloring<V> coloring, Graph<V, E> graph) {
 		for (Set<V> colorClass : coloring.getColorClasses()) {
 			for (V v : colorClass) {
