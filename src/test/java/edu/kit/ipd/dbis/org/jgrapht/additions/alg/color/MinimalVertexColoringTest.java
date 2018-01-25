@@ -141,8 +141,69 @@ public class MinimalVertexColoringTest {
 
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
 		Coloring coloring = alg.getColoring();
-		System.out.println(coloring.getColors());
 		assertEquals(4, coloring.getNumberColors());
 		assertEquals(true, alg.isValidVertexColoring(coloring, graph));
+	}
+
+	@Test
+	public void nearlyCompleteBipartiteGraphColoring() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addVertex("e");
+		graph.addVertex("f");
+		graph.addVertex("g");
+		graph.addVertex("h");
+
+		graph.addEdge("a", "f");
+		graph.addEdge("a", "g");
+		graph.addEdge("a", "h");
+
+		graph.addEdge("b", "e");
+		graph.addEdge("b", "g");
+		graph.addEdge("b", "h");
+
+		graph.addEdge("c", "e");
+		graph.addEdge("c", "f");
+		graph.addEdge("c", "h");
+
+		graph.addEdge("d", "e");
+		graph.addEdge("d", "f");
+		graph.addEdge("d", "g");
+
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		Coloring coloring = alg.getColoring();
+
+		assertEquals(2, coloring.getNumberColors());
+		assertEquals(true, alg.isValidVertexColoring(coloring, graph));
+	}
+
+	@Test
+	public void bigCompleteGraph() {
+		PropertyGraph graph = createCompleteGraph(10);
+
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		Coloring coloring = alg.getColoring();
+
+		assertEquals(10, coloring.getNumberColors());
+		assertEquals(true, alg.isValidVertexColoring(coloring, graph));
+	}
+
+	private PropertyGraph createCompleteGraph(int numberOfVertices) {
+		PropertyGraph graph = new PropertyGraph();
+		for (int i = 0; i < numberOfVertices; i++) {
+			graph.addVertex(i);
+		}
+		for (int i = 0; i < numberOfVertices; i++) {
+			for (int j = 0; j < numberOfVertices; j++) {
+				if (j != i && !graph.containsEdge(graph.getEdgeFactory().createEdge(j, i))) {
+					graph.addEdge(i, j);
+
+				}
+			}
+		}
+		return graph;
 	}
 }

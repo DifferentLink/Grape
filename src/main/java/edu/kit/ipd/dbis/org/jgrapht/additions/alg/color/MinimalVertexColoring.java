@@ -17,6 +17,9 @@ import java.util.*;
  * if it represents a valid vertex coloring.
  * This process guarantees that no isomorphic colorings are checked.
  *
+ * Works well for any graph of up to 10 vertices and sparse graphs
+ * with 10-30 vertices.
+ *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  *
