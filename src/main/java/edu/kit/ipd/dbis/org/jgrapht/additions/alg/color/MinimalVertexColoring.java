@@ -87,7 +87,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return result;
 	}
 
-	protected List<int[]> integerPartitioning(int knoten) {
+	protected List<int[]> integerPartitioning2(int knoten) {
 		List<int[]> result = new LinkedList<>();
 		int anzahlFarben = 2;
 		int[] array = new int[anzahlFarben];
@@ -99,12 +99,29 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			if (array[i] > array[i + 1] + 1) {
 				array[i + 1]++;
 				array[i]--;
-			} else if (array[i] == array[i + 1] + 1 && array[i] != 2 && i + 2 < array.length) {
-				array[i + 1]++;
-				array[i]--;
-				i++;
-				array[i + 1]++;
-				array[i]--;
+			} else if (array[i] == array[i + 1] + 1 && yes(array)) {
+				while (i + 1 < array.length && (array[i] == array[i + 1] + 1 || array[i] == array[i + 1])) {
+					i++;
+				}
+				if (!(i + 1 >= array.length)) {
+					array[i]--;
+					array[i + 1]++;
+				}
+				i = 0;
+
+			} else if (array[i] == array[i + 1] || !yes(array)) {
+				if (i + 1 < array.length - 1) {
+					i++;
+				} else {
+					array = new int[++anzahlFarben];
+					int tmp = knoten;
+					for (int j = array.length - 1; j > 0; j--) {
+						array[j] = 1;
+						tmp--;
+					}
+					array[0] = tmp;
+					i = 0;
+				}
 			} else {
 				array = new int[++anzahlFarben];
 				int tmp = knoten;
@@ -119,9 +136,65 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return result;
 	}
 
-	private int[] nextIntegerPartitioning(int[] array, int numberOfVertices, int numberOfColors) {
-		// TODO: implement me
-		return null;
+	protected List<int[]> integerPartitioning(int knoten) {
+		List<int[]> result = new LinkedList<>();
+		int anzahlFarben = 2;
+		int[] array = new int[anzahlFarben];
+		array[0] = knoten - 1;
+		array[1] = 1;
+		int i = 0;
+
+		while (anzahlFarben < knoten) {
+			int[] arrayCopy = new int[array.length];
+			System.arraycopy(array, 0, arrayCopy, 0, array.length);
+			result.add(arrayCopy);
+
+			if (array[i] == array[array.length - 1] || array[i] - array[array.length - 1] < 2) {
+				array = new int[++anzahlFarben];
+				int tmp = knoten;
+				for (int j = array.length - 1; j > 0; j--) {
+					array[j] = 1;
+					tmp--;
+				}
+				array[0] = tmp;
+				i = 0;
+				// TODO erzeugt manchmal duplikate
+				int[] arrayCopy2 = new int[array.length];
+				System.arraycopy(array, 0, arrayCopy2, 0, array.length);
+				result.add(arrayCopy2);
+			}
+
+			for (int j = i + 1; j < array.length; j++) {
+				if (array[i] - array[j] >= 2) {
+					array[j]++;
+					array[j - 1]--;
+					j--;
+					while (!isInDescendingOrder(array)) {
+						if (array[j] >= array[j - 1]) {
+							break;
+						}
+						array[j]++;
+						array[j - 1]--;
+						j--;
+					}
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	private boolean isInDescendingOrder(int[] array) {
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean yes(int[] array) {
+		return array[0] - array[array.length - 1] >= 2;
 	}
 
 	private Integer[] getNextPermutation(Integer[] ascendingArray) {

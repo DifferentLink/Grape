@@ -6,7 +6,9 @@ import org.jgrapht.alg.interfaces.VertexColoringAlgorithm.Coloring;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -149,6 +151,12 @@ public class MinimalVertexColoringTest {
 
 	@Test
 	public void testGenerator() {
+		PropertyGraph graph = new PropertyGraph();
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		List<int[]> partitionings = alg.integerPartitioning(5);
+		for (int[] p : partitionings) {
+			System.out.println(Arrays.toString(alg.parseIntegerPartitioning(p, 5)));
+		}
 
 	}
 }
