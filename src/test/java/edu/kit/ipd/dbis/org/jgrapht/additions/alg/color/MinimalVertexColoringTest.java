@@ -3,12 +3,9 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm.Coloring;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -103,7 +100,6 @@ public class MinimalVertexColoringTest {
 		assertEquals(5, coloring.getNumberColors());
 	}
 
-	@Ignore
 	@Test
 	public void getColorings2() {
 		// based on this graph from wikipedia:
@@ -147,16 +143,6 @@ public class MinimalVertexColoringTest {
 		Coloring coloring = alg.getColoring();
 		System.out.println(coloring.getColors());
 		assertEquals(4, coloring.getNumberColors());
-	}
-
-	@Test
-	public void testGenerator() {
-		PropertyGraph graph = new PropertyGraph();
-		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
-		List<int[]> partitionings = alg.integerPartitioning(5);
-		for (int[] p : partitionings) {
-			System.out.println(Arrays.toString(alg.parseIntegerPartitioning(p, 5)));
-		}
-
+		assertEquals(true, alg.isValidVertexColoring(coloring, graph));
 	}
 }

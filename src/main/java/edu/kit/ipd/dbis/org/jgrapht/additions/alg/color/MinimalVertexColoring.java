@@ -8,10 +8,14 @@ import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import java.util.*;
 
 /**
- * The minimal vertex coloring algorithm.
- *
- * <p>
- * Description of the algorithm
+ * A brute force implementation which works by calculating
+ * all integer partitions for a number of colors, transforming
+ * the result into a color distribution (e.g. for 2 colors:
+ * vertex 1 has color 0, vertex 2 color 0,...,vertex n color 1),
+ * and determining all possible permutations (while ignoring repeated
+ * values) of this distribution. For each one, the algorithm checks
+ * if it represents a valid vertex coloring.
+ * This process guarantees that no isomorphic colorings are checked.
  *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
@@ -39,43 +43,57 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	@Override
 	public Coloring<V> getColoring() {
 		int numberOfVertices = (int) this.graph.getProperty(NumberOfVertices.class).getValue();
+
 		// give vertices an order
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
 		Integer[] colors = new Integer[numberOfVertices];
+		// initialize colors
 		for (int i = 0; i < colors.length; i++) {
 			colors[i] = 0;
 		}
 
 		if (numberOfVertices == 1) {
+			// trivial case
 			return createColoringObject(new Integer[]{0}, sortedVertices);
-		} else {
-			int index = colors.length - 1;
-			int numberOfColors = 2;
-			List<int[]> partitions = this.integerPartitioning(numberOfVertices);
-			Iterator it = partitions.iterator();
-			while (it.hasNext()) {
-				colors = this.parseIntegerPartitioning((int[]) it.next(), numberOfVertices);
+		}
 
-				Integer[] colorCopy = new Integer[colors.length];
-				for (int j = 0; j < colors.length; j++) {
-					colorCopy[j] = colors[j];
-				}
-				Arrays.sort(colorCopy, Collections.reverseOrder());
+		// get integer partitions
+		List<int[]> partitions = this.integerPartitioning(numberOfVertices);
+		Iterator it = partitions.iterator();
 
-				// get all permutations
-				while (!Arrays.equals(colorCopy, colors)) {
-					colors = getNextPermutation(colors);
-					Coloring coloring = createColoringObject(colors, sortedVertices);
-					if (isValidVertexColoring(coloring, graph)) {
-						return coloring;
-					}
+		// iterate over partitions
+		while (it.hasNext()) {
+			// partitions have the following format:
+			// (e.g. for 8 vertices and 2 numbers):
+			// 7 1
+			// the algorithm needs this format:
+			// 0 0 0 0 0 0 0 1
+			colors = this.parseIntegerPartitioning((int[]) it.next(), numberOfVertices);
+
+			// create copy of array
+			Integer[] colorCopy = new Integer[colors.length];
+			System.arraycopy(colors, 0, colorCopy, 0, colors.length);
+
+			// sort it backwards.
+			// when all permutations are checked,
+			// the color array is in ascending order.
+			// using colorCopy, we can define an end
+			// for the while loop below.
+			Arrays.sort(colorCopy, Collections.reverseOrder());
+
+			// get all permutations of partitioning
+			while (!Arrays.equals(colorCopy, colors)) {
+				colors = getNextPermutation(colors);
+				Coloring coloring = createColoringObject(colors, sortedVertices);
+				if (isValidVertexColoring(coloring, graph)) {
+					return coloring;
 				}
 			}
 		}
 		return null;
 	}
 
-	protected Integer[] parseIntegerPartitioning(int[] partitioning, int numberOfVertices) {
+	private Integer[] parseIntegerPartitioning(int[] partitioning, int numberOfVertices) {
 		Integer[] result = new Integer[numberOfVertices];
 		int index = 0;
 		for (int i = 0; i < partitioning.length; i++) {
@@ -87,77 +105,35 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return result;
 	}
 
-	protected List<int[]> integerPartitioning2(int knoten) {
+	//TODO: make me iterative
+	private List<int[]> integerPartitioning(int numberOfVertices) {
 		List<int[]> result = new LinkedList<>();
-		int anzahlFarben = 2;
-		int[] array = new int[anzahlFarben];
-		array[0] = knoten - 1;
-		array[1] = 1;
 
-		for (int i = 0; i < array.length && anzahlFarben <= knoten; ) {
-			result.add(array);
-			if (array[i] > array[i + 1] + 1) {
-				array[i + 1]++;
-				array[i]--;
-			} else if (array[i] == array[i + 1] + 1 && yes(array)) {
-				while (i + 1 < array.length && (array[i] == array[i + 1] + 1 || array[i] == array[i + 1])) {
-					i++;
-				}
-				if (!(i + 1 >= array.length)) {
-					array[i]--;
-					array[i + 1]++;
-				}
-				i = 0;
-
-			} else if (array[i] == array[i + 1] || !yes(array)) {
-				if (i + 1 < array.length - 1) {
-					i++;
-				} else {
-					array = new int[++anzahlFarben];
-					int tmp = knoten;
-					for (int j = array.length - 1; j > 0; j--) {
-						array[j] = 1;
-						tmp--;
-					}
-					array[0] = tmp;
-					i = 0;
-				}
-			} else {
-				array = new int[++anzahlFarben];
-				int tmp = knoten;
-				for (int j = array.length - 1; j > 0; j--) {
-					array[j] = 1;
-					tmp--;
-				}
-				array[0] = tmp;
-				i = 0;
-			}
-		}
-		return result;
-	}
-
-	protected List<int[]> integerPartitioning(int knoten) {
-		List<int[]> result = new LinkedList<>();
-		int anzahlFarben = 2;
-		int[] array = new int[anzahlFarben];
-		array[0] = knoten - 1;
+		// create first partitioning
+		int numberOfColors = 2;
+		int[] array = new int[numberOfColors];
+		array[0] = numberOfVertices - 1;
 		array[1] = 1;
 		int i = 0;
 
-		while (anzahlFarben < knoten) {
+		// iterate over all possible partitions
+		// for numberOfVertices.
+		while (numberOfColors < numberOfVertices) {
 			int[] arrayCopy = new int[array.length];
 			System.arraycopy(array, 0, arrayCopy, 0, array.length);
 			result.add(arrayCopy);
 
+			// check if
 			if (array[i] == array[array.length - 1] || array[i] - array[array.length - 1] < 2) {
-				array = new int[++anzahlFarben];
-				int tmp = knoten;
+				array = new int[++numberOfColors];
+				int tmp = numberOfVertices;
 				for (int j = array.length - 1; j > 0; j--) {
 					array[j] = 1;
 					tmp--;
 				}
 				array[0] = tmp;
 				i = 0;
+
 				// TODO erzeugt manchmal duplikate
 				int[] arrayCopy2 = new int[array.length];
 				System.arraycopy(array, 0, arrayCopy2, 0, array.length);
@@ -191,10 +167,6 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			}
 		}
 		return true;
-	}
-
-	private boolean yes(int[] array) {
-		return array[0] - array[array.length - 1] >= 2;
 	}
 
 	private Integer[] getNextPermutation(Integer[] ascendingArray) {
