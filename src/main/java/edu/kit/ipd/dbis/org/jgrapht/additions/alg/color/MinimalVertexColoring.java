@@ -114,7 +114,6 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		int[] array = new int[numberOfColors];
 		array[0] = numberOfVertices - 1;
 		array[1] = 1;
-		int i = 0;
 
 		// iterate over all possible partitions
 		// for numberOfVertices.
@@ -123,8 +122,13 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			System.arraycopy(array, 0, arrayCopy, 0, array.length);
 			result.add(arrayCopy);
 
-			// check if
-			if (array[i] == array[array.length - 1] || array[i] - array[array.length - 1] < 2) {
+			// check if first element equals last element
+			// or if their difference is less than 2.
+			// this means that there are no more possible
+			// partitions for the numberOfVertices and
+			// numberOfColors in this iteration.
+			if (array[0] == array[array.length - 1] || array[0] - array[array.length - 1] < 2) {
+				// initialize array with one more color.
 				array = new int[++numberOfColors];
 				int tmp = numberOfVertices;
 				for (int j = array.length - 1; j > 0; j--) {
@@ -132,19 +136,33 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 					tmp--;
 				}
 				array[0] = tmp;
-				i = 0;
 
-				// TODO erzeugt manchmal duplikate
+				// TODO sometimes this creates duplicates.
+				// add initial array to the results.
 				int[] arrayCopy2 = new int[array.length];
 				System.arraycopy(array, 0, arrayCopy2, 0, array.length);
 				result.add(arrayCopy2);
 			}
 
-			for (int j = i + 1; j < array.length; j++) {
-				if (array[i] - array[j] >= 2) {
+			// iterate over array to calculate
+			// next distribution.
+			for (int j = 1; j < array.length; j++) {
+				// check if the difference between
+				// the first and the j-th element
+				// of the array is bigger than 2.
+				// this means that there exists
+				// a possible next distribution.
+				if (array[0] - array[j] >= 2) {
+					// the following section
+					// launches increment and
+					// decrement commands which
+					// flow to the front like
+					// air bubbles out of water.
 					array[j]++;
 					array[j - 1]--;
 					j--;
+					// if array is not in ascending order,
+					// the distribution is not correct yet.
 					while (!isInDescendingOrder(array)) {
 						if (array[j] >= array[j - 1]) {
 							break;
