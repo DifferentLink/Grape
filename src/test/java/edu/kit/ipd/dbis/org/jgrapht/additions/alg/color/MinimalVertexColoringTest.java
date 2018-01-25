@@ -146,4 +146,9 @@ public class MinimalVertexColoringTest {
 		System.out.println(coloring.getColors());
 		assertEquals(4, coloring.getNumberColors());
 	}
+
+	@Test
+	public void testGenerator() {
+
+	}
 }
