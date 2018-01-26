@@ -8,7 +8,6 @@ import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
