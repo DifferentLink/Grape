@@ -3,12 +3,14 @@ package edu.kit.ipd.dbis.org.jgrapht.additions;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashSet;
 
 public class JGraphAdditionsTest {
 
+	@Ignore
 	@Test
 	public void completeGeneratingTest() {
 		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator();

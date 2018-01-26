@@ -12,10 +12,8 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestD
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import sun.security.x509.AVA;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
