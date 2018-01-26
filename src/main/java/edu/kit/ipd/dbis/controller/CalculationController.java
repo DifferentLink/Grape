@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public class CalculationController {
 	private Boolean calculationStatus = false;
 
 	private GraphDatabase database;
+	private NonEditableTableModel table; // todo initialize table
 
 	//TODO: Singleton pattern
 	private static CalculationController calculation;
@@ -48,7 +50,7 @@ public class CalculationController {
 				graph.calculateProperties();
 				// Replacing graphs
 				database.replaceGraph(graph.getId(), graph);
-				table.update();
+				table.update(null); // todo implement calculatedGraphProperties()
 			} else {
 				return;
 			}

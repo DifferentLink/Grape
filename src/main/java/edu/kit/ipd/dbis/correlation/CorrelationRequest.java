@@ -40,7 +40,7 @@ public class CorrelationRequest {
      * @return returns an array list which codes the results of the correlation calculation
      */
     public ArrayList<CorrelationOutput> use() {
-        return correlation.use();
+        return null; // todo was: "correlation.use()"
     }
 
     private static Correlation parseCorrelationToString(String correlationInput) throws InvalidCorrelationInputException {

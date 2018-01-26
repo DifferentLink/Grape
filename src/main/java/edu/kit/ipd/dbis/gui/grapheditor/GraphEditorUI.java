@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import edu.kit.ipd.dbis.controller.GraphEditorController;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
@@ -269,7 +270,21 @@ public class GraphEditorUI extends JPanel {
 
 			PropertyGraph propertyGraph = graph.asPropertyGraph();
 			if (graphEditorController.isValidGraph(propertyGraph)) {
-				graphEditorController.addEditedGraph(propertyGraph, graph.getId());
+				try { // todo remove try-catch, controler should handle this
+					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
+				} catch (DatabaseDoesNotExistException e) {
+					e.printStackTrace();
+				} catch (AccessDeniedForUserException e) {
+					e.printStackTrace();
+				} catch (ConnectionFailedException e) {
+					e.printStackTrace();
+				} catch (TablesNotAsExpectedException e) {
+					e.printStackTrace();
+				} catch (UnexpectedObjectException e) {
+					e.printStackTrace();
+				} catch (InsertionFailedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
