@@ -39,7 +39,7 @@ public class FilterUI extends JPanel {
 		filterMenu = new JPanel();
 		filterMenu.setLayout(new GridBagLayout());
 
-		String[] filterMenuEntries = {"Save selected filter...", "Load Filter..."}; // todo use language resource
+		String[] filterMenuEntries = {"Save selected filter...", "Load filter..."}; // todo use language resource
 		JComboBox<String> filterDropdown = new JComboBox<>(filterMenuEntries);
 		filterDropdown.setFocusable(false);
 		filterDropdown.setMaximumSize(new Dimension(100, 100));
@@ -75,7 +75,7 @@ public class FilterUI extends JPanel {
 		buttonConstraints.fill = GridBagConstraints.VERTICAL;
 		buttonConstraints.weightx = 1;
 
-		JButton newFilter = new JButton(" New Filter "); // todo replace with string from language
+		JButton newFilter = new JButton(" New filter "); // todo replace with string from language
 		newFilter.setBackground(theme.assertiveBackground);
 		newFilter.addActionListener(new NewFilterAction());
 		JButton newFilterGroup = new JButton(" New Group "); // todo replace with string from language
@@ -107,7 +107,7 @@ public class FilterUI extends JPanel {
 
 		if (filterManagement.getFilterGroups().size() > 0) {
 			JPanel textContainerGroup = new JPanel(new BorderLayout());
-			JLabel groupLabel = new JLabel("Filter Groups:");
+			JLabel groupLabel = new JLabel("filter Groups:");
 			groupLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
 			groupLabel.setFont(theme.smallFont);
 			textContainerGroup.add(groupLabel, BorderLayout.CENTER);
@@ -122,7 +122,7 @@ public class FilterUI extends JPanel {
 
 		if (filterManagement.getSimpleFilter().size() > 0) {
 			JPanel textContainerSimple = new JPanel(new BorderLayout());
-			JLabel simpleLabel = new JLabel("Simple Filter:");
+			JLabel simpleLabel = new JLabel("Simple filter:");
 			simpleLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
 			simpleLabel.setFont(theme.smallFont);
 			textContainerSimple.add(simpleLabel, BorderLayout.CENTER);
@@ -166,7 +166,7 @@ public class FilterUI extends JPanel {
 		filterGroupHeaderUI.setLayout(new BoxLayout(filterGroupHeaderUI, BoxLayout.X_AXIS));
 		JCheckBox isActive = new JCheckBox();
 		filterGroupHeaderUI.add(isActive);
-		JTextArea filterInput = new JTextArea(" Filter Group " + filterGroup.getID());
+		JTextArea filterInput = new JTextArea(" filter Group " + filterGroup.getID());
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		filterGroupHeaderUI.add(filterInput);
 		JButton deleteFilterGroup = new JButton("X");

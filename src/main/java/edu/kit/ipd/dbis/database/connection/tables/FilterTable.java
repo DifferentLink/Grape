@@ -1,6 +1,6 @@
 package edu.kit.ipd.dbis.database.connection.tables;
 
-import edu.kit.ipd.dbis.Filter.Filtersegment;
+import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;

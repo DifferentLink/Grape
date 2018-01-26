@@ -1,11 +1,10 @@
 package edu.kit.ipd.dbis.database.connection;
 
-import edu.kit.ipd.dbis.Filter.Filtersegment;
+import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.LinkedList;
-import java.util.Set;
 
 /**
  *

@@ -1,7 +1,7 @@
 package edu.kit.ipd.dbis.controller;
 
-import edu.kit.ipd.dbis.Filter.Filtermanagement;
-import edu.kit.ipd.dbis.Filter.InvalidInputException;
+import edu.kit.ipd.dbis.filter.Filtermanagement;
+import edu.kit.ipd.dbis.filter.InvalidInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
