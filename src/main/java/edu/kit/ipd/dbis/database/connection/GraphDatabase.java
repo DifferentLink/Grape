@@ -3,9 +3,9 @@ package edu.kit.ipd.dbis.database.connection;
 import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
 import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.Filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.IOException;
@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.Set;
 
 /**
  * This class represents a Graphdatabase that contains graphs and filters.
@@ -396,8 +395,8 @@ public class GraphDatabase implements DatabaseManager {
 		Collections.sort(graphs, new Comparator<PropertyGraph>() {
 			@Override
 			public int compare(PropertyGraph o1, PropertyGraph o2) {
-				BfsCodeAlgorithm.BfsCodeImpl bfs1 = (BfsCodeAlgorithm.BfsCodeImpl) o1.getProperty(BfsCode.class);
-				BfsCodeAlgorithm.BfsCodeImpl bfs2 = (BfsCodeAlgorithm.BfsCodeImpl) o2.getProperty(BfsCode.class);
+				BfsCodeAlgorithm.BfsCode bfs1 = (BfsCodeAlgorithm.BfsCode) o1.getProperty(BfsCode.class);
+				BfsCodeAlgorithm.BfsCode bfs2 = (BfsCodeAlgorithm.BfsCode) o2.getProperty(BfsCode.class);
 				return bfs1.compareTo(bfs2);
 			}
 		});
@@ -412,8 +411,8 @@ public class GraphDatabase implements DatabaseManager {
 		Collections.sort(graphs, new Comparator<PropertyGraph>() {
 			@Override
 			public int compare(PropertyGraph o1, PropertyGraph o2) {
-				BfsCodeAlgorithm.BfsCodeImpl bfs1 = (BfsCodeAlgorithm.BfsCodeImpl) o1.getProperty(BfsCode.class);
-				BfsCodeAlgorithm.BfsCodeImpl bfs2 = (BfsCodeAlgorithm.BfsCodeImpl) o2.getProperty(BfsCode.class);
+				BfsCodeAlgorithm.BfsCode bfs1 = (BfsCodeAlgorithm.BfsCode) o1.getProperty(BfsCode.class);
+				BfsCodeAlgorithm.BfsCode bfs2 = (BfsCodeAlgorithm.BfsCode) o2.getProperty(BfsCode.class);
 				return bfs2.compareTo(bfs1);
 			}
 		});
