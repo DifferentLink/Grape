@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Filter;
+package edu.kit.ipd.dbis.filter;
 
 public enum Relation {
     EQUAL,

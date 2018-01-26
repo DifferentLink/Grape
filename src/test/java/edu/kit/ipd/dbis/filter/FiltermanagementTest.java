@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Filter;
+package edu.kit.ipd.dbis.filter;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -137,7 +137,7 @@ public class FiltermanagementTest {
         Filtergroup activeGroup = new Filtergroup("Test", true, 1);
         Filtergroup inactiveGroup = new Filtergroup("InactiveFilter", false, 2);
         Property myProperty = new GreatestDegree();
-        Filter activeFilter = new BasicFilter("Filter", true, 1, Relation.EQUAL, myProperty, 3);
+        Filter activeFilter = new BasicFilter("filter", true, 1, Relation.EQUAL, myProperty, 3);
         Filter inactiveFilter = new BasicFilter("InactiveFilter", false, 1, Relation.EQUAL, myProperty, 4);
         Filter activeFilterInactiveGroup = new BasicFilter("ActiveFilterOfInactiveGroup", true, 5, Relation.EQUAL, myProperty, 5);
         Filter activeFilterActiveGroup = new BasicFilter("ActiveFilterInactiveGroup", true, 6, Relation.LESSTHAN, myProperty, 6);

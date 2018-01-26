@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Filter;
+package edu.kit.ipd.dbis.filter;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -12,7 +12,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * class which communicates with other packages of Grpape
@@ -326,10 +325,10 @@ public class Filtermanagement {
     }
 
     /**
-     * checks whether the input string codes a valid Filter. In case of success the method
+     * checks whether the input string codes a valid filter. In case of success the method
      * addFiltersegment(filtersegment: Filtersegment): void is called and a new
-     * Filter is added to the list of class Filtermanagement
-     * @param input string which might code a Filter
+     * filter is added to the list of class Filtermanagement
+     * @param input string which might code a filter
      * @param id unique identifier of the new Filterobject
      */
     public void addFiltergroup(String input, int id) throws Exception {
@@ -354,7 +353,7 @@ public class Filtermanagement {
     /**
      * used when initializing Grape or switching a database. The methode clears the current
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
-     * Filtersegment): void for every Filter element of the new database
+     * Filtersegment): void for every filter element of the new database
      */
     public void setDatabase(GraphDatabase newDatabase) throws Exception {
         availableFilterGroups.clear();

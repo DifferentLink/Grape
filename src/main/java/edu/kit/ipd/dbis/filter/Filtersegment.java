@@ -1,9 +1,9 @@
-package edu.kit.ipd.dbis.Filter;
+package edu.kit.ipd.dbis.filter;
 
 import java.io.Serializable;
 
 /**
- * class Filtersegment allows to handle objects of class Filter and Filtergroup as
+ * class Filtersegment allows to handle objects of class filter and Filtergroup as
  * same objects
  */
 public abstract class Filtersegment implements Serializable {
