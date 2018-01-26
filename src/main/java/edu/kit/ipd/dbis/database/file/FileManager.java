@@ -144,6 +144,7 @@ public class FileManager implements Connector {
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			url += "?autoReconnect=true&useSSL=false";
 			Connection connection = DriverManager.getConnection(url, user, password);
 			return connection;
 		} catch (MySQLSyntaxErrorException e) {

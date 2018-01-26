@@ -7,11 +7,8 @@ import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
+import java.sql.*;
+import java.util.*;
 
 /**
  * This class represents a MySQL-Table.
@@ -38,7 +35,7 @@ public abstract class Table {
 	public Table(String url, String user, String password, String name)
 			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException,
 			ConnectionFailedException {
-		this.url = url;
+		this.url = url + "?autoReconnect=true&useSSL=false";
 		this.user = user;
 		this.password = password;
 		this.name = name;
@@ -89,7 +86,7 @@ public abstract class Table {
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
 
-		String sql = "DELETE * FROM " + this.name + " WHERE id = " + id;
+		String sql = "DELETE FROM " + this.name + " WHERE id = " + id;
 		this.getConnection().prepareStatement(sql).executeUpdate();
 	}
 
