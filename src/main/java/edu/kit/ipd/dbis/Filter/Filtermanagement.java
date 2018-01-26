@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.Filter;
+package edu.kit.ipd.dbis.filter;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
