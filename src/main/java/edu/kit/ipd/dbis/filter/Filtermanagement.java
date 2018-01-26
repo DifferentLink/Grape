@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.filter;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
@@ -31,8 +32,9 @@ public class Filtermanagement {
      * adds a filtergroup to the list availableFilterGroups of class Filtermanagement
      * @param filtergroup filtersegment which should be added
      */
-    public void addFilterGroup(Filtergroup filtergroup) throws Exception {
-        //database.addFilter(filtergroup);
+    public void addFilterGroup(Filtergroup filtergroup) throws TablesNotAsExpectedException, ConnectionFailedException,
+            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+        database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
     }
 
@@ -40,8 +42,9 @@ public class Filtermanagement {
      * adds a filter to the list availableFilter of class Filtermanagement
      * @param filter filtersegment which should be added
      */
-    public void addFilter(Filter filter) throws Exception {
-        //database.addFilter(filter);
+    public void addFilter(Filter filter) throws TablesNotAsExpectedException, ConnectionFailedException,
+            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+        database.addFilter(filter);
         availableFilter.add(filter);
     }
 
@@ -50,41 +53,70 @@ public class Filtermanagement {
      * @param filter filter which should be added to a specific filtergroup
      * @param groupID ID of the filtergroup
      */
-    public void addFilterToFiltergroup(Filter filter, int groupID) throws Exception {
+    public void addFilterToFiltergroup(Filter filter, int groupID) throws TablesNotAsExpectedException,
+            ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
+            DatabaseDoesNotExistException {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == groupID) {
                 element.availableFilter.add(filter);
-                //database.repleaceFilter(groupID, element);
+                database.replaceFilter(groupID, element);
             }
         }
+    }
+
+    private int removeFiltersegmentAngGetID(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException,
+            ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException, InsertionFailedException {
+        for (Filtersegment element : availableFilter) {
+            if (element.id == id) {
+                availableFilter.remove(element);
+                database.deleteFilter(id);
+                return 0;
+            }
+        }
+        for (Filtergroup element : availableFilterGroups) {
+            if (element.id == id) {
+                availableFilterGroups.remove(element);
+                database.deleteFilter(id);
+                return 0;
+            }
+            for (Filter filterInGroup : element.availableFilter) {
+                if (filterInGroup.id == id) {
+                    element.availableFilter.remove(filterInGroup);
+                    database.replaceFilter(element.id, element);
+                    return element.id;
+                }
+            }
+        }
+        return 0;
     }
 
     /**
      * removes a filtersegment out of the list of class Filtermanagement
      * @param id unique identifier of the filtersegment which should be removed
      */
-    public void removeFiltersegment(int id) throws Exception {
-        for (Filtersegment element: availableFilter) {
-            if (element.id == id) {
-                availableFilter.remove(element);
-                //database.deleteFilter(id);
-                return;
-            }
-        }
-        for (Filtergroup element: availableFilterGroups) {
-            if (element.id == id) {
-                availableFilterGroups.remove(element);
-                //database.deleteFilter(id);
-                return;
-            }
-            for (Filter filterInGroup: element.availableFilter) {
-                if (filterInGroup.id == id) {
-                    element.availableFilter.remove(filterInGroup);
-                    //database.repleaceFilter(element.id, element);
-                    return;
+    public void removeFiltersegment(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException,
+                    ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException, InsertionFailedException {
+                for (Filtersegment element: availableFilter) {
+                    if (element.id == id) {
+                        availableFilter.remove(element);
+                        database.deleteFilter(id);
+                        return;
+                    }
                 }
-            }
-        }
+                for (Filtergroup element: availableFilterGroups) {
+                    if (element.id == id) {
+                        availableFilterGroups.remove(element);
+                        database.deleteFilter(id);
+                        return;
+                    }
+                    for (Filter filterInGroup: element.availableFilter) {
+                        if (filterInGroup.id == id) {
+                            element.availableFilter.remove(filterInGroup);
+                            database.replaceFilter(element.id, element);
+                            return;
+                        }
+                    }
+                }
     }
 
     /**
@@ -93,24 +125,25 @@ public class Filtermanagement {
      * @param id unique identifier of the filtersegment which should be enabled
 
      */
-    public void activate(int id) throws Exception {
+    public void activate(int id) throws TablesNotAsExpectedException, ConnectionFailedException,
+            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 element.activate();
-                //database.repleaceFilter(id, element);
+                database.replaceFilter(id, element);
                 return;
             }
         }
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 element.activate();
-                //database.repleaceFilter(id, element);
+                database.replaceFilter(id, element);
                 return;
             }
             for (Filter currentFilter: element.availableFilter) {
                 if (currentFilter.id == id) {
                     currentFilter.activate();
-                    //database.repleaceFilter(element.id, element);
+                    database.replaceFilter(element.id, element);
                     return;
                 }
             }
@@ -122,24 +155,25 @@ public class Filtermanagement {
      * ignored while filtering graphs
      * @param id unique identifier of the filtersegment which should be disabled
      */
-    public void deactivate(int id) throws Exception {
+    public void deactivate(int id) throws TablesNotAsExpectedException, ConnectionFailedException,
+            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
             for (Filter element: availableFilter) {
                 if (element.id == id) {
                     element.deactivate();
-                    //database.repleaceFilter(id, element);
+                    database.replaceFilter(id, element);
                     return;
                 }
             }
             for (Filtergroup currentElement: availableFilterGroups) {
                 if (currentElement.id == id) {
                     currentElement.deactivate();
-                    //database.repleaceFilter(id, currentElement);
+                    database.replaceFilter(id, currentElement);
                     return;
                 }
                 for (Filter currentFilter : currentElement.availableFilter) {
                     if (currentFilter.id == id) {
                         currentFilter.deactivate();
-                        //database.repleaceFilter(currentElement.id, currentElement);
+                        database.replaceFilter(currentElement.id, currentElement);
                         return;
                     }
                 }
@@ -148,13 +182,46 @@ public class Filtermanagement {
     }
 
     /**
+     * method which offers the oppotunity to modify a specific filter
+     * @param input code of the modified filter
+     * @param id id of the filter to modify
+     * @throws TablesNotAsExpectedException thrown if the table in database is not as exspected
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws InsertionFailedException thrown if filter could not be added to database
+     * @throws AccessDeniedForUserException thrown if there is no access to database
+     * @throws UnexpectedObjectException thrown if there is an unknown object
+     * @throws DatabaseDoesNotExistException thrown if there is no database
+     * @throws InvalidInputException thrown if no valid filter is coded in iput string
+     */
+    public void updateFilter(String input, int id) throws TablesNotAsExpectedException, ConnectionFailedException,
+            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException,
+            InvalidInputException {
+        int groupID = this.removeFiltersegmentAngGetID(id);
+        if (groupID != 0) {
+            this.addFilterToGroup(input, id, groupID);
+        } else {
+            this.addFilter(input, id);
+        }
+    }
+
+    public void updateFiltergroup(String input, int id) {
+        for (Filtergroup element: availableFilterGroups) {
+            if (element.id == id) {
+                element.name = input;
+            }
+        }
+    }
+
+    /**
      * method which returns all graphs sorted by a specific property ascending
      * @param property property to sort after
      * @return returns all graphs sorted by a specific property
      * @throws Exception thrown if an exception in database occured
      */
-    public ArrayList<PropertyGraph> getFilteredAndAscendingSortedGraphs(Property property) throws Exception {
-        return null;//database.getGraphs();
+    public LinkedList<PropertyGraph> getFilteredAndAscendingSortedGraphs(Property property) throws DatabaseDoesNotExistException,
+            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+        LinkedList<PropertyGraph> graphList = database.getGraphs(this.parseFilterList(), property.toString(), true);
+        return graphList;
     }
 
     /**
@@ -163,18 +230,21 @@ public class Filtermanagement {
      * @return returns all graphs sorted by a specific property
      * @throws Exception thrown if an exception in database occured
      */
-    public ArrayList<PropertyGraph> getFilteredAndDescendingSortedGraphs(Property property) throws Exception {
-        return null;//database.getGraphs();
+    public LinkedList<PropertyGraph> getFilteredAndDescendingSortedGraphs(Property property) throws DatabaseDoesNotExistException,
+            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+        LinkedList<PropertyGraph> graphList = database.getGraphs(this.parseFilterList(), property.toString(), false);
+        return graphList;
     }
 
     /**
      * method which returns all graphs sorted by a specific property
-     * @param property property to sort after
      * @return returns all graphs sorted by a specific property
      * @throws Exception thrown if an exception in database occured
      */
-    public ArrayList<PropertyGraph> getFilteredAndSortedGraphs(Property property) throws Exception {
-        return null;//database.getGraphs();
+    public LinkedList<PropertyGraph> getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
+            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+        LinkedList<PropertyGraph> graphList = database.getGraphs(this.parseFilterList(), "id", true);
+        return graphList;
     }
 
         /**
@@ -188,7 +258,9 @@ public class Filtermanagement {
          * does not code a valid filter
          * a filter with same identifier
          */
-    public void addFilterToGroup(String input, int id, int groupID) throws Exception, InvalidInputException {
+    public void addFilterToGroup(String input, int id, int groupID) throws InvalidInputException, TablesNotAsExpectedException,
+            ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
+            DatabaseDoesNotExistException {
         this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
     }
 
@@ -202,11 +274,13 @@ public class Filtermanagement {
      * does not code a valid filter
      * a filter with same identifier
      */
-    public void addFilter(String input, int id) throws Exception, InvalidInputException {
+    public void addFilter(String input, int id) throws InvalidInputException, TablesNotAsExpectedException,
+            ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
+            DatabaseDoesNotExistException {
         this.addFilter(Filtermanagement.parseToFilter(input, id));
     }
 
-    static Filter parseToFilter(String input, int id) throws InvalidInputException, Exception {
+    static Filter parseToFilter(String input, int id) throws InvalidInputException {
         int i = 0;
         String filterName = input;
         String property1String = "";
@@ -331,7 +405,8 @@ public class Filtermanagement {
      * @param input string which might code a filter
      * @param id unique identifier of the new Filterobject
      */
-    public void addFiltergroup(String input, int id) throws Exception {
+    public void addFiltergroup(String input, int id) throws TablesNotAsExpectedException, ConnectionFailedException,
+            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
         Filtergroup myFiltergroup = new Filtergroup(input, true, id);
         this.addFilterGroup(myFiltergroup);
     }
@@ -355,10 +430,12 @@ public class Filtermanagement {
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
      * Filtersegment): void for every filter element of the new database
      */
-    public void setDatabase(GraphDatabase newDatabase) throws Exception {
+    public void setDatabase(GraphDatabase database) throws DatabaseDoesNotExistException,
+            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
         availableFilterGroups.clear();
         availableFilter.clear();
-        LinkedList<Filtersegment> activatedFilter = newDatabase.getFilters();
+        this.database = database;
+        LinkedList<Filtersegment> activatedFilter = database.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
                 if (element.getClass() == Filtergroup.class) {
@@ -380,7 +457,7 @@ public class Filtermanagement {
                 stringArray[currentColumn][1] = "+";
                 stringArray[currentColumn][2] = "0";
                 stringArray[currentColumn][3] = Filtermanagement.transformRelationToString(element);
-                stringArray[currentColumn][4] = "nothing";
+                stringArray[currentColumn][4] = "0";
                 stringArray[currentColumn][5] = "+";
                 stringArray[currentColumn][6] = String.valueOf(element.getValue1());
                 currentColumn++;
@@ -403,7 +480,7 @@ public class Filtermanagement {
                         stringArray[currentColumn][1] = "+";
                         stringArray[currentColumn][2] = "0";
                         stringArray[currentColumn][3] = Filtermanagement.transformRelationToString(groupElement);
-                        stringArray[currentColumn][4] = "nothing";
+                        stringArray[currentColumn][4] = "0";
                         stringArray[currentColumn][5] = "+";
                         stringArray[currentColumn][6] = String.valueOf(groupElement.getValue1());
                         currentColumn++;

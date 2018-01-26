@@ -40,10 +40,10 @@ public class FilterTable extends Table {
 	public Filtersegment getContent(int id)
 			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
 			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
-		Connection connection = this.getConnection();
+
 		String sql = "SELECT filter FROM " + this.name + " WHERE id = " + id;
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet result = statement.executeQuery();
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+
 		if (result.next()) {
 			return this.getInstanceOf(this.byteArrayToObject(result.getBytes("filter")));
 		}
@@ -61,10 +61,8 @@ public class FilterTable extends Table {
 			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
 			SQLException {
 
-		Connection connection = this.getConnection();
 		String sql = "SELECT filter FROM " + this.name;
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet result = statement.executeQuery();
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
 		LinkedList<Filtersegment> filters = new LinkedList<>();
 
 		while (result.next()) {
@@ -83,11 +81,12 @@ public class FilterTable extends Table {
 			SQLException, UnexpectedObjectException, IOException {
 
 		Filtersegment filter = this.getInstanceOf(object);
-		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, "
+				+ filter.getID() + ", "
+				+ filter.getIsActivated() + ")";
+
 		PreparedStatement statement = this.getConnection().prepareStatement(sql);
 		statement.setObject(1, this.objectToByteArray(filter));
-		statement.setObject(2, filter.getID());
-		statement.setObject(3, filter.getIsActivated());
 		statement.executeUpdate();
 	}
 
@@ -103,15 +102,14 @@ public class FilterTable extends Table {
 	protected void createTable()
 			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException,
 			ConnectionFailedException {
-		Connection connection = this.getConnection();
+
 		String sql = "CREATE TABLE IF NOT EXISTS "
 				+ this.name +" ("
 				+ "filter longblob, "
 				+ "id int NOT NULL, "
 				+ "state boolean, "
 				+ "PRIMARY KEY(id))";
-		PreparedStatement create = connection.prepareStatement(sql);
-		create.executeUpdate();
+		this.getConnection().prepareStatement(sql).executeUpdate();
 	}
 
 }
