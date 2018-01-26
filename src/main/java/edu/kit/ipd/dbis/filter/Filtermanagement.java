@@ -1,26 +1,14 @@
 package edu.kit.ipd.dbis.filter;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfTotalColorings;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.KkGraphNumberOfSubgraphs;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertexColorings;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -427,20 +415,45 @@ public class Filtermanagement {
     }
 
     private static Property testProperty(String input) throws InvalidInputException {
+		PropertyGraph graph = new PropertyGraph();
         Property property;
         switch (input) {
-            case "profile": property = new Profile(); return property;
-            case "averagedegree": property = new AverageDegree(); return property;
-            case "proportiondensity": property = new ProportionDensity(); return property;
-            case "structuredensity": property = new StructureDensity(); return property;
-            case "greatestDegree": property = new GreatestDegree(); return property;
-            case "kkgraphnumberofsubgraphs": property = new KkGraphNumberOfSubgraphs(); return property;
-            case "numberofcliques": property = new NumberOfCliques(); return property;
-            case "numberofedges": property = new NumberOfEdges(); return property;
-            case "numberoftotalcolorings": property = new NumberOfTotalColorings(); return property;
-            case "numberofvertexcolorings": property = new NumberOfVertexColorings(); return property;
-            case "numberofvertices": property = new NumberOfVertices(); return property;
-            case "smallestdegree": property = new SmallestDegree(); return property;
+			case "profile":
+				property = new Profile(graph);
+				return property;
+			case "averagedegree":
+				property = new AverageDegree(graph);
+				return property;
+			case "proportiondensity":
+				property = new ProportionDensity(graph);
+				return property;
+			case "structuredensity":
+				property = new StructureDensity(graph);
+				return property;
+			case "greatestDegree":
+				property = new GreatestDegree(graph);
+				return property;
+			case "kkgraphnumberofsubgraphs":
+				property = new KkGraphNumberOfSubgraphs(graph);
+				return property;
+			case "numberofcliques":
+				property = new NumberOfCliques(graph);
+				return property;
+			case "numberofedges":
+				property = new NumberOfEdges(graph);
+				return property;
+			case "numberoftotalcolorings":
+				property = new NumberOfTotalColorings(graph);
+				return property;
+			case "numberofvertexcolorings":
+				property = new NumberOfVertexColorings(graph);
+				return property;
+			case "numberofvertices":
+				property = new NumberOfVertices(graph);
+				return property;
+			case "smallestdegree":
+				property = new SmallestDegree(graph);
+				return property;
             default: throw new InvalidInputException();
         }
     }

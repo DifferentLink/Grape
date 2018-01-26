@@ -45,7 +45,7 @@ public class CalculationController {
 		// Trigger Graph calculation
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
 			if (calculationStatus == true) {
-				graph.calculateRemainingProperties();
+				graph.calculateProperties();
 				// Replacing graphs
 				database.replaceGraph(graph.getId(), graph);
 				table.update();
