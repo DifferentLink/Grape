@@ -318,7 +318,7 @@ public class Filtermanagement {
     private static Filter parseToFilter(String input, int id) throws InvalidInputException {
         int i = 0;
         String property1String = "";
-        while (input.charAt(i) != ' ') {
+        while (i < input.length() && input.charAt(i) != ' ') {
             property1String = property1String + input.charAt(i);
             i++;
         }
