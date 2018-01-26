@@ -10,27 +10,28 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class FilterUI extends JPanel {
-	private FilterController controller;
+	private final FilterController filterController;
 	private FilterManagement filterManagement;
 	private JPanel filterMenu;
 	private JPanel filter;
 	private Theme theme;
+	private JComboBox<String> filterDropdown;
 
 	private final int simpleFilterUIHeight = 22;
 
-	public FilterUI(FilterController controller, ResourceBundle language, Theme theme) {
+	public FilterUI(FilterController filterController, ResourceBundle language, Theme theme) {
 
-		this.controller = controller;
+		this.filterController = filterController;
 		this.theme = theme;
 
-		filterManagement = new FilterManagement();
+		filterManagement = new FilterManagement(filterController);
 
 		this.setLayout(new BorderLayout());
 		this.setBackground(theme.backgroundColor);
@@ -40,7 +41,8 @@ public class FilterUI extends JPanel {
 		filterMenu.setLayout(new GridBagLayout());
 
 		String[] filterMenuEntries = {"Save selected filter...", "Load filter..."}; // todo use language resource
-		JComboBox<String> filterDropdown = new JComboBox<>(filterMenuEntries);
+		filterDropdown = new JComboBox<>(filterMenuEntries);
+		filterDropdown.addActionListener(new ManageFilterAction());
 		filterDropdown.setFocusable(false);
 		filterDropdown.setMaximumSize(new Dimension(100, 100));
 		filterDropdown.setMinimumSize(new Dimension(100, 0));
@@ -77,10 +79,10 @@ public class FilterUI extends JPanel {
 
 		JButton newFilter = new JButton(" New filter "); // todo replace with string from language
 		newFilter.setBackground(theme.assertiveBackground);
-		newFilter.addActionListener(new NewFilterAction());
+		newFilter.addActionListener(new NewFilterAction(filterController));
 		JButton newFilterGroup = new JButton(" New Group "); // todo replace with string from language
 		newFilterGroup.setBackground(theme.assertiveBackground);
-		newFilterGroup.addActionListener(new NewFilterGroupAction());
+		newFilterGroup.addActionListener(new NewFilterGroupAction(filterController));
 		buttons.add(newFilter, buttonConstraints);
 		buttons.add(Box.createHorizontalStrut(5));
 		buttons.add(newFilterGroup, buttonConstraints);
@@ -146,14 +148,17 @@ public class FilterUI extends JPanel {
 		simpleFilterUI.setLayout(new BoxLayout(simpleFilterUI, BoxLayout.X_AXIS));
 		simpleFilterUI.add(new JLabel("⚫"));
 		JCheckBox isActive = new JCheckBox();
-		isActive.addActionListener(new ToggleFilterAction(simpleFilter, isActive.isSelected()));
+		isActive.setSelected(simpleFilter.isActive());
+		isActive.addActionListener(new ToggleFilterAction(simpleFilter, isActive));
 		simpleFilterUI.add(isActive);
 		JTextArea filterInput = new JTextArea(simpleFilter.getText());
+		filterInput.getDocument().addDocumentListener(new FilterInputChange(simpleFilter, filterInput));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		simpleFilterUI.add(filterInput);
 		JButton deleteFilter = new JButton("X");
 		deleteFilter.addActionListener(new RemoveFilterAction(simpleFilter.getID()));
 		deleteFilter.setBackground(theme.backgroundColor);
+		deleteFilter.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		deleteFilter.setPreferredSize(new Dimension(simpleFilterUIHeight, simpleFilterUIHeight));
 		simpleFilterUI.add(deleteFilter);
 		simpleFilterUI.setMaximumSize(new Dimension(Integer.MAX_VALUE, simpleFilterUIHeight));
@@ -165,8 +170,11 @@ public class FilterUI extends JPanel {
 		JPanel filterGroupHeaderUI = new JPanel();
 		filterGroupHeaderUI.setLayout(new BoxLayout(filterGroupHeaderUI, BoxLayout.X_AXIS));
 		JCheckBox isActive = new JCheckBox();
+		isActive.setSelected(filterGroup.isActive());
+		isActive.addActionListener(new ToggleFilterAction(filterGroup, isActive));
 		filterGroupHeaderUI.add(isActive);
-		JTextArea filterInput = new JTextArea(" filter Group " + filterGroup.getID());
+		JTextArea filterInput = new JTextArea(filterGroup.getText());
+		filterInput.getDocument().addDocumentListener(new FilterInputChange(filterGroup, filterInput));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		filterGroupHeaderUI.add(filterInput);
 		JButton deleteFilterGroup = new JButton("X");
@@ -195,9 +203,15 @@ public class FilterUI extends JPanel {
 
 	private class NewFilterAction implements ActionListener {
 
+		private final FilterController filterController;
+
+		private NewFilterAction(FilterController filterController) {
+			this.filterController = filterController;
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			filterManagement.addNewSimpleFilter();
+			filterManagement.addNewSimpleFilter(filterController);
 			update();
 			repaint();
 			revalidate();
@@ -206,9 +220,15 @@ public class FilterUI extends JPanel {
 
 	private class NewFilterGroupAction implements ActionListener {
 
+		private final FilterController filterController;
+
+		private NewFilterGroupAction(FilterController filterController) {
+			this.filterController = filterController;
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			filterManagement.addNewFilterGroup();
+			filterManagement.addNewFilterGroup(filterController, "");
 			update();
 			repaint();
 			revalidate();
@@ -218,16 +238,16 @@ public class FilterUI extends JPanel {
 	private class ToggleFilterAction implements ActionListener {
 
 		private final Filter filter;
-		private final boolean isActive;
+		private final JCheckBox checkBox;
 
-		public ToggleFilterAction(Filter filter, boolean isActive) {
+		public ToggleFilterAction(Filter filter, JCheckBox checkBox) {
 			this.filter = filter;
-			this.isActive = isActive;
+			this.checkBox = checkBox;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			filter.setActive(isActive);
+			filter.setActive(checkBox.isSelected());
 		}
 	}
 
@@ -247,7 +267,7 @@ public class FilterUI extends JPanel {
 		}
 	}
 
-	private class FilterInputChange implements DocumentListener {
+	private class FilterInputChange implements DocumentListener { // todo implement check if filter is valid
 
 		private final Filter filter;
 		private final JTextArea textArea;
@@ -259,14 +279,27 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void insertUpdate(DocumentEvent documentEvent) {
+			filter.setText(textArea.getText());
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent documentEvent) {
+			filter.setText(textArea.getText());
 		}
 
 		@Override
 		public void changedUpdate(DocumentEvent documentEvent) {
+			filter.setText(textArea.getText());
+		}
+	}
+
+	private class ManageFilterAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			switch ((String) Objects.requireNonNull(filterDropdown.getSelectedItem())) {
+				case "Save selected filter..." : filterManagement.exportVisibleFilters(); break; // todo make compatible with different languages (use language resource)
+				case "Load filter..." : filterManagement.importFilters(); break; // todo make compatible with different languages (use language resource)
+			}
 		}
 	}
 }
