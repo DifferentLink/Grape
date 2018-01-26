@@ -446,10 +446,10 @@ public class Filtermanagement {
     }
 
     /**
-     * checks whether the input string codes a valid filter. In case of success the method
+     * checks whether the input string codes a valid Filter. In case of success the method
      * addFiltersegment(filtersegment: Filtersegment): void is called and a new
-     * filter is added to the list of class Filtermanagement
-     * @param input string which might code a filter
+     * Filter is added to the list of class Filtermanagement
+     * @param input string which might code a Filter
      * @param id unique identifier of the new Filterobject
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
@@ -468,16 +468,12 @@ public class Filtermanagement {
     /**
      * used when initializing Grape or switching a database. The methode clears the current
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
-<<<<<<< HEAD:src/main/java/edu/kit/ipd/dbis/Filter/Filtermanagement.java
      * Filtersegment): void for every Filter element of the new database
      * @param database new database which should be used in future
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
-=======
-     * Filtersegment): void for every filter element of the new database
->>>>>>> master:src/main/java/edu/kit/ipd/dbis/filter/Filtermanagement.java
      */
     public void setDatabase(GraphDatabase database) throws DatabaseDoesNotExistException,
             AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
