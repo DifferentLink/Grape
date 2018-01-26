@@ -1,11 +1,14 @@
 package edu.kit.ipd.dbis.controller;
 
-
-
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.exceptions.files.FileContentCouldNotBeReadException;
+import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class DatabaseController {
@@ -23,14 +26,14 @@ public class DatabaseController {
 		generate = GenerateController.getInstance();
 		calculation = CalculationController.getInstance();
 		editor = GraphEditorController.getInstance();
-		// filter = FilterController.getInstance();
+		filter = FilterController.getInstance();
 		connector = new FileManager();
 	}
 
 	/**
 	 * Triggers the database to open a new database table.
 	 */
-	public void newDatabase(String url, String user, String password, String name) throws Exception {
+	public void newDatabase(String url, String user, String password, String name) throws Exception, DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException, TableAlreadyExistsException, ConnectionFailedException {
 		database = connector.createGraphDatabase(url, user, password, name);
 		this.updateDatabases();
 	}
@@ -40,7 +43,7 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the database.
 	 */
-	public void loadDatabase(String filepath) throws Exception {
+	public void loadDatabase(String filepath) throws Exception, SQLException, AccessDeniedForUserException, FileContentNotAsExpectedException, TablesNotAsExpectedException, ConnectionFailedException, FileNotFoundException, FileContentCouldNotBeReadException, DatabaseDoesNotExistException {
 		database = connector.loadGraphDatabase(filepath);
 		this.updateDatabases();
 	}
@@ -50,7 +53,7 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the Database.
 	 */
-	public void mergeDatabase(String filepath) throws Exception {
+	public void mergeDatabase(String filepath) throws Exception, SQLException, AccessDeniedForUserException, FileContentNotAsExpectedException, TablesNotAsExpectedException, ConnectionFailedException, FileNotFoundException, FileContentCouldNotBeReadException, DatabaseDoesNotExistException {
 		GraphDatabase mergeDatabase;
 		mergeDatabase = connector.loadGraphDatabase(filepath);
 		database.merge(mergeDatabase);
@@ -83,7 +86,7 @@ public class DatabaseController {
 		generate.setDatabase(database);
 		calculation.setDatabase(database);
 		editor.setDatabase(database);
-		//filter.setDatabase(database);
+		filter.setDatabase(database);
 	}
 
 }

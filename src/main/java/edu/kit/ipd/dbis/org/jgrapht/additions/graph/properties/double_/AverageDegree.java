@@ -11,6 +11,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public class AverageDegree extends DoubleProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph the input graph
+	 */
+	public AverageDegree(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Double calculateAlgorithm(PropertyGraph graph) {
 		AverageDegreeFinder finder = new AverageDegreeFinder(graph);

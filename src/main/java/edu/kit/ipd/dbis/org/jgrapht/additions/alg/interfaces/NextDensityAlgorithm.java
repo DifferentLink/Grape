@@ -14,6 +14,6 @@ public interface NextDensityAlgorithm<V, E> {
 	 *
 	 * @return the closest graph with a higher density
 	 */
-	Graph<V, E> getNextDensityGraph();
+	Graph<V, E> getNextDenserGraph();
 }
 

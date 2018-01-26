@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
+@Deprecated
 public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 
 	@Override

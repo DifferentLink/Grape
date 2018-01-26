@@ -6,8 +6,20 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 import org.kohsuke.MetaInfServices;
 
+/**
+ * the profile property
+ */
 @MetaInfServices
 public class Profile extends ComplexProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph the input graph
+	 */
+	public Profile(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected ProfileDensityAlgorithm.Profile calculateAlgorithm(PropertyGraph graph) {
 		MinimalProfileAlgorithm alg = new MinimalProfileAlgorithm();

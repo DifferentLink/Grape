@@ -33,8 +33,9 @@ public abstract class Table {
 	 * @throws ConnectionFailedException
 	 */
 	public Table(String url, String user, String password, String name)
-			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
-		this.url = url;
+			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException,
+			ConnectionFailedException {
+		this.url = url + "?autoReconnect=true&useSSL=false";
 		this.user = user;
 		this.password = password;
 		this.name = name;
@@ -84,10 +85,9 @@ public abstract class Table {
 	public void delete(int id)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
-		Connection connection = this.getConnection();
-		String sql = "DELETE * FROM " + this.name + " WHERE id = " + id;
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.executeUpdate();
+
+		String sql = "DELETE FROM " + this.name + " WHERE id = " + id;
+		this.getConnection().prepareStatement(sql).executeUpdate();
 	}
 
 	/**
@@ -119,9 +119,9 @@ public abstract class Table {
 	public LinkedList<Integer> getIds()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
-		Connection connection = this.getConnection();
+
 		String sql = "SELECT id FROM " + this.name;
-		ResultSet result = connection.prepareStatement(sql).executeQuery();
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
 		LinkedList<Integer> ids = new LinkedList<>();
 		while (result.next()) {
 			ids.add(result.getInt("id"));
@@ -138,7 +138,6 @@ public abstract class Table {
 	 */
 	public Connection getConnection()
 			throws ConnectionFailedException, AccessDeniedForUserException, DatabaseDoesNotExistException {
-
 		try {
 			Class.forName(this.DRIVER);
 			Connection connection = DriverManager.getConnection(this.url, this.user, this.password);
@@ -163,15 +162,13 @@ public abstract class Table {
 	public void switchState(int id)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
-		Connection connection= this.getConnection();
-		String sql = "SELECT state FROM " + this.name + " WHERE id = " + id;
-		ResultSet result = connection.prepareStatement(sql).executeQuery();
 
+		String sql = "SELECT state FROM " + this.name + " WHERE id = " + id;
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
 		if (result.next()) {
-			boolean value = (result.getInt("state") == 1) ? (false) : (true);
+			boolean value = (result.getInt("state") != 1);
 			sql = "UPDATE " + this.name + " SET state = " + value + " WHERE id = " + id;
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			this.getConnection().prepareStatement(sql).executeUpdate();
 		}
 
 	}
@@ -217,13 +214,13 @@ public abstract class Table {
 	 * @throws DatabaseDoesNotExistException
 	 * @throws SQLException
 	 */
-	public HashSet<String> getColumns()
+	public LinkedList<String> getColumns()
 			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
 			SQLException {
-		Connection connection = this.getConnection();
+
 		String sql = "SHOW COLUMNS FROM " + this.name;
-		ResultSet result = connection.prepareStatement(sql).executeQuery();
-		HashSet<String> columns = new HashSet<>();
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		LinkedList<String> columns = new LinkedList<>();
 		while (result.next()) {
 			columns.add(result.getString(1));
 		}

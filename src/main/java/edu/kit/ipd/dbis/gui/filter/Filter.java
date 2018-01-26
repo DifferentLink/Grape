@@ -5,9 +5,9 @@
 package edu.kit.ipd.dbis.gui.filter;
 
 public abstract class Filter {
-	protected final int id;
-	protected boolean isActive = true;
-	protected String text = "...";
+	private final int id;
+	private boolean isActive = false;
+	private String text = "";
 
 	public Filter(final int id) {
 		this.id = id;
@@ -21,16 +21,8 @@ public abstract class Filter {
 		this.text = text;
 	}
 
-	public void toggle() {
-		isActive = !isActive;
-	}
-
-	public void disable() {
-		isActive = false;
-	}
-
-	public void enable() {
-		isActive = true;
+	public boolean isActive() {
+		return this.isActive;
 	}
 
 	public void setActive(boolean active) {

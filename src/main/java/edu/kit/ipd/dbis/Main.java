@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis;
 import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.themes.GrapeTheme;
+import edu.kit.ipd.dbis.log.Log;
 
 import javax.swing.*;
 import java.util.Locale;
@@ -25,6 +26,7 @@ public class Main {
 				FilterController.getInstance(),
 				GenerateController.getInstance(),
 				GraphEditorController.getInstance(),
+				new Log(100),
 				getLanguage(), new GrapeTheme()));
 	}
 

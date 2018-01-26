@@ -10,4 +10,9 @@ public class SimpleFilter extends Filter {
 	public SimpleFilter(int id) {
 		super(id);
 	}
+
+	public SimpleFilter(int id, String text) {
+		super(id);
+		super.setText(text);
+	}
 }

@@ -12,7 +12,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -20,6 +19,7 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  * This class creates GraphDatabase-Objects and saves them by creating text files.
@@ -94,8 +94,22 @@ public class FileManager implements Connector {
 	}
 
 	@Override
-	public void deleteGraphDatabase(GraphDatabase database) {
-		//TODO: implementieren?
+	public void deleteGraphDatabase(GraphDatabase database)
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
+			SQLException {
+
+		GraphTable graphs = database.getGraphTable();
+		FilterTable filters = database.getFilterTable();
+		String sql = "DROP TABLE " + graphs.getName();
+		this.getConnection(
+				filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
+
+		sql = "DROP TABLE " + filters.getName();
+		this.getConnection(
+				filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
+
+		//TODO: delete .txt file
+
 	}
 
 	/**
@@ -107,7 +121,7 @@ public class FileManager implements Connector {
 	 */
 	private boolean tableExists(Connection connection, String name) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet resultSet = meta.getTables(null, null, null, null);
+		ResultSet resultSet = meta.getTables(null, null, "%", null);
 		while (resultSet.next()) {
 			if (resultSet.getString(3).equals(name)) {
 				return true;
@@ -130,6 +144,7 @@ public class FileManager implements Connector {
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			url += "?autoReconnect=true&useSSL=false";
 			Connection connection = DriverManager.getConnection(url, user, password);
 			return connection;
 		} catch (MySQLSyntaxErrorException e) {
@@ -173,7 +188,7 @@ public class FileManager implements Connector {
 			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
 			DatabaseDoesNotExistException {
 
-		HashSet<String> columns = filterTable.getColumns();
+		LinkedList<String> columns = filterTable.getColumns();
 		HashSet<String> names = new HashSet<>();
 		names.add("id");
 		names.add("state");
@@ -197,23 +212,22 @@ public class FileManager implements Connector {
 			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
 			DatabaseDoesNotExistException {
 
-		HashSet<String> columns = graphTable.getColumns();
+		LinkedList<String> columns = graphTable.getColumns();
 		HashSet<String> names = new HashSet<>();
 		names.add("id");
 		names.add("graph");
-		names.add("BfsCode");
-		names.add("nothing");
+		names.add("bfscode");
 		names.add("state");
-		names.add("isCalculated");
+		names.add("iscalculated");
 
 		PropertyGraph graph = new PropertyGraph();
 		Collection<Property> properties = graph.getProperties();
 
 		for (Property property : properties) {
 			if (property.getClass().getSuperclass() == IntegerProperty.class) {
-				names.add(property.toString());
+				names.add(property.getClass().getSimpleName().toLowerCase());
 			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
-				names.add(property.toString());
+				names.add(property.getClass().getSimpleName().toLowerCase());
 			}
 		}
 		return (columns.containsAll(names) && names.containsAll(columns));

@@ -9,7 +9,16 @@ import org.kohsuke.MetaInfServices;
  * can only be represented as an object which cannot be sorted.
  */
 @MetaInfServices
-public abstract class ComplexProperty extends Property{
+public abstract class ComplexProperty extends Property {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph the input graph
+	 */
+	public ComplexProperty(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected abstract Object calculateAlgorithm(PropertyGraph graph);
 }

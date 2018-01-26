@@ -9,6 +9,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public class NumberOfEdges extends IntegerProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph the input graph
+	 */
+	public NumberOfEdges(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		return graph.edgeSet().size();

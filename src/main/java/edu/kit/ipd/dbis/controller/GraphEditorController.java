@@ -1,8 +1,13 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 public class GraphEditorController {
 
@@ -35,11 +40,16 @@ public class GraphEditorController {
 	 * graphlist of CalculationController and deletes the old graph from the
 	 * database.
 	 *
-	 * @param graph the PropertyGraph<V,E> to add.
-	 * @param oldID the id of the modified graph from the Grapheditor.
+	 * @param newGraph the PropertyGraph<V,E> to add.
+	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
-	public void addEditedGraph(PropertyGraph graph, int oldID) {
-
+	public void addEditedGraph(PropertyGraph newGraph, int oldID) throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException, InsertionFailedException {
+		if (database.graphExists(newGraph)) {
+			return;
+		} else {
+			database.addGraph(newGraph);
+			database.deleteGraph(oldID);
+		}
 	}
 
 	/**
@@ -58,46 +68,49 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 */
 	public void calculateDenserGraph(PropertyGraph graph) {
-
+		NextDenserGraphFinder denserGraph = new NextDenserGraphFinder(graph);
+		//database.addGraph(denserGraph.getNextDensityGraph());
 	}
 
-	/*	*//**
+	/**
 	 * calculates a valid colorization for a specific graph.
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the graphcolorization.
-	 *//*
-	public Coloring getVertexColoring(PropertyGraph graph) {
-		return null;
-	}*/
+	 */
+	public VertexColoringAlgorithm.Coloring getVertexColoring(PropertyGraph graph) {
+		MinimalVertexColoring coloring = new MinimalVertexColoring(graph);
+		return coloring.getColoring();
+	}
 
 	/**
-	 * calculates a valid colorization for a specic graph
+	 * calculates a valid colorization for a specific graph
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the graphcolorization.
 	 */
 	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph graph) {
-		return null;
+		MinimalTotalColoring coloring = new MinimalTotalColoring(graph);
+		return coloring.getColoring();
 	}
-
-	/*	*//**
-	 * calculates a coloring which is not equivalent to current coloring
-	 *
-	 * @param graph the PropertyGraph<V,E> to calculate.
-	 * @return the next valid alternative Coloring.
-	 * @throws NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
-	 *//*
-	public Coloring getAlternateVertexColoring(PropertyGraph graph) {
-		return null;
-	}*/
 
 	/**
 	 * calculates a coloring which is not equivalent to current coloring
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the next valid alternative Coloring.
-	 * @throws NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
+	 * @throws //NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
+	 */
+	public VertexColoringAlgorithm.Coloring getAlternateVertexColoring(PropertyGraph graph) {
+		return null;
+	}
+
+	/**
+	 * calculates a coloring which is not equivalent to current coloring
+	 *
+	 * @param graph the PropertyGraph<V,E> to calculate.
+	 * @return the next valid alternative Coloring.
+	 * @throws //NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
 	 */
 	public TotalColoringAlgorithm.TotalColoring getAlternateTotalColoring(PropertyGraph graph) {
 		return null;

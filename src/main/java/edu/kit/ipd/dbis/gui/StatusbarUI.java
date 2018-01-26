@@ -5,6 +5,9 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.themes.Theme;
+import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.log.EventType;
+import edu.kit.ipd.dbis.log.History;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,6 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 
 public class StatusbarUI extends JPanel {
@@ -35,10 +39,11 @@ public class StatusbarUI extends JPanel {
 		this.setForeground(theme.foregroundColor);
 
 		JButton log = new JButton("Log");
+		log.addActionListener(new ShowLogAction(new LogUI(new History(20), language, theme), log));
 		log.setBackground(theme.backgroundColor);
 		log.setForeground(theme.foregroundColor);
 		log.setFont(theme.defaultFont);
-		log.getSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
+		log.setSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
 		log.setBorder(BorderFactory.createEmptyBorder());
 
 		this.add(Box.createHorizontalGlue());
@@ -78,6 +83,21 @@ public class StatusbarUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+		}
+	}
+
+	private class ShowLogAction implements ActionListener {
+		private final LogUI logUI;
+		private Component component;
+
+		public ShowLogAction(LogUI logUI, Component component) {
+			this.logUI = logUI;
+			this.component = component;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			logUI.drawLog(component);
 		}
 	}
 }

@@ -21,6 +21,7 @@ public interface BulkGraphGenerator<V, E> {
 	 * @param maxVertices the maximal number of vertices
 	 * @param minEdges the minimal number of edges
 	 * @param maxEdges the maximal number of edges
+	 * @throws IllegalArgumentException if the parameters are not valid
 	 */
 	void generateBulk(Set<PropertyGraph> target, int quantity, int minVertices, int maxVertices, int minEdges,
 					  int maxEdges);

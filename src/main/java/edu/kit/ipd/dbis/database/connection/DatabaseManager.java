@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.database.connection;
 
 import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.LinkedList;
@@ -223,7 +224,8 @@ public interface DatabaseManager {
 	 * @throws AccessDeniedForUserException
 	 * @throws UnexpectedObjectException
 	 */
-	PropertyGraph getGraphById(int id)throws TablesNotAsExpectedException, ConnectionFailedException, DatabaseDoesNotExistException,
+	PropertyGraph getGraphById(int id)
+			throws TablesNotAsExpectedException, ConnectionFailedException, DatabaseDoesNotExistException,
 			AccessDeniedForUserException, UnexpectedObjectException;
 
 	/**
@@ -238,5 +240,8 @@ public interface DatabaseManager {
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 
+	LinkedList<Double> getValues(String[][] filters, String column)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			TablesNotAsExpectedException;
 }
 
