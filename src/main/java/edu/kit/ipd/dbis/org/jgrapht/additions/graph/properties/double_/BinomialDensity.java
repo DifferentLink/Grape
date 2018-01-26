@@ -1,27 +1,29 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.ProportionDensityAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.BinomialDensityAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NodeSpecificDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
 import org.kohsuke.MetaInfServices;
 
 /**
- * the proportion density property
+ * Represents the binomial density
+ * in a graph.
  */
 @MetaInfServices
-public class ProportionDensity extends DoubleProperty {
+public class BinomialDensity extends DoubleProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph  the input graph
+	 * @param graph the input graph
 	 */
-	public ProportionDensity(PropertyGraph graph) {
+	public BinomialDensity(PropertyGraph graph) {
 		super(graph);
 	}
 
 	@Override
 	protected Double calculateAlgorithm(PropertyGraph graph) {
-		ProportionDensityAlgorithm alg = new ProportionDensityAlgorithm(graph);
+		BinomialDensityAlgorithm alg = new BinomialDensityAlgorithm(graph);
 		return alg.getDensity();
 	}
 }

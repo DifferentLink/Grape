@@ -35,7 +35,7 @@ public interface TotalColoringAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class TotalColoringImplementation<V, E> implements TotalColoring<V, E> {
+	class TotalColoringImpl<V, E> implements TotalColoring<V, E> {
 
 		@Override
 		public int getNumberColors() {

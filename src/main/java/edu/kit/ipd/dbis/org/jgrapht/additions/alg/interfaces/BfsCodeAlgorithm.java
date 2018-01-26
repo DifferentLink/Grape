@@ -16,6 +16,7 @@ public interface BfsCodeAlgorithm<V, E> {
 	/**
 	 * Get the bfs code
 	 *
+	 * @param graph the input graph
 	 * @return the bfs code
 	 */
 	BfsCode<V, E> getBfsCode(PropertyGraph graph);
@@ -93,8 +94,8 @@ public interface BfsCodeAlgorithm<V, E> {
 		@Override
 		public int getNumberOfBackwardEdges() {
 			int cnt = 0;
-			for (int i = 0; i < code.length; i++) {
-				if (code[i] == -1) {
+			for (int i : code) {
+				if (i == -1) {
 					cnt++;
 				}
 			}
@@ -107,6 +108,7 @@ public interface BfsCodeAlgorithm<V, E> {
 			for (int i = 0; i < code.length; i++) {
 				if (code[i] == -1) {
 					int[] edge = {code[i + 1], code[i + 2]};
+					edges.add(edge);
 				}
 			}
 			return edges;
@@ -117,6 +119,7 @@ public interface BfsCodeAlgorithm<V, E> {
 		 * @param o other BfsCode
 		 * @return -1, 0, 1 if this is less than, equal to, or greater than o.
 		 */
+
 		@Override
 		public int compareTo(Object o) {
 			int[] b2 = ((BfsCodeImpl) o).getCode();

@@ -44,8 +44,8 @@ public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerat
 			}
 			//TODO: temporary solution (find a better one) / break after find no new graphs after "value" loops
 			if (cnt > 5 * quantity) {
-				throw new IllegalArgumentException("Only " + target.size() + " graphs found. Quantity: " + quantity +
-						" too big.");
+				throw new IllegalArgumentException("Only " + target.size() + " graphs found. Quantity: " + quantity
+						+ " too big.");
 			}
 		}
 	}

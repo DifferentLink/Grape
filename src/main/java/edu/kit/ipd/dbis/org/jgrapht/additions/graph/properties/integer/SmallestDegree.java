@@ -11,6 +11,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public class SmallestDegree extends IntegerProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph the input graph
+	 */
+	public SmallestDegree(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		MinDegreeFinder finder = new MinDegreeFinder(graph);

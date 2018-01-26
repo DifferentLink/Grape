@@ -1,8 +1,11 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.NumberDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -30,6 +33,18 @@ public class StructureDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
 
 	@Override
 	public double getDensity() {
-		return 0.0;
+		BfsCodeAlgorithm.BfsCodeImpl bfsCode =
+				(BfsCodeAlgorithm.BfsCodeImpl) graph.getProperty(BfsCode.class).getValue();
+		List<int[]> backwardEdges = bfsCode.getBackwardEdges();
+		double numerator = 0;
+		for (int[] edge : backwardEdges) {
+			numerator += (1 / (Math.abs(edge[0] - edge[1])));
+		}
+		double denumerator = 0;
+		int k = graph.vertexSet().size(); //number of vertices
+		for (int i = 1; i <= k - 2; i++) {
+			denumerator += (i * (1 / (k - 1 - i)));
+		}
+		return numerator / denumerator;
 	}
 }

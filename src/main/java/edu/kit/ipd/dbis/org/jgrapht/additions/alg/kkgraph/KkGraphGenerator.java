@@ -28,7 +28,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 	@Override
 	public KkGraph getKkGraph() {
-		//TODO: implement me
-		return null;
+		//TODO: implement me (empty implementation for test in PropertyGraphTest)
+		return new KkGraphImpl(null, 2);
 	}
 }

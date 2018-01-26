@@ -2,7 +2,6 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.List;
 
 /**
  * An algorithm that computes a profile of a graph.
@@ -14,6 +13,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 	/**
 	 * Get the profile.
 	 *
+	 * @param graph the input graph
 	 * @return the profile
 	 */
 	Profile getProfile(PropertyGraph<V, E> graph);
@@ -42,6 +42,11 @@ public interface ProfileDensityAlgorithm<V, E> {
 	class ProfileImpl<V, E> implements Profile<V, E> {
 		private int[][] profile;
 
+		/**
+		 * constructs a new profile
+		 *
+		 * @param profile the profile matrix
+		 */
 		public ProfileImpl(int[][] profile) {
 			this.profile = profile;
 		}

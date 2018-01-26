@@ -1,7 +1,5 @@
 package edu.kit.ipd.dbis.controller;
 
-
-
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;

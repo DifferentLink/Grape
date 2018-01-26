@@ -50,23 +50,21 @@ public class MinimalProfileAlgorithmTest {
 		return graph;
 	}
 
-
 	@Test
 	public void profileTest() {
 		PropertyGraph graph = generateSimpleTestGraph1();
 		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
 		int[][] result = alg.getProfile(graph).getMatrix();
-		/**
-		int[][] profile = {{1},{2}};
+
+		int[][] profile = {{1,1,2,1,1,3,-1,2,3,1,1,4,1,1,5,-1,4,5,1,1,6,1,2,7,-1,4,7,-1,6,7},
+		 {1,1,2,1,1,3,-1,2,3,1,1,4,1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7},
+		 {1,1,2,1,1,3,-1,2,3,1,1,4,1,2,5,-1,4,5,1,2,6,-1,4,6,1,2,7,-1,5,7},
+		 {1,1,2,1,1,3,-1,2,3,1,2,4,1,3,5,-1,4,5,1,3,6,-1,4,6,1,3,7,-1,5,7},
+		 {1,1,2,1,1,3,-1,2,3,1,2,4,1,3,5,-1,4,5,1,3,6,-1,4,6,1,3,7,-1,5,7},
+		 {1,1,2,1,1,3,1,1,4,1,2,5,-1,3,5,-1,4,5,1,3,6,-1,5,6,1,4,7,-1,5,7},
+		 {1,1,2,1,1,3,1,2,4,-1,3,4,1,2,5,-1,3,5,1,3,6,-1,4,6,1,3,7,-1,5,7}};
 		ProfileDensityAlgorithm.Profile p = new ProfileDensityAlgorithm.ProfileImpl(profile);
 		Assert.assertTrue(p.compareTo(new ProfileDensityAlgorithm.ProfileImpl<>(result)) == 0);
-		 */
-		for (int i = 0; i < result.length; i++) {
-			for (int j = 0; j < result[0].length; j++) {
-				System.out.print(result[i][j]);
-			}
-			System.out.println();
-		}
 	}
 
 	@Test

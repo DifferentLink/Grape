@@ -1,10 +1,18 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * The minimal vertex coloring algorithm.
@@ -31,6 +39,10 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 
+	/**
+	 * get colorings
+	 * @return all colorings
+	 */
 	public List<Coloring<V>> getColorings() {
 		return null;
 	}
@@ -40,7 +52,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		// brute force algorithm that determines
 		// a minimal vertex coloring.
 		// needs to be optimized!
-		int numberOfVertices = this.graph.getNumberOfVertices();
+		int numberOfVertices = (int) this.graph.getProperty(NumberOfVertices.class).getValue();
 		// give vertices an order
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
 		int[] colors = new int[numberOfVertices];
@@ -75,6 +87,13 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return null;
 	}
 
+	/**
+	 * get permutations from a
+	 *
+	 * @param n length of the permutations
+	 * @param a the start array
+	 * @return all permutations
+	 */
 	protected List<int[]> getPermutations(int n, int[] a) {
 		List<int[]> result = new ArrayList<>();
 		int[] c = new int[n];
@@ -118,6 +137,13 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return new ColoringImpl(colors, differentColors.size());
 	}
 
+	/**
+	 * checka if the coloring is valid
+	 *
+	 * @param coloring the coloring
+	 * @param graph the graph
+	 * @return if the coloring is valid on the graph
+	 */
 	protected boolean isValidVertexColoring(Coloring<V> coloring, Graph<V, E> graph) {
 		for (Set<V> colorClass : coloring.getColorClasses()) {
 			for (V v : colorClass) {

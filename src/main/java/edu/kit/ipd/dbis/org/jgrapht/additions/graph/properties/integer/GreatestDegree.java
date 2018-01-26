@@ -11,6 +11,15 @@ import org.kohsuke.MetaInfServices;
  */
 @MetaInfServices
 public class GreatestDegree extends IntegerProperty {
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph the input graph
+	 */
+	public GreatestDegree(PropertyGraph graph) {
+		super(graph);
+	}
+
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		MaxDegreeFinder finder = new MaxDegreeFinder(graph);

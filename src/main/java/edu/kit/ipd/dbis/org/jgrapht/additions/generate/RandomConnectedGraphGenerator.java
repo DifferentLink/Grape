@@ -55,13 +55,33 @@ public class RandomConnectedGraphGenerator<V, E> implements GraphGenerator<V, E,
 		}
 
 		//generate the random number of edges in the interval the is possible according to the vertex interval
-		int rangeE = (this.maxVertices * (this.maxVertices - 1) / 2) - (this.minVertices - 1);
-		if (rangeE < 0) {
-			throw new IllegalArgumentException("negative edge range");
+
+		int maxE = (this.maxVertices * (this.maxVertices - 1) / 2);
+		//number of different possibilities of the edge number (edge input not respected)
+		int rangeE1 = maxE - (this.minVertices - 1);
+		if (rangeE1 < 0) {
+			throw new IllegalArgumentException("maxVertices too small");
 		}
-		int numberOfEdges = (this.minVertices - 1)
-				+ (int) (Math.random()
-				* (Math.min((rangeE + 1), (this.maxEdges - this.minEdges + 1))));
+
+		//range from minEdges to maxEdges
+		int rangeE2 = this.maxEdges - (this.minVertices - 1);
+		if (rangeE2 < 0) {
+			throw new IllegalArgumentException("maxEdge too small or minVertices too big");
+		}
+		//range from minEdges to maxE
+		int rangeE3 = maxE - this.minEdges;
+		if (rangeE3 < 0) {
+			throw new IllegalArgumentException("min edge count too big or maxVertices too small");
+		}
+		int numberOfEdges;
+		if (this.minEdges > (this.minVertices - 1)) {
+			numberOfEdges = this.minEdges
+					+ (int) (Math.random() * (Math.min(maxE, this.maxEdges) - this.minEdges + 1));
+		} else {
+			numberOfEdges = this.minVertices - 1
+					+ (int) (Math.random() * (Math.min(maxE, this.maxEdges) - (this.minVertices - 1) + 1));
+		}
+
 
 		//generate the random number of vertices
 		int minV = Math.max((int) (
