@@ -14,7 +14,6 @@ import java.util.Iterator;
  * @param <E> the graph edge type
  */
 public class MinimalProfileAlgorithm<V, E> implements ProfileDensityAlgorithm {
-	//TODO: minmalProfil.getCode[1] == minimalBfsCode -> muss nicht nochmal extra ausgerechnet werden
 
 	@Override
 	public Profile getProfile(PropertyGraph graph) {

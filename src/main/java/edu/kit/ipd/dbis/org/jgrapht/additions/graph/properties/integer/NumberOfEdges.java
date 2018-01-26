@@ -12,7 +12,7 @@ public class NumberOfEdges extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public NumberOfEdges(PropertyGraph graph) {
 		super(graph);

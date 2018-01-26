@@ -14,7 +14,7 @@ public class SmallestDegree extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public SmallestDegree(PropertyGraph graph) {
 		super(graph);

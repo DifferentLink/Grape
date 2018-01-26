@@ -5,12 +5,15 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
 import org.kohsuke.MetaInfServices;
 
+/**
+ * the proportion density property
+ */
 @MetaInfServices
 public class ProportionDensity extends DoubleProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph  the input graph
 	 */
 	public ProportionDensity(PropertyGraph graph) {
 		super(graph);

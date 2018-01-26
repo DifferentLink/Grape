@@ -12,7 +12,7 @@ public class NumberOfTotalColorings extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public NumberOfTotalColorings(PropertyGraph graph) {
 		super(graph);

@@ -14,7 +14,7 @@ public class GreatestDegree extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public GreatestDegree(PropertyGraph graph) {
 		super(graph);

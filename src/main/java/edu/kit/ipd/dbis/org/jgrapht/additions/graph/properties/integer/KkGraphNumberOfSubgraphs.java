@@ -7,7 +7,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.KkGraph;
 import org.kohsuke.MetaInfServices;
 
 /**
- * TODO: design change
  * Calculates a number of subgraphs of a graph's Kk-graph.
  */
 @MetaInfServices
@@ -15,7 +14,7 @@ public class KkGraphNumberOfSubgraphs extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public KkGraphNumberOfSubgraphs(PropertyGraph graph) {
 		super(graph);

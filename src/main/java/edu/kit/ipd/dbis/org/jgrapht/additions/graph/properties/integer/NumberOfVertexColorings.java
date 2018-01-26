@@ -5,7 +5,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
 import org.kohsuke.MetaInfServices;
 
 /**
- * TODO: design change
  * Calculates the number of vertex colorings.
  */
 @MetaInfServices
@@ -13,7 +12,7 @@ public class NumberOfVertexColorings extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public NumberOfVertexColorings(PropertyGraph graph) {
 		super(graph);

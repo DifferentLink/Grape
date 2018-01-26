@@ -1,24 +1,30 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
-import org.kohsuke.MetaInfServices;
-
-import java.io.Serializable;
-
 /**
  * Represents a graph's property
  */
-public abstract class Property implements Serializable{
+public abstract class Property {
 	private Object value;
+	private PropertyGraph graph;
+
+	/**
+	 * Standard constructor
+	 *
+	 * @param graph the input graph
+	 */
+	public Property(PropertyGraph graph) {
+		this.graph = graph;
+	}
 
 	/**
 	 * Method which induces the calculation
 	 * of the property
 	 *
-	 * @param graph target graph
 	 */
-	public void calculate(PropertyGraph graph) {
-		this.value = this.calculateAlgorithm(graph);
+	protected void calculate() {
+		if (this.value == null) {
+			this.value = this.calculateAlgorithm(this.graph);
+		}
 	}
 
 	/**
@@ -35,6 +41,9 @@ public abstract class Property implements Serializable{
 	 * @return attribute value
 	 */
 	public Object getValue() {
+		if (this.value == null) {
+			this.calculate();
+		}
 		return this.value;
 	}
 }

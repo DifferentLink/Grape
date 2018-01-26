@@ -1,24 +1,31 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 import org.kohsuke.MetaInfServices;
 
+import java.util.Set;
+
+
+/**
+ * the total coloring property
+ */
 @MetaInfServices
-public class TotalColorings extends ComplexProperty {
+public class TotalColoring extends ComplexProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
-	public TotalColorings(PropertyGraph graph) {
+	public TotalColoring(PropertyGraph graph) {
 		super(graph);
 	}
 
 	@Override
 	protected TotalColoringAlgorithm.TotalColoring calculateAlgorithm(PropertyGraph graph) {
-		// TODO: need method calculateAllColorings()
-		return null;
+		MinimalTotalColoring alg = new MinimalTotalColoring(graph);
+		return alg.getColoring();
 	}
 }

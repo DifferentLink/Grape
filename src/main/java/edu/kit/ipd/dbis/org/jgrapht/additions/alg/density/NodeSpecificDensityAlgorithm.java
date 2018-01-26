@@ -5,7 +5,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.NumberDensityAlgori
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,17 +31,10 @@ public class NodeSpecificDensityAlgorithm<V, E> implements NumberDensityAlgorith
 
 	@Override
 	public double getDensity() {
-		BfsCodeAlgorithm.BfsCodeImpl bfsCode = new BfsCodeAlgorithm.BfsCodeImpl((int[]) graph.getProperty(BfsCode.class).getValue());
-		List<int[]> backwardEdges = bfsCode.getBackwardEdges();
-		double numerator = 0 ;
-		for (int[] edge : backwardEdges) {
-			numerator += (1 / (Math.abs(edge[0] - edge[1])));
+		int maxEdges = 0;
+		for (int i = graph.vertexSet().size() - 1; i > 0; i--) {
+			maxEdges += i;
 		}
-		double denumerator = 0;
-		int k = graph.vertexSet().size(); //number of vertices
-		for (int i = 1; i <= k - 2; i++) {
-			denumerator += (i * (1 / (k - 1 - i)));
-		}
-		return numerator / denumerator;
+		return maxEdges / graph.edgeSet().size();
 	}
 }
