@@ -52,6 +52,10 @@ public class GraphEditorController {
 		}
 	}
 
+	public void addNewGraph(PropertyGraph graph) { // todo implement me
+
+	}
+
 	/**
 	 * checks if the graph is valid
 	 *
@@ -60,14 +64,14 @@ public class GraphEditorController {
 	 */
 	public boolean isValidGraph(PropertyGraph graph) {
 		return true;
-	}
+	} // todo throw exception for gui
 
 	/**
 	 * triggers the calculation of the next denser graph for a specific graph
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 */
-	public void calculateDenserGraph(PropertyGraph graph) {
+	public void addNextDenserToDatabase(PropertyGraph graph) {
 		NextDenserGraphFinder denserGraph = new NextDenserGraphFinder(graph);
 		//database.addGraph(denserGraph.getNextDensityGraph());
 	}
@@ -101,7 +105,7 @@ public class GraphEditorController {
 	 * @return the next valid alternative Coloring.
 	 * @throws //NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
 	 */
-	public VertexColoringAlgorithm.Coloring getAlternateVertexColoring(PropertyGraph graph) {
+	public VertexColoringAlgorithm.Coloring getAlternateVertexColoring(int id) {
 		return null;
 	}
 
@@ -112,7 +116,7 @@ public class GraphEditorController {
 	 * @return the next valid alternative Coloring.
 	 * @throws //NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
 	 */
-	public TotalColoringAlgorithm.TotalColoring getAlternateTotalColoring(PropertyGraph graph) {
+	public TotalColoringAlgorithm.TotalColoring getAlternateTotalColoring(int id) {
 		return null;
 	}
 
