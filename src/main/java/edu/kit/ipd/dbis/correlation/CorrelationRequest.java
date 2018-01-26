@@ -40,7 +40,11 @@ public class CorrelationRequest {
      * @return returns an array list which codes the results of the correlation calculation
      */
     public ArrayList<CorrelationOutput> use() {
-        return null; // todo was: "correlation.use()"
+        if (correlation.getMaximum()) {
+            return correlation.useMaximum();
+        } else {
+           return correlation.useMaximum();
+        }
     }
 
     private static Correlation parseCorrelationToString(String correlationInput) throws InvalidCorrelationInputException {
