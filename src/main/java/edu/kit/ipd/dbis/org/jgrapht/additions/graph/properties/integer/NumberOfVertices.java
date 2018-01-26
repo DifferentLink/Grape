@@ -12,7 +12,7 @@ public class NumberOfVertices extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph the input graph
+	 * @param graph
 	 */
 	public NumberOfVertices(PropertyGraph graph) {
 		super(graph);

@@ -1,23 +1,23 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 import org.kohsuke.MetaInfServices;
 
 @MetaInfServices
-public class KkGraph extends ComplexProperty {
+public class VertexColorings extends ComplexProperty {
 	/**
 	 * Standard constructor
 	 *
 	 * @param graph
 	 */
-	public KkGraph(PropertyGraph graph) {
+	public VertexColorings(PropertyGraph graph) {
 		super(graph);
 	}
 
 	@Override
-	protected KkGraphAlgorithm.KkGraph calculateAlgorithm(PropertyGraph graph) {
+	protected Object calculateAlgorithm(PropertyGraph graph) {
+		// TODO: Need method calculateAllColorings()
 		return null;
 	}
 }

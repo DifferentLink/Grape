@@ -33,7 +33,6 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 
 	@Override
 	public TotalColoring getColoring() {
-		//TODO: implement me
 		PropertyGraph edgeToVertexGraph = this.makeEdgesToVertices();
 		VertexColoringAlgorithm vertexColoringAlgorithm = new MinimalVertexColoring(edgeToVertexGraph);
 		VertexColoringAlgorithm.Coloring coloring = vertexColoringAlgorithm.getColoring();

@@ -10,7 +10,7 @@ public abstract class Property {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph the input graph
+	 * @param graph
 	 */
 	public Property(PropertyGraph graph) {
 		this.graph = graph;
@@ -21,7 +21,7 @@ public abstract class Property {
 	 * of the property
 	 *
 	 */
-	protected void calculate() {
+	public void calculate() {
 		if (this.value == null) {
 			this.value = this.calculateAlgorithm(this.graph);
 		}

@@ -2,13 +2,10 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Cliques;
 import org.kohsuke.MetaInfServices;
 
-import java.util.List;
-import java.util.Set;
-
 /**
+ * TODO: design change
  * Calculates the number of cliques.
  */
 @MetaInfServices
@@ -16,7 +13,7 @@ public class NumberOfCliques extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph the input graph
+	 * @param graph
 	 */
 	public NumberOfCliques(PropertyGraph graph) {
 		super(graph);
@@ -24,6 +21,6 @@ public class NumberOfCliques extends IntegerProperty {
 
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
-		return ((List<Set<Object>>) graph.getProperty(Cliques.class).getValue()).size();
+		return null;
 	}
 }

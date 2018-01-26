@@ -14,7 +14,7 @@ public class AverageDegree extends DoubleProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph the input graph
+	 * @param graph
 	 */
 	public AverageDegree(PropertyGraph graph) {
 		super(graph);

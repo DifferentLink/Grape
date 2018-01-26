@@ -10,15 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * the clique property
- */
 @MetaInfServices
 public class Cliques extends ComplexProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph the input graph
+	 * @param graph
 	 */
 	public Cliques(PropertyGraph graph) {
 		super(graph);
@@ -28,26 +25,11 @@ public class Cliques extends ComplexProperty {
 	protected List<Set<Object>> calculateAlgorithm(PropertyGraph graph) {
 		ArrayList<Set<Object>> result = new ArrayList<>();
 		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(graph);
-		Iterator<Set<Object>> it = alg.iterator();
+		//TODO: all cliques or only maximum cliques?
+		Iterator<Set<Object>> it = alg.maximumIterator();
 		while (it.hasNext()) {
 			Set<Object> clique = it.next();
 			result.add(clique);
-		}
-		return result;
-	}
-
-	/**
-	 *
-	 * @param size the size of cliques
-	 * @return a list of all cliques with this size
-	 */
-	public List<Set<Object>> getCliquesOfSize(int size) {
-		List<Set<Object>> result = new ArrayList<>();
-		List<Set<Object>> allCliques = (List<Set<Object>>) this.getValue();
-		for (Set<Object> clique : allCliques) {
-			if (clique.size() == size) {
-				result.add(clique);
-			}
 		}
 		return result;
 	}

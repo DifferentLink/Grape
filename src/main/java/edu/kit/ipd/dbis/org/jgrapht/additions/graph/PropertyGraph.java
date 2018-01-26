@@ -1,18 +1,11 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.TreeSet;
-import java.util.Set;
-import java.util.List;
+import java.util.*;
 
 /**
  * A SimpleGraph which contains Property-objects.
@@ -36,28 +29,8 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	}
 
 	/**
-	 * Constructs a property graph with an bfs code
-	 *
-	 * @param bfsCode the bfs code
-	 */
-	public PropertyGraph(BfsCodeAlgorithm.BfsCodeImpl bfsCode) {
-		super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false);
-		int[] code = bfsCode.getCode();
-		for (int i = 1; i <= (code[code.length - 1]); i++) {
-			this.addVertex(i);
-		}
-		for (int i = 1; i < bfsCode.getLength(); i = i + 3) {
-			this.addEdge(bfsCode.getCode()[i], bfsCode.getCode()[i + 1]);
-		}
-		this.properties = new HashMap<>();
-		for (Property p : PropertyFactory.createAllProperties(this)) {
-			this.properties.put(p.getClass(), p);
-		}
-	}
-
-	/**
 	 * Setter method for id.
-	 * @param id the id of the graph
+	 * @param id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -94,7 +67,7 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	/**
 	 * Induces the calculation of every property.
 	 */
-	public void calculateProperties() {
+	public void calculateAllProperties() {
 		for (Property p : this.properties.values()) {
 			p.calculate();
 		}
@@ -107,9 +80,12 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 * @return if this graph is equal to the input graph
 	 */
 	public boolean equals(PropertyGraph graph) {
-		VF2GraphIsomorphismInspector<Integer, DefaultEdge> iI =
-				new VF2GraphIsomorphismInspector<Integer, DefaultEdge>(graph, this);
-		return iI.isomorphismExists();
+		VF2GraphIsomorphismInspector<Integer, DefaultEdge> iI = new VF2GraphIsomorphismInspector<Integer, DefaultEdge>(graph, this);
+		if (iI.isomorphismExists()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
