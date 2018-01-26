@@ -4,35 +4,48 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.gui.popups.AboutUI;
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
-import edu.kit.ipd.dbis.gui.popups.NewDatabaseUI;
+import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
 import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
+import edu.kit.ipd.dbis.log.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
-public class MenuUI extends GUIMenu {
+public class MenuUI extends JMenuBar {
 
-	public MenuUI(ResourceBundle language, Theme theme) {
-		super(language, theme);
+	private final Log log;
+	private final Theme theme;
+
+	public MenuUI(GenerateController generateController,
+	              DatabaseController databaseController,
+	              Log log, ResourceBundle language,
+	              Theme theme) {
+
+		this.log = log;
+		this.theme = theme;
 
 		JMenu file = new JMenu(language.getString("file"));
 		JMenuItem newDatabase = new JMenuItem(language.getString("newDatabase"));
-		newDatabase.addActionListener(new NewDatabaseAction(language, theme));
+		newDatabase.addActionListener(new NewDatabaseAction(databaseController, language, theme));
 		JMenuItem openDatabase = new JMenuItem(language.getString("openDatabase"));
-		openDatabase.addActionListener(new OpenDatabaseAction(language, theme));
+		openDatabase.addActionListener(new OpenDatabaseAction(databaseController, language, theme));
 		JMenuItem saveDatabase = new JMenuItem(language.getString("saveDatabase"));
-		saveDatabase.addActionListener(new SaveAction(language, theme));
+		saveDatabase.addActionListener(new SaveAction(databaseController, language, theme));
 		JMenuItem saveSelection = new JMenuItem(language.getString("saveSelection"));
-		saveSelection.addActionListener(new SaveSelectionAction(language, theme));
+		saveSelection.addActionListener(new SaveSelectionAction(databaseController, language, theme));
 		JMenuItem importDatabase = new JMenuItem(language.getString("importDatabase"));
-		importDatabase.addActionListener(new ImportDatabaseAction(language, theme));
+		importDatabase.addActionListener(new ImportDatabaseAction(databaseController, language, theme));
 		JMenuItem saveDatabaseAs = new JMenuItem(language.getString("saveDatabaseAs"));
-		saveDatabaseAs.addActionListener(new SaveAsAction(language, theme));
+		saveDatabaseAs.addActionListener(new SaveAsAction(databaseController, language, theme));
 		file.add(newDatabase);
 		file.add(openDatabase);
 		file.add(importDatabase);
@@ -43,18 +56,24 @@ public class MenuUI extends GUIMenu {
 
 		JMenu edit = new JMenu(language.getString("edit"));
 		JMenuItem generateGraphs = new JMenuItem(language.getString("generateGraphs"));
-		generateGraphs.addActionListener(new GenerateGraphAction(language, theme));
+		generateGraphs.addActionListener(new GenerateGraphAction(generateController, language, theme));
 		JMenuItem emptyGraph = new JMenuItem(language.getString("emptyGraph"));
 		JMenuItem readBFSCode = new JMenuItem(language.getString("readBFSCode"));
-		readBFSCode.addActionListener(new ReadBFSCodeAction(language, theme));
-		JMenuItem Undo = new JMenuItem(language.getString("undo"));
-		JMenuItem Redo = new JMenuItem(language.getString("redo"));
+		readBFSCode.addActionListener(new ReadBFSCodeAction(generateController, language, theme));
+		JMenuItem undo = new JMenuItem(language.getString("undo"));
+		undo.addActionListener(new UndoAction(this.log));
+		JMenuItem redo = new JMenuItem(language.getString("redo"));
+		redo.addActionListener(new RedoAction(this.log));
+		JMenuItem configureDatabase = new JMenuItem("Configure Database..."); // todo replace with language resource
+		configureDatabase.addActionListener(new ConfigureDatabaseAction(databaseController, language, theme));
 		edit.add(generateGraphs);
 		edit.add(emptyGraph);
 		edit.add(readBFSCode);
 		edit.addSeparator();
-		edit.add(Undo);
-		edit.add(Redo);
+		edit.add(undo);
+		edit.add(redo);
+		edit.addSeparator();
+		edit.add(configureDatabase);
 		this.add(edit);
 
 		JMenu help = new JMenu(language.getString("help"));
@@ -71,134 +90,260 @@ public class MenuUI extends GUIMenu {
 
 	}
 
-	private static class GenerateGraphAction implements ActionListener {
+	private static class NewDatabaseAction implements ActionListener {
 
+		private final DatabaseController databaseController;
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public GenerateGraphAction(ResourceBundle language, Theme theme) {
+		public NewDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			JFrame generateGraphUI = new GenerateGraphUI(language, theme);
+			final JFileChooser fileChooser = new JFileChooser();
+			final int returnValue = fileChooser.showDialog(null, "Create"); // todo replace with language resource
+			File file = fileChooser.getSelectedFile();
+
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				System.out.println("Created new file!"); // todo remove sout
+				if (file != null) {
+					file = new File(file.getParentFile(), file.getName() + ".txt");
+					databaseController.saveDatabase(file.getPath()); // todo catch possible exceptions
+				}
+			} else {
+				System.out.println("Creating file failed"); // todo remove sout
+			}
+		}
+	}
+
+	private static class GenerateGraphAction implements ActionListener {
+
+		private final GenerateController generateController;
+		private final ResourceBundle language;
+		private final Theme theme;
+
+		public GenerateGraphAction(GenerateController generateController, ResourceBundle language, Theme theme) {
+			this.generateController = generateController;
+			this.language = language;
+			this.theme = theme;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			JFrame generateGraphUI = new GenerateGraphUI(generateController, language, theme);
 			generateGraphUI.setVisible(true);
 		}
 	}
 
 	private class ReadBFSCodeAction implements ActionListener {
 
+		private final GenerateController generateController;
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public ReadBFSCodeAction(ResourceBundle language, Theme theme) {
+		public ReadBFSCodeAction(GenerateController generateController, ResourceBundle language, Theme theme) {
+			this.generateController = generateController;
 			this.language = language;
 			this.theme = theme;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			JFrame readBFSCodeUI = new ReadBFSCodeUI(language, theme);
+			JFrame readBFSCodeUI = new ReadBFSCodeUI(generateController, language, theme);
 			readBFSCodeUI.setVisible(true);
 		}
 	}
 
-	private class NewDatabaseAction implements ActionListener {
+	private class ConfigureDatabaseAction implements ActionListener {
 
+		private final DatabaseController databaseController;
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public NewDatabaseAction(ResourceBundle language, Theme theme) {
+		public ConfigureDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			JFrame newDatabaseUI = new NewDatabaseUI(language, theme);
+			JFrame newDatabaseUI = new ConfigureDatabaseUI(databaseController, language, theme);
 			newDatabaseUI.setVisible(true);
 		}
 	}
 
 	private class OpenDatabaseAction implements ActionListener {
 
+		private final DatabaseController databaseController;
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public OpenDatabaseAction(ResourceBundle language, Theme theme) {
+		public OpenDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			final JFileChooser fileChooser = new JFileChooser();
+			final int returnValue = fileChooser.showDialog(null, "Open"); // todo replace with language resource
+			File file = fileChooser.getSelectedFile();
 
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				System.out.println("Open a database!"); // todo remove sout
+				if (file != null) {
+					file = new File(file.getParentFile(), file.getName() + ".txt");
+					try {
+						databaseController.loadDatabase(file.getPath());
+					} catch (Exception e) { // todo replace with correct exception as soon as available
+						e.printStackTrace();
+					}
+				}
+			} else {
+				System.out.println("Creating file failed"); // todo remove sout
+			}
 		}
 	}
 
 	private class ImportDatabaseAction implements ActionListener {
 
+		private final DatabaseController databaseController;
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public ImportDatabaseAction(ResourceBundle language, Theme theme) {
+		public ImportDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			final JFileChooser fileChooser = new JFileChooser();
+			final int returnValue = fileChooser.showDialog(null, "Import"); // todo replace with language resource
+			File file = fileChooser.getSelectedFile();
 
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				System.out.println("Import a database!"); // todo remove sout
+				if (file != null) {
+					file = new File(file.getParentFile(), file.getName() + ".txt");
+					try {
+						databaseController.mergeDatabase(file.getPath());
+					} catch (Exception e) { // todo replace with correct exception as soon as available
+						e.printStackTrace();
+					}
+				}
+			} else {
+				System.out.println("Importing database failed"); // todo remove sout
+			}
 		}
 	}
 
 	private class SaveAction implements ActionListener {
 
+		private final DatabaseController databaseController;
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public SaveAction(ResourceBundle language, Theme theme) {
+		public SaveAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			final JFileChooser fileChooser = new JFileChooser();
+			final int returnValue = fileChooser.showDialog(null, "Save"); // todo replace with language resource
+			File file = fileChooser.getSelectedFile();
 
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				System.out.println("Saved a database!"); // todo remove sout
+				if (file != null) {
+					file = new File(file.getParentFile(), file.getName() + ".txt");
+					try {
+						databaseController.saveDatabase(file.getPath());
+					} catch (Exception e) { // todo replace with correct exception as soon as available
+						e.printStackTrace();
+					}
+				}
+			} else {
+				System.out.println("Saving database failed"); // todo remove sout
+			}
 		}
 	}
 
 	private class SaveAsAction implements ActionListener {
 
+		private final DatabaseController databaseController;
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public SaveAsAction(ResourceBundle language, Theme theme) {
+		public SaveAsAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			final JFileChooser fileChooser = new JFileChooser();
+			final int returnValue = fileChooser.showDialog(null, "Save"); // todo replace with language resource
+			File file = fileChooser.getSelectedFile();
 
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				System.out.println("Saved a database under new name!"); // todo remove sout
+				if (file != null) {
+					file = new File(file.getParentFile(), file.getName() + ".txt");
+					try {
+						databaseController.saveDatabase(file.getPath());
+					} catch (Exception e) { // todo replace with correct exception as soon as available
+						e.printStackTrace();
+					}
+				}
+			} else {
+				System.out.println("Saving database under a new name failed"); // todo remove sout
+			}
 		}
 	}
 
 	private class SaveSelectionAction implements ActionListener {
 
+		private final DatabaseController databaseController;
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public SaveSelectionAction(ResourceBundle language, Theme theme) {
+		public SaveSelectionAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			final JFileChooser fileChooser = new JFileChooser();
+			final int returnValue = fileChooser.showDialog(null, "Save"); // todo replace with language resource
+			File file = fileChooser.getSelectedFile();
 
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				System.out.println("Saved selection to a database!"); // todo remove sout
+				if (file != null) {
+					file = new File(file.getParentFile(), file.getName() + ".txt");
+					try {
+						databaseController.saveSelection(file.getPath(), new LinkedList<>());
+					} catch (Exception e) { // todo replace with correct exception as soon as available
+						e.printStackTrace();
+					}
+				}
+			} else {
+				System.out.println("Saving selection as database failed"); // todo remove sout
+			}
 		}
 	}
 
@@ -208,6 +353,38 @@ public class MenuUI extends GUIMenu {
 		public void actionPerformed(ActionEvent actionEvent) {
 			JFrame aboutUI = new AboutUI(theme);
 			aboutUI.setVisible(true);
+		}
+	}
+
+	private class UndoAction implements ActionListener {
+
+		private final Log log;
+
+		private UndoAction(Log log) {
+			this.log = log;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			try {
+				log.undo();
+			} catch (Exception e) {} // todo try/catch only added so that the project is compilable. It's not the GUI's job to handle any exceptions here
+		}
+	}
+
+	private class RedoAction implements ActionListener {
+
+		private final Log log;
+
+		private RedoAction(Log log) {
+			this.log = log;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			try {
+				log.redo();
+			} catch (Exception e) {} // todo try/catch only added so that the project is compilable. It's not the GUI's job to handle any exceptions here
 		}
 	}
 }

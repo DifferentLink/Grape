@@ -20,6 +20,7 @@ public abstract class Theme {
 	public int dividerSize;
 	public Color shadowColor;
 	public Color assertiveBackground;
+	public Color unassertiveBackground;
 	public Color tableSelectionColor;
 	public Color buttonBackgorundColor;
 	public Color buttonHighlightColor;

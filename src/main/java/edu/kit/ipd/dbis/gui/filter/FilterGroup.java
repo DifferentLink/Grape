@@ -15,6 +15,11 @@ public class FilterGroup extends Filter {
 		super(id);
 	}
 
+	public FilterGroup(int id, String name) {
+		super(id);
+		super.setText(name);
+	}
+
 	public void add(SimpleFilter filter) {
 		simpleFilter.add(filter);
 	}

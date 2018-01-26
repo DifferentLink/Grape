@@ -4,16 +4,41 @@
 
 package edu.kit.ipd.dbis.gui.popups;
 
+import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class GenerateGraphUI extends JFrame {
-	public GenerateGraphUI(ResourceBundle language, Theme theme) {
+
+	private final GenerateController generateController;
+	private final ResourceBundle language;
+	private final Theme theme;
+
+	private final JTextField numVerticesInput;
+	private final JTextField numEdgesInput;
+	private final JTextField numGraphsInput;
+	private final JButton generateGraphsButton;
+
+	private int minVertices = 5;
+	private int maxVertices = 10;
+	private int minEdges = 4;
+	private int maxEdges = 15;
+	private int amount = 10;
+
+	public GenerateGraphUI(GenerateController generateController, ResourceBundle language, Theme theme) {
 
 		super(language.getString("generateGraphs"));
+		this.generateController = generateController;
+		this.language = language;
+		this.theme = theme;
+
 		this.setSize(350, 200);
 		this.setResizable(false);
 
@@ -30,12 +55,16 @@ public class GenerateGraphUI extends JFrame {
 
 		JLabel numVertices = new JLabel(language.getString("numberOfVertices"));
 		properties.add(numVertices);
-		JTextField numVerticesInput = new JTextField();
+		numVerticesInput = new JTextField(Integer.toString(minVertices) + "-" + Integer.toString(maxVertices));
+		numVerticesInput.getDocument().addDocumentListener(new TextInputChangeListener());
+		numVerticesInput.setBackground(theme.backgroundColor);
 		properties.add(numVerticesInput);
 
 		JLabel numEdges = new JLabel(language.getString("numberOfEdges"));
 		properties.add(numEdges);
-		JTextField numEdgesInput = new JTextField();
+		numEdgesInput = new JTextField(Integer.toString(minEdges) + "-" + Integer.toString(maxEdges));
+		numEdgesInput.getDocument().addDocumentListener(new TextInputChangeListener());
+		numEdgesInput.setBackground(theme.backgroundColor);
 		properties.add(numEdgesInput);
 
 		content.add(properties);
@@ -43,16 +72,114 @@ public class GenerateGraphUI extends JFrame {
 		JPanel generate = new JPanel();
 		generate.setLayout(new GridLayout(1, 2, 2, 0));
 
-		JTextField numGraphsInput = new JTextField();
+		numGraphsInput = new JTextField(Integer.toString(amount));
+		numGraphsInput.getDocument().addDocumentListener(new TextInputChangeListener());
+		numGraphsInput.setBackground(theme.backgroundColor);
 		numGraphsInput.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		generate.add(numGraphsInput);
 
-		JButton generateGraphsButton = new JButton(language.getString("generateGraphs"));
+		generateGraphsButton = new JButton(language.getString("generateGraphs"));
+		generateGraphsButton.addActionListener(
+				new GenerateGraphsAction(generateController));
 		generateGraphsButton.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		generateGraphsButton.setBackground(theme.assertiveBackground);
 		generate.add(generateGraphsButton);
 
 		content.add(generate);
 		this.add(content);
+	}
+
+	@SuppressWarnings("Duplicates")
+	private void updateInput() {
+		if (numVerticesInput.getText().matches("\\d+")) {
+			minVertices = Integer.parseInt(numVerticesInput.getText());
+			maxVertices = minVertices;
+		} else if (numVerticesInput.getText().matches("\\d+-\\d+")){
+			minVertices = Integer.parseInt(numVerticesInput.getText().split("-")[0]);
+			maxVertices = Integer.parseInt(numVerticesInput.getText().split("-")[1]);
+		}
+
+		if (numEdgesInput.getText().matches("\\d+")) {
+			minEdges = Integer.parseInt(numEdgesInput.getText());
+			maxEdges = minEdges;
+		} else if (numEdgesInput.getText().matches("\\d+-\\d+")) {
+			minEdges = Integer.parseInt(numEdgesInput.getText().split("-")[0]);
+			maxEdges = Integer.parseInt(numEdgesInput.getText().split("-")[1]);
+		}
+
+		if (numGraphsInput.getText().matches("\\d+")) {
+			amount = Integer.parseInt(numGraphsInput.getText());
+		}
+
+		update();
+	}
+
+	private void update() {
+		final boolean verticesMatch = numVerticesInput.getText().matches("\\d+") ||
+				numVerticesInput.getText().matches("\\d+-\\d+");
+		final boolean edgesMatch = numEdgesInput.getText().matches("\\d+") ||
+				numEdgesInput.getText().matches("\\d+-\\d+");
+		final boolean amountMatch = numGraphsInput.getText().matches("\\d+");
+
+		if (verticesMatch) {
+			numVerticesInput.setBackground(theme.backgroundColor);
+		} else if (!numVerticesInput.getText().equals("")) {
+			numVerticesInput.setBackground(theme.unassertiveBackground);
+		}
+
+		if (edgesMatch) {
+			numEdgesInput.setBackground(theme.backgroundColor);
+		} else if (!numEdgesInput.getText().equals("")) {
+			numEdgesInput.setBackground(theme.unassertiveBackground);
+		}
+
+		if (amountMatch) {
+			numGraphsInput.setBackground(theme.backgroundColor);
+		} else if (!numGraphsInput.getText().equals("")) {
+			numGraphsInput.setBackground(theme.unassertiveBackground);
+		}
+
+		if (verticesMatch && edgesMatch && amountMatch) {
+			generateGraphsButton.setEnabled(true);
+			generateGraphsButton.setBackground(theme.assertiveBackground);
+		} else {
+			generateGraphsButton.setEnabled(false);
+			generateGraphsButton.setBackground(theme.buttonDisabledColor);
+		}
+	}
+
+	private class GenerateGraphsAction implements ActionListener {
+		private final GenerateController generateController;
+
+		public GenerateGraphsAction(GenerateController generateController) {
+			this.generateController = generateController;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			try {
+				generateController.generateGraphs(
+						minVertices, maxVertices, minEdges, maxEdges, amount);
+			} catch (Exception e) { // todo replace with correct subclass of Exception as soon as available
+				System.out.println("Generate graphs input is invalid");
+			}
+		}
+	}
+
+	private class TextInputChangeListener implements DocumentListener {
+		@Override
+		public void insertUpdate(DocumentEvent documentEvent) {
+			updateInput();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent documentEvent) {
+			updateInput();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent documentEvent) {
+			updateInput();
+		}
 	}
 }

@@ -6,6 +6,7 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +33,7 @@ public class GraphEditorUI extends JPanel {
 	private Dimension buttonSize = new Dimension(barHeight - 2, barHeight - 2);
 	private int buttonSeparation = 2;
 
-	public GraphEditorUI(GraphEditorController controller, ResourceBundle language, Theme theme) {
+	public GraphEditorUI(GraphEditorController graphEditorController, ResourceBundle language, Theme theme) {
 
 		this.theme = theme;
 		this.setLayout(new BorderLayout());
@@ -55,17 +56,19 @@ public class GraphEditorUI extends JPanel {
 		redo.setMinimumSize(buttonSize);
 		redo.setPreferredSize(buttonSize);
 		redo.setMaximumSize(buttonSize);
-		denser = new JButton("D+");
+		denser = new JButton("D+"); // todo replace with icon
+		denser.addActionListener(new NextDenserGraphAction(graphEditorController));
 		theme.style(denser);
 		denser.setMinimumSize(buttonSize);
 		denser.setPreferredSize(buttonSize);
 		denser.setMaximumSize(buttonSize);
-		switchColor = new JButton("<>");
+		switchColor = new JButton("<>"); // todo replace with icon
+		switchColor.addActionListener(new SwitchColorAction(graphEditorController));
 		theme.style(switchColor);
 		switchColor.setMinimumSize(buttonSize);
 		switchColor.setPreferredSize(buttonSize);
 		switchColor.setMaximumSize(buttonSize);
-		String[] availableColorings = {"Total Coloring", "Vertex Coloring"};
+		String[] availableColorings = {"Total Coloring", "Vertex Coloring"}; // todo replace with language resource
 		coloringType = new JComboBox<>();
 		coloringType.addItem(availableColorings[0]);
 		coloringType.addItem(availableColorings[1]);
@@ -87,15 +90,15 @@ public class GraphEditorUI extends JPanel {
 		bottomBarButtons.setPreferredSize(new Dimension(Integer.MAX_VALUE, barHeight));
 		theme.style(bottomBarButtons);
 		bottomBarButtons.setBorder(null);
-		center = new JButton("Center");
+		center = new JButton("Center"); // todo replace with language resource
 		theme.style(center);
-		center.addActionListener((e) -> {
-			GraphLook.arrangeInCircle(graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
-			repaint();
-		});
-		preview = new JButton("Preview");
+		center.addActionListener(new CenterVerticesAction());
+		preview = new JButton("Preview");// todo replace with language resource
+		preview.addActionListener(new PreviewAction(graphEditorController));
 		theme.style(preview);
-		apply = new JButton("Apply");
+		apply = new JButton("Apply");// todo replace with language resource
+		apply.addActionListener(new ApplyAction(graphEditorController));
+
 		theme.style(apply);
 		bottomBarButtons.add(Box.createHorizontalStrut(buttonSeparation));
 		bottomBarButtons.add(center);
@@ -120,7 +123,7 @@ public class GraphEditorUI extends JPanel {
 		private Point mTarget;
 		private int currentMouseButtonKey = MouseEvent.BUTTON1;
 
-		public Editor() {
+		private Editor() {
 
 			this.addMouseListener(new MouseAdapter() {
 				@Override
@@ -181,23 +184,30 @@ public class GraphEditorUI extends JPanel {
 			kanvas.setPaint(theme.backgroundColor);
 			kanvas.fill(new Rectangle(0, 0, this.getWidth(), this.getHeight()));
 
-			for (Edge edge : graph.getEdges()) {
+			graph.getEdges().forEach(edge -> {
 				Shape currentEdgeShape = edge.draw();
 				kanvas.setPaint(edge.getColor());
 				kanvas.fill(currentEdgeShape);
 				kanvas.setStroke(new BasicStroke(edge.getThickness()));
 				kanvas.setPaint(edge.getColor());
 				kanvas.draw(currentEdgeShape);
-			}
+			});
 
-			for (Vertex vertex : graph.getVertices()) {
+			graph.getVertices().forEach(vertex -> {
 				Shape vertexShape = vertex.draw();
 				kanvas.setPaint(vertex.getFillColor());
 				kanvas.fill(vertexShape);
 				kanvas.setStroke(new BasicStroke(vertex.getOutlineThickness()));
 				kanvas.setPaint(vertex.getOutlineColor());
 				kanvas.draw(vertexShape);
-			}
+			});
+
+			graph.getSubgraphs().forEach(subgraph -> {
+				Shape subgraphOutline = subgraph.outline();
+				kanvas.setPaint(theme.outlineColor);
+				kanvas.fill(subgraphOutline);
+				kanvas.draw(subgraphOutline);
+			});
 		}
 	}
 
@@ -224,6 +234,79 @@ public class GraphEditorUI extends JPanel {
 				graph = nextGraph;
 				repaint();
 			}
+		}
+	}
+
+	private class PreviewAction implements ActionListener {
+
+		private final GraphEditorController graphEditorController;
+
+		private PreviewAction(GraphEditorController graphEditorController) {
+			this.graphEditorController = graphEditorController;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			if (coloringType.getSelectedItem().toString().equals("Total Coloring")) { // todo make this work with different languages
+				// todo how to use this method correctly:
+				graphEditorController.getTotalColoring(graph.asPropertyGraph());
+			} else if (coloringType.getSelectedItem().toString().equals("Vertex Coloring")) { // todo make this work with different languages
+				// todo where's the method to get the vertex coloring?
+			}
+		}
+	}
+
+	private class ApplyAction implements ActionListener {
+
+		private final GraphEditorController graphEditorController;
+
+		private ApplyAction(GraphEditorController graphEditorController) {
+			this.graphEditorController = graphEditorController;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+
+			PropertyGraph propertyGraph = graph.asPropertyGraph();
+			if (graphEditorController.isValidGraph(propertyGraph)) {
+				graphEditorController.addEditedGraph(propertyGraph, graph.getId());
+			}
+		}
+	}
+
+	private class NextDenserGraphAction implements ActionListener {
+
+		private final GraphEditorController graphEditorController;
+
+		private NextDenserGraphAction(GraphEditorController graphEditorController) {
+			this.graphEditorController = graphEditorController;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			// graph = graphEditorController.calculateDenserGraph(graph.asPropertyGraph()); todo uncomment as soon as available
+		}
+	}
+
+	private class SwitchColorAction implements ActionListener {
+
+		private final GraphEditorController graphEditorController;
+
+		private SwitchColorAction(GraphEditorController graphEditorController) {
+			this.graphEditorController = graphEditorController;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) { // todo implement methods to apply a coloring to the visible graph
+			graphEditorController.getAlternateTotalColoring(graph.asPropertyGraph()); // todo this method's signature is most likely nonsense
+		}
+	}
+
+	private class CenterVerticesAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			GraphLook.arrangeInCircle(graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+			repaint();
 		}
 	}
 }

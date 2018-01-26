@@ -7,7 +7,10 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 public class RenderableGraph {
@@ -20,6 +23,7 @@ public class RenderableGraph {
 	public RenderableGraph() {
 		vertices = new HashSet<>();
 		edges = new HashSet<>();
+		subgraphs = new HashSet<>();
 	}
 
 	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id) {
@@ -41,7 +45,7 @@ public class RenderableGraph {
 
 	public PropertyGraph asPropertyGraph() {
 		return new PropertyGraph();
-	}
+	} // todo implement asPropertyGraph() now that PropertyGraph class is available
 
 	public void move(Point delta) {
 		for (Vertex vertex : vertices) {
@@ -110,7 +114,7 @@ public class RenderableGraph {
 		return true;
 	}
 
-	public void makeConnected() { // todo implement makeConnected() by removing smallest disconnected graph
+	public void makeConnected() { // todo implement makeConnected() (only if sensible choice) by removing smallest disconnected graph
 
 	}
 
@@ -154,6 +158,36 @@ public class RenderableGraph {
 
 	public void setSubgraphs(Set<RenderableGraph> subgraphs) {
 		this.subgraphs = subgraphs;
+	}
+
+	public Point getUpperLeft() {
+		Vertex upperleftVertex = new Vertex(0, 0);
+		Vertex vertex;
+		for (Iterator<Vertex> iterator = vertices.iterator(); iterator.hasNext(); ) {
+			vertex = iterator.next();
+			if (vertex.x <= upperleftVertex.x && vertex.y >= upperleftVertex.y) {
+				upperleftVertex = vertex;
+			}
+		}
+		return new Point(upperleftVertex.x, upperleftVertex.y);
+	}
+
+	public Point getLowerRight() {
+		Vertex upperleftVertex = new Vertex(0, 0);
+		Vertex vertex;
+		for (Iterator<Vertex> iterator = vertices.iterator(); iterator.hasNext(); ) {
+			vertex = iterator.next();
+			if (vertex.x >= upperleftVertex.x && vertex.y <= upperleftVertex.y) {
+				upperleftVertex = vertex;
+			}
+		}
+		return new Point(upperleftVertex.x, upperleftVertex.y);
+	}
+
+	public Shape outline() {
+		final Point upperleft = getUpperLeft();
+		final Point lowerright = getLowerRight();
+		return new RoundRectangle2D.Double(upperleft.x, upperleft.y, lowerright.x, lowerright.y, 1 , 2);
 	}
 
 	public RenderableGraph deepCopy() {
