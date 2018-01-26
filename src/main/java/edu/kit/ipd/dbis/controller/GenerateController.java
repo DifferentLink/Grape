@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.controller;
 
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -50,11 +51,10 @@ public class GenerateController {
 	 * @param maxEdges    upper bound of edges.
 	 * @param amount      the number of graphs
 	 */
-	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws Exception {
+	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
 		// solange generieren bis die gewünschte anzahl von graphen existiert!
-
-		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<PropertyGraph<Integer, Integer>>();
-		//generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
+		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
 	}
 
@@ -72,7 +72,7 @@ public class GenerateController {
 	 *
 	 * @param id the ID of the PropertyGraph<V,E>.
 	 */
-	public void delGraph(int id) throws Exception {
+	public void delGraph(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
 		database.deleteGraph(id);
 	}
 
@@ -81,8 +81,8 @@ public class GenerateController {
 	 *
 	 * @param graphs the set of PropertyGraph<V,E>
 	 */
-	private void saveGraphs(Set<PropertyGraph<Integer, Integer>> graphs) throws Exception {
-		for (PropertyGraph<Integer, Integer> graph : graphs) {
+	private void saveGraphs(Set<PropertyGraph> graphs) throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+		for (PropertyGraph graph : graphs) {
 			database.addGraph(graph);
 		}
 	}
@@ -95,4 +95,3 @@ public class GenerateController {
 		return true;
 	}
 }
-

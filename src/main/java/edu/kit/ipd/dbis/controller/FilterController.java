@@ -66,9 +66,8 @@ public class FilterController {
 	 *
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndSortedGraphs() {
-		List<PropertyGraph<Integer, Integer>> graphs = new ArrayList<PropertyGraph<Integer, Integer>>();
-
+	public List<PropertyGraph> getFilteredAndSortedGraphs() {
+		List<PropertyGraph> graphs = new ArrayList<PropertyGraph>();
 		return graphs;
 	}
 
@@ -79,8 +78,8 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndAscendingSortedGraphs(Property property) {
-		return null;
+	public List<PropertyGraph> getFilteredAndAscendingSortedGraphs(Property property) throws Exception {
+		return filter.getFilteredAndAscendingSortedGraphs(property);
 	}
 
 	/**
@@ -89,8 +88,8 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndDescendingSortedGraphs(Property property) {
-		return null;
+	public List<PropertyGraph> getFilteredAndDescendingSortedGraphs(Property property) throws Exception {
+		return filter.getFilteredAndDescendingSortedGraphs(property);
 	}
 }
 

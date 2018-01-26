@@ -2,9 +2,13 @@ package edu.kit.ipd.dbis.controller;
 
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.gui.TableUI;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class CalculationController {
@@ -12,6 +16,9 @@ public class CalculationController {
 	private Boolean calculationStatus = false;
 
 	private GraphDatabase database;
+
+	//TODO: Same Table Object required
+	private TableUI table;
 
 	//TODO: Singleton pattern
 	private static CalculationController calculation;
@@ -39,16 +46,16 @@ public class CalculationController {
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
 	 */
-	private void calculateGraphProperties() throws Exception {
-		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<PropertyGraph<Integer, Integer>>();
-		//graphs = database.getUncalculatedGraphs();
-
+	private void calculateGraphProperties() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException, InsertionFailedException {
+		List<PropertyGraph> graphs;
+		graphs = database.getUncalculatedGraphs();
 		// Trigger Graph calculation
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
 			if (calculationStatus == true) {
 				graph.calculateRemainingProperties();
-				// Deleting graphs from list of not calculated graphs
+				// Replacing graphs
 				database.replaceGraph(graph.getId(), graph);
+				table.update();
 			} else {
 				return;
 			}
@@ -58,10 +65,8 @@ public class CalculationController {
 	/**
 	 * @return the length of the graphlist of CalculationController.
 	 */
-	public int getNumberNotCalculatedGraphs() {
-		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<PropertyGraph<Integer, Integer>>();
-		//graphs = database.getUncalculatedGraphs();
-		return graphs.size();
+	public int getNumberNotCalculatedGraphs() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+		return database.getUncalculatedGraphs().size();
 	}
 
 	/**
@@ -84,7 +89,7 @@ public class CalculationController {
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public void continueCalculation() throws Exception {
+	public void continueCalculation() throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
 		calculationStatus = true;
 		this.calculateGraphProperties();
 	}
