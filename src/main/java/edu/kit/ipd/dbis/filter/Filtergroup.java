@@ -24,26 +24,4 @@ public class Filtergroup extends Filtersegment {
         this.id = id;
         availableFilter = new ArrayList<>();
     }
-
-    /**
-     * adds a filter to a specific filtergroup
-     * @param filter filter which should be added to a specific filtergroup
-     */
-    void addFilter(Filter filter) {
-        availableFilter.add(filter);
-    }
-
-    /**
-     * removes a filter from a specific filtergroup
-     * @param id unique identifier of the filtersegment which should be enabled
-     */
-    void removeFilter(int id) {
-        for (Filter filterInGroup: availableFilter) {
-            if (filterInGroup.id == id) {
-                availableFilter.remove(filterInGroup);
-                return;
-            }
-        }
-    }
-
 }
