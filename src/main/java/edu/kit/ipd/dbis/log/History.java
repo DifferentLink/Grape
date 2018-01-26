@@ -13,7 +13,7 @@ public class History {
 
 	// TODO: Contructor?
 	public History(int maxHistorySize) {
-		this.events = new ArrayList<Event>();
+		this.events = new ArrayList<>();
 		this.maxHistorySize = maxHistorySize;
 		this.activeState = null;
 	}
@@ -32,10 +32,9 @@ public class History {
 	/**
 	 * @return the most previous Event for which the EventType is not MESSAGE.
 	 */
-	public Event moveBackward() {
-		int currentPosition = events.indexOf(activeState) - 1;
+	public void moveBackward() {
+		int currentPosition = events.indexOf(activeState) - 1; // todo skip messages
 		activeState = events.get(currentPosition);
-		return events.get(currentPosition);
 	}
 
 	// TODO: Why Return??
@@ -43,10 +42,9 @@ public class History {
 	/**
 	 * @return the next Event for which the EventType is not MESSAGE.
 	 */
-	public Event moveForward() {
-		int currentPosition = events.indexOf(activeState) + 1;
+	public void moveForward() {
+		int currentPosition = events.indexOf(activeState) + 1; // todo skip messages
 		activeState = events.get(currentPosition);
-		return events.get(currentPosition);
 	}
 
 	/**
