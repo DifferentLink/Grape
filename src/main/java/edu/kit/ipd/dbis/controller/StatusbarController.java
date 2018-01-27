@@ -44,13 +44,7 @@ public class StatusbarController {
 	public void undo() {
 		try {
 			log.undo();
-		} catch (DatabaseDoesNotExistException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
-		} catch (AccessDeniedForUserException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
-		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
-		} catch (TablesNotAsExpectedException e) {
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
 		}
 	}
@@ -61,13 +55,7 @@ public class StatusbarController {
 	public void redo() {
 		try {
 			log.redo();
-		} catch (DatabaseDoesNotExistException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
-		} catch (AccessDeniedForUserException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
-		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
-		} catch (TablesNotAsExpectedException e) {
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
 		}
 	}
