@@ -51,7 +51,7 @@ public class GenerateController {
 	 * @param maxEdges    upper bound of edges.
 	 * @param amount      the number of graphs
 	 */
-	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
 		// solange generieren bis die gewünschte anzahl von graphen existiert!
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
@@ -75,8 +75,12 @@ public class GenerateController {
 	 *
 	 * @param id the ID of the PropertyGraph<V,E>.
 	 */
-	public void delGraph(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
-		database.deleteGraph(id);
+	public void delGraph(int id) {
+		try {
+			database.deleteGraph(id);
+		} catch (TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException | DatabaseDoesNotExistException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -84,9 +88,13 @@ public class GenerateController {
 	 *
 	 * @param graphs the set of PropertyGraph<V,E>
 	 */
-	private void saveGraphs(Set<PropertyGraph> graphs) throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+	private void saveGraphs(Set<PropertyGraph> graphs) {
 		for (PropertyGraph graph : graphs) {
-			database.addGraph(graph);
+			try {
+				database.addGraph(graph);
+			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

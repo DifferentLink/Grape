@@ -41,15 +41,23 @@ public class CalculationController {
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
 	 */
-	private void calculateGraphProperties() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException, InsertionFailedException {
-		List<PropertyGraph> graphs;
-		graphs = database.getUncalculatedGraphs();
+	private void calculateGraphProperties() {
+		List<PropertyGraph> graphs = null;
+		try {
+			graphs = database.getUncalculatedGraphs();
+		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException e) {
+			e.printStackTrace();
+		}
 		// Trigger Graph calculation
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
 			if (calculationStatus == true) {
 				graph.calculateProperties();
 				// Replacing graphs
-				database.replaceGraph(graph.getId(), graph);
+				try {
+					database.replaceGraph(graph.getId(), graph);
+				} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
+					e.printStackTrace();
+				}
 				table.update(null); // todo implement calculatedGraphProperties()
 			} else {
 				return;
@@ -60,8 +68,14 @@ public class CalculationController {
 	/**
 	 * @return the length of the graphlist of CalculationController.
 	 */
-	public int getNumberNotCalculatedGraphs() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
-		return database.getUncalculatedGraphs().size();
+	public int getNumberNotCalculatedGraphs() {
+		int numberGraphs = 0;
+		try {
+			numberGraphs = database.getUncalculatedGraphs().size();
+		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException e) {
+			e.printStackTrace();
+		}
+		return numberGraphs;
 	}
 
 	/**
@@ -84,10 +98,10 @@ public class CalculationController {
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public void continueCalculation() throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+	public void continueCalculation() {
 		calculationStatus = true;
+
 		this.calculateGraphProperties();
 	}
-
 
 }
