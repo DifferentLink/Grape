@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui.filter;
 
 import edu.kit.ipd.dbis.controller.FilterController;
+import edu.kit.ipd.dbis.filter.InvalidInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
@@ -132,7 +133,7 @@ public class FilterUI extends JPanel {
 			container.add(textContainerSimple);
 
 			for (SimpleFilter simpleFilter : filterManagement.getSimpleFilter()) {
-				container.add(drawSimpleFilter(simpleFilter));
+				container.add(drawSimpleFilter(simpleFilter)); // todo throws InvalidInputException
 				container.add(Box.createVerticalStrut(2));
 			}
 		}
@@ -211,7 +212,7 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			filterManagement.addNewSimpleFilter(filterController);
+			filterManagement.addNewSimpleFilter();
 			update();
 			repaint();
 			revalidate();
@@ -267,12 +268,19 @@ public class FilterUI extends JPanel {
 		}
 	}
 
-	private class FilterInputChange implements DocumentListener { // todo implement check if filter is valid
+	private class FilterInputChange implements DocumentListener { // todo distinguish between simplefilters and groups
 
 		private final Filter filter;
 		private final JTextArea textArea;
 
 		public FilterInputChange(Filter filter, JTextArea textArea) {
+			try {
+				filterController.updateFilter(textArea.getText(), filter.getID());
+			} catch (Exception e) {
+				e.printStackTrace();
+			} catch (InvalidInputException e) {// todo use to signal wrong input
+				e.printStackTrace();
+			}
 			this.filter = filter;
 			this.textArea = textArea;
 		}

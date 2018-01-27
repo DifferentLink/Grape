@@ -66,8 +66,7 @@ public class Log {
 	/**
 	 * Move backward in the history
 	 */
-	public void undo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
-		this.removeMessages();
+	public void undo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException { // todo catch
 		Event action = history.getActiveState();
 		history.moveBackward();
 		action.getType().undo(this.database, action.getChangedGraphs());
@@ -76,8 +75,7 @@ public class Log {
 	/**
 	 * Move forward in the history
 	 */
-	public void redo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
-		this.removeMessages();
+	public void redo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException { // todo catch
 		Event action = history.getActiveState();
 		history.moveBackward();
 		action.getType().redo(this.database, action.getChangedGraphs());

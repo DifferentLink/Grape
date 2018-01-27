@@ -16,7 +16,7 @@ public class ReadBFSCodeUI extends JFrame{
 
 	private JTextField bfsCodeInput;
 
-	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) {
+	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) { // todo use basic regex matching for BFS-Code
 		super(language.getString("generateGraphs"));
 		this.setSize(350, 200);
 		this.setResizable(false);
