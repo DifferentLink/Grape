@@ -27,8 +27,6 @@ public class History {
 		return activeState;
 	}
 
-	// TODO: Why Return??
-
 	/**
 	 * @return the most previous Event for which the EventType is not MESSAGE.
 	 */
@@ -36,8 +34,6 @@ public class History {
 		int currentPosition = events.indexOf(activeState) - 1; // todo skip messages
 		activeState = events.get(currentPosition);
 	}
-
-	// TODO: Why Return??
 
 	/**
 	 * @return the next Event for which the EventType is not MESSAGE.
@@ -59,7 +55,7 @@ public class History {
 		maintainHistorySize();
 	}
 
-	// TODO:
+	// TODO: method added
 	public void removeEvent(Event event) {
 		events.remove(event);
 	}
