@@ -4,6 +4,7 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -57,7 +58,7 @@ public class GenerateController {
 	 * @param amount      the number of graphs
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
-		// solange generieren bis die gewünschte anzahl von graphen existiert!
+		// todo: solange generieren bis die gewünschte anzahl von graphen existiert!
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
@@ -68,12 +69,30 @@ public class GenerateController {
 	}
 
 	/**
-	 * Calculates a graph with the BFS Code and saves it to the Database.
+	 * Creates a graph with the BFS Code and saves it in the Database.
 	 *
 	 * @param bfsCode the BFS Code of the graph to save.
 	 */
-	public void generateBFSGraph(String bfsCode) {
-
+	public void generateBFSGraph(String bfsCode) throws IllegalArgumentException {
+		if (isValidBFS(bfsCode)) {
+			// Parsing String into int[]
+			String[] splitCode = bfsCode.split("\\[,]");
+			int[] code = new int[splitCode.length];
+			for (int i = 0; i < splitCode.length; i++) {
+				code[i] = Integer.parseInt(splitCode[i]);
+			}
+			// Creating BfsCode Object
+			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+			PropertyGraph graph = new PropertyGraph(bfs);
+			try {
+				database.addGraph(graph);
+			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+					| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			}
+		} else {
+			throw new IllegalArgumentException("BfsCode is not valid");
+		}
 	}
 
 	/**
@@ -107,6 +126,17 @@ public class GenerateController {
 	}
 
 	private Boolean isValidBFS(String bfsCode) {
+		if (!bfsCode.contains("[") || !bfsCode.contains("]")) {
+			return false;
+		}
+		String[] splitCode = bfsCode.split("\\[*,]");
+		for (int i = 0; i < splitCode.length; i++) {
+			if (splitCode[i].length() != 1) {
+				return false;
+			} else if (!isNumeric(splitCode[i])) {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -117,4 +147,14 @@ public class GenerateController {
 			return false;
 		}
 	}
+
+	private Boolean isNumeric(String text) {
+		try {
+			int number = Integer.parseInt(text);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
+	}
+
 }
