@@ -22,7 +22,7 @@ public class GenerateController {
 	private GraphDatabase database;
 
 	private BulkGraphGenerator generator;
-	private StatusbarController log;
+	private StatusbarController log = StatusbarController.getInstance();
 	//TODO: Singleton pattern
 	private static GenerateController generate;
 

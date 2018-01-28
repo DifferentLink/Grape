@@ -24,7 +24,7 @@ public class DatabaseController {
 
 	private Connector connector;
 	private GraphDatabase database;
-	private StatusbarController log;
+	private StatusbarController log = StatusbarController.getInstance();
 
 	public DatabaseController() {
 		generate = GenerateController.getInstance();

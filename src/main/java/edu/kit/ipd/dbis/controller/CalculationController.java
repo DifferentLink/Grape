@@ -16,7 +16,7 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 public class CalculationController {
 
 	private Boolean calculationStatus = false;
-	private StatusbarController log;
+	private StatusbarController log = StatusbarController.getInstance();
 	private GraphDatabase database;
 	private NonEditableTableModel table; // todo initialize table
 

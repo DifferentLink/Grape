@@ -21,6 +21,19 @@ public class StatusbarController {
 		return log.getAsString();
 	}
 
+	//TODO: Singleton pattern
+	private static StatusbarController statusbar;
+
+	private StatusbarController() {
+		this.log = new Log(100);
+	}
+
+	public static StatusbarController getInstance() {
+		if (statusbar == null) {
+			statusbar = new StatusbarController();
+		}
+		return statusbar;
+	}
 
 	/**
 	 * Parses a given String to the current history object with the given events.

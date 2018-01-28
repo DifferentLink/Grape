@@ -19,7 +19,7 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 public class FilterController {
 
 	private Filtermanagement filter;
-	private StatusbarController log;
+	private StatusbarController log = StatusbarController.getInstance();
 	//TODO: Singleton pattern
 	private static FilterController filterController;
 
