@@ -64,6 +64,7 @@ public class GenerateController {
 	}
 
 	public void generateEmptyGraph() { // todo please implement me
+		generateGraphs(0, 0, 0, 0, 1);
 	}
 
 	/**

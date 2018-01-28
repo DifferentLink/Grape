@@ -18,6 +18,7 @@ public class CalculationController {
 	private Boolean calculationStatus;
 	private StatusbarController log;
 	private GraphDatabase database;
+	private FilterController filter;
 	private NonEditableTableModel table; // todo initialize table
 
 	//TODO: Singleton pattern
@@ -25,6 +26,7 @@ public class CalculationController {
 
 	private CalculationController() {
 		this.log = StatusbarController.getInstance();
+		this.filter = FilterController.getInstance();
 		this.calculationStatus = false;
 	}
 
@@ -55,6 +57,9 @@ public class CalculationController {
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
+		if (graphs == null) {
+			return;
+		}
 		// Trigger Graph calculation
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
 			if (calculationStatus == true) {
@@ -65,7 +70,7 @@ public class CalculationController {
 				} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
 					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
-				table.update(null); // todo implement calculatedGraphProperties()
+				//table.update(); // todo implement calculatedGraphProperties()
 			} else {
 				return;
 			}
