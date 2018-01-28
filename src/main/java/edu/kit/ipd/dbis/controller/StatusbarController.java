@@ -36,15 +36,6 @@ public class StatusbarController {
 	}
 
 	/**
-	 * Parses a given String to the current history object with the given events.
-	 *
-	 * @param historyString the string of the history.
-	 */
-	private void parseHistory(String historyString) {
-
-	}
-
-	/**
 	 * Removes all events of the type MESSAGE from the current history
 	 */
 	public void removeMessages() {
