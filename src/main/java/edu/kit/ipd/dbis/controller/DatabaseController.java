@@ -15,6 +15,9 @@ import java.util.List;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
+/**
+ * The type Database controller.
+ */
 public class DatabaseController {
 
 	private GenerateController generate;
@@ -26,6 +29,9 @@ public class DatabaseController {
 	private Connector connector;
 	private GraphDatabase database;
 
+	/**
+	 * Instantiates a new Database controller.
+	 */
 	public DatabaseController() {
 		this.generate = GenerateController.getInstance();
 		this.calculation = CalculationController.getInstance();
@@ -37,11 +43,17 @@ public class DatabaseController {
 
 	/**
 	 * Triggers the database to open a new database table.
+	 *
+	 * @param url      the url
+	 * @param user     the user
+	 * @param password the password
+	 * @param name     the name
 	 */
 	public void newDatabase(String url, String user, String password, String name) {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
-		} catch (TableAlreadyExistsException | SQLException | DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
+		} catch (TableAlreadyExistsException | SQLException | DatabaseDoesNotExistException
+				| ConnectionFailedException | AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		this.updateDatabases();
@@ -55,7 +67,9 @@ public class DatabaseController {
 	public void loadDatabase(String filepath) {
 		try {
 			database = connector.loadGraphDatabase(filepath);
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException | SQLException | TablesNotAsExpectedException | FileContentCouldNotBeReadException | ConnectionFailedException | DatabaseDoesNotExistException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
+				| SQLException | TablesNotAsExpectedException | FileContentCouldNotBeReadException
+				| ConnectionFailedException | DatabaseDoesNotExistException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		this.updateDatabases();
@@ -70,12 +84,15 @@ public class DatabaseController {
 		GraphDatabase mergeDatabase = null;
 		try {
 			mergeDatabase = connector.loadGraphDatabase(filepath);
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException | SQLException | DatabaseDoesNotExistException | ConnectionFailedException | TablesNotAsExpectedException | FileContentCouldNotBeReadException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
+				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException
+				| TablesNotAsExpectedException | FileContentCouldNotBeReadException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		try {
 			database.merge(mergeDatabase);
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException e) {
+		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+				| AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		this.updateDatabases();
@@ -93,7 +110,7 @@ public class DatabaseController {
 	/**
 	 * Triggers the database to save the current selected graphs in the table at the given path.
 	 *
-	 * @param filepath the fille path of the Database.
+	 * @param filepath the file path of the Database.
 	 * @param graphIDs the GraphIDs to save.
 	 */
 	public void saveSelection(String filepath, List<Integer> graphIDs) {

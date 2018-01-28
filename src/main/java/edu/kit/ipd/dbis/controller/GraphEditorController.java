@@ -15,6 +15,9 @@ import java.util.Collections;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
+/**
+ * The type Graph editor controller.
+ */
 public class GraphEditorController {
 
 	private GraphDatabase database;
@@ -27,6 +30,11 @@ public class GraphEditorController {
 		this.log = StatusbarController.getInstance();
 	}
 
+	/**
+	 * Gets instance.
+	 *
+	 * @return the instance
+	 */
 	public static GraphEditorController getInstance() {
 		if (editor == null) {
 			editor = new GraphEditorController();
@@ -52,12 +60,12 @@ public class GraphEditorController {
 	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
 	public void addEditedGraph(PropertyGraph newGraph, int oldID) {
-
 		Boolean isDuplicate = null;
 
 		try {
 			isDuplicate = database.graphExists(newGraph);
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException e) {
+		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+				| AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		if (isDuplicate) {
@@ -65,17 +73,24 @@ public class GraphEditorController {
 		} else {
 			try {
 				database.addGraph(newGraph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
+			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
+					| ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 			try {
 				database.deleteGraph(oldID);
-			} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException | ConnectionFailedException e) {
+			} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
+					| ConnectionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
 	}
 
+	/**
+	 * Add new graph.
+	 *
+	 * @param graph the graph
+	 */
 	public void addNewGraph(PropertyGraph graph) { // todo implement me
 
 	}
@@ -99,7 +114,8 @@ public class GraphEditorController {
 		NextDenserGraphFinder denserGraph = new NextDenserGraphFinder(graph);
 		try {
 			database.addGraph(denserGraph.getNextDenserGraph());
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
+		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+				| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}

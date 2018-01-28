@@ -84,7 +84,8 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
-		} catch (TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException | DatabaseDoesNotExistException e) {
+		} catch (TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException
+				| DatabaseDoesNotExistException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -98,7 +99,8 @@ public class GenerateController {
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
+					| ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
@@ -111,8 +113,7 @@ public class GenerateController {
 	private Boolean isValidGeneratorInput(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
 		if (minVertices >= 0 && minEdges >= 0 && maxEdges >= 0 && maxVertices >= 0 && amount >= 0) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}

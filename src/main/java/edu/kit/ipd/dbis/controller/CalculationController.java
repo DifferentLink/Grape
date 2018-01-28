@@ -13,6 +13,9 @@ import java.util.List;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
+/**
+ * The type Calculation controller.
+ */
 public class CalculationController implements Runnable {
 
 	private Boolean calculationStatus;
@@ -30,6 +33,11 @@ public class CalculationController implements Runnable {
 		this.calculationStatus = false;
 	}
 
+	/**
+	 * Gets instance.
+	 *
+	 * @return the instance
+	 */
 	public static CalculationController getInstance() {
 		if (calculation == null) {
 			calculation = new CalculationController();
@@ -54,7 +62,8 @@ public class CalculationController implements Runnable {
 		List<PropertyGraph> graphs = null;
 		try {
 			graphs = database.getUncalculatedGraphs();
-		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException e) {
+		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
+				| ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		if (graphs == null) {
@@ -68,7 +77,8 @@ public class CalculationController implements Runnable {
 				// Replacing graphs
 				try {
 					database.replaceGraph(graph.getId(), graph);
-				} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
+				} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException
+						| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
 					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
 				//table.update(); // todo implement calculatedGraphProperties()
@@ -78,13 +88,16 @@ public class CalculationController implements Runnable {
 	}
 
 	/**
+	 * Gets number not calculated graphs.
+	 *
 	 * @return the length of the graphlist of CalculationController.
 	 */
 	public int getNumberNotCalculatedGraphs() {
 		int numberGraphs = 0;
 		try {
 			numberGraphs = database.getUncalculatedGraphs().size();
-		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException e) {
+		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
+				| ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		return numberGraphs;
