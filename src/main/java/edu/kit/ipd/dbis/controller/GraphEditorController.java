@@ -18,12 +18,13 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 public class GraphEditorController {
 
 	private GraphDatabase database;
-	private StatusbarController log = StatusbarController.getInstance();
+	private StatusbarController log;
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
 	private GraphEditorController() {
+		this.log = StatusbarController.getInstance();
 	}
 
 	public static GraphEditorController getInstance() {

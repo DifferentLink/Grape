@@ -20,13 +20,14 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 public class GenerateController {
 
 	private GraphDatabase database;
-
 	private BulkGraphGenerator generator;
-	private StatusbarController log = StatusbarController.getInstance();
+	private StatusbarController log;
+
 	//TODO: Singleton pattern
 	private static GenerateController generate;
 
 	private GenerateController() {
+		this.log = StatusbarController.getInstance();
 		this.generator = new BulkRandomConnectedGraphGenerator();
 	}
 

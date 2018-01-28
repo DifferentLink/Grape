@@ -21,17 +21,18 @@ public class DatabaseController {
 	private CalculationController calculation;
 	private GraphEditorController editor;
 	private FilterController filter;
+	private StatusbarController log;
 
 	private Connector connector;
 	private GraphDatabase database;
-	private StatusbarController log = StatusbarController.getInstance();
 
 	public DatabaseController() {
-		generate = GenerateController.getInstance();
-		calculation = CalculationController.getInstance();
-		editor = GraphEditorController.getInstance();
-		filter = FilterController.getInstance();
-		connector = new FileManager();
+		this.generate = GenerateController.getInstance();
+		this.calculation = CalculationController.getInstance();
+		this.editor = GraphEditorController.getInstance();
+		this.filter = FilterController.getInstance();
+		this.log = StatusbarController.getInstance();
+		this.connector = new FileManager();
 	}
 
 	/**
