@@ -76,5 +76,19 @@ public class StatusbarController {
 		log.addEvent(event);
 	}
 
+	/**
+	 * pauses the method calculateGraphProperties().
+	 */
+	public void pauseCalculation() {
+
+	}
+
+	/**
+	 * continues the method calculateGraphProperties().
+	 */
+	public void continueCalculation() {
+
+	}
+
 }
 

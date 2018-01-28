@@ -13,7 +13,7 @@ import java.util.List;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
-public class CalculationController {
+public class CalculationController implements Runnable {
 
 	private Boolean calculationStatus;
 	private StatusbarController log;
@@ -50,7 +50,7 @@ public class CalculationController {
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
 	 */
-	private void calculateGraphProperties() {
+	public void run() {
 		List<PropertyGraph> graphs = null;
 		try {
 			graphs = database.getUncalculatedGraphs();
@@ -61,8 +61,9 @@ public class CalculationController {
 			return;
 		}
 		// Trigger Graph calculation
+
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
-			if (calculationStatus == true) {
+			while (calculationStatus) {
 				graph.calculateProperties();
 				// Replacing graphs
 				try {
@@ -71,10 +72,9 @@ public class CalculationController {
 					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
 				//table.update(); // todo implement calculatedGraphProperties()
-			} else {
-				return;
 			}
 		}
+
 	}
 
 	/**
@@ -112,7 +112,6 @@ public class CalculationController {
 	 */
 	public void continueCalculation() {
 		calculationStatus = true;
-		this.calculateGraphProperties();
 	}
 
 }
