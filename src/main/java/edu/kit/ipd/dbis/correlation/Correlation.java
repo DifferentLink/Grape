@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.correlation;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 /**
  * abstract class which inherits all attributes and methods every correlation
@@ -18,14 +19,30 @@ abstract class Correlation {
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
      */
-    public abstract ArrayList<CorrelationOutput> useMaximum();
+    public abstract TreeSet<CorrelationOutput> useMaximum();
+
+    /**
+     * method which is used to check filters for a specific correlation monitoring only one property
+     * @param property1 property to focus on
+     * @return returns a list of objects of class CorrelationOutput which code the results of the
+     * correlation calculation
+     */
+    public abstract TreeSet<CorrelationOutput> useMaximum(Property property1);
 
     /**
      * method which is used to check filters for a specific correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
      */
-    public abstract ArrayList<CorrelationOutput> useMinimum();
+    public abstract TreeSet<CorrelationOutput> useMinimum();
+
+    /**
+     * method which is used to check filters for a specific correlation monitoring only one property
+     * @param property1 property to focus on
+     * @return returns a list of objects of class CorrelationOutput which code the results of the
+     * correlation calculation
+     */
+    public abstract TreeSet<CorrelationOutput> useMinimum(Property property1);
 
     /**
      * setter of attribute attributeCounter
