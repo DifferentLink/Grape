@@ -109,6 +109,11 @@ public class GenerateController {
 	}
 
 	private Boolean isValidGeneratorInput(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
-		return true;
+		if (minVertices >= 0 && minEdges >= 0 && maxEdges >= 0 && maxVertices >= 0 && amount >= 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }
