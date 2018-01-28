@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class History {
 
+
 	private List<Event> events;
 	// TODO: Messages and other EventTypes are now splitted
 	private List<Event> messages;
