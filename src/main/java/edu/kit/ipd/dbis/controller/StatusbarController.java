@@ -68,5 +68,9 @@ public class StatusbarController {
 		log.setHistory(history);
 	}
 
+	public void addEvent(Event event) {
+		log.addEvent(event);
+	}
+
 }
 

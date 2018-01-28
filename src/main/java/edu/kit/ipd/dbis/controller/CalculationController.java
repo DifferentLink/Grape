@@ -4,14 +4,19 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 public class CalculationController {
 
 	private Boolean calculationStatus = false;
-
+	private StatusbarController log;
 	private GraphDatabase database;
 	private NonEditableTableModel table; // todo initialize table
 
@@ -46,7 +51,7 @@ public class CalculationController {
 		try {
 			graphs = database.getUncalculatedGraphs();
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		// Trigger Graph calculation
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
@@ -56,7 +61,7 @@ public class CalculationController {
 				try {
 					database.replaceGraph(graph.getId(), graph);
 				} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
-					e.printStackTrace();
+					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
 				table.update(null); // todo implement calculatedGraphProperties()
 			} else {
@@ -73,7 +78,7 @@ public class CalculationController {
 		try {
 			numberGraphs = database.getUncalculatedGraphs().size();
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		return numberGraphs;
 	}
@@ -100,7 +105,6 @@ public class CalculationController {
 	 */
 	public void continueCalculation() {
 		calculationStatus = true;
-
 		this.calculateGraphProperties();
 	}
 

@@ -3,12 +3,16 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 /**
  * The type Generate controller.
@@ -18,7 +22,7 @@ public class GenerateController {
 	private GraphDatabase database;
 
 	private BulkGraphGenerator generator;
-
+	private StatusbarController log;
 	//TODO: Singleton pattern
 	private static GenerateController generate;
 
@@ -79,7 +83,7 @@ public class GenerateController {
 		try {
 			database.deleteGraph(id);
 		} catch (TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException | DatabaseDoesNotExistException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
 
@@ -93,7 +97,7 @@ public class GenerateController {
 			try {
 				database.addGraph(graph);
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-				e.printStackTrace();
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
 	}

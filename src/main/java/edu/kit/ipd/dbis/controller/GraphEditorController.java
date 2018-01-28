@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
@@ -10,12 +11,17 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
+import java.util.Collections;
+
+import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
+
 public class GraphEditorController {
 
 	private GraphDatabase database;
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
+	private StatusbarController log;
 
 	private GraphEditorController() {
 	}
@@ -51,7 +57,7 @@ public class GraphEditorController {
 		try {
 			isDuplicate = database.graphExists(newGraph);
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		if (isDuplicate) {
 			return;
@@ -59,12 +65,12 @@ public class GraphEditorController {
 			try {
 				database.addGraph(newGraph);
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
-				e.printStackTrace();
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 			try {
 				database.deleteGraph(oldID);
 			} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException | ConnectionFailedException e) {
-				e.printStackTrace();
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
 	}
@@ -93,7 +99,7 @@ public class GraphEditorController {
 		try {
 			database.addGraph(denserGraph.getNextDenserGraph());
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
 

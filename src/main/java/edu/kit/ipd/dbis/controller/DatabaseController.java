@@ -6,10 +6,14 @@ import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedExcept
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
+import edu.kit.ipd.dbis.log.Event;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
+
+import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 public class DatabaseController {
 
@@ -20,7 +24,7 @@ public class DatabaseController {
 
 	private Connector connector;
 	private GraphDatabase database;
-
+	private StatusbarController log;
 
 	public DatabaseController() {
 		generate = GenerateController.getInstance();
@@ -37,7 +41,7 @@ public class DatabaseController {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
 		} catch (TableAlreadyExistsException | SQLException | DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		this.updateDatabases();
 	}
@@ -51,7 +55,7 @@ public class DatabaseController {
 		try {
 			database = connector.loadGraphDatabase(filepath);
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException | SQLException | TablesNotAsExpectedException | FileContentCouldNotBeReadException | ConnectionFailedException | DatabaseDoesNotExistException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		this.updateDatabases();
 	}
@@ -66,12 +70,12 @@ public class DatabaseController {
 		try {
 			mergeDatabase = connector.loadGraphDatabase(filepath);
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException | SQLException | DatabaseDoesNotExistException | ConnectionFailedException | TablesNotAsExpectedException | FileContentCouldNotBeReadException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		try {
 			database.merge(mergeDatabase);
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException e) {
-			e.printStackTrace();
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		this.updateDatabases();
 	}
