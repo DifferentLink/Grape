@@ -50,6 +50,10 @@ public class CorrelationOutput implements Comparable<CorrelationOutput> {
     public int compareTo(CorrelationOutput other) {
         if (this.getOutputNumber() < other.getOutputNumber()) {
             return 1;
+        } else if (this.getOutputNumber() == other.getOutputNumber()
+                && this.getFirstProperty().equals(other.getSecondProperty())
+                && this.getSecondProperty().equals(other.getFirstProperty())) {
+            return 0;
         }
         return -1;
     }
