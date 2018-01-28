@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.Structure
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 /**
  * class which is used to handle correlation requests
@@ -39,11 +40,15 @@ public class CorrelationRequest {
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
      */
-    public ArrayList<CorrelationOutput> use() {
-        if (correlation.getMaximum()) {
+    public TreeSet<CorrelationOutput> use() {
+        if (correlation.getMaximum() && correlation.getProperty() == null) {
             return correlation.useMaximum();
-        } else {
+        } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
            return correlation.useMaximum();
+        } else if (correlation.getMaximum() && correlation.getProperty() != null) {
+            return correlation.useMaximum(correlation.getProperty());
+        } else {
+            return correlation.useMinimum(correlation.getProperty());
         }
     }
 
@@ -52,7 +57,7 @@ public class CorrelationRequest {
         String input = correlationInput.toLowerCase();
         String maxOrMin = "";
         while (i < input.length() && input.charAt(i) != ' ') {
-            maxOrMin = maxOrMin + (char) input.charAt(i);
+            maxOrMin = maxOrMin + input.charAt(i);
             i++;
         }
         boolean maximum = CorrelationRequest.testMaxOrMin(maxOrMin);
@@ -60,7 +65,7 @@ public class CorrelationRequest {
         String correlationString = "";
         i++;
         while (i < input.length() && input.charAt(i) != ' ') {
-            correlationString = correlationString + (char) input.charAt(i);
+            correlationString = correlationString + input.charAt(i);
             i++;
         }
         Correlation correlation = CorrelationRequest.testCorrelationString(correlationString);
@@ -70,7 +75,7 @@ public class CorrelationRequest {
             int j = i;
             j++;
             while (j < input.length() && input.charAt(j) != ' ') {
-                propertyString = propertyString + (char) input.charAt(j);
+                propertyString = propertyString + input.charAt(j);
                 j++;
             }
             Property property = CorrelationRequest.testProperty(propertyString);
@@ -78,7 +83,7 @@ public class CorrelationRequest {
             String propertyCounterString = "";
             j++;
             while (j < input.length() && input.charAt(j) != ' ') {
-                propertyCounterString = propertyCounterString + (char) input.charAt(j);
+                propertyCounterString = propertyCounterString + input.charAt(j);
                 j++;
             }
             int attributeCounter = Integer.parseInt(propertyCounterString);
@@ -91,7 +96,7 @@ public class CorrelationRequest {
             String propertyCounterString = "";
             i++;
             while (i < input.length() && input.charAt(i) != ' ') {
-                propertyCounterString = propertyCounterString + (char) input.charAt(i);
+                propertyCounterString = propertyCounterString + input.charAt(i);
                 i++;
             }
             int attributeCounter = Integer.parseInt(propertyCounterString);
