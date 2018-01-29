@@ -108,8 +108,7 @@ public class MenuUI extends JMenuBar {
 			final int returnValue = fileChooser.showDialog(null, "Create"); // todo replace with language resource
 			File file = fileChooser.getSelectedFile();
 
-			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Created new file!"); // todo remove sout
+			if (returnValue == JFileChooser.APPROVE_OPTION) { // todo open ConfigureDatabaseUI, then controller.saveDatabase()
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
 					databaseController.saveDatabase(file.getPath()); // todo catch possible exceptions
@@ -279,7 +278,7 @@ public class MenuUI extends JMenuBar {
 		}
 	}
 
-	private class SaveAsAction implements ActionListener {
+	private class SaveAsAction implements ActionListener { // todo same as Save
 
 		private final DatabaseController databaseController;
 		private final ResourceBundle language;
@@ -313,7 +312,7 @@ public class MenuUI extends JMenuBar {
 		}
 	}
 
-	private class SaveSelectionAction implements ActionListener {
+	private class SaveSelectionAction implements ActionListener { // todo controller.saveSelection(graphs)
 
 		private final DatabaseController databaseController;
 		private final ResourceBundle language;
