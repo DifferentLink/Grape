@@ -58,6 +58,9 @@ public class GenerateController {
 		this.saveGraphs(graphs);
 	}
 
+	public void generateEmptyGraph() { // todo please implement me
+	}
+
 	/**
 	 * Calculates a graph with the BFS Code and saves it to the Database.
 	 *

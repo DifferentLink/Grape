@@ -248,11 +248,11 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+
 			if (coloringType.getSelectedItem().toString().equals("Total Coloring")) { // todo make this work with different languages
-				// todo how to use this method correctly:
-				graphEditorController.getTotalColoring(graph.asPropertyGraph());
+				graphEditorController.getTotalColoring(graph.asPropertyGraph()); // todo this simply returns a coloring. Use this color in the RenderableGraph
 			} else if (coloringType.getSelectedItem().toString().equals("Vertex Coloring")) { // todo make this work with different languages
-				// todo where's the method to get the vertex coloring?
+				graphEditorController.getVertexColoring(graph.asPropertyGraph()); // todo this simply returns a coloring. Use this color in the RenderableGraph
 			}
 		}
 	}
@@ -270,7 +270,7 @@ public class GraphEditorUI extends JPanel {
 
 			PropertyGraph propertyGraph = graph.asPropertyGraph();
 			if (graphEditorController.isValidGraph(propertyGraph)) {
-				try { // todo remove try-catch, controler should handle this
+				try { // todo replace with correct exceptions
 					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
 				} catch (DatabaseDoesNotExistException e) {
 					e.printStackTrace();
@@ -299,7 +299,7 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			// graph = graphEditorController.calculateDenserGraph(graph.asPropertyGraph()); todo uncomment as soon as available
+			graphEditorController.addNextDenserToDatabase(graph.asPropertyGraph());
 		}
 	}
 
@@ -313,7 +313,7 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) { // todo implement methods to apply a coloring to the visible graph
-			graphEditorController.getAlternateTotalColoring(graph.asPropertyGraph()); // todo this method's signature is most likely nonsense
+			graphEditorController.getAlternateTotalColoring(graph.getId()); // todo use correct coloring and check if graph hasn't been edited yet
 		}
 	}
 

@@ -37,16 +37,16 @@ public class FilterController {
 		filter.setDatabase(database);
 	}
 
-	public void addFilter(String filterInput, int id) throws Exception, InvalidInputException {
-		filter.addFilter(filterInput, id);
+	public void updateFilter(String filterInput, int id) throws Exception, InvalidInputException {
+		filter.updateFilter(filterInput, id);
 	}
 
 	public void addFilterToGroup(String filterInput, int filterId, int groupId) throws Exception, InvalidInputException {
 		filter.addFilterToGroup(filterInput, filterId, groupId);
 	}
 
-	public void addFiltergroup(String filterInput, int id) throws Exception, InvalidInputException {
-		filter.addFiltergroup(filterInput, id);
+	public void updateFilterGroup(String filterInput, int id) throws Exception, InvalidInputException {
+		filter.updateFiltergroup(filterInput, id);
 	}
 
 	public void removeFiltersegment(int id) throws Exception {

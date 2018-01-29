@@ -25,16 +25,9 @@ public class FilterManagement {
 		this.filterController = filterController;
 	}
 
-	public void addNewSimpleFilter(FilterController filterController) {
+	public void addNewSimpleFilter() {
 		SimpleFilter newFilter = new SimpleFilter(getUniqueID());
 		simpleFilter.add(newFilter);
-		try {
-			filterController.addFilter("", newFilter.getID());
-		} catch (Exception e) { // todo when is this exception being thrown?
-			e.printStackTrace();
-		} catch (InvalidInputException e) { // todo this most likely doesn't make sense
-			e.printStackTrace();
-		}
 	}
 
 	private void addSimpleFilterToGroup(FilterGroup filterGroup, SimpleFilter simpleFilter) {
@@ -45,7 +38,7 @@ public class FilterManagement {
 		FilterGroup newGroup = new FilterGroup(getUniqueID(), name);
 		filterGroups.add(newGroup);
 		try {
-			filterController.addFiltergroup("", newGroup.getID());
+			filterController.updateFilterGroup("", newGroup.getID());
 		} catch (Exception e) { // todo when is this exception being thrown?
 			e.printStackTrace();
 		} catch (InvalidInputException e) { // todo this most likely doesn't make sense
