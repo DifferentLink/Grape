@@ -8,10 +8,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class RenderableGraph {
 
@@ -40,7 +37,33 @@ public class RenderableGraph {
 	}
 
 	public RenderableGraph(PropertyGraph propertyGraph) {
+		this.edges = new HashSet<>();
+		this.vertices = new HashSet<>();
+		this.id = propertyGraph.getId();
 
+		Map<Object, Vertex> objectVertexMap = new HashMap<>();
+		Set addedEdges = new HashSet();
+
+		for (Object v : propertyGraph.vertexSet()) {
+			if (!objectVertexMap.containsKey(v)) {
+				Vertex vertex1 = new Vertex(0, 0);
+				this.vertices.add(vertex1);
+				objectVertexMap.put(v, vertex1);
+			}
+			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (!objectVertexMap.containsKey(edgeTarget)) {
+					Vertex vertex2 = new Vertex(0, 0);
+					this.vertices.add(vertex2);
+					objectVertexMap.put(edgeTarget, vertex2);
+				}
+				if (!addedEdges.contains(e)
+						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
+					addedEdges.add(e);
+					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
+				}
+			}
+		}
 	}
 
 	public PropertyGraph asPropertyGraph() {
