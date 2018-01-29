@@ -1,8 +1,9 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.graph.ClassBasedVertexFactory;
 
 import java.util.Objects;
 
@@ -17,31 +18,45 @@ import java.util.Objects;
  *
  */
 public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> {
-	/**
-	 * The input graph
-	 */
-	protected final PropertyGraph<V, E> graph;
+	private final Graph<V, E> graph;
+	private VertexFactory<V> vertexFactory;
 
 	/**
-	 * Constructs a new minimal total coloring algorithm
+	 * Constructs a new minimal total coloring algorithm.
+	 * The vertex class is needed in order to create
+	 * new vertices in the input graph.
 	 *
 	 * @param graph the input graph
+	 * @param vertexClass the vertices' class
 	 */
-	public MinimalTotalColoring(PropertyGraph<V, E> graph) {
+	public MinimalTotalColoring(Graph<V, E> graph, Class<? extends V> vertexClass) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
+		this.vertexFactory = new ClassBasedVertexFactory<>(vertexClass);
 	}
 
 	@Override
 	public TotalColoring getColoring() {
-		PropertyGraph edgeToVertexGraph = this.makeEdgesToVertices();
-		VertexColoringAlgorithm vertexColoringAlgorithm = new MinimalVertexColoring(edgeToVertexGraph);
-		VertexColoringAlgorithm.Coloring coloring = vertexColoringAlgorithm.getColoring();
-		// parse back
+		Graph edgeToVertexGraph = this.makeEdgesToVertices();
 		return null;
 	}
 
-	private PropertyGraph makeEdgesToVertices() {
-		//TODO: implement me
-		return null;
+	private Graph makeEdgesToVertices() {
+		Graph edgeToVertexGraph = this.graph;
+		// iterate over vertices
+		for (Object v : this.graph.vertexSet()) {
+			// iterate over vertex v's edges
+			for (Object e : this.graph.outgoingEdgesOf((V) v)) {
+				// make edge to vertex by creating new
+				// vertex that is situated inbetween
+				// v and the edges' target and creating
+				// edges from the new vertex to those two
+				// vertices.
+				V edgeToVertex = this.vertexFactory.createVertex();
+				edgeToVertexGraph.addVertex(edgeToVertex);
+				edgeToVertexGraph.addEdge(v, edgeToVertex);
+				edgeToVertexGraph.addEdge(edgeToVertex, edgeToVertexGraph.getEdgeTarget(e));
+			}
+		}
+		return edgeToVertexGraph;
 	}
 }
