@@ -45,7 +45,6 @@ public class FileManager implements Connector {
 		GraphTable graphTable = new GraphTable(url, user, password, name);
 		FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
 		return new GraphDatabase(graphTable, filterTable);
-
 	}
 
 	@Override
