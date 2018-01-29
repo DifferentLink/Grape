@@ -162,6 +162,8 @@ public class GenerateController {
 				return false;
 			} else if (Integer.parseInt(splitCode[i]) > splitCode.length) {
 				return false;
+			} else if (Integer.parseInt(splitCode[i]) < -1) {
+				return false;
 			}
 		}
 		return true;

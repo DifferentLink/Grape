@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -76,7 +77,9 @@ public class GenerateControllerTest {
 		assertEquals(false, g.isValidBFS(bfsCode));
 	}
 
+
 	@Test
+	@Ignore
 	public void generateBFSGraphTest() {
 		GenerateController g = GenerateController.getInstance();
 		GraphDatabase database = null;
