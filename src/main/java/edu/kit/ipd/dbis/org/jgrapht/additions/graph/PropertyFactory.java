@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * a property factorie that creates all properties for the input graph
+ * A factory that creates instances of all existing properties.
  */
 public class PropertyFactory {
 	/**
