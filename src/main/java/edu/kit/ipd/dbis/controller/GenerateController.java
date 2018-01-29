@@ -125,7 +125,7 @@ public class GenerateController {
 		}
 	}
 
-	private Boolean isValidBFS(String bfsCode) {
+	public Boolean isValidBFS(String bfsCode) {
 		if (!bfsCode.contains("[") || !bfsCode.contains("]")) {
 			return false;
 		}
@@ -135,13 +135,15 @@ public class GenerateController {
 				return false;
 			} else if (!isNumeric(splitCode[i])) {
 				return false;
+			} else if (Integer.parseInt(splitCode[i]) > splitCode.length) {
+				return false;
 			}
 		}
 		return true;
 	}
 
 	private Boolean isValidGeneratorInput(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
-		if (minVertices >= 0 && minEdges >= 0 && maxEdges >= 0 && maxVertices >= 0 && amount >= 0) {
+		if (minVertices >= 0 && minEdges >= 0 && maxEdges >= 0 && maxVertices >= 0 && amount >= 1) {
 			return true;
 		} else {
 			return false;
