@@ -109,14 +109,14 @@ public class StatusbarController {
 	/**
 	 * pauses the method calculateGraphProperties().
 	 */
-	public void pauseCalculation() {
+	public void pauseCalculation() { //TODO
 
 	}
 
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public void continueCalculation() {
+	public void continueCalculation() { //TODO
 
 	}
 
