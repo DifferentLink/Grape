@@ -8,7 +8,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 import java.util.*;
 
 /**
- * class which calculates teh Pearson-Correlation for a list of graphs
+ * class which calculates the Pearson-Correlation for a list of graphs
  */
 public class Pearson extends Correlation {
 
@@ -86,7 +86,8 @@ public class Pearson extends Correlation {
         return outputSet;
     }
 
-    private static ArrayList<Property> createPropertyList() {
+    //TODO: An dieser Stelle würde sich die Methode aus der Klasse PropertyFactory deutlich besser eignen
+    static ArrayList<Property> createPropertyList() {
         ArrayList<Property> returnArray = new ArrayList<>();
         PropertyGraph graph = new PropertyGraph();
         returnArray.add(new Profile(graph));
@@ -106,21 +107,21 @@ public class Pearson extends Correlation {
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty) {
         //TODO: Hier muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
-        LinkedList<Double> firstPropertyValues = new LinkedList<>();
+        LinkedList<Double> firstPropertyValues = Pearson.generateRandomLinkedList();
         //TODO: Hir muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
-        LinkedList<Double> secondpropertyValues = new LinkedList<>();
+        LinkedList<Double> secondPropertyValues = Pearson.generateRandomLinkedList();
         double firstRandomMedium = Pearson.createRandomMedium(firstPropertyValues);
-        double secondRandomMedium = Pearson.createRandomMedium(secondpropertyValues);
+        double secondRandomMedium = Pearson.createRandomMedium(secondPropertyValues);
         double sum = 0;
         for (double currentFirstPropertyValue: firstPropertyValues) {
-            for (double currentSecondPropertyValue: secondpropertyValues) {
+            for (double currentSecondPropertyValue: secondPropertyValues) {
                 sum = sum + ((currentFirstPropertyValue - firstRandomMedium)
                         * (currentSecondPropertyValue - secondRandomMedium));
             }
         }
         double result = (sum / (firstPropertyValues.size() - 1));
         return (result / (Pearson.getSampleVariationskeffizient(firstPropertyValues, firstRandomMedium)
-            * Pearson.getSampleVariationskeffizient(secondpropertyValues, secondRandomMedium)));
+            * Pearson.getSampleVariationskeffizient(secondPropertyValues, secondRandomMedium)));
     }
 
     private static double createRandomMedium(LinkedList<Double> inputList) {
@@ -137,5 +138,14 @@ public class Pearson extends Correlation {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));
         }
         return Math.sqrt(sum / (inputList.size() - 1));
+    }
+
+    //TODO: Diese Methode muss nach DB-Zugriff entfernt werden
+    private static LinkedList<Double> generateRandomLinkedList() {
+        LinkedList<Double> outputList = new LinkedList<>();
+        for (int i = 0; i < 3; i++) {
+            outputList.add(Math.random());
+        }
+        return outputList;
     }
 }
