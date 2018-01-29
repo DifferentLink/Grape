@@ -41,7 +41,7 @@ public class DatabaseController {
 		this.connector = new FileManager();
 	}
 
-	// TODO:
+	// TODO: new Getter
 	public GraphDatabase getCurrentDatabase() {
 		return this.database;
 	}
