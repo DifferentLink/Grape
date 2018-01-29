@@ -41,6 +41,10 @@ public class DatabaseController {
 		this.connector = new FileManager();
 	}
 
+	// TODO:
+	public GraphDatabase getCurrentDatabase() {
+		return this.database;
+	}
 	/**
 	 * Triggers the database to open a new database table.
 	 *
