@@ -1,9 +1,11 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
+import java.io.Serializable;
+
 /**
  * Represents a graph's property
  */
-public abstract class Property {
+public abstract class Property implements Serializable {
 	private Object value;
 	private PropertyGraph graph;
 
