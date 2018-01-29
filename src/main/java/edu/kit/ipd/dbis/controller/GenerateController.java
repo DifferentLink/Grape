@@ -32,6 +32,11 @@ public class GenerateController {
 		this.generator = new BulkRandomConnectedGraphGenerator();
 	}
 
+	/**
+	 * Gets instance.
+	 *
+	 * @return the instance
+	 */
 	public static GenerateController getInstance() {
 		if (generate == null) {
 			generate = new GenerateController();
@@ -56,24 +61,38 @@ public class GenerateController {
 	 * @param minEdges    lower bound of edges.
 	 * @param maxEdges    upper bound of edges.
 	 * @param amount      the number of graphs
+	 * @throws InvalidGeneratorInputException the invalid generator input exception
 	 */
-	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
+	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
+			InvalidGeneratorInputException {
+
+		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
+			throw new InvalidGeneratorInputException();
+		}
 		// todo: solange generieren bis die gewünschte anzahl von graphen existiert!
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
 	}
 
+	/**
+	 * Generate empty graph.
+	 */
 	public void generateEmptyGraph() { // todo please implement me
-		generateGraphs(0, 0, 0, 0, 1);
+		try {
+			generateGraphs(0, 0, 0, 0, 1);
+		} catch (InvalidGeneratorInputException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**
 	 * Creates a graph with the BFS Code and saves it in the Database.
 	 *
 	 * @param bfsCode the BFS Code of the graph to save.
+	 * @throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
-	public void generateBFSGraph(String bfsCode) throws IllegalArgumentException {
+	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
 		if (isValidBFS(bfsCode)) {
 			// Parsing String into int[]
 			String[] splitCode = bfsCode.split("\\[,]");
@@ -91,7 +110,7 @@ public class GenerateController {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		} else {
-			throw new IllegalArgumentException("BfsCode is not valid");
+			throw new InvalidBfsCodeInputException("BfsCode is not valid");
 		}
 	}
 
@@ -125,6 +144,12 @@ public class GenerateController {
 		}
 	}
 
+	/**
+	 * Is valid bfs boolean.
+	 *
+	 * @param bfsCode the bfs code
+	 * @return the boolean
+	 */
 	public Boolean isValidBFS(String bfsCode) {
 		if (!bfsCode.contains("[") || !bfsCode.contains("]")) {
 			return false;

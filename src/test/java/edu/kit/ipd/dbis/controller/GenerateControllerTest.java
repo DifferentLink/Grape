@@ -5,10 +5,8 @@ import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
@@ -83,19 +81,25 @@ public class GenerateControllerTest {
 		GenerateController g = GenerateController.getInstance();
 		GraphDatabase database = null;
 		try {
-			database = new FileManager().createGraphDatabase("","","","");
-		} catch (TableAlreadyExistsException | DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException | SQLException e) {
+			database = new FileManager().createGraphDatabase("", "", "", "");
+		} catch (TableAlreadyExistsException | DatabaseDoesNotExistException | ConnectionFailedException |
+				AccessDeniedForUserException | SQLException e) {
 			e.printStackTrace();
 		}
 		g.setDatabase(database);
 		String bfsCode = "[1,2,0,0,0,-1,3]";
-		g.generateBFSGraph(bfsCode);
+		try {
+			g.generateBFSGraph(bfsCode);
+		} catch (InvalidBfsCodeInputException e) {
+			e.printStackTrace();
+		}
 		LinkedList<PropertyGraph> graphs = null;
 		try {
 			graphs = database.getUncalculatedGraphs();
-		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException e) {
+		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException |
+				ConnectionFailedException e) {
 			e.printStackTrace();
 		}
-		assert(graphs.isEmpty());
+		assert (graphs.isEmpty());
 	}
 }
