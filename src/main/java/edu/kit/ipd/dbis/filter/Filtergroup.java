@@ -24,4 +24,13 @@ public class Filtergroup extends Filtersegment {
         this.id = id;
         availableFilter = new ArrayList<>();
     }
+
+	/**
+	 * Getter method for availableFilter
+	 * @return the field availableFilter
+	 */
+	public List<Filter> getAvailableFilter() {
+		return this.availableFilter;
+	}
+
 }
