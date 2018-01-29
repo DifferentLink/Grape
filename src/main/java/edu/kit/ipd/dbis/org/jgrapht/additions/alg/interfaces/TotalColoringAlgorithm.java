@@ -133,5 +133,13 @@ public interface TotalColoringAlgorithm<V, E> {
 			}
 			return classes;
 		}
+
+		@Override
+		public String toString() {
+			return "Total Coloring [number-of-colors="
+					+ numberColors + ", vertexColors="
+					+ vertexColors + ", edgeColors=" + edgeColors
+					+ "]";
+		}
 	}
 }
