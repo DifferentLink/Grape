@@ -148,7 +148,7 @@ public class GraphTable extends Table {
 		graph.setId(this.getId());
 		columns += "graph, id, bfscode, state, iscalculated)";
 		values += "?, " + graph.getId()
-				+ ", " + this.minimalBfsCodeToString(graph)
+				+ ", '" + this.minimalBfsCodeToString(graph) + "'"
 				+ ", " + false
 				+ ", " + this.isCalculated(graph) + ")";
 
@@ -272,7 +272,7 @@ public class GraphTable extends Table {
 		int[] bfsCode = code.getCode();
 
 		for (int i = 0; i < bfsCode.length; i++) {
-			s += (i != bfsCode.length - 1) ? (bfsCode[i] + "a") : (bfsCode[i]);
+			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
 		}
 		return s;
 
