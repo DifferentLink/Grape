@@ -136,4 +136,13 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		}
 		return matrix;
 	}
+
+	/**
+	 * clones this graph
+	 * @return a clone of this graph
+	 */
+	public PropertyGraph clone() {
+		//TODO: implement me
+		return null;
+	}
 }
