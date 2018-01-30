@@ -37,7 +37,7 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 	public TotalColoring getColoring() {
 		Graph edgeToVertexGraph = this.makeEdgesToVertices();
 		VertexColoringAlgorithm.Coloring coloring = new MinimalVertexColoring(edgeToVertexGraph).getColoring();
-		return null;
+		return this.createTotalColoringObject(coloring);
 	}
 
 	private Graph makeEdgesToVertices() {
@@ -79,5 +79,21 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 			}
 		}
 		return edgeToVertexGraph;
+	}
+
+	private TotalColoring createTotalColoringObject(VertexColoringAlgorithm.Coloring coloring) {
+		Map<V, Integer> vertexColors = new HashMap<>();
+		Map<E, Integer> edgeColors = new HashMap<>();
+		int numberColors = coloring.getNumberColors();
+
+		Map colors = coloring.getColors();
+		for (Object o : colors.keySet()) {
+			if (this.integerVMap.containsKey(o)) {
+				vertexColors.put(this.integerVMap.get(o), (Integer) colors.get(o));
+			} else if (this.integerEMap.containsKey(o)) {
+				edgeColors.put(this.integerEMap.get(o), (Integer) colors.get(o));
+			}
+		}
+		return new TotalColoringImpl(vertexColors, edgeColors, numberColors);
 	}
 }
