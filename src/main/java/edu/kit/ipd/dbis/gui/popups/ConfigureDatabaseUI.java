@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -81,6 +82,18 @@ public class ConfigureDatabaseUI extends JFrame {
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), nameInput.getText());
+
+				final JFileChooser fileChooser = new JFileChooser();
+				final int returnValue = fileChooser.showDialog(null, "Create"); // todo replace with language resource
+				File file = fileChooser.getSelectedFile();
+
+				if (returnValue == JFileChooser.APPROVE_OPTION) {
+					if (file != null) {
+						file = new File(file.getParentFile(), file.getName() + ".txt");
+						databaseController.saveDatabase(file.getPath());
+					}
+				}
+
 			} catch (DatabaseDoesNotExistException e) {
 				e.printStackTrace();
 			} catch (SQLException e) { // todo nonono no SQLException
