@@ -68,6 +68,7 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the database.
 	 */
+	//TODO: nix
 	public void loadDatabase(String filepath) {
 		try {
 			database = connector.loadGraphDatabase(filepath);
