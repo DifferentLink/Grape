@@ -271,7 +271,8 @@ public class GraphTable extends Table {
 
 		String s = "";
 		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
-		int[] bfsCode = (int[]) bfs.getValue();
+		BfsCodeAlgorithm.BfsCode code = (BfsCodeAlgorithm.BfsCode) bfs.getValue();
+		int[] bfsCode = code.getCode();
 
 		for (int i = 0; i < bfsCode.length; i++) {
 			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
