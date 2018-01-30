@@ -6,12 +6,11 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
+import org.jgrapht.alg.clique.BronKerboschCliqueFinder;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  *The kk-graph generator. It generates the kk-graph for the input graph depending on the Hadwiger Conjecture.
@@ -61,28 +60,49 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		BfsCodeAlgorithm.BfsCodeImpl bfsCode = (BfsCodeAlgorithm.BfsCodeImpl) graph.getProperty(BfsCode.class).getValue();
 		int[] bfsArray = bfsCode.getCode();
 		ArrayList<int[]> edges = this.getEdgeList(bfsArray);
+
+		PropertyGraph graphCopy;
 		Map<Integer, V> numberMap = bfsCode.getNumberMap();
 		boolean found = false;
-
+		boolean allCombsDone = false;
 		//tries all different possibilities of edges until the kk graph gets found
-		Map<Integer, V> combMap = bfsCode.getNumberMap();
-		while (!sameComb(actualComb, endComb) && !found) {
-			combMap = bfsCode.getNumberMap();
+		while (!found && !allCombsDone) {
+			graphCopy = graph.clone();
+			//contract all edges from this combination
 			for (int i = 0; i < actualComb.length; i++) {
 				if (actualComb[i] == 1) {
-					contractEdge(combMap, numberMap.get(edges.get(i)[0]), numberMap.get(edges.get(i)[0]));
+					contractEdge(graphCopy, numberMap.get(edges.get(i)[0]), numberMap.get(edges.get(i)[1]));
 				}
 			}
-			if (isClique(combMap)) {
+
+			if (isClique(graphCopy)) {
 				found = true;
 			}
+			if (sameComb(actualComb, endComb)) {
+				allCombsDone = true;
+			}
+			if (!found) {
+				actualComb = getNextEdgeCombination(actualComb);
+			}
+		}
+		//kk graph not found
+		if (found = false) {
+			return null;
 		}
 		//TODO: implement me (numberOfSubgraphs)
-		return new KkGraphImpl(combMap, vertexColoring.getNumberColors());
+		return new KkGraphImpl(getKkGraphMap(actualComb), vertexColoring.getNumberColors());
 	}
 
 
-	private void contractEdge(Map<Integer, V> graphMap, V firstNode, V secondNode) {
+	/**
+	 * contracs the edge
+	 *
+	 * @param graph input graph
+	 * @param firstNode the start vertex of the edge
+	 * @param secondNode the end vertex of the edge
+	 */
+	private void contractEdge(PropertyGraph graph, V firstNode, V secondNode) {
+		//graphMap verändern zu neuer Map und zurückgeben
 		//TODO: implement me;
 	}
 
@@ -134,6 +154,12 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		return result;
 	}
 
+	/**
+	 * checks if it is the same comb
+	 * @param first first comb
+	 * @param second second comb
+	 * @return if its the same comb
+	 */
 	private boolean sameComb(int[] first, int[] second) {
 		for (int i = 0; i < Math.min(first.length, second.length); i++) {
 			if (first[i] != second[i]) {
@@ -161,11 +187,26 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 	/**
 	 * checks if the graph represented by the combMap is a clique
-	 * @param combMap the map
+	 * @param graph the graph
 	 * @return if its a clique
 	 */
-	private boolean isClique(Map<Integer, V> combMap) {
+	private boolean isClique(PropertyGraph graph) {
 		//TODO: implement me
-		return true;
+		ArrayList<Set<Object>> cliques = new ArrayList<>();
+		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(graph);
+		Iterator<Set<Object>> it = alg.iterator();
+		while (it.hasNext()) {
+			Set<Object> clique = it.next();
+			cliques.add(clique);
+		}
+		if (cliques.size() == 1) {
+			return true;
+		}
+		return false;
+	}
+
+	private Map<V, Integer> getKkGraphMap(int[] edgeComb) {
+		return null;
+		//TODO:implement me
 	}
 }
