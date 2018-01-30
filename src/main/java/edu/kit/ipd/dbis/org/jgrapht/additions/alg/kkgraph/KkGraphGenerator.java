@@ -6,8 +6,10 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
+import org.jgrapht.VertexFactory;
 import org.jgrapht.alg.clique.BronKerboschCliqueFinder;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
+import org.jgrapht.graph.ClassBasedVertexFactory;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -89,8 +91,42 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		if (found = false) {
 			return null;
 		}
-		//TODO: implement me (numberOfSubgraphs)
-		return new KkGraphImpl(getKkGraphMap(actualComb), vertexColoring.getNumberColors());
+
+		//TODO: implement me
+		//getKkGraphMap
+		int cnt = 0;
+		Map<V, Integer> result = new HashMap<>();
+		for (int i = 0; i < actualComb.length; i++) {
+			if (actualComb[i] == 1) {
+				V first = numberMap.get(edges.get(i)[0]);
+				V second = numberMap.get(edges.get(i)[1]);
+				if (result.keySet().contains(first) && result.keySet().contains(second)) {
+					int valueFirst = result.get(first);
+					int valueSecond = result.get(first);
+					for (V v : result.keySet()) {
+						if (result.get(v) == valueFirst) {
+							result.replace(v, valueSecond);
+						}
+					}
+				}else if (result.keySet().contains(first)) {
+					int v = result.get(first);
+					result.put(second, v);
+				} else if (result.keySet().contains(second)) {
+					int v = result.get(second);
+					result.put(first, v);
+				} else {
+					result.put(first, cnt);
+					result.put(second, cnt);
+					cnt++;
+				}
+			}
+		}
+		Collection<Integer> values = result.values();
+		Set<Integer> v = new HashSet<>();
+		for (int i : values) {
+			v.add(i);
+		}
+		return new KkGraphImpl(result, v.size());
 	}
 
 
@@ -102,7 +138,17 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	 * @param secondNode the end vertex of the edge
 	 */
 	private void contractEdge(PropertyGraph graph, V firstNode, V secondNode) {
-		//graphMap verändern zu neuer Map und zurückgeben
+		VertexFactory<V> vertexFactory = new ClassBasedVertexFactory(firstNode.getClass());
+		V newNode = vertexFactory.createVertex();
+		graph.removeAllEdges(firstNode, secondNode);
+		graph.addVertex(newNode);
+		for (Object v : graph.vertexSet()) {
+			if (graph.containsEdge(firstNode, v) || graph.containsEdge(secondNode, v)) {
+				graph.addEdge(newNode, v);
+			}
+		}
+		graph.removeVertex(firstNode);
+		graph.removeVertex(secondNode);
 		//TODO: implement me;
 	}
 
@@ -203,10 +249,5 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 			return true;
 		}
 		return false;
-	}
-
-	private Map<V, Integer> getKkGraphMap(int[] edgeComb) {
-		return null;
-		//TODO:implement me
 	}
 }
