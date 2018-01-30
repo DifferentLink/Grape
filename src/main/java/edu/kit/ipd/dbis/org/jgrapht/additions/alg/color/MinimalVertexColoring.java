@@ -230,7 +230,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 * @param graph    the graph
 	 * @return true if valid, false if invalid
 	 */
-	protected boolean isValidVertexColoring(Coloring<V> coloring, Graph<V, E> graph) {
+	public boolean isValidVertexColoring(Coloring<V> coloring, Graph<V, E> graph) {
 		for (Set<V> colorClass : coloring.getColorClasses()) {
 			for (V v : colorClass) {
 				TreeSet<V> collect = new TreeSet<>();
