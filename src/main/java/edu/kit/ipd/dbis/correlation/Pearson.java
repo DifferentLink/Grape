@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.*;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.*;
@@ -14,8 +15,8 @@ public class Pearson extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum() {
-        ArrayList<Property> firstPropertyList = Pearson.createPropertyList();
-        ArrayList<Property> secondPropertyList = Pearson.createPropertyList();
+        Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
+        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property1: firstPropertyList) {
             for (Property property2: secondPropertyList) {
@@ -34,7 +35,7 @@ public class Pearson extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum(Property property2) {
-        ArrayList<Property> firstPropertyList = Pearson.createPropertyList();
+        Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property1: firstPropertyList) {
             CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
@@ -51,8 +52,8 @@ public class Pearson extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum() {
-        ArrayList<Property> firstPropertyList = Pearson.createPropertyList();
-        ArrayList<Property> secondPropertyList = Pearson.createPropertyList();
+        Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
+        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property1: firstPropertyList) {
             for (Property property2: secondPropertyList) {
@@ -71,7 +72,7 @@ public class Pearson extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum(Property property2) {
-        ArrayList<Property> firstPropertyList = Pearson.createPropertyList();
+        Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property1: firstPropertyList) {
             CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
@@ -84,25 +85,6 @@ public class Pearson extends Correlation {
             resultSet.remove(resultSet.first());
         }
         return outputSet;
-    }
-
-    //TODO: An dieser Stelle würde sich die Methode aus der Klasse PropertyFactory deutlich besser eignen
-    static ArrayList<Property> createPropertyList() {
-        ArrayList<Property> returnArray = new ArrayList<>();
-        PropertyGraph graph = new PropertyGraph();
-        returnArray.add(new Profile(graph));
-        returnArray.add(new AverageDegree(graph));
-        returnArray.add(new ProportionDensity(graph));
-        returnArray.add(new StructureDensity(graph));
-        returnArray.add(new KkGraphNumberOfSubgraphs(graph));
-        returnArray.add(new GreatestDegree(graph));
-        returnArray.add(new NumberOfCliques(graph));
-        returnArray.add(new NumberOfTotalColorings(graph));
-        returnArray.add(new NumberOfEdges(graph));
-        returnArray.add(new NumberOfVertexColorings(graph));
-        returnArray.add(new NumberOfVertices(graph));
-        returnArray.add(new SmallestDegree(graph));
-        return returnArray;
     }
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty) {

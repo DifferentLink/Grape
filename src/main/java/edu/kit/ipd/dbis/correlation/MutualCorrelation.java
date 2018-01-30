@@ -1,8 +1,11 @@
 package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-import java.util.ArrayList;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -12,8 +15,8 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum() {
-        ArrayList<Property> firstPropertyList = Pearson.createPropertyList();
-        ArrayList<Property> secondPropertyList = Pearson.createPropertyList();
+        Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
+        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property1: firstPropertyList) {
             for (Property property2: secondPropertyList) {
@@ -32,7 +35,7 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum(Property property1) {
-        ArrayList<Property> secondPropertyList = Pearson.createPropertyList();
+        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property2: secondPropertyList) {
             CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
@@ -49,8 +52,8 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum() {
-        ArrayList<Property> firstPropertyList = Pearson.createPropertyList();
-        ArrayList<Property> secondPropertyList = Pearson.createPropertyList();
+        Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
+        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property1: firstPropertyList) {
             for (Property property2: secondPropertyList) {
@@ -69,7 +72,7 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum(Property property1) {
-        ArrayList<Property> secondPropertyList = Pearson.createPropertyList();
+        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property2: secondPropertyList) {
             CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
