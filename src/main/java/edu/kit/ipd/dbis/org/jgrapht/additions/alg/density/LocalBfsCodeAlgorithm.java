@@ -3,11 +3,7 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * The local bfs code algorithm.
@@ -116,7 +112,11 @@ public class LocalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 			}
 			nodeCnt++;
 		}
-		return new BfsCodeImpl(calculateBFS(graph, startPermutations.get(0), 1));
+		HashMap<Integer, V> bfsMap = new HashMap<>();
+		for (int i = 0; i < startPermutations.get(0).length; i++) {
+			bfsMap.put(i + 1, startPermutations.get(0)[i]);
+		}
+		return new BfsCodeImpl(calculateBFS(graph, startPermutations.get(0), 1), bfsMap);
 	}
 
 	/**

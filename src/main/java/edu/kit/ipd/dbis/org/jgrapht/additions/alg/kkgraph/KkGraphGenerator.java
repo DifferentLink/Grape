@@ -1,11 +1,15 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.kkgraph;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -33,20 +37,56 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	public KkGraph getKkGraph() {
 		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
 				graph.getProperty(VertexColoring.class).getValue();
+		//this is the number of edges that have to be contract to get the kk graph
 		int numberOfContractEdges = graph.vertexSet().size() - vertexColoring.getNumberColors();
 
+		//allocates the endComb and the actualComb f.e 5 Edges, numberOfContractEdges = 3 -> actualComb = (1,1,1,0,0)
+		//endComb = (0,0,1,1,1)
+		int[] actualComb = new int[graph.edgeSet().size()];
+		int[] endComb = new int[graph.edgeSet().size()];
+		for (int i = 0; i < actualComb.length; i++) {
+			if (i < numberOfContractEdges) {
+				actualComb[i] = 1;
+			} else {
+				actualComb[i] = 0;
+			}
+			if (i < endComb.length - numberOfContractEdges) {
+				endComb[i] = 0;
+			} else {
+				endComb[i] = 1;
+			}
+		}
 
+		BfsCodeAlgorithm.BfsCodeImpl bfsCode = (BfsCodeAlgorithm.BfsCodeImpl) graph.getProperty(BfsCode.class).getValue();
+		int[] bfsArray = bfsCode.getCode();
+		ArrayList edges = this.getEdgeList(bfsArray);
+		PropertyGraph graphClone = graph.clone();
+		boolean found = false;
+
+		//tries all different possibilities of edges until the kk graph gets found
+		while (!sameComb(actualComb, endComb) && !found) {
+			for (int i = 0; i < actualComb.length; i++) {
+				if (actualComb[i] == 1) {
+				//	contractEdge(graphClone, edges.get(i)[0]; );
+				}
+			}
+		}
 
 		//TODO: implement me (empty implementation for test in PropertyGraphTest)
 		return new KkGraphImpl(null, 2);
 	}
 
-	private void contractEdge(PropertyGraph graph, V firstNde, V secondNode) {
+
+	private void contractEdge(PropertyGraph graph, V firstNode, V secondNode) {
+		if (!graph.containsEdge(firstNode, secondNode)) {
+			throw new IllegalArgumentException("edges does not exist!");
+		}
+		//TODO: implement me;
 	}
 
 
 	/**
-	 * calculates the next combination of a combination
+	 * calculates the next edge combination of a given combination
 	 * @param prevComb the previous combination
 	 * @return the next combination
 	 */
@@ -56,7 +96,6 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 				throw new IllegalArgumentException("no valid comb");
 			}
 		}
-
 		int[] result = new int[prevComb.length];
 
 		boolean found = false;
@@ -81,7 +120,6 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		result[moveableOneIndex] = 0;
 		result[moveableOneIndex + 1] = 1;
 		if (moveableOneIndex + 2 < result.length) {
-
 			for (int j = moveableOneIndex + 2; j < result.length; j++) {
 				if (onesBeforeMoveableOne > 0) {
 					result[j] = 1;
@@ -90,6 +128,31 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 				}
 				onesBeforeMoveableOne--;
 			}
+		}
+		return result;
+	}
+
+	private boolean sameComb(int[] first, int[] second) {
+		for (int i = 0; i < Math.min(first.length, second.length); i++) {
+			if (first[i] != second[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * get a list of edges
+	 * @param bfsArray the bfsArray of the graph
+	 * @return the list of edges represented as array of two vertices
+	 */
+	private ArrayList getEdgeList(int[] bfsArray) {
+		ArrayList<int[]> result = new ArrayList();
+		for (int i = 0; i < graph.edgeSet().size(); i++) {
+			int[] edge = new int[2];
+			edge[0] = bfsArray[3 * i + 1];
+			edge[1] = bfsArray[3 * i + 2];
+			result.add(edge);
 		}
 		return result;
 	}
