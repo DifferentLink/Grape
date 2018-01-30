@@ -81,7 +81,7 @@ public class CalculationController implements Runnable {
 						| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
 					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
-				//table.update(); // todo implement calculatedGraphProperties()
+				table.update(filter.getFilteredAndSortedGraphs()); // todo implement calculatedGraphProperties()
 			}
 		}
 
