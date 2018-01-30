@@ -27,19 +27,19 @@ public class Log {
 	public String getAsString() {
 		String historyEntries = "";
 		List<Event> events;
-
 		if (history == null || history.getEvents().size() == 0) {
 			return "";
 		}
-
-		events = history.getEvents();
-		for (Event event : events) {
+		//Building String
+		for (Event event : history.getEvents()) {
 			String changedGraphs = "";
 			for (int id : event.getChangedGraphs()) {
 				changedGraphs += id + ", ";
 			}
+			changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 1);
 			historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (" + changedGraphs + ")\n";
 		}
+		historyEntries = historyEntries.substring(0, historyEntries.length() - 2);
 		return historyEntries;
 	}
 
@@ -61,6 +61,10 @@ public class Log {
 				history.removeEvent(event);
 			}
 		}
+	}
+
+	public void addEvent(Event event) {
+		this.history.addEvent(event);
 	}
 
 	/**

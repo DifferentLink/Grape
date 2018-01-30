@@ -80,33 +80,7 @@ public class ConfigureDatabaseUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			try {
-				databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), nameInput.getText());
-
-				final JFileChooser fileChooser = new JFileChooser();
-				final int returnValue = fileChooser.showDialog(null, "Create"); // todo replace with language resource
-				File file = fileChooser.getSelectedFile();
-
-				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					if (file != null) {
-						file = new File(file.getParentFile(), file.getName() + ".txt");
-						databaseController.saveDatabase(file.getPath());
-					}
-				}
-
-			} catch (DatabaseDoesNotExistException e) {
-				e.printStackTrace();
-			} catch (SQLException e) { // todo nonono no SQLException
-				e.printStackTrace();
-			} catch (AccessDeniedForUserException e) {
-				e.printStackTrace();
-			} catch (TableAlreadyExistsException e) {
-				e.printStackTrace();
-			} catch (ConnectionFailedException e) {
-				e.printStackTrace();
-			} catch (TablesNotAsExpectedException e) {
-				e.printStackTrace();
-			}
+			databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), nameInput.getText());
 		}
 	}
 }

@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.InvalidBfsCodeInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
@@ -49,7 +50,12 @@ public class ReadBFSCodeUI extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			generateController.generateBFSGraph(bfsCodeInput.getText());
+			try {
+				generateController.generateBFSGraph(bfsCodeInput.getText());
+			} catch (InvalidBfsCodeInputException e) {
+				//TODO: implement me
+				e.printStackTrace();
+			}
 		}
 	}
 }
