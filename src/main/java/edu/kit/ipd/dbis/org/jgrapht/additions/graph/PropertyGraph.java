@@ -8,7 +8,6 @@ import org.jgrapht.graph.ClassBasedVertexFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 /**
@@ -19,21 +18,19 @@ import java.util.*;
  */
 public class PropertyGraph<V, E> extends SimpleGraph {
 	private int id;
-	private Map<Class<?>, Property> properties;
+	private Map<Class<? extends Property>, Property> properties;
 	private final Class<V> vertexType;
 
 	/**
 	 * Standard constructor
 	 */
-	public PropertyGraph() {
+	public PropertyGraph(Class<V> vertexType) {
 		super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false);
 		this.properties = new HashMap<>();
 		for (Property p : PropertyFactory.createAllProperties(this)) {
 			this.properties.put(p.getClass(), p);
 		}
-		this.vertexType = (Class<V>) ((ParameterizedType) getClass()
-				.getGenericSuperclass())
-				.getActualTypeArguments()[0];
+		this.vertexType = vertexType;
 	}
 
 	/**
@@ -41,7 +38,7 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 *
 	 * @param bfsCode the bfs code
 	 */
-	public PropertyGraph(BfsCodeAlgorithm.BfsCodeImpl bfsCode) {
+	public PropertyGraph(BfsCodeAlgorithm.BfsCodeImpl bfsCode, Class<V> vertexType) {
 		super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false);
 		int[] code = bfsCode.getCode();
 		for (int i = 1; i <= (code[code.length - 1]); i++) {
@@ -54,9 +51,7 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		for (Property p : PropertyFactory.createAllProperties(this)) {
 			this.properties.put(p.getClass(), p);
 		}
-		this.vertexType = (Class<V>) ((ParameterizedType) getClass()
-				.getGenericSuperclass())
-				.getActualTypeArguments()[0];
+		this.vertexType = vertexType;
 	}
 
 	/**
@@ -147,6 +142,11 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		return matrix;
 	}
 
+	/**
+	 * Creates a vertex factory based on vertexType.
+	 *
+	 * @return the vertex factory
+	 */
 	public VertexFactory<V> getVertexFactory() {
 		return new ClassBasedVertexFactory<>(this.vertexType);
 	}
