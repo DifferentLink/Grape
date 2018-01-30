@@ -23,7 +23,7 @@ public class PropertyFactory {
 		properties.add(new BfsCode(graph));
 		properties.add(new Cliques(graph));
 		properties.add(new KkGraph(graph));
-		properties.add(new TotalColoring(graph, graph.getVertexFactory()));
+		properties.add(new TotalColoring(graph));
 		properties.add(new VertexColoring(graph));
 		properties.add(new AverageDegree(graph));
 		properties.add(new ProportionDensity(graph));

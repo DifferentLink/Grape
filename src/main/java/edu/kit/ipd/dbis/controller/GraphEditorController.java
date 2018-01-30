@@ -94,7 +94,7 @@ public class GraphEditorController {
 	 * @return the graphcolorization.
 	 */
 	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph graph) {
-		MinimalTotalColoring coloring = new MinimalTotalColoring(graph, graph.getVertexFactory());
+		MinimalTotalColoring coloring = new MinimalTotalColoring(graph);
 		return coloring.getColoring();
 	}
 
