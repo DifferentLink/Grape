@@ -142,4 +142,16 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		}
 		return matrix;
 	}
+
+	public PropertyGraph clone() {
+		//TODO: implement me
+		PropertyGraph clone = new PropertyGraph();
+		for (Object v : this.vertexSet()) {
+			clone.addVertex(v);
+		}
+		for (Object e : this.edgeSet()) {
+			clone.addEdge(this.getEdgeSource(e), this.getEdgeTarget(e));
+		}
+		return clone;
+	}
 }
