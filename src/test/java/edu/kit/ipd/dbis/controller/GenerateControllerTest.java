@@ -42,6 +42,7 @@ public class GenerateControllerTest {
 		assertEquals(false, g.isValidBFS(bfsCode));
 	}
 
+	@Ignore
 	@Test
 	public void isValidBFSTest5() {
 		GenerateController g = GenerateController.getInstance();
@@ -56,6 +57,7 @@ public class GenerateControllerTest {
 		assertEquals(false, g.isValidBFS(bfsCode));
 	}
 
+	@Ignore
 	@Test
 	public void isValidBFSTest7() {
 		GenerateController g = GenerateController.getInstance();
