@@ -71,7 +71,6 @@ public class GraphDatabase implements DatabaseManager {
 			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
 			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
-
 			this.graphTable.insert(graph);
 		} catch (DatabaseDoesNotExistException e) {
 			throw new DatabaseDoesNotExistException();
