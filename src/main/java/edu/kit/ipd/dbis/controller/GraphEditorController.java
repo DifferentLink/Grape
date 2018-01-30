@@ -12,8 +12,12 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexCol
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
+import static edu.kit.ipd.dbis.log.EventType.ADD;
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
+import static edu.kit.ipd.dbis.log.EventType.REMOVE;
 
 /**
  * The type Graph editor controller.
@@ -76,12 +80,15 @@ public class GraphEditorController {
 					| ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
+			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
+			log.addEvent(ADD, newGraph.getId());
 			try {
 				database.deleteGraph(oldID);
 			} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
 					| ConnectionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
+			log.addEvent(REMOVE, oldID);
 		}
 
 	}
@@ -99,6 +106,9 @@ public class GraphEditorController {
 					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
+			// Creating Event
+			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
+			log.addEvent(ADD, graph.getId());
 		}
 	}
 
@@ -131,6 +141,8 @@ public class GraphEditorController {
 		NextDenserGraphFinder denserGraph = new NextDenserGraphFinder(graph);
 		try {
 			database.addGraph(denserGraph.getNextDenserGraph());
+			// TODO get right id!
+			log.addEvent(ADD, denserGraph.getNextDenserGraph().getId());
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
 				| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));

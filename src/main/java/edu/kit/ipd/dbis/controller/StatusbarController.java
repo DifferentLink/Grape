@@ -5,10 +5,13 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
 import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.log.History;
 import edu.kit.ipd.dbis.log.Log;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
@@ -100,9 +103,45 @@ public class StatusbarController {
 	/**
 	 * Add event.
 	 *
-	 * @param event the event
+	 * @param event the event to add
 	 */
 	public void addEvent(Event event) {
+		log.addEvent(event);
+	}
+
+	/**
+	 * Add event.
+	 *
+	 * @param type the EventType
+	 * @param id   the id of the graph
+	 */
+	public void addEvent(EventType type, int id) {
+		Set<Integer> changedGraph = new HashSet<Integer>();
+		changedGraph.add(id);
+		Event event;
+		String message;
+		if (type.equals(EventType.ADD)) {
+			message = "New graph added.";
+		} else if (type.equals(EventType.REMOVE)) {
+			message = "graph removed.";
+		} else {
+			return;
+		}
+		event = new Event(type, message, changedGraph);
+		log.addEvent(event);
+	}
+
+	/**
+	 *
+	 */
+	public void addMessage(EventType type, String message) {
+		Set<Integer> empty = new HashSet<Integer>();
+		Event event;
+		if (!type.equals(EventType.REMOVE)) {
+			return;
+		}
+		event = new Event(type, message, empty);
+		// TODO: change to addMessage
 		log.addEvent(event);
 	}
 
