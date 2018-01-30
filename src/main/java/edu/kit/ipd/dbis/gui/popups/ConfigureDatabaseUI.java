@@ -5,12 +5,14 @@
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class ConfigureDatabaseUI extends JFrame {
@@ -19,6 +21,7 @@ public class ConfigureDatabaseUI extends JFrame {
 	private final ResourceBundle language;
 	private final Theme theme;
 
+	JTextArea nameInput;
 	JTextArea urlInput;
 	JTextArea userInput;
 	JTextArea passwordInput;
@@ -31,7 +34,12 @@ public class ConfigureDatabaseUI extends JFrame {
 		this.theme = theme;
 
 		JPanel inputContainer = new JPanel();
-		inputContainer.setLayout(new GridLayout(3, 2, 2, 10));
+		inputContainer.setLayout(new GridLayout(4, 2, 2, 10));
+
+		JLabel nameLabel = new JLabel("Name"); // todo use language resource
+		nameInput = new JTextArea("database");
+		inputContainer.add(nameLabel);
+		inputContainer.add(nameInput);
 
 		JLabel urlLabel = new JLabel("URL"); // todo use language resource
 		urlInput = new JTextArea("mysql://");
@@ -64,18 +72,14 @@ public class ConfigureDatabaseUI extends JFrame {
 		container.add(Box.createVerticalStrut(10));
 		container.add(buttonContainer);
 		this.add(container);
-		this.setMinimumSize(new Dimension(300, 150));
+		this.setMinimumSize(new Dimension(300, 200));
 	}
 
 	private class ConfigureDatabaseAction implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			try {
-				databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), "name"); // todo replace name with correct input
-			} catch (Exception e) { // todo replace with correct exception as soon as available
-				e.printStackTrace();
-			}
+			databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), nameInput.getText());
 		}
 	}
 }
