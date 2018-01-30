@@ -44,7 +44,7 @@ public class CorrelationRequest {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
             return correlation.useMaximum();
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
-           return correlation.useMaximum();
+           return correlation.useMinimum();
         } else if (correlation.getMaximum() && correlation.getProperty() != null) {
             return correlation.useMaximum(correlation.getProperty());
         } else {

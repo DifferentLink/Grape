@@ -2,7 +2,6 @@ package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
-import java.util.ArrayList;
 import java.util.TreeSet;
 
 /**
