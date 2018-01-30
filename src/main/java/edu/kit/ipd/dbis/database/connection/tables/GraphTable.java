@@ -275,7 +275,7 @@ public class GraphTable extends Table {
 		int[] bfsCode = code.getCode();
 
 		for (int i = 0; i < bfsCode.length; i++) {
-			s += (i != bfsCode.length - 1) ? (bfsCode[i] + "a") : (bfsCode[i]);
+			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
 		}
 		return s;
 
