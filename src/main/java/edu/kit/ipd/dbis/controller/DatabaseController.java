@@ -33,7 +33,7 @@ public class DatabaseController {
 	/**
 	 * Triggers the database to open a new database table.
 	 */
-	public void newDatabase(String url, String user, String password, String name) throws Exception, DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException, TableAlreadyExistsException, ConnectionFailedException {
+	public void newDatabase(String url, String user, String password, String name) throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException, TableAlreadyExistsException, ConnectionFailedException, TablesNotAsExpectedException {
 		database = connector.createGraphDatabase(url, user, password, name);
 		this.updateDatabases();
 	}
@@ -53,7 +53,7 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the Database.
 	 */
-	public void mergeDatabase(String filepath) throws Exception, SQLException, AccessDeniedForUserException, FileContentNotAsExpectedException, TablesNotAsExpectedException, ConnectionFailedException, FileNotFoundException, FileContentCouldNotBeReadException, DatabaseDoesNotExistException {
+	public void mergeDatabase(String filepath) throws SQLException, AccessDeniedForUserException, FileContentNotAsExpectedException, TablesNotAsExpectedException, ConnectionFailedException, FileNotFoundException, FileContentCouldNotBeReadException, DatabaseDoesNotExistException {
 		GraphDatabase mergeDatabase;
 		mergeDatabase = connector.loadGraphDatabase(filepath);
 		database.merge(mergeDatabase);
@@ -82,7 +82,7 @@ public class DatabaseController {
 	/**
 	 * Sets the database for all controller classes that have a database connection
 	 */
-	private void updateDatabases() throws Exception {
+	private void updateDatabases() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
 		generate.setDatabase(database);
 		calculation.setDatabase(database);
 		editor.setDatabase(database);

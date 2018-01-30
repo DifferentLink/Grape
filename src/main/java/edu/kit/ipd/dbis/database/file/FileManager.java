@@ -37,7 +37,6 @@ public class FileManager implements Connector {
 	public GraphDatabase createGraphDatabase(String url, String user, String password, String name)
 			throws TableAlreadyExistsException, DatabaseDoesNotExistException, AccessDeniedForUserException,
 			ConnectionFailedException, SQLException {
-
 		Connection connection = getConnection(url, user, password);
 		if (tableExists(connection, name)) {
 			throw new TableAlreadyExistsException();
@@ -45,16 +44,14 @@ public class FileManager implements Connector {
 		GraphTable graphTable = new GraphTable(url, user, password, name);
 		FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
 		return new GraphDatabase(graphTable, filterTable);
-
 	}
 
 	@Override
 	public void saveGraphDatabase(String directory, GraphDatabase database)
-			throws GraphDatabaseAlreadySavedException, FileNameAlreadyTakenException, FileCouldNotBeSavedException {
+			throws FileNameAlreadyTakenException, FileCouldNotBeSavedException {
+
 		File file = new File(directory);
-		if (database.getDirectory() != null) {
-			throw new GraphDatabaseAlreadySavedException();
-		} else if (file.exists()) {
+		if (file.exists()) {
 			throw new FileNameAlreadyTakenException();
 		} else {
 			SaveParser save = new SaveParser(database);

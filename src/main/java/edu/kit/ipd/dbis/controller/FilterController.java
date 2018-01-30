@@ -1,5 +1,9 @@
 package edu.kit.ipd.dbis.controller;
 
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.InvalidInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
@@ -33,7 +37,7 @@ public class FilterController {
 	 *
 	 * @param database the current database
 	 */
-	public void setDatabase(GraphDatabase database) throws Exception {
+	public void setDatabase(GraphDatabase database) throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
 		filter.setDatabase(database);
 	}
 
