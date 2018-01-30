@@ -64,16 +64,12 @@ public class MenuUI extends JMenuBar {
 		undo.addActionListener(new UndoAction(this.log));
 		JMenuItem redo = new JMenuItem(language.getString("redo"));
 		redo.addActionListener(new RedoAction(this.log));
-		JMenuItem configureDatabase = new JMenuItem("Configure Database..."); // todo replace with language resource
-		configureDatabase.addActionListener(new ConfigureDatabaseAction(databaseController, language, theme));
 		edit.add(generateGraphs);
 		edit.add(emptyGraph);
 		edit.add(readBFSCode);
 		edit.addSeparator();
 		edit.add(undo);
 		edit.add(redo);
-		edit.addSeparator();
-		edit.add(configureDatabase);
 		this.add(edit);
 
 		JMenu help = new JMenu(language.getString("help"));
@@ -104,19 +100,9 @@ public class MenuUI extends JMenuBar {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, "Create"); // todo replace with language resource
-			File file = fileChooser.getSelectedFile();
-
-			if (returnValue == JFileChooser.APPROVE_OPTION) { // todo open ConfigureDatabaseUI, then controller.saveDatabase()
-				if (file != null) {
-					file = new File(file.getParentFile(), file.getName() + ".txt");
-					databaseController.saveDatabase(file.getPath()); // todo catch possible exceptions
-				}
-			} else {
-				System.out.println("Creating file failed"); // todo remove sout
+			JFrame configureDatabaseUI = new ConfigureDatabaseUI(databaseController, language, theme);
+			configureDatabaseUI.setVisible(true);
 			}
-		}
 	}
 
 	private static class GenerateGraphAction implements ActionListener {
@@ -154,25 +140,6 @@ public class MenuUI extends JMenuBar {
 		public void actionPerformed(ActionEvent actionEvent) {
 			JFrame readBFSCodeUI = new ReadBFSCodeUI(generateController, language, theme);
 			readBFSCodeUI.setVisible(true);
-		}
-	}
-
-	private class ConfigureDatabaseAction implements ActionListener {
-
-		private final DatabaseController databaseController;
-		private final ResourceBundle language;
-		private final Theme theme;
-
-		public ConfigureDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
-			this.databaseController = databaseController;
-			this.language = language;
-			this.theme = theme;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent actionEvent) {
-			JFrame newDatabaseUI = new ConfigureDatabaseUI(databaseController, language, theme);
-			newDatabaseUI.setVisible(true);
 		}
 	}
 

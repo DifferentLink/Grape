@@ -125,6 +125,7 @@ public class DatabaseController {
 	 * Sets the database for all controller classes that have a database connection
 	 */
 	private void updateDatabases() {
+
 		generate.setDatabase(database);
 		calculation.setDatabase(database);
 		editor.setDatabase(database);
