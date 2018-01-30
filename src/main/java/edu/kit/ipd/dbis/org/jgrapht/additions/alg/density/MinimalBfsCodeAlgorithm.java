@@ -18,7 +18,7 @@ public class MinimalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 		for (int i = 0; i < worstCode.length; i++) {
 			worstCode[i] = graph.vertexSet().size() + 1;
 		}
-		BfsCode bestCode = new BfsCodeImpl(worstCode);
+		BfsCode bestCode = new BfsCodeImpl(worstCode, null);
 
 		for (Object v : graph.vertexSet()) {
 			LocalBfsCodeAlgorithm local = new LocalBfsCodeAlgorithm((V) v);
