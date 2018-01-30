@@ -272,7 +272,7 @@ public class GraphTable extends Table {
 		int[] bfsCode = code.getCode();
 
 		for (int i = 0; i < bfsCode.length; i++) {
-			s += (i != bfsCode.length - 1) ? (bfsCode[i] + "|") : (bfsCode[i]);
+			s += (i != bfsCode.length - 1) ? (bfsCode[i] + "a") : (bfsCode[i]);
 		}
 		return s;
 
@@ -293,7 +293,10 @@ public class GraphTable extends Table {
 
 		String sql = "SELECT * FROM " + this.name + " WHERE BfsCode = " + this.minimalBfsCodeToString(graph);
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		return result.next();
+		if (result.next()) {
+			return this.minimalBfsCodeToString(graph).equals(result.getString("bfscode"));
+		}
+		return false;
 
 	}
 
