@@ -23,6 +23,9 @@ public class LoadParser extends Parser {
 			throws FileContentNotAsExpectedException {
 		try {
 			String[] content = this.information.split(";");
+			if (content[3].equals("database")) {
+				throw new FileContentNotAsExpectedException();
+			}
 			GraphTable graphTable = new GraphTable(content[0], content[1], content[2], content[3]);
 			FilterTable filterTable = new FilterTable(content[4], content[5],content[6],content[7]);
 			this.database = new GraphDatabase(graphTable, filterTable);

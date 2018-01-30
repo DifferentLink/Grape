@@ -38,7 +38,7 @@ public class FileManager implements Connector {
 			throws TableAlreadyExistsException, DatabaseDoesNotExistException, AccessDeniedForUserException,
 			ConnectionFailedException, SQLException {
 		Connection connection = getConnection(url, user, password);
-		if (tableExists(connection, name)) {
+		if (tableExists(connection, name) || name.equals("database")) {
 			throw new TableAlreadyExistsException();
 		}
 		GraphTable graphTable = new GraphTable(url, user, password, name);
