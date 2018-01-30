@@ -1,18 +1,15 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
+import org.jgrapht.VertexFactory;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
+import org.jgrapht.graph.ClassBasedVertexFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.TreeSet;
-import java.util.Set;
-import java.util.List;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
 
 /**
  * A SimpleGraph which contains Property-objects.
@@ -23,6 +20,7 @@ import java.util.List;
 public class PropertyGraph<V, E> extends SimpleGraph {
 	private int id;
 	private Map<Class<?>, Property> properties;
+	private final Class<V> vertexType;
 
 	/**
 	 * Standard constructor
@@ -33,6 +31,9 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		for (Property p : PropertyFactory.createAllProperties(this)) {
 			this.properties.put(p.getClass(), p);
 		}
+		this.vertexType = (Class<V>) ((ParameterizedType) getClass()
+				.getGenericSuperclass())
+				.getActualTypeArguments()[0];
 	}
 
 	/**
@@ -53,6 +54,9 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		for (Property p : PropertyFactory.createAllProperties(this)) {
 			this.properties.put(p.getClass(), p);
 		}
+		this.vertexType = (Class<V>) ((ParameterizedType) getClass()
+				.getGenericSuperclass())
+				.getActualTypeArguments()[0];
 	}
 
 	/**
@@ -141,5 +145,9 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 			}
 		}
 		return matrix;
+	}
+
+	public VertexFactory<V> getVertexFactory() {
+		return new ClassBasedVertexFactory<>(this.vertexType);
 	}
 }
