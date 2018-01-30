@@ -34,6 +34,17 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		this.vertexFactory = new ClassBasedVertexFactory<>(vertexClass);
 	}
 
+	/**
+	 * Constructs a new minimal total coloring algorithm.
+	 *
+	 * @param graph         the input graph
+	 * @param vertexFactory the graph's vertex factory
+	 */
+	public MinimalTotalColoring(Graph<V, E> graph, VertexFactory vertexFactory) {
+		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
+		this.vertexFactory = Objects.requireNonNull(vertexFactory, "VertexFactory cannot be null");
+	}
+
 	@Override
 	public TotalColoring getColoring() {
 		Graph edgeToVertexGraph = this.makeEdgesToVertices();
