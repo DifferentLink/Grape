@@ -38,12 +38,12 @@ public class ConfigureDatabaseUI extends JFrame {
 		inputContainer.setLayout(new GridLayout(4, 2, 2, 10));
 
 		JLabel nameLabel = new JLabel("Name"); // todo use language resource
-		nameInput = new JTextArea("database");
+		nameInput = new JTextArea("graphs");
 		inputContainer.add(nameLabel);
 		inputContainer.add(nameInput);
 
 		JLabel urlLabel = new JLabel("URL"); // todo use language resource
-		urlInput = new JTextArea("mysql://");
+		urlInput = new JTextArea("jdbc:mysql://localhost:3306/library");
 		inputContainer.add(urlLabel);
 		inputContainer.add(urlInput);
 
