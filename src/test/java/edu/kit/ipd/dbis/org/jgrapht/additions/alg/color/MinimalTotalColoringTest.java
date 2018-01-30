@@ -4,6 +4,8 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgori
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class MinimalTotalColoringTest {
 
 	@Test
@@ -19,6 +21,11 @@ public class MinimalTotalColoringTest {
 
 		MinimalTotalColoring totalColoring = new MinimalTotalColoring(graph);
 		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
-		System.out.println(coloring);
+		assertEquals(3, coloring.getNumberColors());
+	}
+
+	@Test
+	public void getColoring2() {
+
 	}
 }
