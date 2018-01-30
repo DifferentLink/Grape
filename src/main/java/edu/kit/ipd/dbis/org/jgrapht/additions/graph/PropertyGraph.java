@@ -1,10 +1,8 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
-import org.jgrapht.VertexFactory;
 import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
-import org.jgrapht.graph.ClassBasedVertexFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -19,18 +17,16 @@ import java.util.*;
 public class PropertyGraph<V, E> extends SimpleGraph {
 	private int id;
 	private Map<Class<? extends Property>, Property> properties;
-	private final Class<V> vertexType;
 
 	/**
 	 * Standard constructor
 	 */
-	public PropertyGraph(Class<V> vertexType) {
+	public PropertyGraph() {
 		super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false);
 		this.properties = new HashMap<>();
 		for (Property p : PropertyFactory.createAllProperties(this)) {
 			this.properties.put(p.getClass(), p);
 		}
-		this.vertexType = vertexType;
 	}
 
 	/**
@@ -38,7 +34,7 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 *
 	 * @param bfsCode the bfs code
 	 */
-	public PropertyGraph(BfsCodeAlgorithm.BfsCodeImpl bfsCode, Class<V> vertexType) {
+	public PropertyGraph(BfsCodeAlgorithm.BfsCodeImpl bfsCode) {
 		super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false);
 		int[] code = bfsCode.getCode();
 		for (int i = 1; i <= (code[code.length - 1]); i++) {
@@ -51,7 +47,6 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		for (Property p : PropertyFactory.createAllProperties(this)) {
 			this.properties.put(p.getClass(), p);
 		}
-		this.vertexType = vertexType;
 	}
 
 	/**
@@ -140,14 +135,5 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 			}
 		}
 		return matrix;
-	}
-
-	/**
-	 * Creates a vertex factory based on vertexType.
-	 *
-	 * @return the vertex factory
-	 */
-	public VertexFactory<V> getVertexFactory() {
-		return new ClassBasedVertexFactory<>(this.vertexType);
 	}
 }
