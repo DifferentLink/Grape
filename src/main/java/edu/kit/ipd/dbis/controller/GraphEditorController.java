@@ -61,7 +61,6 @@ public class GraphEditorController {
 	 */
 	public void addEditedGraph(PropertyGraph newGraph, int oldID) {
 		Boolean isDuplicate = null;
-
 		try {
 			isDuplicate = database.graphExists(newGraph);
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
@@ -84,6 +83,7 @@ public class GraphEditorController {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
+
 	}
 
 	/**
@@ -91,8 +91,15 @@ public class GraphEditorController {
 	 *
 	 * @param graph the graph
 	 */
-	public void addNewGraph(PropertyGraph graph) { // todo implement me
-
+	public void addNewGraph(PropertyGraph graph) throws InvalidGraphInputException { // todo only duplicate check??
+		if (isValidGraph(graph)) {
+			try {
+				database.addGraph(graph);
+			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			}
+		}
 	}
 
 	/**
@@ -101,9 +108,19 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
 	 */
-	public boolean isValidGraph(PropertyGraph graph) {
+	public Boolean isValidGraph(PropertyGraph graph) throws InvalidGraphInputException {
+		Boolean duplicate = true;
+		try {
+			duplicate = database.graphExists(graph);
+		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+				| AccessDeniedForUserException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
+		if (duplicate) {
+			throw new InvalidGraphInputException("Given graph is a duplicate.");
+		}
 		return true;
-	} // todo throw exception for gui
+	}
 
 	/**
 	 * triggers the calculation of the next denser graph for a specific graph
