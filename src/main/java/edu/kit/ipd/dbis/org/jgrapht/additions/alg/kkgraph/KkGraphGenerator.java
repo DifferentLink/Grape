@@ -10,6 +10,7 @@ import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -59,28 +60,29 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 		BfsCodeAlgorithm.BfsCodeImpl bfsCode = (BfsCodeAlgorithm.BfsCodeImpl) graph.getProperty(BfsCode.class).getValue();
 		int[] bfsArray = bfsCode.getCode();
-		ArrayList edges = this.getEdgeList(bfsArray);
-		PropertyGraph graphClone = graph.clone();
+		ArrayList<int[]> edges = this.getEdgeList(bfsArray);
+		Map<Integer, V> numberMap = bfsCode.getNumberMap();
 		boolean found = false;
 
 		//tries all different possibilities of edges until the kk graph gets found
+		Map<Integer, V> combMap = bfsCode.getNumberMap();
 		while (!sameComb(actualComb, endComb) && !found) {
+			combMap = bfsCode.getNumberMap();
 			for (int i = 0; i < actualComb.length; i++) {
 				if (actualComb[i] == 1) {
-				//	contractEdge(graphClone, edges.get(i)[0]; );
+					contractEdge(combMap, numberMap.get(edges.get(i)[0]), numberMap.get(edges.get(i)[0]));
 				}
 			}
+			if (isClique(combMap)) {
+				found = true;
+			}
 		}
-
-		//TODO: implement me (empty implementation for test in PropertyGraphTest)
-		return new KkGraphImpl(null, 2);
+		//TODO: implement me (numberOfSubgraphs)
+		return new KkGraphImpl(combMap, vertexColoring.getNumberColors());
 	}
 
 
-	private void contractEdge(PropertyGraph graph, V firstNode, V secondNode) {
-		if (!graph.containsEdge(firstNode, secondNode)) {
-			throw new IllegalArgumentException("edges does not exist!");
-		}
+	private void contractEdge(Map<Integer, V> graphMap, V firstNode, V secondNode) {
 		//TODO: implement me;
 	}
 
@@ -146,7 +148,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	 * @param bfsArray the bfsArray of the graph
 	 * @return the list of edges represented as array of two vertices
 	 */
-	private ArrayList getEdgeList(int[] bfsArray) {
+	private ArrayList<int[]> getEdgeList(int[] bfsArray) {
 		ArrayList<int[]> result = new ArrayList();
 		for (int i = 0; i < graph.edgeSet().size(); i++) {
 			int[] edge = new int[2];
@@ -155,5 +157,15 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 			result.add(edge);
 		}
 		return result;
+	}
+
+	/**
+	 * checks if the graph represented by the combMap is a clique
+	 * @param combMap the map
+	 * @return if its a clique
+	 */
+	private boolean isClique(Map<Integer, V> combMap) {
+		//TODO: implement me
+		return true;
 	}
 }
