@@ -2,23 +2,43 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import static edu.kit.ipd.dbis.log.EventType.ADD;
+import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
+import static edu.kit.ipd.dbis.log.EventType.REMOVE;
+
+/**
+ * The type Graph editor controller.
+ */
 public class GraphEditorController {
 
 	private GraphDatabase database;
+	private StatusbarController log;
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
 	private GraphEditorController() {
+		this.log = StatusbarController.getInstance();
 	}
 
+	/**
+	 * Gets instance.
+	 *
+	 * @return the instance
+	 */
 	public static GraphEditorController getInstance() {
 		if (editor == null) {
 			editor = new GraphEditorController();
@@ -43,17 +63,53 @@ public class GraphEditorController {
 	 * @param newGraph the PropertyGraph<V,E> to add.
 	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
-	public void addEditedGraph(PropertyGraph newGraph, int oldID) throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException, InsertionFailedException {
-		if (database.graphExists(newGraph)) {
+	public void addEditedGraph(PropertyGraph newGraph, int oldID) {
+		Boolean isDuplicate = null;
+		try {
+			isDuplicate = database.graphExists(newGraph);
+		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+				| AccessDeniedForUserException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
+		if (isDuplicate) {
 			return;
 		} else {
-			database.addGraph(newGraph);
-			database.deleteGraph(oldID);
+			try {
+				database.addGraph(newGraph);
+			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
+					| ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			}
+			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
+			log.addEvent(ADD, newGraph.getId());
+			try {
+				database.deleteGraph(oldID);
+			} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
+					| ConnectionFailedException e) {
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			}
+			log.addEvent(REMOVE, oldID);
 		}
+
 	}
 
-	public void addNewGraph(PropertyGraph graph) { // todo implement me
-
+	/**
+	 * Add new graph.
+	 *
+	 * @param graph the graph
+	 */
+	public void addNewGraph(PropertyGraph graph) throws InvalidGraphInputException { // todo only duplicate check??
+		if (isValidGraph(graph)) {
+			try {
+				database.addGraph(graph);
+			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			}
+			// Creating Event
+			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
+			log.addEvent(ADD, graph.getId());
+		}
 	}
 
 	/**
@@ -62,9 +118,19 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
 	 */
-	public boolean isValidGraph(PropertyGraph graph) {
+	public Boolean isValidGraph(PropertyGraph graph) throws InvalidGraphInputException {
+		Boolean duplicate = true;
+		try {
+			duplicate = database.graphExists(graph);
+		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+				| AccessDeniedForUserException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
+		if (duplicate) {
+			throw new InvalidGraphInputException("Given graph is a duplicate.");
+		}
 		return true;
-	} // todo throw exception for gui
+	}
 
 	/**
 	 * triggers the calculation of the next denser graph for a specific graph
@@ -73,7 +139,14 @@ public class GraphEditorController {
 	 */
 	public void addNextDenserToDatabase(PropertyGraph graph) {
 		NextDenserGraphFinder denserGraph = new NextDenserGraphFinder(graph);
-		//database.addGraph(denserGraph.getNextDensityGraph());
+		try {
+			database.addGraph(denserGraph.getNextDenserGraph());
+			// TODO get right id!
+			log.addEvent(ADD, denserGraph.getNextDenserGraph().getId());
+		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+				| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**
@@ -99,20 +172,20 @@ public class GraphEditorController {
 	}
 
 	/**
-	 * calculates a coloring which is not equivalent to current coloring
+	 * calculates a cloring which is not equivalent to current coloring
 	 *
-	 * @param graph the PropertyGraph<V,E> to calculate.
-	 * @return the next valid alternative Coloring.
-	 * @throws //NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
+	 * @param id the PropertyGraph<V,E> to calculate.
+	 * @return the net valid alternative Coloring.
+	 * @throws //NoEqivalentColoringException thrown if there is no equivalent colorization for a specific graph
 	 */
-	public VertexColoringAlgorithm.Coloring getAlternateVertexColoring(int id) {
+	public VertexColoring getAlternateVertexColoring(int id) {
 		return null;
 	}
 
 	/**
-	 * calculates a coloring which is not equivalent to current coloring
+	 * calculates a cloring which is not equivalent to current coloring
 	 *
-	 * @param graph the PropertyGraph<V,E> to calculate.
+	 * @param id the PropertyGraph<V,E> to calculate.
 	 * @return the next valid alternative Coloring.
 	 * @throws //NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
 	 */
