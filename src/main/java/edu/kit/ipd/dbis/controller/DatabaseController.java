@@ -56,11 +56,12 @@ public class DatabaseController {
 	public void newDatabase(String url, String user, String password, String name) {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
+			this.updateDatabases();
 		} catch (TableAlreadyExistsException | SQLException | DatabaseDoesNotExistException
 				| ConnectionFailedException | AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		this.updateDatabases();
+
 	}
 
 	/**
