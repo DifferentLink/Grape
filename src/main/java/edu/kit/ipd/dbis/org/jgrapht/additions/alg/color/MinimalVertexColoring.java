@@ -1,7 +1,5 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
@@ -28,14 +26,14 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	/**
 	 * The input graph
 	 */
-	protected final PropertyGraph<V, E> graph;
+	protected final Graph<V, E> graph;
 
 	/**
 	 * Construct a new coloring algorithm.
 	 *
 	 * @param graph the input graph
 	 */
-	public MinimalVertexColoring(PropertyGraph<V, E> graph) {
+	public MinimalVertexColoring(Graph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 
@@ -45,7 +43,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 
 	@Override
 	public Coloring<V> getColoring() {
-		int numberOfVertices = (int) this.graph.getProperty(NumberOfVertices.class).getValue();
+		int numberOfVertices = this.graph.vertexSet().size();
 
 		// give vertices an order
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
