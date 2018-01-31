@@ -13,7 +13,7 @@ import java.util.LinkedList;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface ProfileDensityAlgorithm<V, E> extends Serializable {
+public interface ProfileDensityAlgorithm<V, E> {
 	/**
 	 * Get the profile.
 	 *
@@ -45,7 +45,7 @@ public interface ProfileDensityAlgorithm<V, E> extends Serializable {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class ProfileImpl<V, E> implements Profile<V, E> {
+	class ProfileImpl<V, E> implements Profile<V, E>, Serializable {
 		private int[][] profile;
 		private LinkedList<BfsCodeAlgorithm.BfsCode> bfsList;
 

@@ -14,7 +14,7 @@ import java.util.Map;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface BfsCodeAlgorithm<V, E> extends Serializable {
+public interface BfsCodeAlgorithm<V, E> {
 	/**
 	 * Get the bfs code
 	 *
@@ -76,7 +76,7 @@ public interface BfsCodeAlgorithm<V, E> extends Serializable {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class BfsCodeImpl<V, E> implements BfsCode<V, E> {
+	class BfsCodeImpl<V, E> implements BfsCode<V, E>, Serializable {
 
 		private final int[] code;
 		private final Map<Integer, V> numberMap;

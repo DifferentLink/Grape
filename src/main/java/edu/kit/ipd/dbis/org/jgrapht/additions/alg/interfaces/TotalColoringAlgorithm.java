@@ -9,7 +9,7 @@ import java.util.*;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface TotalColoringAlgorithm<V, E> extends Serializable {
+public interface TotalColoringAlgorithm<V, E> {
 	/**
 	 * Get a total coloring.
 	 *
@@ -66,7 +66,7 @@ public interface TotalColoringAlgorithm<V, E> extends Serializable {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class TotalColoringImpl<V, E> implements TotalColoring<V, E> {
+	class TotalColoringImpl<V, E> implements TotalColoring<V, E>, Serializable {
 		private final int numberColors;
 		private final Map<V, Integer> vertexColors;
 		private final Map<E, Integer> edgeColors;
