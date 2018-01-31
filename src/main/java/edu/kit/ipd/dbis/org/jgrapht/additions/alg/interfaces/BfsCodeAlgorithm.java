@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface BfsCodeAlgorithm<V, E> {
+public interface BfsCodeAlgorithm<V, E> extends Serializable {
 	/**
 	 * Get the bfs code
 	 *
