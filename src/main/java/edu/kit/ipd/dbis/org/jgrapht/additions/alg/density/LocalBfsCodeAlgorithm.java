@@ -112,6 +112,7 @@ public class LocalBfsCodeAlgorithm<V, E> implements BfsCodeAlgorithm {
 			}
 			nodeCnt++;
 		}
+
 		HashMap<Integer, V> bfsMap = new HashMap<>();
 		for (int i = 0; i < startPermutations.get(0).length; i++) {
 			bfsMap.put(i + 1, startPermutations.get(0)[i]);
