@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
@@ -24,8 +23,6 @@ public class GenerateController {
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
 	private StatusbarController log;
-	private NonEditableTableModel table;
-	private FilterController filter;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -33,7 +30,6 @@ public class GenerateController {
 	private GenerateController() {
 		this.log = StatusbarController.getInstance();
 		this.generator = new BulkRandomConnectedGraphGenerator();
-		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -57,10 +53,6 @@ public class GenerateController {
 		this.database = database;
 	}
 
-	public void setTableModel(NonEditableTableModel table) {
-		this.table = table;
-	}
-
 	/**
 	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
 	 *
@@ -81,15 +73,7 @@ public class GenerateController {
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
-		Set<PropertyGraph> graphSet = new HashSet<>();
-		for (int i = 0; i < 10; i++) {
-			try {
-				graphSet.add(database.getGraphById(i));
-			} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException | DatabaseDoesNotExistException | UnexpectedObjectException e) {
-				e.printStackTrace();
-			}
-		}
-		table.update(graphSet);
+		CalculationController.getInstance().run();
 	}
 
 	/**
