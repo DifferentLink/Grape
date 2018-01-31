@@ -39,6 +39,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	public KkGraph getKkGraph() {
 		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
 				graph.getProperty(VertexColoring.class).getValue();
+		System.out.println("numberColors" + vertexColoring.getNumberColors());
 		//this is the number of edges that have to be contract to get the kk graph
 		int numberOfContractEdges = graph.vertexSet().size() - vertexColoring.getNumberColors();
 
@@ -67,6 +68,54 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		Map<Integer, V> numberMap = bfsCode.getNumberMap();
 		boolean found = false;
 		boolean allCombsDone = false;
+
+		/*
+		a 1
+		b 2
+		c 3
+		d 4
+		e 5
+		 */
+		Map<V, Integer> graphMap = new HashMap<>();
+		Set<Integer> keySet = numberMap.keySet();
+		for (int i : keySet) {
+			graphMap.put(numberMap.get(i), i);
+		}
+
+		//tries all different possibilities of edges until the kk graph gets found
+		while (!found && !allCombsDone) {
+			graphCopy = graph.clone();
+			//contract all edges from this combination
+			for (int i = 0; i < actualComb.length; i++) {
+				if (actualComb[i] == 1) {
+					contractEdge(graphMap, numberMap.get(edges.get(i)[0]), numberMap.get(edges.get(i)[1]));
+				}
+			}
+
+			if (isClique(graphMap)) {
+				found = true;
+			}
+			if (sameComb(actualComb, endComb)) {
+				allCombsDone = true;
+			}
+			if (!found) {
+				actualComb = getNextEdgeCombination(actualComb);
+			}
+		}
+		//kk graph not found
+		if (found = false) {
+			return null;
+		}
+		Collection<Integer> values = graphMap.values();
+		Set<Integer> v = new HashSet<>();
+		for (int i : values) {
+			v.add(i);
+		}
+		return new KkGraphImpl(graphMap, v.size());
+
+
+
+		/**
 		//tries all different possibilities of edges until the kk graph gets found
 		while (!found && !allCombsDone) {
 			graphCopy = graph.clone();
@@ -91,8 +140,6 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		if (found = false) {
 			return null;
 		}
-
-		//TODO: implement me
 		//getKkGraphMap
 		int cnt = 0;
 		Map<V, Integer> result = new HashMap<>();
@@ -127,6 +174,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 			v.add(i);
 		}
 		return new KkGraphImpl(result, v.size());
+		 */
 	}
 
 
@@ -137,6 +185,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	 * @param firstNode the start vertex of the edge
 	 * @param secondNode the end vertex of the edge
 	 */
+	/*
 	private void contractEdge(PropertyGraph graph, V firstNode, V secondNode) {
 		VertexFactory<V> vertexFactory = new ClassBasedVertexFactory(firstNode.getClass());
 		V newNode = vertexFactory.createVertex();
@@ -151,7 +200,29 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		graph.removeVertex(secondNode);
 		//TODO: implement me;
 	}
+	*/
 
+	/**
+	 * contracs the edge
+	 *
+	 * @param graphMap input graph map
+	 * @param firstNode the start vertex of the edge
+	 * @param secondNode the end vertex of the edge
+	 */
+	private void contractEdge(Map<V, Integer> graphMap, V firstNode, V secondNode) {
+		if (!(graphMap.containsKey(firstNode) && graphMap.containsKey(secondNode))) {
+			throw new IllegalArgumentException("map does not contains the nodes");
+		}
+		int firstValue = graphMap.get(firstNode);
+		int secondValue = graphMap.get(secondNode);
+		int minValue = Math.min(firstValue, secondValue);
+
+		for (V v : graphMap.keySet()) {
+			if (graphMap.get(v) == firstValue || graphMap.get(v) == secondValue) {
+				graphMap.replace(v, minValue);
+			}
+		}
+	}
 
 	/**
 	 * calculates the next edge combination of a given combination
@@ -233,13 +304,35 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 	/**
 	 * checks if the graph represented by the combMap is a clique
-	 * @param graph the graph
+	 * @param graphMap the graph
 	 * @return if its a clique
 	 */
-	private boolean isClique(PropertyGraph graph) {
-		//TODO: implement me
+	private boolean isClique(Map<V, Integer> graphMap) {
+
+		PropertyGraph g = new PropertyGraph();
+		Collection<Integer> values = graphMap.values();
+		Set<Integer> valueSet = new HashSet<>();
+		//changes map into graph
+		for (int i : values) {
+			valueSet.add(i);
+		}
+		for (int v : valueSet) {
+			g.addVertex(v);
+		}
+		for (int i : valueSet) {
+			for (Object v : graph.vertexSet()) {
+				if (graphMap.get(v) == i) {
+					for (Object w : graph.vertexSet()) {
+						if (graph.containsEdge(v, w) && (graphMap.get(v) != graphMap.get(w))) {
+							g.addEdge(graphMap.get(w), graphMap.get(v));
+						}
+					}
+				}
+			}
+		}
+
 		ArrayList<Set<Object>> cliques = new ArrayList<>();
-		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(graph);
+		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(g);
 		Iterator<Set<Object>> it = alg.iterator();
 		while (it.hasNext()) {
 			Set<Object> clique = it.next();

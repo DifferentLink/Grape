@@ -90,6 +90,11 @@ public interface BfsCodeAlgorithm<V, E> {
 			this.numberMap = numberMap;
 		}
 
+		public BfsCodeImpl(int[] code) {
+			this.code = code;
+			this.numberMap = null;
+		}
+
 		@Override
 		public Map<Integer, V> getNumberMap() {
 			return this.numberMap;

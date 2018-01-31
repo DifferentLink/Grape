@@ -33,7 +33,7 @@ public class MinimalProfileAlgorithm<V, E> implements ProfileDensityAlgorithm {
 			}
 			allLocalCodes.add(index, localCode);
 		}
-		return new ProfileImpl(getMatrix(allLocalCodes));
+		return new ProfileImpl(allLocalCodes);
 	}
 
 	/**
