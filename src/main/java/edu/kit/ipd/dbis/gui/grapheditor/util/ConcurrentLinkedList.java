@@ -65,7 +65,7 @@ public class ConcurrentLinkedList<T> {
 
 	public synchronized void pushBack(T element) {
 		ConcurrentNode<T> newNode = new ConcurrentNode<>(element);
-		head.getPrevious().setNext(newNode);
+		last().setNext(newNode);
 		newNode.setNext(head);
 		newNode.setPrevious(head.getPrevious());
 		head.setPrevious(newNode);
