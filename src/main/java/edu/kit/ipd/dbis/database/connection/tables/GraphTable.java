@@ -310,6 +310,7 @@ public class GraphTable extends Table {
 	 */
 	private boolean isCalculated(PropertyGraph graph) {
 
+		//TODO: eine methode die prüft, ob ein graph berechnet ist
 		Collection<Property> properties = graph.getProperties();
 		for (Property property : properties) {
 			if (property.getValue() == null) return false;
