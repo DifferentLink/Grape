@@ -20,6 +20,7 @@ public abstract class Table {
 	protected String password;
 	protected String name;
 	protected final String DRIVER = "com.mysql.jdbc.Driver";
+	protected Connection connection;
 
 	/**
 	 * Creates a new Table.
@@ -39,6 +40,7 @@ public abstract class Table {
 		this.user = user;
 		this.password = password;
 		this.name = name;
+		this.connection = null;
 		this.createTable();
 	}
 
@@ -139,9 +141,14 @@ public abstract class Table {
 	public Connection getConnection()
 			throws ConnectionFailedException, AccessDeniedForUserException, DatabaseDoesNotExistException {
 		try {
-			Class.forName(this.DRIVER);
-			Connection connection = DriverManager.getConnection(this.url, this.user, this.password);
-			return connection;
+			if (this.connection == null) {
+				Class.forName(this.DRIVER);
+				this.connection = DriverManager.getConnection(this.url, this.user, this.password);
+				return this.connection;
+			} else {
+				return this.connection;
+			}
+
 		} catch (MySQLSyntaxErrorException e) {
 			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
