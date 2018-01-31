@@ -10,13 +10,15 @@ import java.util.List;
 
 public class Log {
 
-	// TODO: How to change/set Database?
 	private GraphDatabase database;
 	private History history;
 
-	// TODO: Constructor?
 	public Log(int maxHistorySize) {
-		history = new History(maxHistorySize);
+		this.history = new History(maxHistorySize);
+	}
+
+	public void setDatabase(GraphDatabase database) {
+		this.database = database;
 	}
 
 	/**
@@ -91,10 +93,6 @@ public class Log {
 
 	public void setHistory(History history) {
 		this.history = history;
-	}
-
-	public void loadHistory(String file) {
-
 	}
 
 }
