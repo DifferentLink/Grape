@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 public class FilterUI extends JPanel {
 	private final FilterController filterController;
-	private UIFilterManager UIFilterManager;
+	private UIFilterManager uiFilterManager;
 	private JPanel filterMenu;
 	private JPanel filter;
 	private Theme theme;
@@ -32,7 +32,7 @@ public class FilterUI extends JPanel {
 		this.filterController = filterController;
 		this.theme = theme;
 
-		UIFilterManager = new UIFilterManager(filterController);
+		uiFilterManager = new UIFilterManager(filterController);
 
 		this.setLayout(new BorderLayout());
 		this.setBackground(theme.backgroundColor);
@@ -108,7 +108,7 @@ public class FilterUI extends JPanel {
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-		if (UIFilterManager.getFilterGroups().size() > 0) {
+		if (uiFilterManager.getFilterGroups().size() > 0) {
 			JPanel textContainerGroup = new JPanel(new BorderLayout());
 			JLabel groupLabel = new JLabel("Filter Groups:"); // todo use language resource
 			groupLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
@@ -117,13 +117,13 @@ public class FilterUI extends JPanel {
 			textContainerGroup.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 			container.add(textContainerGroup);
 
-			for (FilterGroup filterGroup : UIFilterManager.getFilterGroups()) {
+			for (FilterGroup filterGroup : uiFilterManager.getFilterGroups()) {
 				container.add(drawFilterGroup(filterGroup));
 			}
 			container.add(Box.createVerticalStrut(6));
 		}
 
-		if (UIFilterManager.getSimpleFilter().size() > 0) {
+		if (uiFilterManager.getSimpleFilter().size() > 0) {
 			JPanel textContainerSimple = new JPanel(new BorderLayout());
 			JLabel simpleLabel = new JLabel("Simple Filters:"); // todo use language resource
 			simpleLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
@@ -132,7 +132,7 @@ public class FilterUI extends JPanel {
 			textContainerSimple.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 			container.add(textContainerSimple);
 
-			for (SimpleFilter simpleFilter : UIFilterManager.getSimpleFilter()) {
+			for (SimpleFilter simpleFilter : uiFilterManager.getSimpleFilter()) {
 				container.add(drawSimpleFilter(simpleFilter)); // todo throws InvalidInputException
 				container.add(Box.createVerticalStrut(2));
 			}
@@ -222,7 +222,7 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			UIFilterManager.addNewSimpleFilter();
+			uiFilterManager.addNewSimpleFilter();
 			update();
 			repaint();
 			revalidate();
@@ -239,7 +239,7 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			UIFilterManager.addNewFilterGroup(filterController, "");
+			uiFilterManager.addNewFilterGroup(filterController, "");
 			update();
 			repaint();
 			revalidate();
@@ -271,7 +271,7 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			UIFilterManager.remove(id);
+			uiFilterManager.remove(id);
 			update();
 			repaint();
 			revalidate();
@@ -315,8 +315,8 @@ public class FilterUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			switch ((String) Objects.requireNonNull(filterDropdown.getSelectedItem())) {
-				case "Save selected filter..." : UIFilterManager.exportVisibleFilters(); break; // todo make compatible with different languages (use language resource)
-				case "Load filter..." : UIFilterManager.importFilters(); break; // todo make compatible with different languages (use language resource)
+				case "Save selected filter..." : uiFilterManager.exportVisibleFilters(); break; // todo make compatible with different languages (use language resource)
+				case "Load filter..." : uiFilterManager.importFilters(); break; // todo make compatible with different languages (use language resource)
 			}
 		}
 	}
@@ -331,7 +331,7 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			UIFilterManager.addNewSimpleFilterToGroup(filterGroup);
+			uiFilterManager.addNewSimpleFilterToGroup(filterGroup);
 			update();
 			repaint();
 			revalidate();
