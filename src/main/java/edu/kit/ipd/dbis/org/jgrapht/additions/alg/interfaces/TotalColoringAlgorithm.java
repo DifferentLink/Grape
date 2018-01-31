@@ -23,7 +23,7 @@ public interface TotalColoringAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	interface TotalColoring<V, E> {
+	interface TotalColoring<V, E> extends Serializable {
 		/**
 		 * Get the number of colors.
 		 *
@@ -66,7 +66,7 @@ public interface TotalColoringAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class TotalColoringImpl<V, E> implements TotalColoring<V, E>, Serializable {
+	class TotalColoringImpl<V, E> implements TotalColoring<V, E> {
 		private final int numberColors;
 		private final Map<V, Integer> vertexColors;
 		private final Map<E, Integer> edgeColors;

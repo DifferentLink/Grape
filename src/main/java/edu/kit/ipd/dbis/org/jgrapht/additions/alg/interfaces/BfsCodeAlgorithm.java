@@ -29,7 +29,7 @@ public interface BfsCodeAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	interface BfsCode<V, E> extends Comparable {
+	interface BfsCode<V, E> extends Comparable, Serializable {
 		/**
 		 * Get the length of the bfs code
 		 * @return the length of the bfs code
@@ -76,7 +76,7 @@ public interface BfsCodeAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class BfsCodeImpl<V, E> implements BfsCode<V, E>, Serializable {
+	class BfsCodeImpl<V, E> implements BfsCode<V, E> {
 
 		private final int[] code;
 		private final Map<Integer, V> numberMap;

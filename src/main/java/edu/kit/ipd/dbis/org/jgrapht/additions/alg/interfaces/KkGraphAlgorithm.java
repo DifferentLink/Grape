@@ -22,7 +22,7 @@ public interface KkGraphAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	interface KkGraph<V, E> {
+	interface KkGraph<V, E> extends Serializable {
 		/**
 		 * Get the subgraphs of the kk-graph.
 		 * @return the subgraphs
@@ -50,7 +50,7 @@ public interface KkGraphAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class KkGraphImpl<V, E> implements KkGraph<V, E>, Serializable {
+	class KkGraphImpl<V, E> implements KkGraph<V, E> {
 
 		private final int numberOfSubgraphs;
 		private final Map<V, Integer> kkGraph;

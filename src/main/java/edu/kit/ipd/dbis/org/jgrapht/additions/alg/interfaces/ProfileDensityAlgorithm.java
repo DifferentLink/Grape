@@ -28,7 +28,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	interface Profile<V, E> extends Comparable {
+	interface Profile<V, E> extends Comparable, Serializable {
 		/**
 		 * Get the profile matrix.
 		 *
@@ -45,7 +45,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class ProfileImpl<V, E> implements Profile<V, E>, Serializable {
+	class ProfileImpl<V, E> implements Profile<V, E> {
 		private int[][] profile;
 		private LinkedList<BfsCodeAlgorithm.BfsCode> bfsList;
 
