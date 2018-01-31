@@ -26,12 +26,16 @@ public class GraphEditorHistory {
 	}
 
 	public RenderableGraph moveBack() {
-		activeState = activeState.getPrevious();
+		if (activeState.getPrevious().get() != null) {
+			activeState = activeState.getPrevious();
+		}
 		return activeState.get();
 	}
 
 	public RenderableGraph moveForward() {
-		activeState = activeState.getNext();
+		if (activeState.getNext().get() != null) {
+			activeState = activeState.getNext();
+		}
 		return activeState.get();
 	}
 
