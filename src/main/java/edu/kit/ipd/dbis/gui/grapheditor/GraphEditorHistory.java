@@ -42,7 +42,7 @@ public class GraphEditorHistory {
 	private void maintainHistorySize() {
 		final int historyOverflow = Math.abs(maxHistorySize - history.size());
 		for (int i = 0; i < historyOverflow; i++) {
-			history.popFront();
+			history.popLast();
 		}
 	}
 
