@@ -137,8 +137,11 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		return matrix;
 	}
 
+	/**
+	 * clones this graph
+	 * @return the new graph
+	 */
 	public PropertyGraph clone() {
-		//TODO: implement me
 		PropertyGraph clone = new PropertyGraph();
 		for (Object v : this.vertexSet()) {
 			clone.addVertex(v);
