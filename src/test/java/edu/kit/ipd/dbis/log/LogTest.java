@@ -56,6 +56,7 @@ public class LogTest {
 		String expectedOutput = "[ADD] a1 (1, 2, 3, 4)\n" + "[REMOVE] r2 (1, 2, 3, 4)\n" + "[MESSAGE] m3 (1, 2, 3, " +
 				"4)";
 		String output;
+		log.setHistory(new History(100));
 		log.addEvent(a1);
 		log.addEvent(r2);
 		log.addEvent(m3);
@@ -67,6 +68,7 @@ public class LogTest {
 	public void getAsString2() {
 		String expectedOutput = "[REMOVE] r2 (1, 2, 3, 4)";
 		String output;
+		log.setHistory(new History(100));
 		log.addEvent(r2);
 		output = log.getAsString();
 		assertEquals(expectedOutput, output);
@@ -76,12 +78,23 @@ public class LogTest {
 	public void getAsStringEmptyHistory() {
 		String expectedOutput = "";
 		String output;
+		log.setHistory(new History(100));
 		output = log.getAsString();
 		assertEquals(expectedOutput, output);
 	}
 
 	@Test
 	public void removeMessages() {
+		String expectedOutput = "[ADD] a1 (1, 2, 3, 4)\n" + "[REMOVE] r2 (1, 2, 3, 4)";
+		String output;
+		log.setHistory(new History(100));
+		log.addEvent(a1);
+		log.addEvent(m2);
+		log.addEvent(r2);
+		log.addEvent(m3);
+		log.removeMessages();
+		output = log.getAsString();
+		assertEquals(expectedOutput, output);
 	}
 
 	@Test
