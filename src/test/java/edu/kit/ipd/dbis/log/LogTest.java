@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.log;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,7 +24,6 @@ public class LogTest {
 	static Event r2;
 	static Event r3;
 	static Event r4;
-
 
 	@BeforeClass
 	public static void initialize() {
@@ -51,12 +51,16 @@ public class LogTest {
 		log = new Log(100);
 	}
 
+	@Before
+	public void clearHistory() {
+		log.setHistory(new History(100));
+	}
+
 	@Test
 	public void getAsString() {
 		String expectedOutput = "[ADD] a1 (1, 2, 3, 4)\n" + "[REMOVE] r2 (1, 2, 3, 4)\n" + "[MESSAGE] m3 (1, 2, 3, " +
 				"4)";
 		String output;
-		log.setHistory(new History(100));
 		log.addEvent(a1);
 		log.addEvent(r2);
 		log.addEvent(m3);
@@ -68,7 +72,6 @@ public class LogTest {
 	public void getAsString2() {
 		String expectedOutput = "[REMOVE] r2 (1, 2, 3, 4)";
 		String output;
-		log.setHistory(new History(100));
 		log.addEvent(r2);
 		output = log.getAsString();
 		assertEquals(expectedOutput, output);
@@ -78,7 +81,6 @@ public class LogTest {
 	public void getAsStringEmptyHistory() {
 		String expectedOutput = "";
 		String output;
-		log.setHistory(new History(100));
 		output = log.getAsString();
 		assertEquals(expectedOutput, output);
 	}
@@ -87,7 +89,6 @@ public class LogTest {
 	public void removeMessages() {
 		String expectedOutput = "[ADD] a1 (1, 2, 3, 4)\n" + "[REMOVE] r2 (1, 2, 3, 4)";
 		String output;
-		log.setHistory(new History(100));
 		log.addEvent(a1);
 		log.addEvent(m2);
 		log.addEvent(r2);
