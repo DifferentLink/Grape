@@ -73,7 +73,6 @@ public class GenerateController {
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
-		CalculationController.getInstance().run();
 	}
 
 	/**
@@ -140,6 +139,7 @@ public class GenerateController {
 				database.addGraph(graph);
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
 					| ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+				e.printStackTrace();
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
