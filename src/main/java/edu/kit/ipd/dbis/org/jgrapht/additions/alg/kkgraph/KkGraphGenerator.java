@@ -2,17 +2,20 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.kkgraph;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
-import org.jgrapht.VertexFactory;
 import org.jgrapht.alg.clique.BronKerboschCliqueFinder;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
-import org.jgrapht.graph.ClassBasedVertexFactory;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  *The kk-graph generator. It generates the kk-graph for the input graph depending on the Hadwiger Conjecture.
@@ -61,7 +64,8 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 			}
 		}
 
-		BfsCodeAlgorithm.BfsCodeImpl bfsCode = (BfsCodeAlgorithm.BfsCodeImpl) graph.getProperty(BfsCode.class).getValue();
+		BfsCodeAlgorithm.BfsCodeImpl bfsCode =
+				(BfsCodeAlgorithm.BfsCodeImpl) graph.getProperty(BfsCode.class).getValue();
 		int[] bfsArray = bfsCode.getCode();
 		ArrayList<int[]> edges = this.getEdgeList(bfsArray);
 
@@ -73,12 +77,13 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 		//tries all different possibilities of edges until the kk graph gets found
 		while (!found && !allCombsDone) {
-			//reset graphMap
+			//reset graphMap for next combination
 			graphMap.clear();
 			Set<Integer> keySet = numberMap.keySet();
 			for (int i : keySet) {
 				graphMap.put(numberMap.get(i), i);
 			}
+
 			//contract all edges from this combination
 			for (int i = 0; i < actualComb.length; i++) {
 				if (actualComb[i] == 1) {
@@ -96,20 +101,19 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 				actualComb = getNextEdgeCombination(actualComb);
 			}
 		}
+
 		//kk graph not found
-		if (found = false) {
+		if (!found) {
 			return null;
 		}
 		Collection<Integer> values = graphMap.values();
 		Set<Integer> v = new HashSet<>();
-		for (int i : values) {
-			v.add(i);
-		}
+		v.addAll(values);
 		return new KkGraphImpl(graphMap, v.size());
 	}
 
 	/**
-	 * contracs the edge
+	 * contracts the edge from firstNode to secondNode
 	 *
 	 * @param graphMap input graph map
 	 * @param firstNode the start vertex of the edge
@@ -135,9 +139,9 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	 * @param prevComb the previous combination
 	 * @return the next combination
 	 */
-	public int[] getNextEdgeCombination(int[] prevComb) {
-		for (int i = 0; i < prevComb.length; i++) {
-			if (!(prevComb[i] == 1 || prevComb[i] == 0)) {
+	private int[] getNextEdgeCombination(int[] prevComb) {
+		for (int i : prevComb) {
+			if (!(i == 1 || i == 0)) {
 				throw new IllegalArgumentException("no valid comb");
 			}
 		}
@@ -150,7 +154,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		}
 		int moveableOneIndex = 0;
 		int i = prevComb.length - 2;
-		while(!found && i > 0) {
+		while (!found && i > 0) {
 			if (prevComb[i] == 1 && prevComb[i + 1] == 0) {
 				found = true;
 				moveableOneIndex = i;
@@ -178,7 +182,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	}
 
 	/**
-	 * checks if it is the same comb
+	 * checks if first and second are the same
 	 * @param first first comb
 	 * @param second second comb
 	 * @return if its the same comb
@@ -219,9 +223,8 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		Collection<Integer> values = graphMap.values();
 		Set<Integer> valueSet = new HashSet<>();
 		//changes map into graph
-		for (int i : values) {
-			valueSet.add(i);
-		}
+		valueSet.addAll(values);
+
 		for (int v : valueSet) {
 			g.addVertex(v);
 		}
@@ -236,7 +239,6 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 				}
 			}
 		}
-
 		ArrayList<Set<Object>> cliques = new ArrayList<>();
 		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(g);
 		Iterator<Set<Object>> it = alg.iterator();

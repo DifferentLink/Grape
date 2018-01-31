@@ -1,15 +1,11 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.kkgraph;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
+
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
-import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Map;
 
 public class KkGraphGeneratorTest {
 
@@ -42,21 +38,6 @@ public class KkGraphGeneratorTest {
 	}
 
 	@Test
-	public void Test() {
-		PropertyGraph graph = new PropertyGraph();
-		KkGraphGenerator g = new KkGraphGenerator(graph);
-		int[] a = {1,1,1,0,0};
-		for (int i = 0; i < 9; i++) {
-			int[] b = g.getNextEdgeCombination(a);
-			for (int j = 0; j < b.length; j++) {
-				System.out.print(b[j] +  ", ");
-			}
-			System.out.println();
-			a = b;
-		}
-	}
-
-	@Test
 	public void cliqueGraphTest() {
 		PropertyGraph graph = this.generateSimpleTestCliqueGraph();
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
@@ -69,8 +50,7 @@ public class KkGraphGeneratorTest {
 		PropertyGraph graph = this.generateSimpleTestGraph();
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		Map g = kkGraph.getKkGraph();
-		System.out.println(g);
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
 	}
 
 	@Test
@@ -88,9 +68,7 @@ public class KkGraphGeneratorTest {
 		graph.addEdge("c", "e");
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		Map g = kkGraph.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
-		System.out.println(g);
 	}
 
 	@Test
@@ -108,16 +86,10 @@ public class KkGraphGeneratorTest {
 		graph.addEdge("b", "c");
 		graph.addEdge("c", "e");
 		graph.addEdge("e", "d");
-		graph.addEdge("b", "e");
-		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
-				graph.getProperty(VertexColoring.class).getValue();
-		int numberOfColors = vertexColoring.getNumberColors();
-		System.out.println("Number: " + numberOfColors);
+		graph.addEdge("b", "e");;
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		Map g = kkGraph.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
-		System.out.println(g);
 	}
 
 	@Test
@@ -168,15 +140,9 @@ public class KkGraphGeneratorTest {
 		graph.addEdge("j", "l");
 		graph.addEdge("j", "h");
 		graph.addEdge("k", "l");
-		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
-				graph.getProperty(VertexColoring.class).getValue();
-		int numberOfColors = vertexColoring.getNumberColors();
-		System.out.println("Number: " + numberOfColors);
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		Map g = kkGraph.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
-		System.out.println(g);
 	}
 
 	@Test
@@ -199,14 +165,8 @@ public class KkGraphGeneratorTest {
 		graph.addEdge("d", "e");
 		graph.addEdge("d", "g");
 		graph.addEdge("f", "g");
-		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
-				graph.getProperty(VertexColoring.class).getValue();
-		int numberOfColors = vertexColoring.getNumberColors();
-		System.out.println("Number: " + numberOfColors);
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		Map g = kkGraph.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
-		System.out.println(g);
 	}
 }
