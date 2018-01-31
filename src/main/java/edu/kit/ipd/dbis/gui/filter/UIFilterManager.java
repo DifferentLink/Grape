@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FilterManagement {
+public class UIFilterManager {
 
 	private final FilterController filterController;
 	private List<SimpleFilter> simpleFilter = new ArrayList<>();
 	private List<FilterGroup> filterGroups = new ArrayList<>();
 	private int nextUniqueID = 0;
 
-	public FilterManagement(FilterController filterController) {
+	public UIFilterManager(FilterController filterController) {
 		this.filterController = filterController;
 	}
 
