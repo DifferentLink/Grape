@@ -6,35 +6,60 @@ import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedExcept
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
+import edu.kit.ipd.dbis.log.Event;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
+import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
+
+/**
+ * The type Database controller.
+ */
 public class DatabaseController {
 
 	private GenerateController generate;
 	private CalculationController calculation;
 	private GraphEditorController editor;
 	private FilterController filter;
+	private StatusbarController log;
 
 	private Connector connector;
 	private GraphDatabase database;
 
-
+	/**
+	 * Instantiates a new Database controller.
+	 */
 	public DatabaseController() {
-		generate = GenerateController.getInstance();
-		calculation = CalculationController.getInstance();
-		editor = GraphEditorController.getInstance();
-		filter = FilterController.getInstance();
-		connector = new FileManager();
+		this.generate = GenerateController.getInstance();
+		this.calculation = CalculationController.getInstance();
+		this.editor = GraphEditorController.getInstance();
+		this.filter = FilterController.getInstance();
+		this.log = StatusbarController.getInstance();
+		this.connector = new FileManager();
 	}
 
+	// TODO: new Getter
+	public GraphDatabase getCurrentDatabase() {
+		return this.database;
+	}
 	/**
 	 * Triggers the database to open a new database table.
+	 *
+	 * @param url      the url
+	 * @param user     the user
+	 * @param password the password
+	 * @param name     the name
 	 */
-	public void newDatabase(String url, String user, String password, String name) throws Exception, DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException, TableAlreadyExistsException, ConnectionFailedException {
-		database = connector.createGraphDatabase(url, user, password, name);
+	public void newDatabase(String url, String user, String password, String name) {
+		try {
+			database = connector.createGraphDatabase(url, user, password, name);
+		} catch (TableAlreadyExistsException | SQLException | DatabaseDoesNotExistException
+				| ConnectionFailedException | AccessDeniedForUserException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 		this.updateDatabases();
 	}
 
@@ -43,8 +68,14 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the database.
 	 */
-	public void loadDatabase(String filepath) throws Exception, SQLException, AccessDeniedForUserException, FileContentNotAsExpectedException, TablesNotAsExpectedException, ConnectionFailedException, FileNotFoundException, FileContentCouldNotBeReadException, DatabaseDoesNotExistException {
-		database = connector.loadGraphDatabase(filepath);
+	public void loadDatabase(String filepath) {
+		try {
+			database = connector.loadGraphDatabase(filepath);
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
+				| SQLException | TablesNotAsExpectedException | FileContentCouldNotBeReadException
+				| ConnectionFailedException | DatabaseDoesNotExistException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 		this.updateDatabases();
 	}
 
@@ -53,10 +84,21 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the Database.
 	 */
-	public void mergeDatabase(String filepath) throws Exception, SQLException, AccessDeniedForUserException, FileContentNotAsExpectedException, TablesNotAsExpectedException, ConnectionFailedException, FileNotFoundException, FileContentCouldNotBeReadException, DatabaseDoesNotExistException {
-		GraphDatabase mergeDatabase;
-		mergeDatabase = connector.loadGraphDatabase(filepath);
-		database.merge(mergeDatabase);
+	public void mergeDatabase(String filepath) {
+		GraphDatabase mergeDatabase = null;
+		try {
+			mergeDatabase = connector.loadGraphDatabase(filepath);
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
+				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException
+				| TablesNotAsExpectedException | FileContentCouldNotBeReadException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
+		try {
+			database.merge(mergeDatabase);
+		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
+				| AccessDeniedForUserException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 		this.updateDatabases();
 	}
 
@@ -72,7 +114,7 @@ public class DatabaseController {
 	/**
 	 * Triggers the database to save the current selected graphs in the table at the given path.
 	 *
-	 * @param filepath the fille path of the Database.
+	 * @param filepath the file path of the Database.
 	 * @param graphIDs the GraphIDs to save.
 	 */
 	public void saveSelection(String filepath, List<Integer> graphIDs) {
@@ -82,7 +124,8 @@ public class DatabaseController {
 	/**
 	 * Sets the database for all controller classes that have a database connection
 	 */
-	private void updateDatabases() throws Exception {
+	private void updateDatabases() {
+
 		generate.setDatabase(database);
 		calculation.setDatabase(database);
 		editor.setDatabase(database);

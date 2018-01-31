@@ -8,10 +8,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class RenderableGraph {
 
@@ -40,12 +37,74 @@ public class RenderableGraph {
 	}
 
 	public RenderableGraph(PropertyGraph propertyGraph) {
+		this.edges = new HashSet<>();
+		this.vertices = new HashSet<>();
+		this.id = propertyGraph.getId();
 
+		Map<Object, Vertex> objectVertexMap = new HashMap<>();
+		Set addedEdges = new HashSet();
+
+		// iterate over vertices
+		for (Object v : propertyGraph.vertexSet()) {
+			// check if vertex was already added as
+			// 'edgeTarget' in loop below
+			if (!objectVertexMap.containsKey(v)) {
+				Vertex vertex1 = new Vertex(0, 0);
+				this.vertices.add(vertex1);
+				objectVertexMap.put(v, vertex1);
+			}
+
+			// iterate over vertex v's edges
+			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+
+				// check if vertex was already added
+				if (!objectVertexMap.containsKey(edgeTarget)) {
+					Vertex vertex2 = new Vertex(0, 0);
+					this.vertices.add(vertex2);
+					objectVertexMap.put(edgeTarget, vertex2);
+				}
+
+				// check if edge was already added
+				if (!addedEdges.contains(e)
+						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
+					addedEdges.add(e);
+					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
+				}
+			}
+		}
 	}
 
 	public PropertyGraph asPropertyGraph() {
-		return new PropertyGraph();
-	} // todo implement asPropertyGraph() now that PropertyGraph class is available
+		PropertyGraph graph = new PropertyGraph();
+		Map<Vertex, Integer> vertexIntegerMap = new HashMap<>();
+		int vertexName = 0;
+
+		// iterate over vertices and assign
+		// integer value to each one
+		for (Vertex vertex : this.vertices) {
+			vertexIntegerMap.put(vertex, vertexName);
+			graph.addVertex(vertexName);
+			vertexName++;
+		}
+
+		// iterate over edges
+		for (Edge edge : this.edges) {
+			// check if edge was already added
+			if (!graph.containsEdge(graph.getEdgeFactory().createEdge(
+					vertexIntegerMap.get(edge.getStart()),
+					vertexIntegerMap.get(edge.getEnd())))
+					&& !graph.containsEdge(graph.getEdgeFactory().createEdge(
+					vertexIntegerMap.get(edge.getEnd()),
+					vertexIntegerMap.get(edge.getStart())))) {
+				graph.addEdge(
+						vertexIntegerMap.get(edge.getStart()),
+						vertexIntegerMap.get(edge.getEnd())
+				);
+			}
+		}
+		return graph;
+	}
 
 	public void move(Point delta) {
 		for (Vertex vertex : vertices) {
