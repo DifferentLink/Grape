@@ -40,6 +40,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
 				graph.getProperty(VertexColoring.class).getValue();
 		int numberOfColors = vertexColoring.getNumberColors();
+
 		//this is the number of edges that have to be contract to get the kk graph
 		int numberOfContractEdges = graph.vertexSet().size() - numberOfColors;
 
