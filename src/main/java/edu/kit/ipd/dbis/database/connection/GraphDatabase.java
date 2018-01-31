@@ -72,18 +72,10 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
 			this.graphTable.insert(graph);
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (IOException e) {
 			throw new InsertionFailedException();
-		} catch (UnexpectedObjectException e) {
-			throw new UnexpectedObjectException();
 		}
 	}
 
@@ -93,18 +85,10 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
 			this.filterTable.insert(filter);
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (IOException e) {
 			throw new InsertionFailedException();
-		} catch (UnexpectedObjectException e) {
-			throw new UnexpectedObjectException();
 		}
 	}
 
@@ -114,12 +98,6 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException {
 		try {
 			this.graphTable.switchState(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -131,12 +109,6 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			this.filterTable.delete(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -149,12 +121,6 @@ public class GraphDatabase implements DatabaseManager {
 
 		try {
 			this.graphTable.switchState(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -166,12 +132,6 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			this.filterTable.switchState(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -184,12 +144,6 @@ public class GraphDatabase implements DatabaseManager {
 
 		try {
 			this.graphTable.deleteAll();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -201,12 +155,6 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			this.graphTable.delete(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -235,14 +183,8 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException {
 		try {
 			this.graphTable.merge(database.getGraphTable());
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		}
 	}
 
@@ -252,14 +194,8 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException {
 		try {
 			return this.graphTable.graphExists(graph);
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		}
 	}
 
@@ -269,14 +205,8 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException {
 		try {
 			return this.filterTable.getContent();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		}
 	}
 
@@ -286,19 +216,11 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException, AccessDeniedForUserException {
 		try {
 			return this.filterTable.getContent(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		} catch (IOException e) {
 			throw new UnexpectedObjectException();
 		} catch (ClassNotFoundException e) {
-			throw new UnexpectedObjectException();
-		} catch (UnexpectedObjectException e) {
 			throw new UnexpectedObjectException();
 		}
 	}
@@ -315,12 +237,6 @@ public class GraphDatabase implements DatabaseManager {
 				this.sortByBfsCodeDescending(graphs);
 			}
 			return graphs;
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -332,19 +248,11 @@ public class GraphDatabase implements DatabaseManager {
 			AccessDeniedForUserException, UnexpectedObjectException {
 		try {
 			return this.graphTable.getContent(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		} catch (IOException e) {
 			throw new UnexpectedObjectException();
 		} catch (ClassNotFoundException e) {
-			throw new UnexpectedObjectException();
-		} catch (UnexpectedObjectException e) {
 			throw new UnexpectedObjectException();
 		}
 	}
@@ -355,18 +263,11 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			return this.graphTable.getUncalculatedGraphs();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
 	}
 
-	//TODO:
 	@Override
 	public LinkedList<Double> getValues(String[][] filters, String column)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
@@ -374,12 +275,6 @@ public class GraphDatabase implements DatabaseManager {
 
 		try {
 			return this.graphTable.getValues(filters, column);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
