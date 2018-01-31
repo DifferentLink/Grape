@@ -34,6 +34,10 @@ public class UIFilterManager {
 		filterGroup.add(simpleFilter);
 	}
 
+	public void addNewSimpleFilterToGroup(FilterGroup filterGroup) {
+		filterGroup.add(new SimpleFilter(getUniqueID()));
+	}
+
 	public void addNewFilterGroup(FilterController filterController, String name) {
 		FilterGroup newGroup = new FilterGroup(getUniqueID(), name);
 		filterGroups.add(newGroup);
