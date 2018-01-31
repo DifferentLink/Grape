@@ -52,7 +52,7 @@ public class Log {
 			changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 1);
 			historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (" + changedGraphs + ")\n";
 		}
-		historyEntries = historyEntries.substring(0, historyEntries.length() - 2);
+		historyEntries = historyEntries.substring(0, historyEntries.length() - 1);
 		return historyEntries;
 	}
 
