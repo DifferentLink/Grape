@@ -1,8 +1,7 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.files.FileContentCouldNotBeReadException;
-import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedException;
+import edu.kit.ipd.dbis.database.exceptions.files.*;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
@@ -76,6 +75,7 @@ public class DatabaseController {
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | TablesNotAsExpectedException | FileContentCouldNotBeReadException
 				| ConnectionFailedException | DatabaseDoesNotExistException e) {
+			e.printStackTrace();
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		this.updateDatabases();
@@ -110,7 +110,11 @@ public class DatabaseController {
 	 * @param filepath the file path of the Database.
 	 */
 	public void saveDatabase(String filepath) {
-		database.setDirectory(filepath);
+		try {
+			connector.saveGraphDatabase(filepath, database);
+		} catch (GraphDatabaseAlreadySavedException | FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**
