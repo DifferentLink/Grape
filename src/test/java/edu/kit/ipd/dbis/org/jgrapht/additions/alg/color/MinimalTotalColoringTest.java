@@ -57,6 +57,6 @@ public class MinimalTotalColoringTest {
 
 		MinimalTotalColoring totalColoring = new MinimalTotalColoring(graph);
 		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
-		assertEquals(4, coloring.getNumberColors());
+		assertEquals(5, coloring.getNumberColors());
 	}
 }
