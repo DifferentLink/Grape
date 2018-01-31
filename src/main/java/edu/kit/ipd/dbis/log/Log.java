@@ -81,7 +81,7 @@ public class Log {
 	 */
 	public void redo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException { // todo catch
 		Event action = history.getActiveState();
-		history.moveBackward();
+		history.moveForward();
 		action.getType().redo(this.database, action.getChangedGraphs());
 	}
 
