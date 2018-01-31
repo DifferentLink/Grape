@@ -35,24 +35,4 @@ public class MinimalProfileAlgorithm<V, E> implements ProfileDensityAlgorithm {
 		}
 		return new ProfileImpl(allLocalCodes);
 	}
-
-	/**
-	 * get the profile matrix of the list of bfs codes -> on position 0 is the minimal bfs code
-	 * @param list the list
-	 * @return the profile
-	 */
-	private int[][] getMatrix(LinkedList<BfsCodeAlgorithm.BfsCode> list) {
-		if (list.size() == 0) {
-			return new int[0][0];
-		}
-		int[][] result = new int[list.size()][];
-		int i = 0;
-		Iterator<BfsCodeAlgorithm.BfsCode> iterator = list.iterator();
-		while (iterator.hasNext()) {
-			int[] code = iterator.next().getCode();
-			result[i] = code;
-			i++;
-		}
-		return result;
-	}
 }

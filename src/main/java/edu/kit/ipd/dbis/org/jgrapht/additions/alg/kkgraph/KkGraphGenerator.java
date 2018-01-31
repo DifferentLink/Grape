@@ -39,9 +39,9 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	public KkGraph getKkGraph() {
 		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
 				graph.getProperty(VertexColoring.class).getValue();
-		System.out.println("numberColors" + vertexColoring.getNumberColors());
+		int numberOfColors = vertexColoring.getNumberColors();
 		//this is the number of edges that have to be contract to get the kk graph
-		int numberOfContractEdges = graph.vertexSet().size() - vertexColoring.getNumberColors();
+		int numberOfContractEdges = graph.vertexSet().size() - numberOfColors;
 
 		//allocates the endComb and the actualComb f.e 5 Edges, numberOfContractEdges = 3 -> actualComb = (1,1,1,0,0)
 		//endComb = (0,0,1,1,1)
@@ -64,27 +64,20 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		int[] bfsArray = bfsCode.getCode();
 		ArrayList<int[]> edges = this.getEdgeList(bfsArray);
 
-		PropertyGraph graphCopy;
 		Map<Integer, V> numberMap = bfsCode.getNumberMap();
 		boolean found = false;
 		boolean allCombsDone = false;
 
-		/*
-		a 1
-		b 2
-		c 3
-		d 4
-		e 5
-		 */
 		Map<V, Integer> graphMap = new HashMap<>();
-		Set<Integer> keySet = numberMap.keySet();
-		for (int i : keySet) {
-			graphMap.put(numberMap.get(i), i);
-		}
 
 		//tries all different possibilities of edges until the kk graph gets found
 		while (!found && !allCombsDone) {
-			graphCopy = graph.clone();
+			//reset graphMap
+			graphMap.clear();
+			Set<Integer> keySet = numberMap.keySet();
+			for (int i : keySet) {
+				graphMap.put(numberMap.get(i), i);
+			}
 			//contract all edges from this combination
 			for (int i = 0; i < actualComb.length; i++) {
 				if (actualComb[i] == 1) {
@@ -112,95 +105,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 			v.add(i);
 		}
 		return new KkGraphImpl(graphMap, v.size());
-
-
-
-		/**
-		//tries all different possibilities of edges until the kk graph gets found
-		while (!found && !allCombsDone) {
-			graphCopy = graph.clone();
-			//contract all edges from this combination
-			for (int i = 0; i < actualComb.length; i++) {
-				if (actualComb[i] == 1) {
-					contractEdge(graphCopy, numberMap.get(edges.get(i)[0]), numberMap.get(edges.get(i)[1]));
-				}
-			}
-
-			if (isClique(graphCopy)) {
-				found = true;
-			}
-			if (sameComb(actualComb, endComb)) {
-				allCombsDone = true;
-			}
-			if (!found) {
-				actualComb = getNextEdgeCombination(actualComb);
-			}
-		}
-		//kk graph not found
-		if (found = false) {
-			return null;
-		}
-		//getKkGraphMap
-		int cnt = 0;
-		Map<V, Integer> result = new HashMap<>();
-		for (int i = 0; i < actualComb.length; i++) {
-			if (actualComb[i] == 1) {
-				V first = numberMap.get(edges.get(i)[0]);
-				V second = numberMap.get(edges.get(i)[1]);
-				if (result.keySet().contains(first) && result.keySet().contains(second)) {
-					int valueFirst = result.get(first);
-					int valueSecond = result.get(first);
-					for (V v : result.keySet()) {
-						if (result.get(v) == valueFirst) {
-							result.replace(v, valueSecond);
-						}
-					}
-				}else if (result.keySet().contains(first)) {
-					int v = result.get(first);
-					result.put(second, v);
-				} else if (result.keySet().contains(second)) {
-					int v = result.get(second);
-					result.put(first, v);
-				} else {
-					result.put(first, cnt);
-					result.put(second, cnt);
-					cnt++;
-				}
-			}
-		}
-		Collection<Integer> values = result.values();
-		Set<Integer> v = new HashSet<>();
-		for (int i : values) {
-			v.add(i);
-		}
-		return new KkGraphImpl(result, v.size());
-		 */
 	}
-
-
-	/**
-	 * contracs the edge
-	 *
-	 * @param graph input graph
-	 * @param firstNode the start vertex of the edge
-	 * @param secondNode the end vertex of the edge
-	 */
-	/*
-	private void contractEdge(PropertyGraph graph, V firstNode, V secondNode) {
-		VertexFactory<V> vertexFactory = new ClassBasedVertexFactory(firstNode.getClass());
-		V newNode = vertexFactory.createVertex();
-		graph.removeAllEdges(firstNode, secondNode);
-		graph.addVertex(newNode);
-		for (Object v : graph.vertexSet()) {
-			if (graph.containsEdge(firstNode, v) || graph.containsEdge(secondNode, v)) {
-				graph.addEdge(newNode, v);
-			}
-		}
-		graph.removeVertex(firstNode);
-		graph.removeVertex(secondNode);
-		//TODO: implement me;
-	}
-	*/
 
 	/**
 	 * contracs the edge
