@@ -3,29 +3,47 @@ package edu.kit.ipd.dbis.log;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The History saves all events, that are added to the log.
+ */
 public class History {
 
 	private List<Event> events;
 	private Event activeState;
 	private int maxHistorySize;
 
+	/**
+	 * Instantiates a new History.
+	 *
+	 * @param maxHistorySize the max history size
+	 */
 	public History(int maxHistorySize) {
 		this.events = new LinkedList<>();
 		this.maxHistorySize = maxHistorySize;
 		this.activeState = null;
 	}
 
+	/**
+	 * Gets all events.
+	 *
+	 * @return the events
+	 */
 	public List<Event> getEvents() {
 		return events;
 	}
 
+	/**
+	 * Gets active state.
+	 *
+	 * @return the active state
+	 */
 	// TODO: New Getter
 	public Event getActiveState() {
 		return activeState;
 	}
 
 	/**
-	 * the most previous Event for which the EventType is not MESSAGE.
+	 * Moves back one event in the history, which the EventType is not MESSAGE.
 	 */
 	public void moveBackward() {
 		if (events.size() == 0) {
@@ -46,7 +64,7 @@ public class History {
 	}
 
 	/**
-	 * the next Event for which the EventType is not MESSAGE.
+	 * Moves forward one event in the history, which the EventType is not MESSAGE.
 	 */
 	public void moveForward() {
 		if (events.size() == 0) {
@@ -67,7 +85,7 @@ public class History {
 	}
 
 	/**
-	 * Before this happens cutTrailing() is called. After the event is added maintainHistorySize() is called.
+	 * Adds an event to the eventlist
 	 *
 	 * @param event this event will be added to the end of the history.
 	 */
@@ -80,6 +98,11 @@ public class History {
 		maintainHistorySize();
 	}
 
+	/**
+	 * Remove event from the list.
+	 *
+	 * @param event the event
+	 */
 	// TODO: method added
 	public void removeEvent(Event event) {
 		events.remove(event);

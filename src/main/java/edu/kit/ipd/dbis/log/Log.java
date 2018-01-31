@@ -6,29 +6,40 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
 
-import java.util.List;
-
+/**
+ * The type Log.
+ */
 public class Log {
 
 	private GraphDatabase database;
 	private History history;
 
+	/**
+	 * Instantiates a new Log.
+	 *
+	 * @param maxHistorySize the history size
+	 */
 	public Log(int maxHistorySize) {
 		this.history = new History(maxHistorySize);
 	}
 
+	/**
+	 * Sets database.
+	 *
+	 * @param database the database
+	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
 	}
 
 	/**
-	 * @return a string with the format [EventType] Event Message"GraphID-1, GraphID-
-	 * 2, ... \n
-	 * Therefore each line of the string corresponds to one log entry.
+	 * Gets as string.
+	 *
+	 * @return a string with the format [EventType] Event Message"GraphID-1, GraphID- 2, ... \n Therefore each line of
+	 * the string corresponds to one log entry.
 	 */
 	public String getAsString() {
 		String historyEntries = "";
-		List<Event> events;
 		if (history == null || history.getEvents().size() == 0) {
 			return "";
 		}
@@ -56,14 +67,25 @@ public class Log {
 		}
 	}
 
+	/**
+	 * Add event to the log history.
+	 *
+	 * @param event the event
+	 */
 	public void addEvent(Event event) {
 		this.history.addEvent(event);
 	}
 
 	/**
 	 * Move backward in the history
+	 *
+	 * @throws DatabaseDoesNotExistException the database does not exist exception
+	 * @throws AccessDeniedForUserException  the access denied for user exception
+	 * @throws ConnectionFailedException     the connection failed exception
+	 * @throws TablesNotAsExpectedException  the tables not as expected exception
 	 */
-	public void undo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException { // todo catch
+	public void undo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
+			TablesNotAsExpectedException {
 		Event action = history.getActiveState();
 		history.moveBackward();
 		action.getType().undo(this.database, action.getChangedGraphs());
@@ -71,17 +93,33 @@ public class Log {
 
 	/**
 	 * Move forward in the history
+	 *
+	 * @throws DatabaseDoesNotExistException the database does not exist exception
+	 * @throws AccessDeniedForUserException  the access denied for user exception
+	 * @throws ConnectionFailedException     the connection failed exception
+	 * @throws TablesNotAsExpectedException  the tables not as expected exception
 	 */
-	public void redo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException { // todo catch
+	public void redo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
+			TablesNotAsExpectedException {
 		Event action = history.getActiveState();
 		history.moveForward();
 		action.getType().redo(this.database, action.getChangedGraphs());
 	}
 
+	/**
+	 * Gets history.
+	 *
+	 * @return the history
+	 */
 	public History getHistory() {
 		return history;
 	}
 
+	/**
+	 * Sets history.
+	 *
+	 * @param history the history
+	 */
 	public void setHistory(History history) {
 		this.history = history;
 	}
