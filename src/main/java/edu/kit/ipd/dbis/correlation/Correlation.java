@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.correlation;
 
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
 import java.util.TreeSet;
@@ -12,6 +13,7 @@ abstract class Correlation {
     private int attributeCounter;
     private Property property;
     private boolean maximum;
+    private GraphDatabase database;
 
     /**
      * method which is used to check filters for a specific correlation
@@ -44,6 +46,14 @@ abstract class Correlation {
     public abstract TreeSet<CorrelationOutput> useMinimum(Property property1);
 
     /**
+     * method which is used to set a specific database
+     * @param database new database to set
+     */
+    void setDatabase(GraphDatabase database) {
+        this.database = database;
+    }
+
+    /**
      * setter of attribute attributeCounter
      * @param attributeCounter integer value which inherits the information
      * how many pairs of properties are wanted
@@ -69,6 +79,13 @@ abstract class Correlation {
         this.maximum = maximum;
     }
 
+    /**
+     * used to get the database of a specific correlation
+     * @return database of a specific correlation
+     */
+    GraphDatabase getDatabase() {
+        return database;
+    }
     /**
      * getter of attribute attributeCounter
      * @return integer value which inherits the information

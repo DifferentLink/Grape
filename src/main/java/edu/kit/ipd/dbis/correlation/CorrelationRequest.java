@@ -52,7 +52,8 @@ public class CorrelationRequest {
         }
     }
 
-    private static Correlation parseCorrelationToString(String correlationInput) throws InvalidCorrelationInputException {
+    private static Correlation parseCorrelationToString(String correlationInput) throws
+            InvalidCorrelationInputException {
         int i = 0;
         String input = correlationInput.toLowerCase();
         String maxOrMin = "";

@@ -1,5 +1,7 @@
 package edu.kit.ipd.dbis.correlation;
 
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -89,7 +91,7 @@ public class MutualCorrelation extends Correlation {
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty) {
         //TODO: Hier muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
-        LinkedList<Double> firstPropertyValues = MutualCorrelation.generateRandomLinkedList();
+        LinkedList<Double> firstPropertyValues = null; //database.getValues(Filtermanagement.);
         double returnValue = 0;
         while (!firstPropertyValues.isEmpty()) {
             //TODO: Hir muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
