@@ -73,7 +73,6 @@ public class GenerateController {
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
-		CalculationController.getInstance().run();
 	}
 
 	/**
