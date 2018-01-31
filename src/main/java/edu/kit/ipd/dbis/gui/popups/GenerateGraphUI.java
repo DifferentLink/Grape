@@ -161,6 +161,7 @@ public class GenerateGraphUI extends JFrame {
 				generateController.generateGraphs(
 						minVertices, maxVertices, minEdges, maxEdges, amount);
 			} catch (Exception e) { // todo replace with correct subclass of Exception as soon as available
+				e.printStackTrace();
 				System.out.println("Generate graphs input is invalid");
 			}
 		}
