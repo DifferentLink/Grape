@@ -156,7 +156,12 @@ public class GraphTable extends Table {
 			}
 		}
 
-		graph.setId(this.getId());
+
+		try {
+			graph.getId();
+		} catch (NullPointerException e) {
+			graph.setId(this.getId());
+		}
 		columns += "graph, id, bfscode, state, iscalculated)";
 		values += "?, " + graph.getId()
 				+ ", '" + this.minimalBfsCodeToString(graph) + "'"
@@ -321,7 +326,11 @@ public class GraphTable extends Table {
 		//TODO: eine methode die prüft, ob ein graph berechnet ist
 		Collection<Property> properties = graph.getProperties();
 		for (Property property : properties) {
-			if (property.getValue() == null) return false;
+			try {
+				property.getValue();
+			} catch (NullPointerException e) {
+				return false;
+			}
 		}
 		return true;
 
