@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.log;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class History {
@@ -12,7 +13,7 @@ public class History {
 
 	// TODO: Contructor?
 	public History(int maxHistorySize) {
-		this.events = new ArrayList<>();
+		this.events = new LinkedList<>();
 		this.maxHistorySize = maxHistorySize;
 		this.activeState = null;
 	}
@@ -27,22 +28,42 @@ public class History {
 	}
 
 	/**
-	 * @return the most previous Event for which the EventType is not MESSAGE.
+	 * the most previous Event for which the EventType is not MESSAGE.
 	 */
 	public void moveBackward() {
-		int currentPosition = events.indexOf(activeState) - 1; // todo skip messages
+		if(events.size() == 0) {
+			return;
+		}
+		int currentPosition = events.indexOf(activeState);
+		if (currentPosition == 0) {
+			return;
+		}
+		currentPosition--;
 		while (events.get(currentPosition).getType().equals(EventType.MESSAGE)) {
+			if (currentPosition == 0) {
+				return;
+			}
 			currentPosition--;
 		}
 		activeState = events.get(currentPosition);
 	}
 
 	/**
-	 * @return the next Event for which the EventType is not MESSAGE.
+	 * the next Event for which the EventType is not MESSAGE.
 	 */
 	public void moveForward() {
-		int currentPosition = events.indexOf(activeState) + 1; // todo skip messages
+		if(events.size() == 0) {
+			return;
+		}
+		int currentPosition = events.indexOf(activeState);
+		if (currentPosition == (events.size() - 1)) {
+			return;
+		}
+		currentPosition++;
 		while (events.get(currentPosition).getType().equals(EventType.MESSAGE)) {
+			if (currentPosition == (events.size() - 1)) {
+				return;
+			}
 			currentPosition++;
 		}
 		activeState = events.get(currentPosition);
@@ -68,7 +89,7 @@ public class History {
 	/**
 	 * Remove all Events after activeState.
 	 */
-	public void cutTrailing() {
+	private void cutTrailing() {
 		int indexOfActiveState = events.indexOf(activeState);
 		for (int i = indexOfActiveState + 1; i < events.size(); i++) {
 			events.remove(i);
@@ -78,7 +99,7 @@ public class History {
 	/**
 	 * Remove oldest Events from the history until its size matches maxHistorySize.
 	 */
-	public void maintainHistorySize() {
+	private void maintainHistorySize() {
 		int j = 0;
 		for (int i = events.size(); i > maxHistorySize; i--) {
 			events.remove(j);
