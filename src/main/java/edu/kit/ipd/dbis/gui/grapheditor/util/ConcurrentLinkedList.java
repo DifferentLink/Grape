@@ -39,7 +39,7 @@ public class ConcurrentLinkedList<T> {
 		return head == head.getNext();
 	}
 
-	public synchronized T popBack() {
+	public synchronized T popFirst() {
 		ConcurrentNode<T> out = head.getPrevious();
 		head.getPrevious().setNext(null);
 		head.getPrevious().setPrevious(null);
@@ -47,7 +47,7 @@ public class ConcurrentLinkedList<T> {
 		return out.get();
 	}
 
-	public synchronized T popFront() {
+	public synchronized T popLast() {
 		ConcurrentNode<T> out = head.getPrevious();
 		head.getNext().setNext(null);
 		head.getNext().setPrevious(null);
@@ -65,7 +65,7 @@ public class ConcurrentLinkedList<T> {
 
 	public synchronized void pushBack(T element) {
 		ConcurrentNode<T> newNode = new ConcurrentNode<>(element);
-		head.getPrevious().setNext(newNode);
+		last().setNext(newNode);
 		newNode.setNext(head);
 		newNode.setPrevious(head.getPrevious());
 		head.setPrevious(newNode);

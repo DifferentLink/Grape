@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.controller;
 
+
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
@@ -55,7 +56,6 @@ public class StatusbarController {
 	public void setDatabase(GraphDatabase database) {
 		log.setDatabase(database);
 	}
-
 	/**
 	 * Removes all events of the type MESSAGE from the current history
 	 */

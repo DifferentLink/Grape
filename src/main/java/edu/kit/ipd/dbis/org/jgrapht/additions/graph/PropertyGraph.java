@@ -6,13 +6,7 @@ import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.TreeSet;
-import java.util.Set;
-import java.util.List;
+import java.util.*;
 
 /**
  * A SimpleGraph which contains Property-objects.
@@ -22,7 +16,7 @@ import java.util.List;
  */
 public class PropertyGraph<V, E> extends SimpleGraph {
 	private int id;
-	private Map<Class<?>, Property> properties;
+	private Map<Class<? extends Property>, Property> properties;
 
 	/**
 	 * Standard constructor
