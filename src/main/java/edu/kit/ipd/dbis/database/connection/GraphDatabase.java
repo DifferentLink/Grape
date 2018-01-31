@@ -231,11 +231,13 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			LinkedList<PropertyGraph> graphs = this.graphTable.getContent(filters, column, ascending);
-			if (column.equals("bfscode") && ascending) {
+			//TODO: Delete?
+			/*if (column.equals("bfscode") && ascending) {
 				this.sortByBfsCodeAscending(graphs);
 			} else if (column.equals("bfscode") && !ascending) {
 				this.sortByBfsCodeDescending(graphs);
-			}
+			}*/
+
 			return graphs;
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
@@ -280,6 +282,7 @@ public class GraphDatabase implements DatabaseManager {
 		}
 	}
 
+	//TODO: Delete?
 	/**
 	 * Sorts a List of PropertyGraphs by BfsCode
 	 * @param graphs the list that should be sorted
@@ -296,6 +299,7 @@ public class GraphDatabase implements DatabaseManager {
 		});
 	}
 
+	//TODO: Delete?
 	/**
 	 * Sorts a List of PropertyGraphs by BfsCode
 	 * @param graphs the list that should be sorted
