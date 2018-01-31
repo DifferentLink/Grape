@@ -1,9 +1,44 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.kkgraph;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.MinimalBfsCodeAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Map;
+
 public class KkGraphGeneratorTest {
+
+	private PropertyGraph generateSimpleTestGraph() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("a", "d");
+		graph.addEdge("b", "c");
+		return graph;
+	}
+
+	private PropertyGraph generateSimpleTestCliqueGraph() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("a", "d");
+		graph.addEdge("b", "c");
+		graph.addEdge("b", "d");
+		graph.addEdge("c", "d");
+		return graph;
+	}
 
 	@Test
 	public void Test() {
@@ -19,14 +54,21 @@ public class KkGraphGeneratorTest {
 			a = b;
 		}
 	}
+
 	@Test
-	public void Test1() {
-		PropertyGraph graph = new PropertyGraph();
-		KkGraphGenerator g = new KkGraphGenerator(graph);
-		int[] a = {1,1,1,0,0,1,1,1};
-		int[] b = g.getNextEdgeCombination(a);
-		for (int j = 0; j < b.length; j++) {
-			System.out.print(b[j] +  ", ");
-		}
+	public void cliqueGraphTest() {
+		PropertyGraph graph = this.generateSimpleTestCliqueGraph();
+		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
+		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
+	}
+
+	@Test
+	public void simpleGraphTest() {
+		PropertyGraph graph = this.generateSimpleTestGraph();
+		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
+		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		Map g = kkGraph.getKkGraph();
+		System.out.println(g);
 	}
 }
