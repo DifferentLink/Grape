@@ -217,7 +217,7 @@ public class GraphTable extends Table {
 					this.insert(graph);
 				}
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
 
@@ -291,7 +291,7 @@ public class GraphTable extends Table {
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
 
-		String sql = "SELECT * FROM " + this.name + " WHERE BfsCode = " + this.minimalBfsCodeToString(graph);
+		String sql = "SELECT * FROM " + this.name + " WHERE BfsCode = '" + this.minimalBfsCodeToString(graph) + "'";
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
 		if (result.next()) {
 			return this.minimalBfsCodeToString(graph).equals(result.getString("bfscode"));

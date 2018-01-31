@@ -198,7 +198,7 @@ public class MenuUI extends JMenuBar {
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				System.out.println("Import a database!"); // todo remove sout
 				if (file != null) {
-					file = new File(file.getParentFile(), file.getName() + ".txt");
+					file = new File(file.getParentFile(), file.getName());
 					try {
 						databaseController.mergeDatabase(file.getPath());
 					} catch (Exception e) { // todo replace with correct exception as soon as available

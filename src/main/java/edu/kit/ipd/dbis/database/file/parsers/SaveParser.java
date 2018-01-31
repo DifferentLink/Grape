@@ -17,11 +17,13 @@ public class SaveParser extends Parser {
 
 	@Override
 	public void parse() {
-		String information = this.database.getGraphTable().getUrl()
+		String graphUrl = this.database.getGraphTable().getUrl();
+		String filterUrl = this.database.getFilterTable().getUrl();
+		String information = graphUrl.substring(0, graphUrl.length() - 32)
 				+ ";" + this.database.getGraphTable().getUser()
 				+ ";" + this.database.getGraphTable().getPassword()
 				+ ";" + this.database.getGraphTable().getName()
-				+ ";" + this.database.getFilterTable().getUrl()
+				+ ";" + filterUrl.substring(0, filterUrl.length() - 32)
 				+ ";" + this.database.getFilterTable().getUser()
 				+ ";" + this.database.getFilterTable().getPassword()
 				+ ";" + this.database.getFilterTable().getName();
