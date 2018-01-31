@@ -146,7 +146,6 @@ public class StatusbarController {
 			return;
 		}
 		event = new Event(type, message, empty);
-		// TODO: change to addMessage
 		log.addEvent(event);
 	}
 

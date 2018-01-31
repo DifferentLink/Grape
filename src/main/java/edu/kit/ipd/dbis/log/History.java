@@ -1,7 +1,5 @@
 package edu.kit.ipd.dbis.log;
 
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,7 +9,6 @@ public class History {
 	private Event activeState;
 	private int maxHistorySize;
 
-	// TODO: Contructor?
 	public History(int maxHistorySize) {
 		this.events = new LinkedList<>();
 		this.maxHistorySize = maxHistorySize;
@@ -31,7 +28,7 @@ public class History {
 	 * the most previous Event for which the EventType is not MESSAGE.
 	 */
 	public void moveBackward() {
-		if(events.size() == 0) {
+		if (events.size() == 0) {
 			return;
 		}
 		int currentPosition = events.indexOf(activeState);
@@ -52,7 +49,7 @@ public class History {
 	 * the next Event for which the EventType is not MESSAGE.
 	 */
 	public void moveForward() {
-		if(events.size() == 0) {
+		if (events.size() == 0) {
 			return;
 		}
 		int currentPosition = events.indexOf(activeState);
@@ -77,7 +74,9 @@ public class History {
 	public void addEvent(Event event) {
 		cutTrailing();
 		events.add(event);
-		activeState = event;
+		if (!event.getType().equals(EventType.MESSAGE)) {
+			activeState = event;
+		}
 		maintainHistorySize();
 	}
 
