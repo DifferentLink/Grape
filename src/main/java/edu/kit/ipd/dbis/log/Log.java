@@ -49,7 +49,7 @@ public class Log {
 			for (int id : event.getChangedGraphs()) {
 				changedGraphs += id + ", ";
 			}
-			changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 1);
+			changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 2);
 			historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (" + changedGraphs + ")\n";
 		}
 		historyEntries = historyEntries.substring(0, historyEntries.length() - 1);
