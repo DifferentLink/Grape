@@ -6,14 +6,12 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 import org.kohsuke.MetaInfServices;
 
-import java.util.Set;
-
 
 /**
  * the total coloring property
  */
 @MetaInfServices
-public class TotalColoring extends ComplexProperty {
+public class TotalColoring<V> extends ComplexProperty {
 	/**
 	 * Standard constructor
 	 *
