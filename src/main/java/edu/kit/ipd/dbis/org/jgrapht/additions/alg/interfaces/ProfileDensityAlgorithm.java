@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -12,7 +13,7 @@ import java.util.LinkedList;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface ProfileDensityAlgorithm<V, E> {
+public interface ProfileDensityAlgorithm<V, E> extends Serializable {
 	/**
 	 * Get the profile.
 	 *
