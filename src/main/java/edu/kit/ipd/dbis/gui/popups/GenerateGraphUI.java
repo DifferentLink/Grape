@@ -5,7 +5,6 @@
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.GenerateController;
-import edu.kit.ipd.dbis.controller.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
@@ -81,7 +80,7 @@ public class GenerateGraphUI extends JFrame {
 
 		generateGraphsButton = new JButton(language.getString("generateGraphs"));
 		generateGraphsButton.addActionListener(
-				new GenerateGraphsAction(generateController, this));
+				new GenerateGraphsAction(generateController));
 		generateGraphsButton.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		generateGraphsButton.setBackground(theme.assertiveBackground);
 		generate.add(generateGraphsButton);
@@ -151,11 +150,9 @@ public class GenerateGraphUI extends JFrame {
 
 	private class GenerateGraphsAction implements ActionListener {
 		private final GenerateController generateController;
-		private final GenerateGraphUI generateGraphUI;
 
-		public GenerateGraphsAction(GenerateController generateController, GenerateGraphUI generateGraphUI) {
+		public GenerateGraphsAction(GenerateController generateController) {
 			this.generateController = generateController;
-			this.generateGraphUI = generateGraphUI;
 		}
 
 		@Override
@@ -163,8 +160,10 @@ public class GenerateGraphUI extends JFrame {
 			try {
 				generateController.generateGraphs(
 						minVertices, maxVertices, minEdges, maxEdges, amount);
-				generateGraphUI.dispose();
-			} catch (InvalidGeneratorInputException e) {}
+			} catch (Exception e) { // todo replace with correct subclass of Exception as soon as available
+				e.printStackTrace();
+				System.out.println("Generate graphs input is invalid");
+			}
 		}
 	}
 
