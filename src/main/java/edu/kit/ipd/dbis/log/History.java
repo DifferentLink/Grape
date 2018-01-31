@@ -31,6 +31,9 @@ public class History {
 	 */
 	public void moveBackward() {
 		int currentPosition = events.indexOf(activeState) - 1; // todo skip messages
+		while (events.get(currentPosition).getType().equals(EventType.MESSAGE)) {
+			currentPosition--;
+		}
 		activeState = events.get(currentPosition);
 	}
 
@@ -39,6 +42,9 @@ public class History {
 	 */
 	public void moveForward() {
 		int currentPosition = events.indexOf(activeState) + 1; // todo skip messages
+		while (events.get(currentPosition).getType().equals(EventType.MESSAGE)) {
+			currentPosition++;
+		}
 		activeState = events.get(currentPosition);
 	}
 
@@ -73,8 +79,10 @@ public class History {
 	 * Remove oldest Events from the history until its size matches maxHistorySize.
 	 */
 	public void maintainHistorySize() {
-		for (int i = 1; i <= (events.size() - maxHistorySize); i++) {
-			events.remove(events.size() - i);
+		int j = 0;
+		for (int i = events.size(); i > maxHistorySize; i--) {
+			events.remove(j);
+			j++;
 		}
 	}
 
