@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -8,7 +9,7 @@ import java.util.*;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface TotalColoringAlgorithm<V, E> {
+public interface TotalColoringAlgorithm<V, E> extends Serializable {
 	/**
 	 * Get a total coloring.
 	 *

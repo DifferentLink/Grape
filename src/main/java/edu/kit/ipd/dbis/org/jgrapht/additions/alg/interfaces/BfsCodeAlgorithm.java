@@ -3,8 +3,10 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An algorithm which computes a bfs code of a graph.
@@ -12,7 +14,7 @@ import java.util.List;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface BfsCodeAlgorithm<V, E> {
+public interface BfsCodeAlgorithm<V, E> extends Serializable {
 	/**
 	 * Get the bfs code
 	 *
@@ -53,6 +55,12 @@ public interface BfsCodeAlgorithm<V, E> {
 		List<int[]> getBackwardEdges();
 
 		/**
+		 * get the number map
+		 * @return the number map
+		 */
+		Map<Integer, V> getNumberMap();
+
+		/**
 		 *
 		 * @param o other BfsCode
 		 * @return -1, 0, 1 if this is less than, equal to, or greater than o.
@@ -71,14 +79,26 @@ public interface BfsCodeAlgorithm<V, E> {
 	class BfsCodeImpl<V, E> implements BfsCode<V, E> {
 
 		private final int[] code;
+		private final Map<Integer, V> numberMap;
 
 		/**
 		 * Construct a new bfs code.
 		 *
 		 * @param code the bfs code
 		 */
+		public BfsCodeImpl(int[] code, Map<Integer, V> numberMap) {
+			this.code = code;
+			this.numberMap = numberMap;
+		}
+
 		public BfsCodeImpl(int[] code) {
 			this.code = code;
+			this.numberMap = null;
+		}
+
+		@Override
+		public Map<Integer, V> getNumberMap() {
+			return this.numberMap;
 		}
 
 		@Override

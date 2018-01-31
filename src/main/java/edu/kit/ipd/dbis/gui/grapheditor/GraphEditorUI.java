@@ -6,7 +6,6 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.InvalidGraphInputException;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
@@ -127,6 +126,8 @@ public class GraphEditorUI extends JPanel {
 
 		private Editor() {
 
+			history.addToHistory(graph);
+
 			this.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent mouseEvent) {
@@ -151,12 +152,12 @@ public class GraphEditorUI extends JPanel {
 							if (target == null) {
 								target = new Vertex(mTarget);
 							}
-							graph.add(new Edge(start, target));
 							graph = graph.deepCopy();
+							graph.add(new Edge(start, target));
 							history.addToHistory(graph);
 						} else {
-							graph.add(new Vertex(mTarget));
 							graph = graph.deepCopy();
+							graph.add(new Vertex(mTarget));
 							history.addToHistory(graph);
 						}
 					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Released right mouse button
