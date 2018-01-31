@@ -58,6 +58,7 @@ public class GraphTable extends Table {
 	private String filtersToString(String[][] filters, String column, boolean ascending) {
 
 		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = true";
+		String order = (ascending) ? ("ASC") : ("DESC");
 
 		for (int i = 0; i < filters.length; i++) {
 			for (int j = 0; j < filters[i].length; j++) {
@@ -65,7 +66,12 @@ public class GraphTable extends Table {
 			}
 		}
 
-		if (!column.equals("bfscode")) sql += " ORDER BY " + column + " " + ascending;
+		if (!column.equals("bfscode")) {
+			sql += " ORDER BY " + column + " " + order;
+		} else {
+			//TODO: zuerst der Länge nach sortieren?
+			sql += " ORDER BY bfscode, CHAR_LENGTH(bfscode) " + order;
+		}
 		return sql;
 	}
 
