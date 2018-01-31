@@ -13,7 +13,7 @@ import java.util.LinkedList;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface ProfileDensityAlgorithm<V, E> extends Serializable {
+public interface ProfileDensityAlgorithm<V, E> {
 	/**
 	 * Get the profile.
 	 *
@@ -28,7 +28,7 @@ public interface ProfileDensityAlgorithm<V, E> extends Serializable {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	interface Profile<V, E> extends Comparable {
+	interface Profile<V, E> extends Comparable, Serializable {
 		/**
 		 * Get the profile matrix.
 		 *
