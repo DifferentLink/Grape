@@ -48,6 +48,8 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		VertexFactory vertexFactory = new IntegerVertexFactory();
 		Set<String> transformedEdges = new HashSet<>();
 
+		Set<Integer> vEdgeToVertexSet = new HashSet<>();
+
 		// iterate over vertices
 		for (Object v : this.graph.vertexSet()) {
 			Object newV;
@@ -59,8 +61,6 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 			} else {
 				newV = vIntegerMap.get(v);
 			}
-
-			Set<Integer> vEdgeToVertexSet = new HashSet<>();
 
 			// iterate over vertex v's edges
 			for (Object e : this.graph.outgoingEdgesOf((V) v)) {
@@ -98,21 +98,58 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 					vEdgeToVertexSet.add((Integer) edgeToVertex);
 				}
 			}
-
-			// create edges between all vertices that
-			// were created from edges for the current
-			// vertex.
-			for (Integer i1 : vEdgeToVertexSet) {
-				for (Integer i2 : vEdgeToVertexSet) {
-					if (!i1.equals(i2)
-							&& !edgeToVertexGraph.containsEdge(i1, i2)
-							&& !edgeToVertexGraph.containsEdge(i2, i1)) {
-						edgeToVertexGraph.addEdge(i1, i2);
-					}
+		}
+		Set<String> addedEdges = new HashSet<>();
+		// create edges between all vertices that
+		// were created from edges and share at
+		// least one target vertex of their edges.
+		for (Integer i1 : vEdgeToVertexSet) {
+			for (Integer i2 : vEdgeToVertexSet) {
+				if (!i1.equals(i2)
+						&& !edgeToVertexGraph.containsEdge(i1, i2)
+						&& !edgeToVertexGraph.containsEdge(i2, i1)
+						&& shareVertex(i1, i2, edgeToVertexGraph, addedEdges)) {
+					edgeToVertexGraph.addEdge(i1, i2);
+					addedEdges.add(edgeToString(i1, i2));
+					addedEdges.add(edgeToString(i2, i1));
 				}
 			}
 		}
+
 		return edgeToVertexGraph;
+	}
+
+	private boolean shareVertex(Integer v1, Integer v2, Graph<Integer, Integer> graph, Set<String> addedEdges) {
+		Set<String> v1TargetVertices = new HashSet<>();
+		for (Object e : graph.outgoingEdgesOf(v1)) {
+			if (!addedEdges.contains(e.toString())) {
+				if (!("" + e.toString().charAt(1)).equals(v1.toString())) {
+					v1TargetVertices.add("" + e.toString().charAt(1));
+				} else {
+					v1TargetVertices.add(("" + e.toString().charAt(5)));
+				}
+			}
+		}
+
+		for (Object e : graph.outgoingEdgesOf(v2)) {
+			if (!addedEdges.contains(e.toString())) {
+				String curr;
+				if (!("" + e.toString().charAt(1)).equals(v2.toString())) {
+					curr = "" + e.toString().charAt(1);
+				} else {
+					curr = "" + e.toString().charAt(5);
+				}
+				if (v1TargetVertices.contains(curr)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private String edgeToString(Object o1, Object o2) {
+		return "(" + o1.toString() + " : " + o2.toString() + ")";
 	}
 
 	private TotalColoring createTotalColoringObject(VertexColoringAlgorithm.Coloring coloring) {

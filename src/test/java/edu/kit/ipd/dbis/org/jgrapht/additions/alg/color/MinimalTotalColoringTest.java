@@ -15,38 +15,6 @@ public class MinimalTotalColoringTest {
 		graph.addVertex("b");
 		graph.addVertex("c");
 		graph.addVertex("d");
-		graph.addEdge("a", "b");
-		graph.addEdge("a", "c");
-		graph.addEdge("b", "d");
-
-		MinimalTotalColoring totalColoring = new MinimalTotalColoring(graph);
-		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
-		assertEquals(3, coloring.getNumberColors());
-	}
-
-	@Test
-	public void getColoring2() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-
-		graph.addEdge("a", "b");
-		graph.addEdge("a", "c");
-		graph.addEdge("b", "c");
-
-		MinimalTotalColoring totalColoring = new MinimalTotalColoring(graph);
-		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
-		assertEquals(3, coloring.getNumberColors());
-	}
-
-	@Test
-	public void getColoring3() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-		graph.addVertex("d");
 
 		graph.addEdge("a", "b");
 		graph.addEdge("a", "c");
