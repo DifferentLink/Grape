@@ -60,7 +60,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		JPanel buttonContainer = new JPanel();
 		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
 		JButton configureButton = new JButton("Configure"); // todo use language resource
-		configureButton.addActionListener(new ConfigureDatabaseAction());
+		configureButton.addActionListener(new ConfigureDatabaseAction(this));
 		theme.style(configureButton);
 		configureButton.setMaximumSize(new Dimension(50, 30));
 		buttonContainer.add(Box.createHorizontalGlue());
@@ -78,9 +78,17 @@ public class ConfigureDatabaseUI extends JFrame {
 
 	private class ConfigureDatabaseAction implements ActionListener {
 
+		private final JFrame configureDatabaseUI;
+
+		public ConfigureDatabaseAction(JFrame configureDatabaseUI) {
+			this.configureDatabaseUI = configureDatabaseUI;
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), nameInput.getText());
+			databaseController.newDatabase(urlInput.getText(), userInput.getText(),
+					passwordInput.getText(), nameInput.getText());
+			configureDatabaseUI.dispose();
 		}
 	}
 }
