@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.log;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -10,20 +11,19 @@ import static org.junit.Assert.*;
 
 public class HistoryTest {
 
-	static History history;
-	static Set<Integer> graphs;
-	static Event a1;
-	static Event a2;
-	static Event a3;
-	static Event a4;
-	static Event m1;
-	static Event m2;
-	static Event m3;
-	static Event m4;
-	static Event r1;
-	static Event r2;
-	static Event r3;
-	static Event r4;
+	static private History history;
+	static private Event a1;
+	static private Event a2;
+	static private Event a3;
+	static private Event a4;
+	static private Event m1;
+	static private Event m2;
+	static private Event m3;
+	static private Event m4;
+	static private Event r1;
+	static private Event r2;
+	static private Event r3;
+	static private Event r4;
 
 
 	@BeforeClass
@@ -31,7 +31,7 @@ public class HistoryTest {
 		history = new History(100);
 
 		// random graphIDs
-		graphs = new HashSet<>();
+		Set<Integer> graphs = new HashSet<>();
 		graphs.add(1);
 		graphs.add(2);
 		graphs.add(3);
@@ -50,6 +50,11 @@ public class HistoryTest {
 		r2 = new Event(EventType.REMOVE, "r2", graphs);
 		r3 = new Event(EventType.REMOVE, "r3", graphs);
 		r4 = new Event(EventType.REMOVE, "r4", graphs);
+	}
+
+	@Before
+	public void clearHistory() {
+		history = new History(100);
 	}
 
 	@Test
