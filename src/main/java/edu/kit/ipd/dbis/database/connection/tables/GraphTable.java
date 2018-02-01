@@ -141,18 +141,19 @@ public class GraphTable extends Table {
 		String columns = "(";
 		String values = "(";
 
+		boolean calculated = true;
 		//TODO: getValue != null ?
 		for (Property property : properties) {
-			if (property.getClass().getSuperclass() == IntegerProperty.class) {
-				if (property.getValue() != null) {
+			if (property.isCalculated()) {
+				if (property.getClass().getSuperclass() == IntegerProperty.class) {
 					columns += property.getClass().getSimpleName() + ", ";
 					values += (int) property.getValue() + ", ";
-				}
-			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
-				if (property.getValue() != null) {
+				} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
 					columns += property.getClass().getSimpleName() + ", ";
 					values += (double) property.getValue() + ", ";
 				}
+			} else {
+				calculated = false;
 			}
 		}
 
@@ -161,7 +162,7 @@ public class GraphTable extends Table {
 		values += "?, " + graph.getId()
 				+ ", '" + this.minimalBfsCodeToString(graph) + "'"
 				+ ", " + false
-				+ ", " + this.isCalculated(graph) + ")";
+				+ ", " + calculated + ")";
 
 		String sql = "INSERT INTO " + this.name + " " + columns + " VALUES " + values;
 		PreparedStatement statement = this.getConnection().prepareStatement(sql);
