@@ -2,7 +2,6 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
-import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.Ignore;
@@ -11,7 +10,7 @@ import org.junit.Test;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class GenerateControllerTest {
 	@Test
@@ -100,7 +99,7 @@ public class GenerateControllerTest {
 		} catch (InvalidBfsCodeInputException e) {
 			e.printStackTrace();
 		}
-		LinkedList<PropertyGraph> graphs = null;
+		LinkedList<PropertyGraph<Integer, Integer>> graphs = null;
 		try {
 			graphs = database.getUncalculatedGraphs();
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException |

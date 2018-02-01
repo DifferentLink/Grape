@@ -4,7 +4,6 @@ import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
@@ -13,8 +12,12 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * This class represents a MySQL-Table where PropertyGraph-Objects will be stored.
@@ -39,7 +42,7 @@ public class GraphTable extends Table {
 	}
 
 	@Override
-	public PropertyGraph getContent(int id)
+	public PropertyGraph<Integer, Integer> getContent(int id)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
 
@@ -105,13 +108,13 @@ public class GraphTable extends Table {
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	public LinkedList<PropertyGraph> getContent(String[][] filters, String column, boolean ascending)
+	public LinkedList<PropertyGraph<Integer, Integer>> getContent(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
 
 		String sql = this.filtersToString(filters, column, ascending);
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<PropertyGraph> graphs = new LinkedList<>();
+		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 		while (result.next()) {
 			try {
 				graphs.add((PropertyGraph) this.byteArrayToObject(result.getBytes("graph")));
@@ -318,16 +321,16 @@ public class GraphTable extends Table {
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	public LinkedList<PropertyGraph> getUncalculatedGraphs() throws AccessDeniedForUserException,
+	public LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs() throws AccessDeniedForUserException,
 			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
 
 		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false";
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<PropertyGraph> graphs = new LinkedList<>();
+		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 
 		while (result.next()) {
 			try {
-				graphs.add((PropertyGraph) this.byteArrayToObject(result.getBytes("graph")));
+				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
 			} catch (Exception e) {
 
 			}

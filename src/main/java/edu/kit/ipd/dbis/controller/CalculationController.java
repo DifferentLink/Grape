@@ -7,9 +7,8 @@ import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedList;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
@@ -59,7 +58,7 @@ public class CalculationController implements Runnable {
 	 * of the database and induces their saving in the database.
 	 */
 	public void run() {
-		List<PropertyGraph> graphs = null;
+		LinkedList<PropertyGraph<Integer, Integer>> graphs = null;
 		try {
 			graphs = database.getUncalculatedGraphs();
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
