@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.table.DefaultTableModel;
@@ -30,7 +31,8 @@ public class NonEditableTableModel extends DefaultTableModel {
 		this.setRowCount(0);
 		allProperties = new LinkedList<>();
 		if (graphs.iterator().hasNext()) {
-			allProperties.addAll(graphs.iterator().next().getProperties());
+			Collection<Property> properties = PropertyFactory.createAllProperties(new PropertyGraph());
+			allProperties.addAll(properties);
 		}
 		columnNames = new String[allProperties.size()];
 		for (int i = 0; i < allProperties.size(); i++) {
