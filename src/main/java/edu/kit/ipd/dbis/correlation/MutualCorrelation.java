@@ -91,7 +91,7 @@ public class MutualCorrelation extends Correlation {
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty) {
         //TODO: Hier muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
-        LinkedList<Double> firstPropertyValues = null; //database.getValues(Filtermanagement.);
+        LinkedList<Double> firstPropertyValues = null;
         double returnValue = 0;
         while (!firstPropertyValues.isEmpty()) {
             //TODO: Hir muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden

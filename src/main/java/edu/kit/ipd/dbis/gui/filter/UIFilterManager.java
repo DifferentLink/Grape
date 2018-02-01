@@ -4,7 +4,7 @@
 
 package edu.kit.ipd.dbis.gui.filter;
 
-import edu.kit.ipd.dbis.filter.InvalidInputException;
+import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.controller.FilterController;
 
 import javax.swing.*;

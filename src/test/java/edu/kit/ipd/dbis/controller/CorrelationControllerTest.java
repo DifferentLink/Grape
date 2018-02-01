@@ -1,7 +1,7 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.correlation.CorrelationOutput;
-import edu.kit.ipd.dbis.correlation.InvalidCorrelationInputException;
+import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import org.junit.Ignore;
 import org.junit.Test;
 
