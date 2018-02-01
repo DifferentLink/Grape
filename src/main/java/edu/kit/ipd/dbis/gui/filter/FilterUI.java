@@ -32,7 +32,7 @@ public class FilterUI extends JPanel {
 		this.filterController = filterController;
 		this.theme = theme;
 
-		uiFilterManager = new UIFilterManager(filterController);
+		uiFilterManager = new UIFilterManager();
 
 		this.setLayout(new BorderLayout());
 		this.setBackground(theme.backgroundColor);
@@ -83,7 +83,7 @@ public class FilterUI extends JPanel {
 		newFilter.addActionListener(new NewFilterAction(filterController));
 		JButton newFilterGroup = new JButton(" New Group "); // todo replace with string from language
 		newFilterGroup.setBackground(theme.assertiveBackground);
-		newFilterGroup.addActionListener(new NewFilterGroupAction(filterController));
+		newFilterGroup.addActionListener(new NewFilterGroupAction());
 		buttons.add(newFilter, buttonConstraints);
 		buttons.add(Box.createHorizontalStrut(5));
 		buttons.add(newFilterGroup, buttonConstraints);
@@ -153,8 +153,14 @@ public class FilterUI extends JPanel {
 		isActive.addActionListener(new ToggleFilterAction(simpleFilter, isActive));
 		simpleFilterUI.add(isActive);
 		JTextArea filterInput = new JTextArea(simpleFilter.getText());
-		filterInput.getDocument().addDocumentListener(new FilterInputChange(simpleFilter, filterInput));
+		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
+		try {
+			filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
+			filterInput.setBackground(Color.WHITE);
+		} catch (InvalidInputException e) {
+			filterInput.setBackground(theme.lightNeutralColor);
+		}
 		simpleFilterUI.add(filterInput);
 		JButton deleteFilter = new JButton("X");
 		deleteFilter.addActionListener(new RemoveFilterAction(simpleFilter.getID()));
@@ -175,8 +181,14 @@ public class FilterUI extends JPanel {
 		isActive.addActionListener(new ToggleFilterAction(filterGroup, isActive));
 		filterGroupHeaderUI.add(isActive);
 		JTextArea filterInput = new JTextArea(filterGroup.getText());
-		filterInput.getDocument().addDocumentListener(new FilterInputChange(filterGroup, filterInput));
+		filterInput.getDocument().addDocumentListener(new FilterGroupInputChange(filterGroup, filterInput));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
+		try {
+			filterController.updateFilterGroup(filterGroup.getText(), filterGroup.getID());
+			filterInput.setBackground(Color.WHITE);
+		} catch (InvalidInputException e) {
+			filterInput.setBackground(theme.lightNeutralColor);
+		}
 		filterGroupHeaderUI.add(filterInput);
 		filterGroupHeaderUI.add(Box.createHorizontalStrut(2));
 
@@ -230,23 +242,16 @@ public class FilterUI extends JPanel {
 	}
 
 	private class NewFilterGroupAction implements ActionListener {
-
-		private final FilterController filterController;
-
-		private NewFilterGroupAction(FilterController filterController) {
-			this.filterController = filterController;
-		}
-
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			uiFilterManager.addNewFilterGroup(filterController, "");
+			uiFilterManager.addNewFilterGroup("");
 			update();
 			repaint();
 			revalidate();
 		}
 	}
 
-	private class ToggleFilterAction implements ActionListener {
+	private class ToggleFilterAction implements ActionListener { // todo use filtercontroller
 
 		private final Filter filter;
 		private final JCheckBox checkBox;
@@ -259,6 +264,11 @@ public class FilterUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			filter.setActive(checkBox.isSelected());
+			if (checkBox.isSelected()) {
+				filterController.activate(filter.getID());
+			} else {
+				filterController.deactivate(filter.getID());
+			}
 		}
 	}
 
@@ -278,37 +288,76 @@ public class FilterUI extends JPanel {
 		}
 	}
 
-	private class FilterInputChange implements DocumentListener { // todo distinguish between simplefilters and groups
+	private class SimpleFilterInputChange implements DocumentListener { // todo distinguish between simplefilters and groups
 
-		private final Filter filter;
+		private final SimpleFilter filter;
 		private final JTextArea textArea;
 
-		public FilterInputChange(Filter filter, JTextArea textArea) {
+		public SimpleFilterInputChange(SimpleFilter simpleFilter, JTextArea textArea) {
+			this.filter = simpleFilter;
+			this.textArea = textArea;
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent documentEvent) { // todo use filtercontroller and only update()/remove()
+			update();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent documentEvent) {
+			update();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent documentEvent) {
+			update();
+		}
+
+		private void update() {
+			filter.setText(textArea.getText());
 			try {
 				filterController.updateFilter(textArea.getText(), filter.getID());
-			} catch (Exception e) {
-				e.printStackTrace();
-			} catch (InvalidInputException e) {// todo use to signal wrong input
-				e.printStackTrace();
+				textArea.setBackground(Color.WHITE);
+			} catch (InvalidInputException e) {
+				textArea.setBackground(theme.lightNeutralColor);
 			}
-			this.filter = filter;
+		}
+	}
+
+	private class FilterGroupInputChange implements DocumentListener {
+		private final FilterGroup filterGroup;
+		private final JTextArea textArea;
+
+		public FilterGroupInputChange(FilterGroup filterGroup, JTextArea textArea) {
+			this.filterGroup = filterGroup;
 			this.textArea = textArea;
 		}
 
 		@Override
 		public void insertUpdate(DocumentEvent documentEvent) {
-			filter.setText(textArea.getText());
+			update();
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent documentEvent) {
-			filter.setText(textArea.getText());
+			update();
 		}
 
 		@Override
 		public void changedUpdate(DocumentEvent documentEvent) {
-			filter.setText(textArea.getText());
+			update();
 		}
+
+		private void update() {
+			filterGroup.setText(textArea.getText());
+			try {
+				filterController.updateFilterGroup(textArea.getText(), filterGroup.getID());
+				textArea.setBackground(Color.WHITE);
+			} catch (InvalidInputException e) {
+				textArea.setBackground(theme.lightNeutralColor);
+			}
+		}
+
 	}
 
 	private class ManageFilterAction implements ActionListener {
