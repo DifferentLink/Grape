@@ -265,21 +265,33 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return true;
 	}
 
+	/**
+	 * Checks if two colorings are isomorphic.
+	 *
+	 * @param c1 first coloring
+	 * @param c2 second coloring
+	 * @return true if they are equal, false if they are not.
+	 */
 	public static boolean equivalentColoring(Coloring c1, Coloring c2) {
 		if (c1.getNumberColors() != c2.getNumberColors()) {
 			return false;
 		}
 		List<Set<Object>> c1ColorClasses = c1.getColorClasses();
 		List<Set<Object>> c2ColorClasses = c2.getColorClasses();
-		boolean foundMatching = false;
+		boolean foundMatching;
 
 		for (Set<Object> s1 : c1ColorClasses) {
 			foundMatching = false;
 			for (Set<Object> s2 : c2ColorClasses) {
-
+				if (s1.containsAll(s2) && s1.size() == s2.size()) {
+					foundMatching = true;
+				}
+			}
+			if (!foundMatching) {
+				return false;
 			}
 		}
 
-		return false;
+		return true;
 	}
 }
