@@ -231,13 +231,6 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			LinkedList<PropertyGraph> graphs = this.graphTable.getContent(filters, column, ascending);
-			//TODO: Delete?
-			/*if (column.equals("bfscode") && ascending) {
-				this.sortByBfsCodeAscending(graphs);
-			} else if (column.equals("bfscode") && !ascending) {
-				this.sortByBfsCodeDescending(graphs);
-			}*/
-
 			return graphs;
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
@@ -281,39 +274,4 @@ public class GraphDatabase implements DatabaseManager {
 			throw new TablesNotAsExpectedException();
 		}
 	}
-
-	//TODO: Delete?
-	/**
-	 * Sorts a List of PropertyGraphs by BfsCode
-	 * @param graphs the list that should be sorted
-	 */
-	private void sortByBfsCodeAscending(LinkedList<PropertyGraph> graphs) {
-
-		Collections.sort(graphs, new Comparator<PropertyGraph>() {
-			@Override
-			public int compare(PropertyGraph o1, PropertyGraph o2) {
-				BfsCodeAlgorithm.BfsCode bfs1 = (BfsCodeAlgorithm.BfsCode) o1.getProperty(BfsCode.class);
-				BfsCodeAlgorithm.BfsCode bfs2 = (BfsCodeAlgorithm.BfsCode) o2.getProperty(BfsCode.class);
-				return bfs1.compareTo(bfs2);
-			}
-		});
-	}
-
-	//TODO: Delete?
-	/**
-	 * Sorts a List of PropertyGraphs by BfsCode
-	 * @param graphs the list that should be sorted
-	 */
-	private void sortByBfsCodeDescending(LinkedList<PropertyGraph> graphs) {
-
-		Collections.sort(graphs, new Comparator<PropertyGraph>() {
-			@Override
-			public int compare(PropertyGraph o1, PropertyGraph o2) {
-				BfsCodeAlgorithm.BfsCode bfs1 = (BfsCodeAlgorithm.BfsCode) o1.getProperty(BfsCode.class);
-				BfsCodeAlgorithm.BfsCode bfs2 = (BfsCodeAlgorithm.BfsCode) o2.getProperty(BfsCode.class);
-				return bfs2.compareTo(bfs1);
-			}
-		});
-	}
-
 }

@@ -142,7 +142,6 @@ public class GraphTable extends Table {
 		String values = "(";
 
 		boolean calculated = true;
-		//TODO: getValue != null ?
 		for (Property property : properties) {
 			if (property.isCalculated()) {
 				if (property.getClass().getSuperclass() == IntegerProperty.class) {
@@ -235,25 +234,6 @@ public class GraphTable extends Table {
 
 	}
 
-	//TODO: löschen
-	private boolean isMergeableWith(GraphTable table) throws Exception {
-		Connection current = this.getConnection();
-		Connection other = table.getConnection();
-
-		String sql = "SHOW COLUMNS FROM ";
-		ResultSet currentResult = current.prepareStatement(sql + this.name).executeQuery();
-
-		while (currentResult.next()) {
-			ResultSet otherResult = other.prepareStatement(sql + table.getName()).executeQuery();
-			boolean found = false;
-			while ((otherResult.next()) && (!found)) {
-				found = (currentResult.getString(1).equals(otherResult.getString(1)));
-			}
-			if (!found) return false;
-		}
-		return true;
-	}
-
 	/**
 	 * All PropertyGraph-Objects that are marked as deleted will be removed from
 	 * the represented MySQL-Table.
@@ -309,22 +289,6 @@ public class GraphTable extends Table {
 			return this.minimalBfsCodeToString(graph).equals(result.getString("bfscode"));
 		}
 		return false;
-
-	}
-
-	/**
-	 * Checks if the given graph is calculated
-	 * @param graph PropertyGraph-objcet
-	 * @return true if all properties of graph have already been calculated
-	 */
-	private boolean isCalculated(PropertyGraph graph) {
-
-		//TODO: eine methode die prüft, ob ein graph berechnet ist
-		Collection<Property> properties = graph.getProperties();
-		for (Property property : properties) {
-			if (property.getValue() == null) return false;
-		}
-		return true;
 
 	}
 

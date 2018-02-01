@@ -104,9 +104,6 @@ public class FileManager implements Connector {
 		sql = "DROP TABLE " + filters.getName();
 		this.getConnection(
 				filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
-
-		//TODO: delete .txt file
-
 	}
 
 	/**
