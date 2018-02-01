@@ -166,8 +166,8 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph> getFilteredAndAscendingSortedGraphs(Property property) {
-		List<PropertyGraph> graphs = new LinkedList<PropertyGraph>();
+	public List<PropertyGraph<Integer, Integer>> getFilteredAndAscendingSortedGraphs(Property property) {
+		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 		try {
 			graphs = filter.getFilteredAndAscendingSortedGraphs(property);
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
@@ -183,8 +183,8 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph> getFilteredAndDescendingSortedGraphs(Property property) {
-		List<PropertyGraph> graphs = new LinkedList<PropertyGraph>();
+	public List<PropertyGraph<Integer, Integer>> getFilteredAndDescendingSortedGraphs(Property property) {
+		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 		try {
 			graphs = filter.getFilteredAndDescendingSortedGraphs(property);
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
