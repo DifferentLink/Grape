@@ -133,10 +133,12 @@ public class GraphTable extends Table {
 			AccessDeniedForUserException, ConnectionFailedException, IOException, UnexpectedObjectException {
 
 		PropertyGraph graph = getInstanceOf(object);
+		if (this.graphExists(graph)) return;
 		Collection<Property> properties = graph.getProperties();
 		String columns = "(";
 		String values = "(";
 
+		//TODO: getValue != null ?
 		for (Property property : properties) {
 			if (property.getClass().getSuperclass() == IntegerProperty.class) {
 				if (property.getValue() != null) {
