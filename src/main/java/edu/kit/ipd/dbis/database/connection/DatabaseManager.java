@@ -1,8 +1,7 @@
 package edu.kit.ipd.dbis.database.connection;
 
-import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.LinkedList;
@@ -210,7 +209,7 @@ public interface DatabaseManager {
 	 * @throws ConnectionFailedException
 	 * @throws TablesNotAsExpectedException
 	 */
-	LinkedList<PropertyGraph> getGraphs(String[][] filters, String column, boolean ascending)
+	LinkedList<PropertyGraph<Integer, Integer>> getGraphs(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 
@@ -236,7 +235,7 @@ public interface DatabaseManager {
 	 * @throws ConnectionFailedException
 	 * @throws TablesNotAsExpectedException
 	 */
-	LinkedList<PropertyGraph> getUncalculatedGraphs()
+	LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 

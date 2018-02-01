@@ -305,11 +305,11 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<PropertyGraph> getGraphs(String[][] filters, String column, boolean ascending)
+	public LinkedList<PropertyGraph<Integer, Integer>> getGraphs(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException {
 		try {
-			LinkedList<PropertyGraph> graphs = this.graphTable.getContent(filters, column, ascending);
+			LinkedList<PropertyGraph<Integer, Integer>> graphs = this.graphTable.getContent(filters, column, ascending);
 			if (column.equals("bfscode") && ascending) {
 				this.sortByBfsCodeAscending(graphs);
 			} else if (column.equals("bfscode") && !ascending) {
@@ -351,7 +351,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<PropertyGraph> getUncalculatedGraphs()
+	public LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException {
 		try {
@@ -390,7 +390,7 @@ public class GraphDatabase implements DatabaseManager {
 	 * Sorts a List of PropertyGraphs by BfsCode
 	 * @param graphs the list that should be sorted
 	 */
-	private void sortByBfsCodeAscending(LinkedList<PropertyGraph> graphs) {
+	private void sortByBfsCodeAscending(LinkedList<PropertyGraph<Integer, Integer>> graphs) {
 
 		Collections.sort(graphs, new Comparator<PropertyGraph>() {
 			@Override
@@ -406,7 +406,7 @@ public class GraphDatabase implements DatabaseManager {
 	 * Sorts a List of PropertyGraphs by BfsCode
 	 * @param graphs the list that should be sorted
 	 */
-	private void sortByBfsCodeDescending(LinkedList<PropertyGraph> graphs) {
+	private void sortByBfsCodeDescending(LinkedList<PropertyGraph<Integer, Integer>> graphs) {
 
 		Collections.sort(graphs, new Comparator<PropertyGraph>() {
 			@Override
