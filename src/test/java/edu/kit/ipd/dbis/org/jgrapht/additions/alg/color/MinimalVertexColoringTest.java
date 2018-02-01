@@ -6,6 +6,7 @@ import org.jgrapht.alg.interfaces.VertexColoringAlgorithm.Coloring;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -57,7 +58,7 @@ public class MinimalVertexColoringTest {
 	}
 
 	@Test
-	public void getColorings() {
+	public void getColoring0() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -76,7 +77,7 @@ public class MinimalVertexColoringTest {
 	}
 
 	@Test
-	public void getColorings1() {
+	public void getColoring1() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -101,7 +102,7 @@ public class MinimalVertexColoringTest {
 	}
 
 	@Test
-	public void getColorings2() {
+	public void getColoring2() {
 		// based on this graph from wikipedia:
 		// https://en.wikipedia.org/wiki/File:Hadwiger_conjecture.svg
 		PropertyGraph graph = new PropertyGraph();
@@ -189,6 +190,24 @@ public class MinimalVertexColoringTest {
 
 		assertEquals(10, coloring.getNumberColors());
 		assertEquals(true, alg.isValidVertexColoring(coloring, graph));
+	}
+
+	@Test
+	public void getColorings() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex(0);
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(0, 3);
+		graph.addEdge(1, 2);
+
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		List<Coloring<Object>> colorings = alg.getColorings();
+		assertEquals(true, colorings.size() == 1);
 	}
 
 	private PropertyGraph createCompleteGraph(int numberOfVertices) {

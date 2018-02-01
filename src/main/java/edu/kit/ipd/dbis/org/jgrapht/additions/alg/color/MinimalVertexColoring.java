@@ -27,6 +27,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 * The input graph
 	 */
 	protected final Graph<V, E> graph;
+	private List<Coloring<V>> colorings;
 
 	/**
 	 * Construct a new coloring algorithm.
@@ -35,14 +36,10 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 */
 	public MinimalVertexColoring(Graph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
+		this.colorings = new ArrayList<>();
 	}
 
 	public List<Coloring<V>> getColorings() {
-		return null;
-	}
-
-	@Override
-	public Coloring<V> getColoring() {
 		int numberOfVertices = this.graph.vertexSet().size();
 
 		// give vertices an order
@@ -54,8 +51,9 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		}
 
 		if (numberOfVertices == 1) {
-			// trivial case
-			return createColoringObject(new Integer[]{0}, sortedVertices);
+			//trivial case
+			this.colorings.add(createColoringObject(new Integer[]{0}, sortedVertices));
+			return this.colorings;
 		}
 
 		// get integer partitions
@@ -87,11 +85,26 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 				colors = getNextPermutation(colors);
 				Coloring coloring = createColoringObject(colors, sortedVertices);
 				if (isValidVertexColoring(coloring, graph)) {
-					return coloring;
+					this.colorings.add(coloring);
+				}
+				// break if at least one coloring
+				// was found and this is the last
+				// permutation.
+				if (Arrays.equals(colorCopy, colors) && !this.colorings.isEmpty()) {
+					return this.colorings;
 				}
 			}
 		}
-		return null;
+		return this.colorings;
+	}
+
+	@Override
+	public Coloring<V> getColoring() {
+		if (this.colorings.isEmpty()) {
+			return this.getColorings().get(0);
+		} else {
+			return this.colorings.get(0);
+		}
 	}
 
 	private Integer[] parseIntegerPartitioning(int[] partitioning, int numberOfVertices) {
@@ -250,5 +263,23 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			}
 		}
 		return true;
+	}
+
+	public static boolean equivalentColoring(Coloring c1, Coloring c2) {
+		if (c1.getNumberColors() != c2.getNumberColors()) {
+			return false;
+		}
+		List<Set<Object>> c1ColorClasses = c1.getColorClasses();
+		List<Set<Object>> c2ColorClasses = c2.getColorClasses();
+		boolean foundMatching = false;
+
+		for (Set<Object> s1 : c1ColorClasses) {
+			foundMatching = false;
+			for (Set<Object> s2 : c2ColorClasses) {
+
+			}
+		}
+
+		return false;
 	}
 }
