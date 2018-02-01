@@ -5,7 +5,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 /**
  * class which allows the GUI to get a list of relevant correlations
  */
-public class CorrelationOutput {
+public class CorrelationOutput implements Comparable<CorrelationOutput> {
     private Property firstProperty;
     private Property secondProperty;
     private double outputNumber;
@@ -44,5 +44,17 @@ public class CorrelationOutput {
      */
     public double getOutputNumber() {
         return outputNumber;
+    }
+
+    @Override
+    public int compareTo(CorrelationOutput other) {
+        if (this.getOutputNumber() < other.getOutputNumber()) {
+            return 1;
+        } else if (this.getOutputNumber() == other.getOutputNumber()
+                && this.getFirstProperty().equals(other.getSecondProperty())
+                && this.getSecondProperty().equals(other.getFirstProperty())) {
+            return 0;
+        }
+        return -1;
     }
 }

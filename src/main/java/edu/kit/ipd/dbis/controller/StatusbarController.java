@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.controller;
 
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
@@ -49,6 +50,10 @@ public class StatusbarController {
 			statusbar = new StatusbarController();
 		}
 		return statusbar;
+	}
+
+	public void setDatabase(GraphDatabase database) {
+		log.setDatabase(database);
 	}
 
 	/**
@@ -141,7 +146,6 @@ public class StatusbarController {
 			return;
 		}
 		event = new Event(type, message, empty);
-		// TODO: change to addMessage
 		log.addEvent(event);
 	}
 
