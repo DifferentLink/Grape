@@ -91,11 +91,11 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 				// was found and this is the last
 				// permutation.
 				if (Arrays.equals(colorCopy, colors) && !this.colorings.isEmpty()) {
-					return this.colorings;
+					return this.getNonEquivalentColorings(this.colorings);
 				}
 			}
 		}
-		return this.colorings;
+		return this.getNonEquivalentColorings(this.colorings);
 	}
 
 	@Override
@@ -275,6 +275,8 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	public static boolean equivalentColoring(Coloring c1, Coloring c2) {
 		if (c1.getNumberColors() != c2.getNumberColors()) {
 			return false;
+		} else if (c1.getNumberColors() == c1.getColors().values().size()) {
+			return false;
 		}
 		List<Set<Object>> c1ColorClasses = c1.getColorClasses();
 		List<Set<Object>> c2ColorClasses = c2.getColorClasses();
@@ -293,5 +295,29 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		}
 
 		return true;
+	}
+
+	private List<Coloring<V>> getNonEquivalentColorings(List<Coloring<V>> colorings) {
+		List<Coloring<V>> result = new ArrayList<>();
+		Map<Coloring<V>, Boolean> addedMap = new HashMap<>();
+		for (Coloring c1 : colorings) {
+			for (Coloring c2 : colorings) {
+				if (c1 != c2 && !equivalentColoring(c1, c2)) {
+					if (!addedMap.containsKey(c1) && !addedMap.containsKey(c2)) {
+						result.add(c1);
+						result.add(c2);
+						addedMap.put(c1, true);
+						addedMap.put(c2, true);
+					} else if (!addedMap.containsKey(c1) && addedMap.containsKey(c2)) {
+						result.add(c1);
+						addedMap.put(c1, true);
+					} else if (addedMap.containsKey(c1) && !addedMap.containsKey(c2)) {
+						result.add(c2);
+						addedMap.put(c2, true);
+					}
+				}
+			}
+		}
+		return result;
 	}
 }
