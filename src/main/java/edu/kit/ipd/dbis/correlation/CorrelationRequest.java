@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.Structure
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 /**
@@ -40,16 +41,24 @@ public class CorrelationRequest {
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
      */
-    public TreeSet<CorrelationOutput> use() {
+    public List<CorrelationOutput> use() {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
-            return correlation.useMaximum();
+            return CorrelationRequest.parseToList(correlation.useMaximum());
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
-           return correlation.useMinimum();
+            return CorrelationRequest.parseToList(correlation.useMinimum());
         } else if (correlation.getMaximum() && correlation.getProperty() != null) {
-            return correlation.useMaximum(correlation.getProperty());
+            return CorrelationRequest.parseToList(correlation.useMaximum(correlation.getProperty()));
         } else {
-            return correlation.useMinimum(correlation.getProperty());
+            return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty()));
         }
+    }
+
+    private static List<CorrelationOutput> parseToList(TreeSet<CorrelationOutput> input) {
+        List<CorrelationOutput> output = new ArrayList<>();
+        for (CorrelationOutput current: input) {
+            output.add(current);
+        }
+        return output;
     }
 
     private static Correlation parseCorrelationToString(String correlationInput) throws

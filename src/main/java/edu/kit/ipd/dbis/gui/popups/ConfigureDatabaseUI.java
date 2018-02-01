@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -79,21 +80,7 @@ public class ConfigureDatabaseUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			try {
-				databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), nameInput.getText());
-			} catch (DatabaseDoesNotExistException e) {
-				e.printStackTrace();
-			} catch (SQLException e) { // todo nonono no SQLException
-				e.printStackTrace();
-			} catch (AccessDeniedForUserException e) {
-				e.printStackTrace();
-			} catch (TableAlreadyExistsException e) {
-				e.printStackTrace();
-			} catch (ConnectionFailedException e) {
-				e.printStackTrace();
-			} catch (TablesNotAsExpectedException e) {
-				e.printStackTrace();
-			}
+			databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), nameInput.getText());
 		}
 	}
 }
