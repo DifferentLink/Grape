@@ -148,6 +148,7 @@ public class GenerateController {
 				database.addGraph(graph);
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
 					| ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+				e.printStackTrace();
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
