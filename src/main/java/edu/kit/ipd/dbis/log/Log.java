@@ -67,6 +67,10 @@ public class Log {
 		}
 	}
 
+	public void addEvent(Event event) {
+		this.history.addEvent(event);
+	}
+
 	/**
 	 * Add event to the log history.
 	 *
