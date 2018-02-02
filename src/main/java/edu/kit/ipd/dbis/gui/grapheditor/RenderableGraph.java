@@ -119,20 +119,20 @@ public class RenderableGraph {
 	}
 
 	public void remove(Vertex vertex) {
-		Set<Edge> edgesRemove = new HashSet();
+		Set<Edge> edgesRemove = new HashSet<>();
 		for (Edge edge : edges) {
 			if (edge.isIncidentTo(vertex)) {
 				edgesRemove.add(edge);
 			}
 		}
 		vertices.remove(vertex);
-		edges.remove(edgesRemove);
+		edges.removeAll(edgesRemove);
 	}
 
 	public void remove(Point point) {
 		Vertex foundVertex = getVertexAt(point);
 		if (foundVertex != null) {
-			vertices.remove(foundVertex);
+			remove(foundVertex);
 		}
 	}
 
