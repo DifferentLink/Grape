@@ -22,7 +22,7 @@ public class CorrelationController {
 		try {
 			List<CorrelationOutput> output = null;
 			CorrelationRequest request = new CorrelationRequest(input, null);
-			output = request.use();
+			output = request.applyCorrelation();
 			return output;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -4,7 +4,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -36,7 +36,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 		 */
 		int[][] getMatrix();
 
-		LinkedList<BfsCodeAlgorithm.BfsCode> getBfsList();
+		BfsCodeAlgorithm.BfsCode getMinBfsCode();
 	}
 
 	/**
@@ -47,7 +47,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 	 */
 	class ProfileImpl<V, E> implements Profile<V, E> {
 		private int[][] profile;
-		private LinkedList<BfsCodeAlgorithm.BfsCode> bfsList;
+		private List<BfsCodeAlgorithm.BfsCode> bfsList;
 
 		/**
 		 * constructs a new profile
@@ -59,7 +59,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 			this.profile = profile;
 		}
 
-		public ProfileImpl( LinkedList<BfsCodeAlgorithm.BfsCode> bfsList) {
+		public ProfileImpl( List<BfsCodeAlgorithm.BfsCode> bfsList) {
 			this.profile = getMatrix(bfsList);
 			this.bfsList = bfsList;
 		}
@@ -70,8 +70,8 @@ public interface ProfileDensityAlgorithm<V, E> {
 		}
 
 		@Override
-		public LinkedList<BfsCodeAlgorithm.BfsCode> getBfsList() {
-			return this.bfsList;
+		public BfsCodeAlgorithm.BfsCode getMinBfsCode() {
+			return this.bfsList.get(0);
 		}
 		/**
 		 *
@@ -108,7 +108,7 @@ public interface ProfileDensityAlgorithm<V, E> {
 		 * @param list the list
 		 * @return the profile
 		 */
-		private int[][] getMatrix(LinkedList<BfsCodeAlgorithm.BfsCode> list) {
+		private int[][] getMatrix(List<BfsCodeAlgorithm.BfsCode> list) {
 			if (list.size() == 0) {
 				return new int[0][0];
 			}

@@ -53,7 +53,7 @@ public class CorrelationRequest {
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public List<CorrelationOutput> use() throws DatabaseDoesNotExistException,
+    public List<CorrelationOutput> applyCorrelation() throws DatabaseDoesNotExistException,
             AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(database));
