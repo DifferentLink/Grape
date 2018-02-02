@@ -8,14 +8,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexCol
 import org.jgrapht.alg.clique.BronKerboschCliqueFinder;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import java.util.Objects;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  *The kk-graph generator. It generates the kk-graph for the input graph depending on the Hadwiger Conjecture.
@@ -41,7 +34,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	@Override
 	public KkGraph getKkGraph() {
 		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
-				graph.getProperty(VertexColoring.class).getValue();
+				((List<VertexColoringAlgorithm.Coloring>) graph.getProperty(VertexColoring.class).getValue()).get(0);
 		int numberOfColors = vertexColoring.getNumberColors();
 
 		//this is the number of edges that have to be contract to get the kk graph
