@@ -551,21 +551,16 @@ public class Filtermanagement {
     }
 
     private static String transformFirstOperatorToString(Filter filter) {
-        String returnString = String.valueOf(filter.getOperator1());
-        if (String.valueOf(filter.getOperator1()).equals("ADD")) {
-            returnString = "+";
-        } else if (String.valueOf(filter.getOperator1()).equals("SUB")) {
-            returnString = "-";
-        } else if (String.valueOf(filter.getOperator1()).equals("MULT")) {
-            returnString = "*";
-        } else if (String.valueOf(filter.getOperator1()).equals("DIV")) {
-            returnString = "/";
-        }
-        return returnString;
+        String operatorString = String.valueOf(filter.getOperator1());
+        return Filtermanagement.transformOperatorToString(operatorString);
     }
 
     private static String transformSecondOperatorToString(Filter filter) {
         String operatorString = String.valueOf(filter.getOperator2());
+        return Filtermanagement.transformOperatorToString(operatorString);
+    }
+
+    private static String transformOperatorToString(String operatorString) {
         String returnString;
         switch (operatorString) {
             case "ADD": returnString = "+"; return returnString;
