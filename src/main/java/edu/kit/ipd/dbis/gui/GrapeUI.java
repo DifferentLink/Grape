@@ -7,13 +7,18 @@ package edu.kit.ipd.dbis.gui;
 import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
+import edu.kit.ipd.dbis.gui.grapheditor.RenderableGraph;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Log;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -91,6 +96,9 @@ public class GrapeUI {
 		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		generateController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
+		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
+		tableUI.addKeyListener(new DeleteGraphAction());
 		JScrollPane scrollPane = new JScrollPane(tableUI);
 		tableUI.setFillsViewportHeight(true);
 		tableUI.setBackground(theme.backgroundColor);
@@ -113,5 +121,29 @@ public class GrapeUI {
 		mainWindow.add(verticalDivider);
 
 		mainWindow.setVisible(true);
+	}
+
+	private class TableSelectionChangeAction implements ListSelectionListener {
+		@Override
+		public void valueChanged(ListSelectionEvent listSelectionEvent) {
+			graphEditorUI.displayGraph(new RenderableGraph());
+		}
+	}
+
+	private class DeleteGraphAction implements KeyListener { // todo implement delete graphs
+		@Override
+		public void keyTyped(KeyEvent keyEvent) {
+
+		}
+
+		@Override
+		public void keyPressed(KeyEvent keyEvent) {
+
+		}
+
+		@Override
+		public void keyReleased(KeyEvent keyEvent) {
+
+		}
 	}
 }

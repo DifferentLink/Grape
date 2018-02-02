@@ -118,6 +118,11 @@ public class GraphEditorUI extends JPanel {
 		this.add(bottomBarButtons, BorderLayout.SOUTH);
 	}
 
+	public void displayGraph(RenderableGraph graph) {
+		this.graph = graph;
+		history = new GraphEditorHistory();
+	}
+
 	private class Editor extends JComponent {
 
 		private Point mStart;
