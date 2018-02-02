@@ -1,8 +1,7 @@
 package edu.kit.ipd.dbis.database.connection;
 
-import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.LinkedList;
@@ -23,7 +22,7 @@ public interface DatabaseManager {
 	 * @throws InsertionFailedException
 	 * @throws UnexpectedObjectException
 	 */
-	void addGraph(PropertyGraph graph)
+	void addGraph(PropertyGraph<Integer, Integer> graph)
 			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
 			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException;
 
@@ -127,7 +126,7 @@ public interface DatabaseManager {
 	 * @throws UnexpectedObjectException
 	 * @throws DatabaseDoesNotExistException
 	 */
-	void replaceGraph(int id, PropertyGraph graph)
+	void replaceGraph(int id, PropertyGraph<Integer, Integer> graph)
 			throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException,
 			AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException;
 
@@ -168,7 +167,7 @@ public interface DatabaseManager {
 	 * @throws AccessDeniedForUserException
 	 * @throws ConnectionFailedException
 	 */
-	boolean graphExists(PropertyGraph graph)
+	boolean graphExists(PropertyGraph<Integer, Integer> graph)
 			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
 			ConnectionFailedException;
 
@@ -210,7 +209,7 @@ public interface DatabaseManager {
 	 * @throws ConnectionFailedException
 	 * @throws TablesNotAsExpectedException
 	 */
-	LinkedList<PropertyGraph> getGraphs(String[][] filters, String column, boolean ascending)
+	LinkedList<PropertyGraph<Integer, Integer>> getGraphs(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 
@@ -224,7 +223,7 @@ public interface DatabaseManager {
 	 * @throws AccessDeniedForUserException
 	 * @throws UnexpectedObjectException
 	 */
-	PropertyGraph getGraphById(int id)
+	PropertyGraph<Integer, Integer> getGraphById(int id)
 			throws TablesNotAsExpectedException, ConnectionFailedException, DatabaseDoesNotExistException,
 			AccessDeniedForUserException, UnexpectedObjectException;
 
@@ -236,7 +235,7 @@ public interface DatabaseManager {
 	 * @throws ConnectionFailedException
 	 * @throws TablesNotAsExpectedException
 	 */
-	LinkedList<PropertyGraph> getUncalculatedGraphs()
+	LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 

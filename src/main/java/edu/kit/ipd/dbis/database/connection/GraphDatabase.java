@@ -67,24 +67,15 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void addGraph(PropertyGraph graph)
+	public void addGraph(PropertyGraph<Integer, Integer> graph)
 			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
 			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
-
 			this.graphTable.insert(graph);
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (IOException e) {
 			throw new InsertionFailedException();
-		} catch (UnexpectedObjectException e) {
-			throw new UnexpectedObjectException();
 		}
 	}
 
@@ -94,18 +85,10 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
 			this.filterTable.insert(filter);
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (IOException e) {
 			throw new InsertionFailedException();
-		} catch (UnexpectedObjectException e) {
-			throw new UnexpectedObjectException();
 		}
 	}
 
@@ -115,12 +98,6 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException {
 		try {
 			this.graphTable.switchState(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -132,12 +109,6 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			this.filterTable.delete(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -150,12 +121,6 @@ public class GraphDatabase implements DatabaseManager {
 
 		try {
 			this.graphTable.switchState(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -167,12 +132,6 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			this.filterTable.switchState(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -185,12 +144,6 @@ public class GraphDatabase implements DatabaseManager {
 
 		try {
 			this.graphTable.deleteAll();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
@@ -202,19 +155,13 @@ public class GraphDatabase implements DatabaseManager {
 			TablesNotAsExpectedException {
 		try {
 			this.graphTable.delete(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
 	}
 
 	@Override
-	public void replaceGraph(int id, PropertyGraph graph)
+	public void replaceGraph(int id, PropertyGraph<Integer, Integer> graph)
 			throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException,
 			AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
 		this.permanentlyDeleteGraph(id);
@@ -236,31 +183,19 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException {
 		try {
 			this.graphTable.merge(database.getGraphTable());
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		}
 	}
 
 	@Override
-	public boolean graphExists(PropertyGraph graph)
+	public boolean graphExists(PropertyGraph<Integer, Integer> graph)
 			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
 			ConnectionFailedException {
 		try {
 			return this.graphTable.graphExists(graph);
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		}
 	}
 
@@ -270,14 +205,8 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException {
 		try {
 			return this.filterTable.getContent();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		}
 	}
 
@@ -287,87 +216,53 @@ public class GraphDatabase implements DatabaseManager {
 			ConnectionFailedException, AccessDeniedForUserException {
 		try {
 			return this.filterTable.getContent(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		} catch (IOException e) {
 			throw new UnexpectedObjectException();
 		} catch (ClassNotFoundException e) {
 			throw new UnexpectedObjectException();
-		} catch (UnexpectedObjectException e) {
-			throw new UnexpectedObjectException();
 		}
 	}
 
 	@Override
-	public LinkedList<PropertyGraph> getGraphs(String[][] filters, String column, boolean ascending)
+	public LinkedList<PropertyGraph<Integer, Integer>> getGraphs(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException {
 		try {
-			LinkedList<PropertyGraph> graphs = this.graphTable.getContent(filters, column, ascending);
-			if (column.equals("bfscode") && ascending) {
-				this.sortByBfsCodeAscending(graphs);
-			} else if (column.equals("bfscode") && !ascending) {
-				this.sortByBfsCodeDescending(graphs);
-			}
+			LinkedList<PropertyGraph<Integer, Integer>> graphs = this.graphTable.getContent(filters, column, ascending);
 			return graphs;
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
 	}
 
 	@Override
-	public PropertyGraph getGraphById(int id)
+	public PropertyGraph<Integer, Integer> getGraphById(int id)
 			throws TablesNotAsExpectedException, ConnectionFailedException, DatabaseDoesNotExistException,
 			AccessDeniedForUserException, UnexpectedObjectException {
 		try {
 			return this.graphTable.getContent(id);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		} catch (IOException e) {
 			throw new UnexpectedObjectException();
 		} catch (ClassNotFoundException e) {
 			throw new UnexpectedObjectException();
-		} catch (UnexpectedObjectException e) {
-			throw new UnexpectedObjectException();
 		}
 	}
 
 	@Override
-	public LinkedList<PropertyGraph> getUncalculatedGraphs()
+	public LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException {
 		try {
 			return this.graphTable.getUncalculatedGraphs();
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
 	}
 
-	//TODO:
 	@Override
 	public LinkedList<Double> getValues(String[][] filters, String column)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
@@ -375,47 +270,8 @@ public class GraphDatabase implements DatabaseManager {
 
 		try {
 			return this.graphTable.getValues(filters, column);
-		} catch (AccessDeniedForUserException e) {
-			throw new AccessDeniedForUserException();
-		} catch (DatabaseDoesNotExistException e) {
-			throw new DatabaseDoesNotExistException();
-		} catch (ConnectionFailedException e) {
-			throw new ConnectionFailedException();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}
 	}
-
-	/**
-	 * Sorts a List of PropertyGraphs by BfsCode
-	 * @param graphs the list that should be sorted
-	 */
-	private void sortByBfsCodeAscending(LinkedList<PropertyGraph> graphs) {
-
-		Collections.sort(graphs, new Comparator<PropertyGraph>() {
-			@Override
-			public int compare(PropertyGraph o1, PropertyGraph o2) {
-				BfsCodeAlgorithm.BfsCode bfs1 = (BfsCodeAlgorithm.BfsCode) o1.getProperty(BfsCode.class);
-				BfsCodeAlgorithm.BfsCode bfs2 = (BfsCodeAlgorithm.BfsCode) o2.getProperty(BfsCode.class);
-				return bfs1.compareTo(bfs2);
-			}
-		});
-	}
-
-	/**
-	 * Sorts a List of PropertyGraphs by BfsCode
-	 * @param graphs the list that should be sorted
-	 */
-	private void sortByBfsCodeDescending(LinkedList<PropertyGraph> graphs) {
-
-		Collections.sort(graphs, new Comparator<PropertyGraph>() {
-			@Override
-			public int compare(PropertyGraph o1, PropertyGraph o2) {
-				BfsCodeAlgorithm.BfsCode bfs1 = (BfsCodeAlgorithm.BfsCode) o1.getProperty(BfsCode.class);
-				BfsCodeAlgorithm.BfsCode bfs2 = (BfsCodeAlgorithm.BfsCode) o2.getProperty(BfsCode.class);
-				return bfs2.compareTo(bfs1);
-			}
-		});
-	}
-
 }

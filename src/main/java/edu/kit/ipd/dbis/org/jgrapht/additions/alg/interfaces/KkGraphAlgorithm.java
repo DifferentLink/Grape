@@ -9,7 +9,7 @@ import java.util.*;
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
  */
-public interface KkGraphAlgorithm<V, E> extends Serializable {
+public interface KkGraphAlgorithm<V, E> {
 	/**
 	 * Get the kk-graph.
 	 * @return the kk-graph
@@ -22,7 +22,7 @@ public interface KkGraphAlgorithm<V, E> extends Serializable {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	interface KkGraph<V, E> {
+	interface KkGraph<V, E> extends Serializable {
 		/**
 		 * Get the subgraphs of the kk-graph.
 		 * @return the subgraphs

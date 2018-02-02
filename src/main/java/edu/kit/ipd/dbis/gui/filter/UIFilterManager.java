@@ -4,9 +4,6 @@
 
 package edu.kit.ipd.dbis.gui.filter;
 
-import edu.kit.ipd.dbis.filter.InvalidInputException;
-import edu.kit.ipd.dbis.controller.FilterController;
-
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -16,14 +13,9 @@ import java.util.regex.Pattern;
 
 public class UIFilterManager {
 
-	private final FilterController filterController;
 	private List<SimpleFilter> simpleFilter = new ArrayList<>();
 	private List<FilterGroup> filterGroups = new ArrayList<>();
 	private int nextUniqueID = 0;
-
-	public UIFilterManager(FilterController filterController) {
-		this.filterController = filterController;
-	}
 
 	public void addNewSimpleFilter() {
 		SimpleFilter newFilter = new SimpleFilter(getUniqueID());
@@ -38,19 +30,12 @@ public class UIFilterManager {
 		filterGroup.add(new SimpleFilter(getUniqueID()));
 	}
 
-	public void addNewFilterGroup(FilterController filterController, String name) {
+	public void addNewFilterGroup(String name) {
 		FilterGroup newGroup = new FilterGroup(getUniqueID(), name);
 		filterGroups.add(newGroup);
-		try {
-			filterController.updateFilterGroup("", newGroup.getID());
-		} catch (Exception e) { // todo when is this exception being thrown?
-			e.printStackTrace();
-		} catch (InvalidInputException e) { // todo this most likely doesn't make sense
-			e.printStackTrace();
-		}
 	}
 
-	private int getUniqueID() {
+	public int getUniqueID() {
 		return nextUniqueID++;
 	}
 
@@ -112,9 +97,7 @@ public class UIFilterManager {
 				SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), filterInfo[1]);
 				addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
 			} else if (!filterInfo[0].equals("")){
-				addNewFilterGroup(filterController, filterInfo[0]);
-			} else {
-				// addNewSimpleFilter(filterController, filterInfo[1]);
+				addNewFilterGroup(filterInfo[0]);
 			}
 		}
 	}

@@ -48,4 +48,14 @@ public abstract class Property implements Serializable {
 		}
 		return this.value;
 	}
+
+	/**
+	 * Returns true if property was calculated,
+	 * false if not calculated yet.
+	 *
+	 * @return boolean value
+	 */
+	public boolean isCalculated() {
+		return this.value != null;
+	}
 }

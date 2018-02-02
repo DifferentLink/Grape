@@ -1,8 +1,9 @@
 package edu.kit.ipd.dbis.correlation;
 
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 /**
  * abstract class which inherits all attributes and methods every correlation
@@ -12,20 +13,45 @@ abstract class Correlation {
     private int attributeCounter;
     private Property property;
     private boolean maximum;
+    private GraphDatabase database;
 
     /**
      * method which is used to check filters for a specific correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
      */
-    public abstract ArrayList<CorrelationOutput> useMaximum();
+    public abstract TreeSet<CorrelationOutput> useMaximum();
+
+    /**
+     * method which is used to check filters for a specific correlation monitoring only one property
+     * @param property1 property to focus on
+     * @return returns a list of objects of class CorrelationOutput which code the results of the
+     * correlation calculation
+     */
+    public abstract TreeSet<CorrelationOutput> useMaximum(Property property1);
 
     /**
      * method which is used to check filters for a specific correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
      */
-    public abstract ArrayList<CorrelationOutput> useMinimum();
+    public abstract TreeSet<CorrelationOutput> useMinimum();
+
+    /**
+     * method which is used to check filters for a specific correlation monitoring only one property
+     * @param property1 property to focus on
+     * @return returns a list of objects of class CorrelationOutput which code the results of the
+     * correlation calculation
+     */
+    public abstract TreeSet<CorrelationOutput> useMinimum(Property property1);
+
+    /**
+     * method which is used to set a specific database
+     * @param database new database to set
+     */
+    void setDatabase(GraphDatabase database) {
+        this.database = database;
+    }
 
     /**
      * setter of attribute attributeCounter
@@ -53,6 +79,13 @@ abstract class Correlation {
         this.maximum = maximum;
     }
 
+    /**
+     * used to get the database of a specific correlation
+     * @return database of a specific correlation
+     */
+    GraphDatabase getDatabase() {
+        return database;
+    }
     /**
      * getter of attribute attributeCounter
      * @return integer value which inherits the information

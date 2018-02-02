@@ -1,14 +1,13 @@
 package edu.kit.ipd.dbis.controller;
 
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.InvalidInputException;
-import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -149,8 +148,8 @@ public class FilterController {
 	 *
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph> getFilteredAndSortedGraphs() {
-		List<PropertyGraph> graphs = new LinkedList<PropertyGraph>();
+	public List<PropertyGraph<Integer, Integer>> getFilteredAndSortedGraphs() {
+		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 		try {
 			graphs = filter.getFilteredAndSortedGraphs();
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
@@ -167,8 +166,8 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph> getFilteredAndAscendingSortedGraphs(Property property) {
-		List<PropertyGraph> graphs = new LinkedList<PropertyGraph>();
+	public List<PropertyGraph<Integer, Integer>> getFilteredAndAscendingSortedGraphs(Property property) {
+		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 		try {
 			graphs = filter.getFilteredAndAscendingSortedGraphs(property);
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
@@ -184,8 +183,8 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph> getFilteredAndDescendingSortedGraphs(Property property) {
-		List<PropertyGraph> graphs = new LinkedList<PropertyGraph>();
+	public List<PropertyGraph<Integer, Integer>> getFilteredAndDescendingSortedGraphs(Property property) {
+		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 		try {
 			graphs = filter.getFilteredAndDescendingSortedGraphs(property);
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException

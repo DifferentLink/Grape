@@ -240,7 +240,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-    public LinkedList<PropertyGraph> getFilteredAndAscendingSortedGraphs(Property property) throws
+	public LinkedList<PropertyGraph<Integer, Integer>> getFilteredAndAscendingSortedGraphs(Property property) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), true);
@@ -255,7 +255,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-    public LinkedList<PropertyGraph> getFilteredAndDescendingSortedGraphs(Property property) throws
+	public LinkedList<PropertyGraph<Integer, Integer>> getFilteredAndDescendingSortedGraphs(Property property) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), false);
@@ -269,7 +269,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-    public LinkedList<PropertyGraph> getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
+	public List<PropertyGraph<Integer, Integer>> getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
             AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), "id", true);
     }

@@ -25,8 +25,7 @@ public class NonEditableTableModel extends DefaultTableModel {
 		this.data = data;
 	}
 
-	//TODO: PropertyGraph<?,?> besprechen.
-	public void update(Collection<PropertyGraph> graphs) {
+	public void update(Collection<PropertyGraph<Integer, Integer>> graphs) {
 		this.setColumnCount(0);
 		this.setRowCount(0);
 		allProperties = new LinkedList<>();
@@ -45,7 +44,7 @@ public class NonEditableTableModel extends DefaultTableModel {
 		this.fireTableStructureChanged();
 	}
 
-	private Object[] graphToTableRow(PropertyGraph<Object, Object> graph) {
+	private Object[] graphToTableRow(PropertyGraph<Integer, Integer> graph) {
 		LinkedList<Object> row = new LinkedList<>();
 		graph.getProperties().forEach(property -> row.add(property.getValue()));
 		return row.toArray();
