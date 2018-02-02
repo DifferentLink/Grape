@@ -416,7 +416,7 @@ public class Filtermanagement {
     }
 
     private static Property testProperty(String input) throws InvalidInputException {
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
         Property property;
         switch (input) {
 			case "profile":

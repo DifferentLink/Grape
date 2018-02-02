@@ -5,13 +5,13 @@ import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
+import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.*;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.*;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * class which calculates the Pearson-Correlation for a list of graphs
@@ -101,10 +101,12 @@ public class Pearson extends Correlation {
     private static double calculateCorrelation(Property firstProperty, Property secondProperty,
                                                GraphDatabase database) throws DatabaseDoesNotExistException,
             AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
-        //TODO: Hier muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
-        LinkedList<Double> firstPropertyValues = database.getValues(null, firstProperty.toString());
-        //TODO: Hir muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
-        LinkedList<Double> secondPropertyValues = database.getValues(null, secondProperty.toString());
+        Filtermanagement manager = new Filtermanagement();
+        manager.setDatabase(database);
+        LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
+                firstProperty.toString());
+        LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
+                secondProperty.toString());
         double firstRandomMedium = Pearson.createRandomMedium(firstPropertyValues);
         double secondRandomMedium = Pearson.createRandomMedium(secondPropertyValues);
         double sum = 0;
@@ -133,14 +135,5 @@ public class Pearson extends Correlation {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));
         }
         return Math.sqrt(sum / (inputList.size() - 1));
-    }
-
-    //TODO: Diese Methode muss nach DB-Zugriff entfernt werden
-    private static LinkedList<Double> generateRandomLinkedList() {
-        LinkedList<Double> outputList = new LinkedList<>();
-        for (int i = 0; i < 3; i++) {
-            outputList.add(Math.random());
-        }
-        return outputList;
     }
 }
