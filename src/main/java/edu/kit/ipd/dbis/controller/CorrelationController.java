@@ -19,9 +19,14 @@ public class CorrelationController {
 	 * @throws InvalidCorrelationInputException the invalid correlation input exception
 	 */
 	public List<CorrelationOutput> addNewCorrelation(String input) throws InvalidCorrelationInputException {
-		List<CorrelationOutput> output = null;
-		CorrelationRequest request = new CorrelationRequest(input);
-		output = request.use();
-		return output;
+		try {
+			List<CorrelationOutput> output = null;
+			CorrelationRequest request = new CorrelationRequest(input, null);
+			output = request.use();
+			return output;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
