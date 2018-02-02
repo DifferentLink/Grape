@@ -15,11 +15,11 @@ import java.util.*;
  */
 public abstract class Table {
 
-	protected String url;
+	private String url;
 	protected String user;
-	protected String password;
+	private String password;
 	protected String name;
-	protected final String DRIVER = "com.mysql.jdbc.Driver";
+	private final String DRIVER = "com.mysql.jdbc.Driver";
 	protected Connection connection;
 
 	/**
@@ -77,59 +77,52 @@ public abstract class Table {
 	}
 
 	/**
-	 * Deletes the identified row from the represented MySQL-Table.
-	 * @param id identifies a row in the represented MySQL-Table.
+	 * Creates the MySQL-Table that should be represented by this Class
+	 * @throws SQLException
 	 * @throws AccessDeniedForUserException
 	 * @throws DatabaseDoesNotExistException
 	 * @throws ConnectionFailedException
-	 * @throws SQLException
 	 */
-	public void delete(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException {
-
-		String sql = "DELETE FROM " + this.name + " WHERE id = " + id;
-		this.getConnection().prepareStatement(sql).executeUpdate();
-	}
+	protected abstract void createTable()
+			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException;
 
 	/**
-	 *
-	 * @return Value of the next free id.
+	 * decides if a object is a Filtersegment or a PropertyGraph
+	 * @param object the given object
+	 * @return a Filtersegment or a PropertyGraph
+	 * @throws UnexpectedObjectException
+	 */
+	protected abstract Serializable getInstanceOf(Object object) throws UnexpectedObjectException;
+
+	/**
+	 * Inserts the given object into the MySQL-Table.
+	 * @param object Java object that should be inserted into the represented MySQL-Table.
 	 * @throws DatabaseDoesNotExistException
 	 * @throws SQLException
 	 * @throws AccessDeniedForUserException
 	 * @throws ConnectionFailedException
+	 * @throws IOException
+	 * @throws UnexpectedObjectException
 	 */
-	public int getId()
+	public abstract void insert(Serializable object)
 			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException {
-		LinkedList<Integer> ids = this.getIds();
-		for (int i = 0; i < ids.size(); i++) {
-			if (!ids.contains(i)) return i;
-		}
-		return ids.size() + 1;
-	}
+			ConnectionFailedException, IOException, UnexpectedObjectException;
 
 	/**
-	 *
-	 * @return all ids in the represented MySQL-Table
+	 * returns the Object identified by the given id.
+	 * @param id identifies the object
+	 * @return every object in the represented MySQL-Table
 	 * @throws AccessDeniedForUserException
 	 * @throws DatabaseDoesNotExistException
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws UnexpectedObjectException
 	 */
-	public LinkedList<Integer> getIds()
+	public abstract Serializable getContent(int id)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException {
-
-		String sql = "SELECT id FROM " + this.name;
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<Integer> ids = new LinkedList<>();
-		while (result.next()) {
-			ids.add(result.getInt("id"));
-		}
-		return ids;
-	}
+			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException;
 
 	/**
 	 * Creates and returns a Connection-Objcect.
@@ -138,7 +131,7 @@ public abstract class Table {
 	 * @throws AccessDeniedForUserException
 	 * @throws DatabaseDoesNotExistException
 	 */
-	public Connection getConnection()
+	protected Connection getConnection()
 			throws ConnectionFailedException, AccessDeniedForUserException, DatabaseDoesNotExistException {
 		try {
 			if (this.connection == null) {
@@ -181,36 +174,19 @@ public abstract class Table {
 	}
 
 	/**
-	 * converts a object into a byte-array
-	 * @param object the object that should be converted
-	 * @return the byte-array
-	 * @throws IOException
+	 * Deletes the identified row from the represented MySQL-Table.
+	 * @param id identifies a row in the represented MySQL-Table.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
 	 */
-	public byte[] objectToByteArray(Serializable object) throws IOException {
-		ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-		ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
-		objectOutput.writeObject(object);
-		byte[] bytes = byteOutput.toByteArray();
+	public void delete(int id)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			SQLException {
 
-		byteOutput.close();
-		objectOutput.close();
-		return bytes;
-	}
-
-	/**
-	 * converts a byte-array into a object
-	 * @param bytes the byte-array that should be converted
-	 * @return the object
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	public Object byteArrayToObject(byte[] bytes) throws IOException, ClassNotFoundException {
-		ByteArrayInputStream byteInput = new ByteArrayInputStream(bytes);
-		ObjectInputStream objectInput = new ObjectInputStream(byteInput);
-		Object object = objectInput.readObject();
-		byteInput.close();
-		objectInput.close();
-		return object;
+		String sql = "DELETE FROM " + this.name + " WHERE id = " + id;
+		this.getConnection().prepareStatement(sql).executeUpdate();
 	}
 
 	/**
@@ -235,51 +211,75 @@ public abstract class Table {
 	}
 
 	/**
-	 * returns the Object identified by the given id.
-	 * @param id identifies the object
-	 * @return every object in the represented MySQL-Table
+	 *
+	 * @return Value of the next free id.
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 */
+	protected int getId()
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
+		LinkedList<Integer> ids = this.getIds();
+		for (int i = 0; i < ids.size(); i++) {
+			if (!ids.contains(i)) return i;
+		}
+		return ids.size() + 1;
+	}
+
+	/**
+	 *
+	 * @return all ids in the represented MySQL-Table
 	 * @throws AccessDeniedForUserException
 	 * @throws DatabaseDoesNotExistException
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
+	 */
+	protected LinkedList<Integer> getIds()
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			SQLException {
+
+		String sql = "SELECT id FROM " + this.name;
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		LinkedList<Integer> ids = new LinkedList<>();
+		while (result.next()) {
+			ids.add(result.getInt("id"));
+		}
+		return ids;
+	}
+
+	/**
+	 * converts a object into a byte-array
+	 * @param object the object that should be converted
+	 * @return the byte-array
+	 * @throws IOException
+	 */
+	protected byte[] objectToByteArray(Serializable object) throws IOException {
+		ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+		ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
+		objectOutput.writeObject(object);
+		byte[] bytes = byteOutput.toByteArray();
+
+		byteOutput.close();
+		objectOutput.close();
+		return bytes;
+	}
+
+	/**
+	 * converts a byte-array into a object
+	 * @param bytes the byte-array that should be converted
+	 * @return the object
 	 * @throws IOException
 	 * @throws ClassNotFoundException
-	 * @throws UnexpectedObjectException
 	 */
-	public abstract Serializable getContent(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException;
-
-	/**
-	 * Inserts the given object into the MySQL-Table.
-	 * @param object Java object that should be inserted into the represented MySQL-Table.
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
-	 * @throws IOException
-	 * @throws UnexpectedObjectException
-	 */
-	public abstract void insert(Serializable object)
-			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException, IOException, UnexpectedObjectException;
-
-	/**
-	 * decides if a object is a Filtersegment or a PropertyGraph
-	 * @param object the given object
-	 * @return a Filtersegment or a PropertyGraph
-	 * @throws UnexpectedObjectException
-	 */
-	protected abstract Serializable getInstanceOf(Object object) throws UnexpectedObjectException;
-
-	/**
-	 * Creates the MySQL-Table that should be represented by this Class
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 */
-	protected abstract void createTable()
-			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException;
+	protected Object byteArrayToObject(byte[] bytes) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream byteInput = new ByteArrayInputStream(bytes);
+		ObjectInputStream objectInput = new ObjectInputStream(byteInput);
+		Object object = objectInput.readObject();
+		byteInput.close();
+		objectInput.close();
+		return object;
+	}
 
 }

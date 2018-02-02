@@ -39,93 +39,43 @@ public class GraphTable extends Table {
 	}
 
 	@Override
-	public PropertyGraph<Integer, Integer> getContent(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
+	protected void createTable()
+			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException,
+			ConnectionFailedException {
 
-		String sql = "SELECT graph FROM " + this.name + " WHERE id = " + id;
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		if (result.next()) {
-			Object object = this.byteArrayToObject(result.getBytes("graph"));
-			return this.getInstanceOf(object);
-		}
-		return null;
-	}
+		String sql = "CREATE TABLE IF NOT EXISTS "
+				+ this.name +" ("
+				+ "graph longblob, "
+				+ "id int NOT NULL, "
+				+ "bfscode VARCHAR(255), "
+				+ "state boolean, "
+				+ "iscalculated boolean";
 
-	private String filtersToString(String[][] filters, String column, boolean ascending) {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		Collection<Property> properties = graph.getProperties();
 
-		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = true";
-		String order = (ascending) ? ("ASC") : ("DESC");
-
-		for (int i = 0; i < filters.length; i++) {
-			for (int j = 0; j < filters[i].length; j++) {
-				sql += " AND" + filters[i][j];
+		for (Property property : properties) {
+			if (property.getClass().getSuperclass() == IntegerProperty.class) {
+				sql += ", " + property.getClass().getSimpleName().toLowerCase() + " int";
+			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
+				sql += ", " + property.getClass().getSimpleName().toLowerCase() + " double";
 			}
 		}
 
-		if (!column.equals("bfscode")) {
-			sql += " ORDER BY " + column + " " + order;
-		} else {
-			//TODO: zuerst der Länge nach sortieren?
-			sql += " ORDER BY bfscode, CHAR_LENGTH(bfscode) " + order;
-		}
-		return sql;
+		sql += ", PRIMARY KEY(id))";
+		this.getConnection().prepareStatement(sql).executeUpdate();
+
 	}
 
-	private String filtersToString(String[][] filters, String column) {
-		String sql = "SELECT " + column + " FROM " + this.name + " WHERE 0 = 0";
+	@Override
+	protected PropertyGraph<Integer, Integer> getInstanceOf(Object object) throws UnexpectedObjectException {
 
-		for (int i = 0; i < filters.length; i++) {
-			for (int j = 0; j < filters[i].length; j++) {
-				sql += " AND" + filters[i][j];
-			}
+		try {
+			return (PropertyGraph<Integer, Integer>) object;
+		} catch (ClassCastException e) {
+			throw new UnexpectedObjectException();
 		}
-		return sql;
-	}
 
-	public LinkedList<Double> getValues(String[][] filters, String column) throws AccessDeniedForUserException,
-			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
-
-		String sql = this.filtersToString(filters, column);
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<Double> values = new LinkedList<>();
-		while (result.next()) {
-			try {
-				double value = (double) result.getObject(column);
-				values.add(value);
-			} catch(Exception e) {
-
-			}
-		}
-		return values;
-	}
-
-	/**
-	 * Returns all PropertyGraph-Objects that fulfill the current filters.
-	 * @param filters determines how the GraphTable should be filtered
-	 * @param column determines how the GraphTable should be sorted
-	 * @param ascending determines if the GraphTable should be sorted ascending or descending
-	 * @return all PropertyGraph-Objects in the MySQL-Database that fulfill the current filters.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
-	 */
-	public LinkedList<PropertyGraph<Integer, Integer>> getContent(String[][] filters, String column, boolean ascending)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException {
-
-		String sql = this.filtersToString(filters, column, ascending);
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
-		while (result.next()) {
-			try {
-				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
-			} catch(Exception e) {
-
-			}
-		}
-		return graphs;
 	}
 
 	@Override
@@ -168,41 +118,103 @@ public class GraphTable extends Table {
 	}
 
 	@Override
-	protected PropertyGraph<Integer, Integer> getInstanceOf(Object object) throws UnexpectedObjectException {
+	public PropertyGraph<Integer, Integer> getContent(int id)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
 
-		try {
-			return (PropertyGraph<Integer, Integer>) object;
-		} catch (ClassCastException e) {
-			throw new UnexpectedObjectException();
+		String sql = "SELECT graph FROM " + this.name + " WHERE id = " + id;
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		if (result.next()) {
+			Object object = this.byteArrayToObject(result.getBytes("graph"));
+			return this.getInstanceOf(object);
 		}
+		return null;
+	}
+
+
+	/**
+	 * Returns all PropertyGraph-Objects that fulfill the current filters.
+	 * @param filters determines how the GraphTable should be filtered
+	 * @param column determines how the GraphTable should be sorted
+	 * @param ascending determines if the GraphTable should be sorted ascending or descending
+	 * @return all PropertyGraph-Objects in the MySQL-Database that fulfill the current filters.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
+	public LinkedList<PropertyGraph<Integer, Integer>> getContent(String[][] filters, String column, boolean ascending)
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			SQLException {
+
+		String sql = this.filtersToString(filters, column, ascending);
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+		while (result.next()) {
+			try {
+				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
+			} catch(Exception e) {
+
+			}
+		}
+		return graphs;
+	}
+
+	/**
+	 *@return all PropertyGraph-Objects in the represented MySQL-Table that are marked as uncalculated.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
+	public LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs() throws AccessDeniedForUserException,
+			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
+
+		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false";
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+
+		while (result.next()) {
+			try {
+				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
+			} catch (Exception e) {
+
+			}
+		}
+		return graphs;
 
 	}
 
-	@Override
-	protected void createTable()
-			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException,
-			ConnectionFailedException {
+	public LinkedList<Double> getValues(String[][] filters, String column) throws AccessDeniedForUserException,
+			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
 
-		String sql = "CREATE TABLE IF NOT EXISTS "
-				+ this.name +" ("
-				+ "graph longblob, "
-				+ "id int NOT NULL, "
-				+ "bfscode VARCHAR(255), "
-				+ "state boolean, "
-				+ "iscalculated boolean";
+		String sql = this.filtersToString(filters, column);
+		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		LinkedList<Double> values = new LinkedList<>();
+		while (result.next()) {
+			try {
+				double value = (double) result.getObject(column);
+				values.add(value);
+			} catch(Exception e) {
 
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-		Collection<Property> properties = graph.getProperties();
-
-		for (Property property : properties) {
-			if (property.getClass().getSuperclass() == IntegerProperty.class) {
-				sql += ", " + property.getClass().getSimpleName().toLowerCase() + " int";
-			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
-				sql += ", " + property.getClass().getSimpleName().toLowerCase() + " double";
 			}
 		}
+		return values;
+	}
 
-		sql += ", PRIMARY KEY(id))";
+	/**
+	 * All PropertyGraph-Objects that are marked as deleted will be removed from
+	 * the represented MySQL-Table.
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
+	public void deleteAll()
+			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			SQLException {
+
+		String sql = "DELETE * FROM " + this.name + " WHERE state = true";
 		this.getConnection().prepareStatement(sql).executeUpdate();
 
 	}
@@ -235,42 +247,6 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 * All PropertyGraph-Objects that are marked as deleted will be removed from
-	 * the represented MySQL-Table.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
-	 */
-	public void deleteAll()
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException {
-
-		String sql = "DELETE * FROM " + this.name + " WHERE state = true";
-		this.getConnection().prepareStatement(sql).executeUpdate();
-
-	}
-
-	/**
-	 * Parses a BfsCode of a PropertyGraph
-	 * @param graph a PropertyGraph-object
-	 * @return the BfsCode of the given graph as String
-	 */
-	private String minimalBfsCodeToString(PropertyGraph<Integer, Integer> graph) {
-
-		String s = "";
-		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
-		BfsCodeAlgorithm.BfsCode code = (BfsCodeAlgorithm.BfsCode) bfs.getValue();
-		int[] bfsCode = code.getCode();
-
-		for (int i = 0; i < bfsCode.length; i++) {
-			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
-		}
-		return s;
-
-	}
-
-	/**
 	 * Checks if a PropertyGraph-Object already Exists.
 	 * @param graph PropertyGaph-Object.
 	 * @return true if the given graph already exists in the represented MySQLTable.
@@ -292,28 +268,52 @@ public class GraphTable extends Table {
 
 	}
 
-	/**
-	 *@return all PropertyGraph-Objects in the represented MySQL-Table that are marked as uncalculated.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
-	 */
-	public LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs() throws AccessDeniedForUserException,
-			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
+	private String filtersToString(String[][] filters, String column, boolean ascending) {
 
-		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false";
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = true";
+		String order = (ascending) ? ("ASC") : ("DESC");
 
-		while (result.next()) {
-			try {
-				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
-			} catch (Exception e) {
-
+		for (int i = 0; i < filters.length; i++) {
+			for (int j = 0; j < filters[i].length; j++) {
+				sql += " AND" + filters[i][j];
 			}
 		}
-		return graphs;
+
+		if (!column.equals("bfscode")) {
+			sql += " ORDER BY " + column + " " + order;
+		} else {
+			sql += " ORDER BY bfscode, CHAR_LENGTH(bfscode) " + order;
+		}
+		return sql;
+	}
+
+	private String filtersToString(String[][] filters, String column) {
+		String sql = "SELECT " + column + " FROM " + this.name + " WHERE 0 = 0";
+
+		for (int i = 0; i < filters.length; i++) {
+			for (int j = 0; j < filters[i].length; j++) {
+				sql += " AND" + filters[i][j];
+			}
+		}
+		return sql;
+	}
+
+	/**
+	 * Parses a BfsCode of a PropertyGraph
+	 * @param graph a PropertyGraph-object
+	 * @return the BfsCode of the given graph as String
+	 */
+	private String minimalBfsCodeToString(PropertyGraph<Integer, Integer> graph) {
+
+		String s = "";
+		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
+		BfsCodeAlgorithm.BfsCode code = (BfsCodeAlgorithm.BfsCode) bfs.getValue();
+		int[] bfsCode = code.getCode();
+
+		for (int i = 0; i < bfsCode.length; i++) {
+			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
+		}
+		return s;
 
 	}
 

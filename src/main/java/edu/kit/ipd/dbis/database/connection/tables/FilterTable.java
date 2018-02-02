@@ -36,6 +36,43 @@ public class FilterTable extends Table {
 	}
 
 	@Override
+	protected void createTable()
+			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException,
+			ConnectionFailedException {
+
+		String sql = "CREATE TABLE IF NOT EXISTS "
+				+ this.name +" ("
+				+ "filter longblob, "
+				+ "id int NOT NULL, "
+				+ "state boolean, "
+				+ "PRIMARY KEY(id))";
+		this.getConnection().prepareStatement(sql).executeUpdate();
+	}
+
+	@Override
+	protected Filtersegment getInstanceOf(Object object) throws UnexpectedObjectException {
+		if (object instanceof Filtersegment) {
+			return (Filtersegment) object;
+		}
+		throw new UnexpectedObjectException();
+	}
+
+	@Override
+	public void insert(Serializable object)
+			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
+			SQLException, UnexpectedObjectException, IOException {
+
+		Filtersegment filter = this.getInstanceOf(object);
+		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, "
+				+ filter.getID() + ", "
+				+ filter.getIsActivated() + ")";
+
+		PreparedStatement statement = this.getConnection().prepareStatement(sql);
+		statement.setObject(1, this.objectToByteArray(filter));
+		statement.executeUpdate();
+	}
+
+	@Override
 	public Filtersegment getContent(int id)
 			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
 			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
@@ -72,43 +109,6 @@ public class FilterTable extends Table {
 			}
 		}
 		return filters;
-	}
-
-	@Override
-	public void insert(Serializable object)
-			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
-			SQLException, UnexpectedObjectException, IOException {
-
-		Filtersegment filter = this.getInstanceOf(object);
-		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, "
-				+ filter.getID() + ", "
-				+ filter.getIsActivated() + ")";
-
-		PreparedStatement statement = this.getConnection().prepareStatement(sql);
-		statement.setObject(1, this.objectToByteArray(filter));
-		statement.executeUpdate();
-	}
-
-	@Override
-	protected Filtersegment getInstanceOf(Object object) throws UnexpectedObjectException {
-		if (object instanceof Filtersegment) {
-			return (Filtersegment) object;
-		}
-		throw new UnexpectedObjectException();
-	}
-
-	@Override
-	protected void createTable()
-			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException,
-			ConnectionFailedException {
-
-		String sql = "CREATE TABLE IF NOT EXISTS "
-				+ this.name +" ("
-				+ "filter longblob, "
-				+ "id int NOT NULL, "
-				+ "state boolean, "
-				+ "PRIMARY KEY(id))";
-		this.getConnection().prepareStatement(sql).executeUpdate();
 	}
 
 }
