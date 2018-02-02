@@ -232,24 +232,24 @@ public class MinimalVertexColoringTest {
 		Map<Integer, Integer> c2colors = new HashMap<>();
 		c1colors.put(0, 0);
 		c1colors.put(1, 1);
-		c1colors.put(2, 0);
-		c1colors.put(3, 2);
-		c1colors.put(4, 1);
-		c1colors.put(5, 0);
+		c1colors.put(2, 2);
+		c1colors.put(3, 1);
+		c1colors.put(4, 0);
+		c1colors.put(5, 1);
 		c1colors.put(6, 2);
-		c1colors.put(7, 0);
+		c1colors.put(7, 1);
 
-		c2colors.put(0, 0);
-		c2colors.put(1, 0);
+		c2colors.put(0, 1);
+		c2colors.put(1, 1);
 		c2colors.put(2, 0);
 		c2colors.put(3, 1);
-		c2colors.put(4, 1);
+		c2colors.put(4, 0);
 		c2colors.put(5, 2);
 		c2colors.put(6, 2);
 		c2colors.put(7, 2);
 
-		Coloring c1 = new VertexColoringAlgorithm.ColoringImpl(c1colors, 3);
-		Coloring c2 = new VertexColoringAlgorithm.ColoringImpl(c2colors, 3);
+		Coloring<Integer> c1 = new VertexColoringAlgorithm.ColoringImpl<>(c1colors, 3);
+		Coloring<Integer> c2 = new VertexColoringAlgorithm.ColoringImpl<>(c2colors, 3);
 
 		assertEquals(false, MinimalVertexColoring.equivalentColoring(c1, c2));
 	}
