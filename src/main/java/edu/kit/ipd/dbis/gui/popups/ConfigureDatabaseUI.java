@@ -38,12 +38,12 @@ public class ConfigureDatabaseUI extends JFrame {
 		inputContainer.setLayout(new GridLayout(4, 2, 2, 10));
 
 		JLabel nameLabel = new JLabel("Name"); // todo use language resource
-		nameInput = new JTextArea("database");
+		nameInput = new JTextArea("graphs");
 		inputContainer.add(nameLabel);
 		inputContainer.add(nameInput);
 
 		JLabel urlLabel = new JLabel("URL"); // todo use language resource
-		urlInput = new JTextArea("mysql://");
+		urlInput = new JTextArea("jdbc:mysql://localhost:3306/library");
 		inputContainer.add(urlLabel);
 		inputContainer.add(urlInput);
 
@@ -60,7 +60,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		JPanel buttonContainer = new JPanel();
 		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
 		JButton configureButton = new JButton("Configure"); // todo use language resource
-		configureButton.addActionListener(new ConfigureDatabaseAction());
+		configureButton.addActionListener(new ConfigureDatabaseAction(this));
 		theme.style(configureButton);
 		configureButton.setMaximumSize(new Dimension(50, 30));
 		buttonContainer.add(Box.createHorizontalGlue());
@@ -78,9 +78,17 @@ public class ConfigureDatabaseUI extends JFrame {
 
 	private class ConfigureDatabaseAction implements ActionListener {
 
+		private final JFrame configureDatabaseUI;
+
+		public ConfigureDatabaseAction(JFrame configureDatabaseUI) {
+			this.configureDatabaseUI = configureDatabaseUI;
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			databaseController.newDatabase(urlInput.getText(), userInput.getText(), passwordInput.getText(), nameInput.getText());
+			databaseController.newDatabase(urlInput.getText(), userInput.getText(),
+					passwordInput.getText(), nameInput.getText());
+			configureDatabaseUI.dispose();
 		}
 	}
 }
