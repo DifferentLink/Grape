@@ -258,8 +258,10 @@ public class GraphEditorUI extends JPanel {
 
 			if (coloringType.getSelectedItem().toString().equals("Total Coloring")) { // todo make this work with different languages
 				graphEditorController.getTotalColoring(graph.asPropertyGraph()); // todo this simply returns a coloring. Use this color in the RenderableGraph
+				history.addToHistory(graph);
 			} else if (coloringType.getSelectedItem().toString().equals("Vertex Coloring")) { // todo make this work with different languages
 				graphEditorController.getVertexColoring(graph.asPropertyGraph()); // todo this simply returns a coloring. Use this color in the RenderableGraph
+				history.addToHistory(graph);
 			}
 		}
 	}
@@ -274,16 +276,14 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			graph.makeConnected();
 			PropertyGraph propertyGraph = graph.asPropertyGraph();
-			Boolean isValid = false;
-			try {
-				isValid = graphEditorController.isValidGraph(propertyGraph);
-			} catch (InvalidGraphInputException e) {
-				//TODO: implement that
-				e.printStackTrace();
-			}
-			if (isValid) {
+			if (graphEditorController.isValidGraph(propertyGraph)) {
 				graphEditorController.addEditedGraph(propertyGraph, graph.getId());
+				graph = new RenderableGraph();
+				history = new GraphEditorHistory();
+			} else {
+				System.out.println("Invalid graph");
 			}
 		}
 	}

@@ -118,7 +118,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
 	 */
-	public Boolean isValidGraph(PropertyGraph graph) throws InvalidGraphInputException {
+	public Boolean isValidGraph(PropertyGraph graph) {
 		Boolean duplicate = true;
 		try {
 			duplicate = database.graphExists(graph);
@@ -126,10 +126,7 @@ public class GraphEditorController {
 				| AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		if (duplicate) {
-			throw new InvalidGraphInputException("Given graph is a duplicate.");
-		}
-		return true;
+		return duplicate;
 	}
 
 	/**
