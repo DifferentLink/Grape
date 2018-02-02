@@ -24,6 +24,7 @@ public class DatabaseController {
 	private GraphEditorController editor;
 	private FilterController filter;
 	private StatusbarController log;
+	private CorrelationController correlation;
 
 	private Connector connector;
 	private GraphDatabase database;
@@ -37,6 +38,7 @@ public class DatabaseController {
 		this.editor = GraphEditorController.getInstance();
 		this.filter = FilterController.getInstance();
 		this.log = StatusbarController.getInstance();
+		this.correlation = CorrelationController.getInstance();
 		this.connector = new FileManager();
 	}
 
@@ -133,11 +135,12 @@ public class DatabaseController {
 	 * Sets the database for all controller classes that have a database connection
 	 */
 	private void updateDatabases() {
-
 		generate.setDatabase(database);
 		calculation.setDatabase(database);
 		editor.setDatabase(database);
 		filter.setDatabase(database);
+		correlation.setDatabase(database);
+		log.setDatabase(database);
 	}
 
 }

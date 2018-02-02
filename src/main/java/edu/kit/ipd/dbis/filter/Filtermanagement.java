@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.filter;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
@@ -375,7 +376,7 @@ public class Filtermanagement {
             }
             int secondValue = Integer.parseInt(secondValueString);
 
-            return new ConnectedFilter(input, true, property1, property2, operator1,
+            return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
         } catch (InvalidInputException e) {
             Relation basicRelation = Filtermanagement.testRelation(firstOperator);
@@ -387,7 +388,7 @@ public class Filtermanagement {
                 i++;
             }
             int value = Integer.parseInt(valueString);
-            return new BasicFilter(input, true, value, basicRelation, property1, id);
+            return new BasicFilter(input, false, value, basicRelation, property1, id);
         }
     }
 
@@ -415,7 +416,7 @@ public class Filtermanagement {
     }
 
     private static Property testProperty(String input) throws InvalidInputException {
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
         Property property;
         switch (input) {
 			case "profile":
@@ -550,21 +551,16 @@ public class Filtermanagement {
     }
 
     private static String transformFirstOperatorToString(Filter filter) {
-        String returnString = String.valueOf(filter.getOperator1());
-        if (String.valueOf(filter.getOperator1()).equals("ADD")) {
-            returnString = "+";
-        } else if (String.valueOf(filter.getOperator1()).equals("SUB")) {
-            returnString = "-";
-        } else if (String.valueOf(filter.getOperator1()).equals("MULT")) {
-            returnString = "*";
-        } else if (String.valueOf(filter.getOperator1()).equals("DIV")) {
-            returnString = "/";
-        }
-        return returnString;
+        String operatorString = String.valueOf(filter.getOperator1());
+        return Filtermanagement.transformOperatorToString(operatorString);
     }
 
     private static String transformSecondOperatorToString(Filter filter) {
         String operatorString = String.valueOf(filter.getOperator2());
+        return Filtermanagement.transformOperatorToString(operatorString);
+    }
+
+    private static String transformOperatorToString(String operatorString) {
         String returnString;
         switch (operatorString) {
             case "ADD": returnString = "+"; return returnString;

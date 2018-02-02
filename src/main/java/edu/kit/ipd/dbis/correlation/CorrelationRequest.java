@@ -1,5 +1,11 @@
 package edu.kit.ipd.dbis.correlation;
 
+import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
@@ -18,15 +24,18 @@ import java.util.TreeSet;
 public class CorrelationRequest {
 
     private Correlation correlation;
+    private GraphDatabase database;
 
     /**
      * constructor of class CorrelationRequest
      * @param input string which should code a valid correlation
+     * @param database database which inherits the current graphs
      * @throws InvalidCorrelationInputException thrown if the input string does not
      * code a valid correlation
      */
-    public CorrelationRequest(String input) throws InvalidCorrelationInputException {
+    public CorrelationRequest(String input, GraphDatabase database) throws InvalidCorrelationInputException {
         correlation = CorrelationRequest.parseCorrelationToString(input);
+        this.database = database;
     }
 
     /**
@@ -40,16 +49,21 @@ public class CorrelationRequest {
     /**
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
+     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws AccessDeniedForUserException thrown if there is no access to database
+     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public List<CorrelationOutput> use() {
+    public List<CorrelationOutput> applyCorrelation() throws DatabaseDoesNotExistException,
+            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
-            return CorrelationRequest.parseToList(correlation.useMaximum());
+            return CorrelationRequest.parseToList(correlation.useMaximum(database));
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
-            return CorrelationRequest.parseToList(correlation.useMinimum());
+            return CorrelationRequest.parseToList(correlation.useMinimum(database));
         } else if (correlation.getMaximum() && correlation.getProperty() != null) {
-            return CorrelationRequest.parseToList(correlation.useMaximum(correlation.getProperty()));
+            return CorrelationRequest.parseToList(correlation.useMaximum(correlation.getProperty(), database));
         } else {
-            return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty()));
+            return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty(), database));
         }
     }
 

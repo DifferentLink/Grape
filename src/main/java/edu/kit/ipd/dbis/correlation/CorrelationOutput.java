@@ -16,7 +16,7 @@ public class CorrelationOutput implements Comparable<CorrelationOutput> {
      * @param secondProperty second property of a specific correlation
      * @param outputNumber double value which shows how strong a specific correlation is
      */
-    public CorrelationOutput(Property firstProperty, Property secondProperty, double outputNumber) {
+    CorrelationOutput(Property firstProperty, Property secondProperty, double outputNumber) {
         this.firstProperty = firstProperty;
         this.secondProperty = secondProperty;
         this.outputNumber = outputNumber;
