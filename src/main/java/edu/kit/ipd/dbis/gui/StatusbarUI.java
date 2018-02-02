@@ -87,6 +87,26 @@ public class StatusbarUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			if (isCalculationRunning) {
+				statusbarController.pauseCalculation();
+				try {
+					Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Continue.png"));
+					image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
+					button.setIcon(new ImageIcon(image));
+				} catch (IOException e) {
+					button.setText("R");
+				}
+			} else {
+				statusbarController.continueCalculation();
+				try {
+					Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Pause.png"));
+					image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
+					button.setIcon(new ImageIcon(image));
+				} catch (IOException e) {
+					button.setText("P");
+				}
+			}
+			isCalculationRunning = !isCalculationRunning;
 		}
 	}
 
