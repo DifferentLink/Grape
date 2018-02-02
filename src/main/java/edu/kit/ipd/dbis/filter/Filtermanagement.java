@@ -376,7 +376,7 @@ public class Filtermanagement {
             }
             int secondValue = Integer.parseInt(secondValueString);
 
-            return new ConnectedFilter(input, true, property1, property2, operator1,
+            return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
         } catch (InvalidInputException e) {
             Relation basicRelation = Filtermanagement.testRelation(firstOperator);
@@ -388,7 +388,7 @@ public class Filtermanagement {
                 i++;
             }
             int value = Integer.parseInt(valueString);
-            return new BasicFilter(input, true, value, basicRelation, property1, id);
+            return new BasicFilter(input, false, value, basicRelation, property1, id);
         }
     }
 
