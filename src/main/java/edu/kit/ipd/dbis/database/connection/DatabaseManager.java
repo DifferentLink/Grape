@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 /**
@@ -240,6 +241,16 @@ public interface DatabaseManager {
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 
+	/**
+	 * Returns the values of a certain column of every graph that matches the filter criteria
+	 * @param filters determines how the database should be filters
+	 * @param column the column
+	 * @return the value of every given column
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws TablesNotAsExpectedException
+	 */
 	LinkedList<Double> getValues(String[][] filters, String column)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
