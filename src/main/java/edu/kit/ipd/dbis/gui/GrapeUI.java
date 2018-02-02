@@ -126,7 +126,7 @@ public class GrapeUI {
 	private class TableSelectionChangeAction implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
-			graphEditorUI.displayGraph(new RenderableGraph());
+			//graphEditorUI.displayGraph();
 		}
 	}
 
