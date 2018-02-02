@@ -20,17 +20,19 @@ public class NonEditableTableModel extends DefaultTableModel {
 		this.setColumnCount(0);
 		this.setRowCount(0);
 
-		ResultSetMetaData metaData = resultSet.getMetaData();
-		for (int i = 1; i <= metaData.getColumnCount(); i++) {
-			this.addColumn(metaData.getColumnName(i));
-		}
-
-		while (resultSet.next()) {
-			Vector<Object> row = new Vector<>();
+		if (resultSet != null) {
+			ResultSetMetaData metaData = resultSet.getMetaData();
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
-				row.add(resultSet.getObject(i));
+				this.addColumn(metaData.getColumnName(i));
 			}
-			this.addRow(row);
+
+			while (resultSet.next()) {
+				Vector<Object> row = new Vector<>();
+				for (int i = 1; i <= metaData.getColumnCount(); i++) {
+					row.add(resultSet.getObject(i));
+				}
+				this.addRow(row);
+			}
 		}
 
 		this.fireTableDataChanged();
