@@ -270,30 +270,24 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 *
 	 * @param c1 first coloring
 	 * @param c2 second coloring
+	 * @param <V> type
 	 * @return true if they are equal, false if they are not.
 	 */
-	public static boolean equivalentColoring(Coloring c1, Coloring c2) {
+	public static <V> boolean equivalentColoring(Coloring<V> c1, Coloring<V> c2) {
 		if (c1.getNumberColors() != c2.getNumberColors()) {
 			return false;
-		} else if (c1.getNumberColors() == c1.getColors().values().size()) {
-			return false;
 		}
-		List<Set<Object>> c1ColorClasses = c1.getColorClasses();
-		List<Set<Object>> c2ColorClasses = c2.getColorClasses();
-		boolean foundMatching;
-
-		for (Set<Object> s1 : c1ColorClasses) {
-			foundMatching = false;
-			for (Set<Object> s2 : c2ColorClasses) {
-				if (s1.containsAll(s2) && s1.size() == s2.size()) {
-					foundMatching = true;
-				}
-			}
-			if (!foundMatching) {
+		List<Integer> c1colors = new ArrayList<>(c1.getColors().values());
+		List<Integer> c2colors = new ArrayList<>(c2.getColors().values());
+		Collections.sort(c1colors);
+		Collections.sort(c2colors);
+		Iterator it1 = c1colors.iterator();
+		Iterator it2 = c2colors.iterator();
+		while (it1.hasNext()) {
+			if (!it1.next().equals(it2.next())) {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
