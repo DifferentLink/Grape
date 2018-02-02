@@ -29,6 +29,7 @@ public class CorrelationRequest {
     /**
      * constructor of class CorrelationRequest
      * @param input string which should code a valid correlation
+     * @param database database which inherits the current graphs
      * @throws InvalidCorrelationInputException thrown if the input string does not
      * code a valid correlation
      */

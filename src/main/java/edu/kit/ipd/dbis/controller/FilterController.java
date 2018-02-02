@@ -17,7 +17,6 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 /**
  * The type Filter controller.
  */
-//TODO:
 public class FilterController {
 
 	private Filtermanagement filter;
