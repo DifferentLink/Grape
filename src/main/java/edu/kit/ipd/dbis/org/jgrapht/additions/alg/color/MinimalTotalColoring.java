@@ -20,6 +20,7 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 	private final Graph<V, E> graph;
 	private Map<Integer, V> integerVMap;
 	private Map<Integer, E> integerEMap;
+	private List<TotalColoring<V, E>> totalColorings;
 
 	/**
 	 * Constructs a new minimal total coloring algorithm.
@@ -28,74 +29,94 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 	 */
 	public MinimalTotalColoring(Graph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
+		this.totalColorings = new ArrayList<>();
+	}
+
+	/**
+	 * Determines all minimal total colorings.
+	 *
+	 * @return List of minimal total colorings
+	 */
+	public List<TotalColoring<V, E>> getAllColorings() {
+		if (!this.totalColorings.isEmpty()) {
+			return this.totalColorings;
+		}
+		Graph<Integer, Integer> edgeToVertexGraph = this.makeEdgesToVertices();
+		List<VertexColoringAlgorithm.Coloring<Integer>> colorings = new MinimalVertexColoring<>(edgeToVertexGraph).getAllColorings();
+		for (VertexColoringAlgorithm.Coloring<Integer> c : colorings) {
+			this.totalColorings.add(this.createTotalColoringObject(c));
+		}
+		return this.totalColorings;
 	}
 
 	@Override
 	public TotalColoring getColoring() {
-		Graph edgeToVertexGraph = this.makeEdgesToVertices();
-		VertexColoringAlgorithm.Coloring coloring = new MinimalVertexColoring(edgeToVertexGraph).getColoring();
-		return this.createTotalColoringObject(coloring);
+		if (this.totalColorings.isEmpty()) {
+			return this.getAllColorings().get(0);
+		} else {
+			return this.totalColorings.get(0);
+		}
 	}
 
-	private Graph makeEdgesToVertices() {
+	private Graph<Integer, Integer> makeEdgesToVertices() {
 		this.integerVMap = new HashMap<>();
 		this.integerEMap = new HashMap<>();
 
 		// quick hack. there probably exists a better solution.
 		Map<V, Integer> vIntegerMap = new HashMap<>();
 
-		Graph<Integer, Integer> edgeToVertexGraph = new PropertyGraph();
+		Graph<Integer, Integer> edgeToVertexGraph = new PropertyGraph<>();
 		VertexFactory vertexFactory = new IntegerVertexFactory();
 		Set<String> transformedEdges = new HashSet<>();
 
 		Set<Integer> vEdgeToVertexSet = new HashSet<>();
 
 		// iterate over vertices
-		for (Object v : this.graph.vertexSet()) {
-			Object newV;
+		for (V v : this.graph.vertexSet()) {
+			Integer newV;
 			if (!integerVMap.values().contains(v)) {
-				newV = vertexFactory.createVertex();
-				edgeToVertexGraph.addVertex((Integer) newV);
-				integerVMap.put((Integer) newV, (V) v);
-				vIntegerMap.put((V) v, (Integer) newV);
+				newV = (Integer) vertexFactory.createVertex();
+				edgeToVertexGraph.addVertex(newV);
+				integerVMap.put(newV, v);
+				vIntegerMap.put(v, newV);
 			} else {
 				newV = vIntegerMap.get(v);
 			}
 
 			// iterate over vertex v's edges
-			for (Object e : this.graph.outgoingEdgesOf((V) v)) {
+			for (E e : this.graph.outgoingEdgesOf(v)) {
 				if (!transformedEdges.contains(e.toString())) {
 					// make edge to vertex by creating new
 					// vertex that is situated inbetween
 					// v and the edges' target and creating
 					// edges from the new vertex to those two
 					// vertices.
-					Object edgeTarget = this.graph.getEdgeTarget((E) e);
+					V edgeTarget = this.graph.getEdgeTarget(e);
 
 					transformedEdges.add((e.toString()));
 					transformedEdges.add("(" + edgeTarget.toString() + " : " + v.toString() + ")");
 
-					Object newTargetVertex;
-					if (vIntegerMap.containsKey((V) edgeTarget)) {
-						newTargetVertex = vIntegerMap.get((V) edgeTarget);
+					Integer newTargetVertex;
+					if (vIntegerMap.containsKey(edgeTarget)) {
+						newTargetVertex = (Integer) vIntegerMap.get(edgeTarget);
 					} else {
-						newTargetVertex = vertexFactory.createVertex();
+						newTargetVertex = (Integer) vertexFactory.createVertex();
 					}
 
-					Object edgeToVertex = vertexFactory.createVertex();
+					Integer edgeToVertex = (Integer) vertexFactory.createVertex();
 
-					edgeToVertexGraph.addVertex((Integer) newTargetVertex);
-					edgeToVertexGraph.addVertex((Integer) edgeToVertex);
-					edgeToVertexGraph.addEdge((Integer) newV, (Integer) edgeToVertex);
-					edgeToVertexGraph.addEdge((Integer) edgeToVertex, (Integer) newTargetVertex);
-					edgeToVertexGraph.addEdge((Integer) newV, (Integer) newTargetVertex);
+					edgeToVertexGraph.addVertex(newTargetVertex);
+					edgeToVertexGraph.addVertex(edgeToVertex);
+					edgeToVertexGraph.addEdge(newV, edgeToVertex);
+					edgeToVertexGraph.addEdge(edgeToVertex, newTargetVertex);
+					edgeToVertexGraph.addEdge(newV, newTargetVertex);
 
-					integerEMap.put((Integer) edgeToVertex, (E) e);
-					integerVMap.put((Integer) newTargetVertex, (V) edgeTarget);
+					integerEMap.put(edgeToVertex, e);
+					integerVMap.put(newTargetVertex, edgeTarget);
 
-					vIntegerMap.put((V) edgeTarget, (Integer) newTargetVertex);
+					vIntegerMap.put(edgeTarget, newTargetVertex);
 
-					vEdgeToVertexSet.add((Integer) edgeToVertex);
+					vEdgeToVertexSet.add(edgeToVertex);
 				}
 			}
 		}
@@ -152,7 +173,7 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		return "(" + o1.toString() + " : " + o2.toString() + ")";
 	}
 
-	private TotalColoring createTotalColoringObject(VertexColoringAlgorithm.Coloring coloring) {
+	private TotalColoring<V, E> createTotalColoringObject(VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		Map<V, Integer> vertexColors = new HashMap<>();
 		Map<E, Integer> edgeColors = new HashMap<>();
 		int numberColors = coloring.getNumberColors();
@@ -165,6 +186,6 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 				edgeColors.put(this.integerEMap.get(o), (Integer) colors.get(o));
 			}
 		}
-		return new TotalColoringImpl(vertexColors, edgeColors, numberColors);
+		return new TotalColoringImpl<>(vertexColors, edgeColors, numberColors);
 	}
 }
