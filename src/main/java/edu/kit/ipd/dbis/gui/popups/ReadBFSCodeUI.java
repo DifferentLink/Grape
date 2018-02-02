@@ -32,7 +32,7 @@ public class ReadBFSCodeUI extends JFrame{
 		content.add(bfsCodeInput);
 
 		JButton readGraph = new JButton(language.getString("generateGraphs"));
-		readGraph.addActionListener(new ReadBFSCodeAction(generateController));
+		readGraph.addActionListener(new ReadBFSCodeAction(generateController, this));
 		readGraph.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		readGraph.setBackground(theme.assertiveBackground);
 		content.add(readGraph);
@@ -43,15 +43,18 @@ public class ReadBFSCodeUI extends JFrame{
 	private class ReadBFSCodeAction implements ActionListener {
 
 		private final GenerateController generateController;
+		private final ReadBFSCodeUI readBFSCodeUI;
 
-		public ReadBFSCodeAction(GenerateController generateController) {
+		public ReadBFSCodeAction(GenerateController generateController, ReadBFSCodeUI readBFSCodeUI) {
 			this.generateController = generateController;
+			this.readBFSCodeUI = readBFSCodeUI;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				generateController.generateBFSGraph(bfsCodeInput.getText());
+				readBFSCodeUI.dispose();
 			} catch (InvalidBfsCodeInputException e) {
 				//TODO: implement me
 				e.printStackTrace();
