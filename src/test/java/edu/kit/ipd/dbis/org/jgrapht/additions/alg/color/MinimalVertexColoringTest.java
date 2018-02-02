@@ -6,6 +6,7 @@ import org.jgrapht.alg.interfaces.VertexColoringAlgorithm.Coloring;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class MinimalVertexColoringTest {
 	@Test
 	public void isValidVertexColoring() {
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<String, Integer> graph = new PropertyGraph<>();
 		graph.addVertex("a");
 		graph.addVertex("b");
 		graph.addVertex("c");
@@ -57,7 +58,7 @@ public class MinimalVertexColoringTest {
 	}
 
 	@Test
-	public void getColorings() {
+	public void getColoring0() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -76,7 +77,7 @@ public class MinimalVertexColoringTest {
 	}
 
 	@Test
-	public void getColorings1() {
+	public void getColoring1() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -101,7 +102,7 @@ public class MinimalVertexColoringTest {
 	}
 
 	@Test
-	public void getColorings2() {
+	public void getColoring2() {
 		// based on this graph from wikipedia:
 		// https://en.wikipedia.org/wiki/File:Hadwiger_conjecture.svg
 		PropertyGraph graph = new PropertyGraph();
@@ -189,6 +190,90 @@ public class MinimalVertexColoringTest {
 
 		assertEquals(10, coloring.getNumberColors());
 		assertEquals(true, alg.isValidVertexColoring(coloring, graph));
+	}
+
+	@Test
+	public void getColorings() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex(0);
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(0, 3);
+		graph.addEdge(1, 2);
+
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		List<Coloring<Object>> colorings = alg.getAllColorings();
+		assertEquals(true, colorings.size() == 1);
+	}
+
+	@Test
+	public void getColorings2() {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		graph.addVertex(0);
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+		graph.addVertex(4);
+		graph.addVertex(5);
+
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(2, 3);
+		graph.addEdge(3, 4);
+		graph.addEdge(4, 5);
+
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		List<Coloring<Object>> colorings = alg.getAllColorings();
+		assertEquals(true, colorings.size() > 1);
+	}
+
+	@Test
+	public void isEquivalent() {
+		Map<Integer, Integer> c1colors = new HashMap<>();
+		Map<Integer, Integer> c2colors = new HashMap<>();
+		c1colors.put(0, 0);
+		c1colors.put(1, 1);
+
+		c2colors.put(0, 1);
+		c2colors.put(1, 0);
+
+		Coloring c1 = new VertexColoringAlgorithm.ColoringImpl(c1colors, 2);
+		Coloring c2 = new VertexColoringAlgorithm.ColoringImpl(c2colors, 2);
+
+		assertEquals(true, MinimalVertexColoring.equivalentColoring(c1, c2));
+	}
+
+	@Test
+	public void isEquivalent2() {
+		Map<Integer, Integer> c1colors = new HashMap<>();
+		Map<Integer, Integer> c2colors = new HashMap<>();
+		c1colors.put(0, 0);
+		c1colors.put(1, 1);
+		c1colors.put(2, 2);
+		c1colors.put(3, 1);
+		c1colors.put(4, 0);
+		c1colors.put(5, 1);
+		c1colors.put(6, 2);
+		c1colors.put(7, 1);
+
+		c2colors.put(0, 1);
+		c2colors.put(1, 1);
+		c2colors.put(2, 0);
+		c2colors.put(3, 1);
+		c2colors.put(4, 0);
+		c2colors.put(5, 2);
+		c2colors.put(6, 2);
+		c2colors.put(7, 2);
+
+		Coloring<Integer> c1 = new VertexColoringAlgorithm.ColoringImpl<>(c1colors, 3);
+		Coloring<Integer> c2 = new VertexColoringAlgorithm.ColoringImpl<>(c2colors, 3);
+
+		assertEquals(false, MinimalVertexColoring.equivalentColoring(c1, c2));
 	}
 
 	private PropertyGraph createCompleteGraph(int numberOfVertices) {
