@@ -178,6 +178,16 @@ public class GraphTable extends Table {
 
 	}
 
+	/**
+	 * Returns the values of a certain column of every graph that matches the filter criteria
+	 * @param filters determines how the database should be filters
+	 * @param column the column
+	 * @return the value of every given column
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
 	public LinkedList<Double> getValues(String[][] filters, String column) throws AccessDeniedForUserException,
 			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
 
@@ -261,6 +271,17 @@ public class GraphTable extends Table {
 
 	}
 
+	/**
+	 * Generates the MySQL-Query necessary to filter and sort the represented MySQL-table
+	 * @param filters determines how the MySQL-table should be filtered
+	 * @param column determines how the MySQL-table should be sorted
+	 * @param ascending determines whether the MySQL-table should be sorted ascending or descending
+	 * @return the according MySQL-Query
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 */
 	private String getFilteredTableQuery(String[][] filters, String column, boolean ascending)
 			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
 			ConnectionFailedException {
@@ -277,12 +298,23 @@ public class GraphTable extends Table {
 		return sql;
 	}
 
+	/**
+	 * Generates the MySQL-Query necessary to get the values of a certain column
+	 * @param filters determines how the MySQL-table should be filtered
+	 * @param column determines which values should be returned
+	 * @return the according MySQL-Query
+	 */
 	private String getValuesQuery(String[][] filters, String column) {
 		String sql = "SELECT " + column + " FROM " + this.name + " WHERE 0 = 0";
 		sql += this.filtersToQuery(filters);
 		return sql;
 	}
 
+	/**
+	 * Generates the part of a MySQL-Query that is responsible for filtering
+	 * @param filters determines how the MySQL-table should be filtered
+	 * @return the according part of a MySQL-Query
+	 */
 	private String filtersToQuery(String[][] filters) {
 		String sql = "";
 		for (int i = 0; i < filters.length; i++) {

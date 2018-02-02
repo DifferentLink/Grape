@@ -210,6 +210,14 @@ public abstract class Table {
 		return columns;
 	}
 
+	/**
+	 * Returns every column that shall be displayed on the gui-table
+	 * @return the column names
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 */
 	protected String getPropertyColumns()
 			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
 			ConnectionFailedException {
@@ -223,7 +231,8 @@ public abstract class Table {
 		for (String element : list) {
 			columns += (element + ", ");
 		}
-		return columns.substring(0, columns.length() - 2);
+		columns = (columns.length() > 0) ? (columns.substring(0, columns.length() - 2)) : (columns);
+		return columns;
 
 	}
 
