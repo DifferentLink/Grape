@@ -67,7 +67,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void addGraph(PropertyGraph graph)
+	public void addGraph(PropertyGraph<Integer, Integer> graph)
 			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
 			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
@@ -161,7 +161,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public void replaceGraph(int id, PropertyGraph graph)
+	public void replaceGraph(int id, PropertyGraph<Integer, Integer> graph)
 			throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException,
 			AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
 		this.permanentlyDeleteGraph(id);
@@ -189,7 +189,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public boolean graphExists(PropertyGraph graph)
+	public boolean graphExists(PropertyGraph<Integer, Integer> graph)
 			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
 			ConnectionFailedException {
 		try {
@@ -226,11 +226,11 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<PropertyGraph> getGraphs(String[][] filters, String column, boolean ascending)
+	public LinkedList<PropertyGraph<Integer, Integer>> getGraphs(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException {
 		try {
-			LinkedList<PropertyGraph> graphs = this.graphTable.getContent(filters, column, ascending);
+			LinkedList<PropertyGraph<Integer, Integer>> graphs = this.graphTable.getContent(filters, column, ascending);
 			return graphs;
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
@@ -238,7 +238,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public PropertyGraph getGraphById(int id)
+	public PropertyGraph<Integer, Integer> getGraphById(int id)
 			throws TablesNotAsExpectedException, ConnectionFailedException, DatabaseDoesNotExistException,
 			AccessDeniedForUserException, UnexpectedObjectException {
 		try {
@@ -253,7 +253,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<PropertyGraph> getUncalculatedGraphs()
+	public LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException {
 		try {

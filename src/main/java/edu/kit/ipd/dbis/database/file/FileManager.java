@@ -214,7 +214,7 @@ public class FileManager implements Connector {
 		names.add("state");
 		names.add("iscalculated");
 
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		Collection<Property> properties = graph.getProperties();
 
 		for (Property property : properties) {

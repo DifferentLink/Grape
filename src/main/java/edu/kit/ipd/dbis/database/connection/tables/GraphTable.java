@@ -4,6 +4,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
@@ -12,12 +13,8 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.sql.*;
+import java.util.*;
 
 /**
  * This class represents a MySQL-Table where PropertyGraph-Objects will be stored.
@@ -123,7 +120,7 @@ public class GraphTable extends Table {
 		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 		while (result.next()) {
 			try {
-				graphs.add((PropertyGraph) this.byteArrayToObject(result.getBytes("graph")));
+				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
 			} catch(Exception e) {
 
 			}
@@ -135,7 +132,7 @@ public class GraphTable extends Table {
 	public void insert(Serializable object) throws DatabaseDoesNotExistException, SQLException,
 			AccessDeniedForUserException, ConnectionFailedException, IOException, UnexpectedObjectException {
 
-		PropertyGraph graph = getInstanceOf(object);
+		PropertyGraph<Integer, Integer> graph = getInstanceOf(object);
 		if (this.graphExists(graph)) return;
 		Collection<Property> properties = graph.getProperties();
 		String columns = "(";
@@ -171,11 +168,14 @@ public class GraphTable extends Table {
 	}
 
 	@Override
-	protected PropertyGraph getInstanceOf(Object object) throws UnexpectedObjectException {
-		if (object instanceof PropertyGraph) {
-			return (PropertyGraph) object;
+	protected PropertyGraph<Integer, Integer> getInstanceOf(Object object) throws UnexpectedObjectException {
+
+		try {
+			return (PropertyGraph<Integer, Integer>) object;
+		} catch (ClassCastException e) {
+			throw new UnexpectedObjectException();
 		}
-		throw new UnexpectedObjectException();
+
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class GraphTable extends Table {
 				+ "state boolean, "
 				+ "iscalculated boolean";
 
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		Collection<Property> properties = graph.getProperties();
 
 		for (Property property : properties) {
@@ -223,7 +223,7 @@ public class GraphTable extends Table {
 		for (int i : ids) {
 			try {
 				if (!this.graphExists(table.getContent(i))) {
-					PropertyGraph graph = table.getContent(i);
+					PropertyGraph<Integer, Integer> graph = table.getContent(i);
 					graph.setId(this.getId());
 					this.insert(graph);
 				}
@@ -256,7 +256,7 @@ public class GraphTable extends Table {
 	 * @param graph a PropertyGraph-object
 	 * @return the BfsCode of the given graph as String
 	 */
-	private String minimalBfsCodeToString(PropertyGraph graph) {
+	private String minimalBfsCodeToString(PropertyGraph<Integer, Integer> graph) {
 
 		String s = "";
 		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
@@ -279,7 +279,7 @@ public class GraphTable extends Table {
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	public boolean graphExists(PropertyGraph graph)
+	public boolean graphExists(PropertyGraph<Integer, Integer> graph)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
 
