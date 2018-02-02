@@ -4,14 +4,11 @@ import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
 import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.filter.Filtersegment;
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 
 /**
@@ -226,12 +223,11 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<PropertyGraph<Integer, Integer>> getGraphs(String[][] filters, String column, boolean ascending)
+	public ResultSet getGraphs(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException {
 		try {
-			LinkedList<PropertyGraph<Integer, Integer>> graphs = this.graphTable.getContent(filters, column, ascending);
-			return graphs;
+			return this.graphTable.getContent(filters, column, ascending);
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}

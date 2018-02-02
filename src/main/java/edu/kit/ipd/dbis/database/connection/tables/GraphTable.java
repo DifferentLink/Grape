@@ -143,21 +143,14 @@ public class GraphTable extends Table {
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	public LinkedList<PropertyGraph<Integer, Integer>> getContent(String[][] filters, String column, boolean ascending)
+	public ResultSet getContent(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
 
-		String sql = this.filtersToString(filters, column, ascending);
+		String sql = this.getFilteredTableQuery(filters, column, ascending);
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
-		while (result.next()) {
-			try {
-				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
-			} catch(Exception e) {
 
-			}
-		}
-		return graphs;
+		return result;
 	}
 
 	/**
@@ -188,7 +181,7 @@ public class GraphTable extends Table {
 	public LinkedList<Double> getValues(String[][] filters, String column) throws AccessDeniedForUserException,
 			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
 
-		String sql = this.filtersToString(filters, column);
+		String sql = this.getValuesQuery(filters, column);
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
 		LinkedList<Double> values = new LinkedList<>();
 		while (result.next()) {
@@ -268,16 +261,13 @@ public class GraphTable extends Table {
 
 	}
 
-	private String filtersToString(String[][] filters, String column, boolean ascending) {
+	private String getFilteredTableQuery(String[][] filters, String column, boolean ascending)
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
 
-		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = true";
+		String sql = "SELECT " + this.getPropertyColumns() + " FROM " + this.name + " WHERE iscalculated = true";
 		String order = (ascending) ? ("ASC") : ("DESC");
-
-		for (int i = 0; i < filters.length; i++) {
-			for (int j = 0; j < filters[i].length; j++) {
-				sql += " AND" + filters[i][j];
-			}
-		}
+		sql += this.filtersToQuery(filters);
 
 		if (!column.equals("bfscode")) {
 			sql += " ORDER BY " + column + " " + order;
@@ -287,9 +277,14 @@ public class GraphTable extends Table {
 		return sql;
 	}
 
-	private String filtersToString(String[][] filters, String column) {
+	private String getValuesQuery(String[][] filters, String column) {
 		String sql = "SELECT " + column + " FROM " + this.name + " WHERE 0 = 0";
+		sql += this.filtersToQuery(filters);
+		return sql;
+	}
 
+	private String filtersToQuery(String[][] filters) {
+		String sql = "";
 		for (int i = 0; i < filters.length; i++) {
 			for (int j = 0; j < filters[i].length; j++) {
 				sql += " AND" + filters[i][j];
