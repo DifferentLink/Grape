@@ -276,7 +276,6 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			graph.makeConnected();
 			PropertyGraph propertyGraph = graph.asPropertyGraph();
 			if (graphEditorController.isValidGraph(propertyGraph)) {
 				graphEditorController.addEditedGraph(propertyGraph, graph.getId());

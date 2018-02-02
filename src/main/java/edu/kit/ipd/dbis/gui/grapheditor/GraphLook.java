@@ -41,7 +41,7 @@ public class GraphLook {
 
 		final Point center =
 				new Point(Math.abs(upperLeft.x - lowerRight.x) / 2, Math.abs(upperLeft.y - lowerRight.y) / 2);
-		final double radius = Math.min(center.x, center.y) * .4;
+		final double radius = Math.min(center.x, center.y) * .75;
 		final double angle = Math.toRadians(360d / (double) vertices.size());
 		int i = 0;
 
