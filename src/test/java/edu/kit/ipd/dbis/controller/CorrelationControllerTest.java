@@ -15,7 +15,7 @@ public class CorrelationControllerTest {
 	@Test
 	public void newCorrelationTestRightInput() {
 		String input = "";
-		CorrelationController c = new CorrelationController();
+		CorrelationController c = CorrelationController.getInstance();
 		List<CorrelationOutput> output = null;
 		try {
 			output = c.addNewCorrelation(input);
@@ -31,7 +31,7 @@ public class CorrelationControllerTest {
 	@Test
 	public void newCorrelationTestWrongInput() {
 		String input = "wrong input";
-		CorrelationController c = new CorrelationController();
+		CorrelationController c = CorrelationController.getInstance();
 		List<CorrelationOutput> output = null;
 		try {
 			output = c.addNewCorrelation(input);
