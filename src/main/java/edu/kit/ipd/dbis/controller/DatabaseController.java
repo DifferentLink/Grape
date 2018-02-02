@@ -132,6 +132,7 @@ public class DatabaseController {
 		editor.setDatabase(database);
 		filter.setDatabase(database);
 		correlation.setDatabase(database);
+		log.setDatabase(database);
 	}
 
 }
