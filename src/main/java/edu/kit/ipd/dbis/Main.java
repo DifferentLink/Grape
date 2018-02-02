@@ -21,7 +21,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> new GrapeUI(CalculationController.getInstance(),
-				new CorrelationController(),
+				CorrelationController.getInstance(),
 				new DatabaseController(),
 				FilterController.getInstance(),
 				GenerateController.getInstance(),
