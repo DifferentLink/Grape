@@ -81,15 +81,7 @@ public class GenerateController {
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
-		Set<PropertyGraph> graphSet = new HashSet<>();
-		for (int i = 0; i < 10; i++) {
-			try {
-				graphSet.add(database.getGraphById(i));
-			} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException | DatabaseDoesNotExistException | UnexpectedObjectException e) {
-				e.printStackTrace();
-			}
-		}
-		table.update(graphSet);
+		table.update(filter.getFilteredAndSortedGraphs());
 	}
 
 	/**
@@ -156,7 +148,6 @@ public class GenerateController {
 				database.addGraph(graph);
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
 					| ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-				e.printStackTrace();
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
