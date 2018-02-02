@@ -1,6 +1,11 @@
 package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
 import java.util.TreeSet;
@@ -13,45 +18,63 @@ abstract class Correlation {
     private int attributeCounter;
     private Property property;
     private boolean maximum;
-    private GraphDatabase database;
 
     /**
      * method which is used to check filters for a specific correlation
+     * @param database database which inherits graphs for the correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
+     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws AccessDeniedForUserException thrown if there is no access to database
+     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMaximum();
+    public abstract TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws DatabaseDoesNotExistException,
+            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException;
 
     /**
      * method which is used to check filters for a specific correlation monitoring only one property
      * @param property1 property to focus on
+     * @param database database which inherits graphs for the correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
+     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws AccessDeniedForUserException thrown if there is no access to database
+     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMaximum(Property property1);
+    public abstract TreeSet<CorrelationOutput> useMaximum(Property property1, GraphDatabase database) throws
+            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
+            TablesNotAsExpectedException;
 
     /**
      * method which is used to check filters for a specific correlation
+     * @param database database which inherits graphs for the correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
+     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws AccessDeniedForUserException thrown if there is no access to database
+     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMinimum();
+    public abstract TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws
+            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
+            TablesNotAsExpectedException;
 
     /**
      * method which is used to check filters for a specific correlation monitoring only one property
      * @param property1 property to focus on
+     * @param database database which inherits graphs for the correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
+     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws AccessDeniedForUserException thrown if there is no access to database
+     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMinimum(Property property1);
-
-    /**
-     * method which is used to set a specific database
-     * @param database new database to set
-     */
-    void setDatabase(GraphDatabase database) {
-        this.database = database;
-    }
+    public abstract TreeSet<CorrelationOutput> useMinimum(Property property1, GraphDatabase database)
+            throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
+            TablesNotAsExpectedException;
 
     /**
      * setter of attribute attributeCounter
@@ -79,13 +102,6 @@ abstract class Correlation {
         this.maximum = maximum;
     }
 
-    /**
-     * used to get the database of a specific correlation
-     * @return database of a specific correlation
-     */
-    GraphDatabase getDatabase() {
-        return database;
-    }
     /**
      * getter of attribute attributeCounter
      * @return integer value which inherits the information
