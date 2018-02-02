@@ -11,6 +11,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.Proportio
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -241,7 +242,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public LinkedList<PropertyGraph<Integer, Integer>> getFilteredAndAscendingSortedGraphs(Property property) throws
+	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), true);
@@ -256,7 +257,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public LinkedList<PropertyGraph<Integer, Integer>> getFilteredAndDescendingSortedGraphs(Property property) throws
+	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), false);
@@ -270,7 +271,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
+	public ResultSet getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
             AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), "id", true);
     }
