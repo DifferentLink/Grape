@@ -6,6 +6,8 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 import org.kohsuke.MetaInfServices;
 
+import java.util.List;
+
 
 /**
  * the total coloring property
@@ -22,8 +24,8 @@ public class TotalColoring<V> extends ComplexProperty {
 	}
 
 	@Override
-	protected TotalColoringAlgorithm.TotalColoring calculateAlgorithm(PropertyGraph graph) {
+	protected List<TotalColoringAlgorithm.TotalColoring> calculateAlgorithm(PropertyGraph graph) {
 		MinimalTotalColoring alg = new MinimalTotalColoring(graph);
-		return alg.getColoring();
+		return alg.getAllColorings();
 	}
 }
