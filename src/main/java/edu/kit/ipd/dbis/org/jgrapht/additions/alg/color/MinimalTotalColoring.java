@@ -30,6 +30,14 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 
+	/**
+	 * Determines all minimal total colorings.
+	 *
+	 * @return List of minimal total colorings
+	 */
+	public List<TotalColoring> getAllColorings() {
+		return null;
+	}
 	@Override
 	public TotalColoring getColoring() {
 		Graph edgeToVertexGraph = this.makeEdgesToVertices();

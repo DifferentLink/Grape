@@ -40,11 +40,11 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	}
 
 	/**
-	 * Determines all minimal colorings of a graph.
+	 * Determines all minimal vertex colorings.
 	 *
-	 * @return List of minimal colorings
+	 * @return List of minimal vertex colorings
 	 */
-	public List<Coloring<V>> getColorings() {
+	public List<Coloring<V>> getAllColorings() {
 		int numberOfVertices = this.graph.vertexSet().size();
 
 		// give vertices an order
@@ -112,7 +112,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	@Override
 	public Coloring<V> getColoring() {
 		if (this.colorings.isEmpty()) {
-			return this.getColorings().get(0);
+			return this.getAllColorings().get(0);
 		} else {
 			return this.colorings.get(0);
 		}
