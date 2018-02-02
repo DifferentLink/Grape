@@ -326,21 +326,14 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 * Parses a BfsCode of a PropertyGraph
+	 * Returns the string of the BfsCode of a PropertyGraph by using its toString()-method
 	 * @param graph a PropertyGraph-object
 	 * @return the BfsCode of the given graph as String
 	 */
 	private String minimalBfsCodeToString(PropertyGraph<Integer, Integer> graph) {
-
-		String s = "";
 		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
 		BfsCodeAlgorithm.BfsCode code = (BfsCodeAlgorithm.BfsCode) bfs.getValue();
-		int[] bfsCode = code.getCode();
-
-		for (int i = 0; i < bfsCode.length; i++) {
-			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
-		}
-		return s;
+		return code.toString();
 
 	}
 
