@@ -38,7 +38,7 @@ public class FileManager implements Connector {
 			throws TableAlreadyExistsException, DatabaseDoesNotExistException, AccessDeniedForUserException,
 			ConnectionFailedException, SQLException {
 		Connection connection = getConnection(url, user, password);
-		if (tableExists(connection, name)) {
+		if (tableExists(connection, name) || name.equals("database")) {
 			throw new TableAlreadyExistsException();
 		}
 		GraphTable graphTable = new GraphTable(url, user, password, name);
@@ -104,9 +104,6 @@ public class FileManager implements Connector {
 		sql = "DROP TABLE " + filters.getName();
 		this.getConnection(
 				filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
-
-		//TODO: delete .txt file
-
 	}
 
 	/**
@@ -217,7 +214,7 @@ public class FileManager implements Connector {
 		names.add("state");
 		names.add("iscalculated");
 
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		Collection<Property> properties = graph.getProperties();
 
 		for (Property property : properties) {

@@ -89,6 +89,7 @@ public class GrapeUI {
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
+		generateController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
 		JScrollPane scrollPane = new JScrollPane(tableUI);
 		tableUI.setFillsViewportHeight(true);

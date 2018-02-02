@@ -8,6 +8,8 @@ import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class CorrelationRequestUI extends JFrame {
@@ -33,6 +35,7 @@ public class CorrelationRequestUI extends JFrame {
 		buttonAlignment.setLayout(new BoxLayout(buttonAlignment, BoxLayout.X_AXIS));
 		buttonAlignment.add(Box.createHorizontalGlue());
 		JButton addToTable = new JButton("Show");
+		addToTable.addActionListener(new AddToTableAction(this));
 		theme.style(addToTable);
 		buttonAlignment.add(addToTable);
 
@@ -40,5 +43,18 @@ public class CorrelationRequestUI extends JFrame {
 		this.add(container);
 		this.pack();
 		this.setResizable(false);
+	}
+
+	private class AddToTableAction implements ActionListener {
+		private final CorrelationRequestUI correlationRequestUI;
+
+		public AddToTableAction(CorrelationRequestUI correlationRequestUI) {
+			this.correlationRequestUI = correlationRequestUI;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			correlationRequestUI.dispose();
+		}
 	}
 }

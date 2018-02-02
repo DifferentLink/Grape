@@ -5,7 +5,9 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -71,7 +73,6 @@ public class CalculationController implements Runnable {
 		// Trigger Graph calculation
 
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
-			while (calculationStatus) {
 				graph.calculateProperties();
 				// Replacing graphs
 				try {
@@ -81,7 +82,7 @@ public class CalculationController implements Runnable {
 					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
 				table.update(filter.getFilteredAndSortedGraphs()); // todo implement calculatedGraphProperties()
-			}
+
 		}
 
 	}
