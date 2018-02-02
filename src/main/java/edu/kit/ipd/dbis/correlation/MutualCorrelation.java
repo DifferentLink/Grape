@@ -102,12 +102,14 @@ public class MutualCorrelation extends Correlation {
     private static double calculateCorrelation(Property firstProperty, Property secondProperty,
                                                GraphDatabase database) throws DatabaseDoesNotExistException,
             AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
-        //TODO: Hier muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
-        LinkedList<Double> firstPropertyValues = database.getValues(null, firstProperty.toString());
+        Filtermanagement manager = new Filtermanagement();
+        manager.setDatabase(database);
+        LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
+                firstProperty.toString());
         double returnValue = 0;
         while (!firstPropertyValues.isEmpty()) {
-            //TODO: Hir muss der Teil nach dem = durch eine Methode aus der Datenbank ersetzt werden
-            LinkedList<Double> secondPropertyValues = database.getValues(null, secondProperty.toString());
+            LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
+                    secondProperty.toString());
             double i = MutualCorrelation.getMinimum(firstPropertyValues);
             while (!secondPropertyValues.isEmpty()) {
                 double j = MutualCorrelation.getMinimum(secondPropertyValues);
@@ -155,14 +157,5 @@ public class MutualCorrelation extends Correlation {
             }
         }
         return minimum;
-    }
-
-    //TODO: Diese Methode muss nach DB-Zugriff entfernt werden
-    private static LinkedList<Double> generateRandomLinkedList() {
-        LinkedList<Double> outputList = new LinkedList<>();
-        for (int i = 0; i < 3; i++) {
-            outputList.add(Math.random());
-        }
-        return outputList;
     }
 }
