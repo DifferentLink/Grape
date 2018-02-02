@@ -8,6 +8,7 @@ import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.sql.ResultSet;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -147,15 +148,14 @@ public class FilterController {
 	 *
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndSortedGraphs() {
-		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+	public ResultSet getFilteredAndSortedGraphs() {
 		try {
-			graphs = filter.getFilteredAndSortedGraphs();
+			return filter.getFilteredAndSortedGraphs();
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
 				| AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		return graphs;
+		return null;
 	}
 
 	/**
@@ -165,15 +165,14 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndAscendingSortedGraphs(Property property) {
-		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) {
 		try {
-			graphs = filter.getFilteredAndAscendingSortedGraphs(property);
+			return filter.getFilteredAndAscendingSortedGraphs(property);
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
 				| TablesNotAsExpectedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		return graphs;
+		return null;
 	}
 
 	/**
@@ -182,15 +181,14 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndDescendingSortedGraphs(Property property) {
-		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) {
 		try {
-			graphs = filter.getFilteredAndDescendingSortedGraphs(property);
+			return filter.getFilteredAndDescendingSortedGraphs(property);
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
 				| TablesNotAsExpectedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		return graphs;
+		return null;
 	}
 }
 

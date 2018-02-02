@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -81,7 +82,11 @@ public class CalculationController implements Runnable {
 						| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
 					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
+			try {
 				table.update(filter.getFilteredAndSortedGraphs()); // todo implement calculatedGraphProperties()
+			} catch (SQLException e) {
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			}
 
 		}
 
