@@ -4,13 +4,15 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgori
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 public class MinimalTotalColoringTest {
 
 	@Test
 	public void getColoring() {
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<String, String> graph = new PropertyGraph<>();
 		graph.addVertex("a");
 		graph.addVertex("b");
 		graph.addVertex("c");
@@ -23,8 +25,30 @@ public class MinimalTotalColoringTest {
 		graph.addEdge("b", "d");
 		graph.addEdge("c", "d");
 
-		MinimalTotalColoring totalColoring = new MinimalTotalColoring(graph);
+		MinimalTotalColoring<String, String> totalColoring = new MinimalTotalColoring<>(graph);
 		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
 		assertEquals(5, coloring.getNumberColors());
+	}
+
+	@Test
+	public void getAllColorings() {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		graph.addVertex(0);
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+		graph.addVertex(4);
+		graph.addVertex(5);
+
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(2, 3);
+		graph.addEdge(3, 4);
+		graph.addEdge(4, 5);
+
+		MinimalTotalColoring<String, String> totalColoring = new MinimalTotalColoring<>(graph);
+		List<TotalColoringAlgorithm.TotalColoring<String, String>> colorings = totalColoring.getAllColorings();
+		assertEquals(true, colorings.size() > 1);
 	}
 }
