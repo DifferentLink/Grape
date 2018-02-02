@@ -206,7 +206,7 @@ public class MinimalVertexColoringTest {
 		graph.addEdge(1, 2);
 
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
-		List<Coloring<Object>> colorings = alg.getColorings();
+		List<Coloring<Object>> colorings = alg.getAllColorings();
 		assertEquals(true, colorings.size() == 1);
 	}
 
@@ -228,7 +228,7 @@ public class MinimalVertexColoringTest {
 		graph.addEdge(4, 5);
 
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
-		List<Coloring<Object>> colorings = alg.getColorings();
+		List<Coloring<Object>> colorings = alg.getAllColorings();
 		assertEquals(true, colorings.size() > 1);
 	}
 
