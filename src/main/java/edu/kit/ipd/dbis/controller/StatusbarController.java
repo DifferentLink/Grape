@@ -163,5 +163,8 @@ public class StatusbarController {
 
 	}
 
+	public Log getLog() {
+		return log;
+	}
 }
 
