@@ -210,6 +210,23 @@ public abstract class Table {
 		return columns;
 	}
 
+	protected String getPropertyColumns()
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
+
+		LinkedList<String> list = this.getColumns();
+		list.remove("graph");
+		list.remove("state");
+		list.remove("iscalculated");
+
+		String columns = "";
+		for (String element : list) {
+			columns += (element + ", ");
+		}
+		return columns.substring(0, columns.length() - 2);
+
+	}
+
 	/**
 	 *
 	 * @return Value of the next free id.
