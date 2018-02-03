@@ -65,18 +65,15 @@ public class CalculationController {
 	 * of the database and induces their saving in the database.
 	 */
 	public void calculateAndSaveProperties() {
-		LinkedList<PropertyGraph<Integer, Integer>> graphs = null;
+		PropertyGraph<Integer, Integer> graph = null;
+		Boolean hasUncalculatedGraph = false;
 		try {
-			graphs = database.getUncalculatedGraphs();
+			hasUncalculatedGraph = database.hasUncalculatedGraph();
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
 				| ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		if (graphs == null) {
-			return;
-		}
-		// Trigger Graph calculation
-		for (PropertyGraph<Integer, Integer> graph : graphs) {
+		if (hasUncalculatedGraph) {
 			graph.calculateProperties();
 			// Replacing graphs
 			try {
@@ -92,6 +89,7 @@ public class CalculationController {
 			}
 		}
 	}
+
 
 	/**
 	 * Gets number not calculated graphs.
