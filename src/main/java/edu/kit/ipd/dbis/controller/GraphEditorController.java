@@ -106,6 +106,16 @@ public class GraphEditorController {
 		}
 	}
 
+	public PropertyGraph<Integer, Integer> getGraphById(int id) {
+		PropertyGraph<Integer, Integer> graph = null;
+		try {
+			graph = database.getGraphById(id);
+		} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException | DatabaseDoesNotExistException | UnexpectedObjectException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
+		return graph;
+	}
+
 	/**
 	 * checks if the graph is valid
 	 *
