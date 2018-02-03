@@ -5,13 +5,10 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.LinkedList;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
@@ -68,7 +65,7 @@ public class CalculationController {
 		PropertyGraph<Integer, Integer> graph = null;
 		Boolean hasUncalculatedGraph = false;
 		try {
-			hasUncalculatedGraph = database.hasUncalculatedGraph();
+			hasUncalculatedGraph = database.hasUncalculatedGraphs();
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
 				| ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
@@ -99,7 +96,7 @@ public class CalculationController {
 	public int getNumberNotCalculatedGraphs() {
 		int numberGraphs = 0;
 		try {
-			numberGraphs = database.getUncalculatedGraphs().size();
+			numberGraphs = database.getUncalculatedGraph().size();
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
 				| ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));

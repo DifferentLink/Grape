@@ -101,7 +101,7 @@ public class GenerateControllerTest {
 		}
 		LinkedList<PropertyGraph<Integer, Integer>> graphs = null;
 		try {
-			graphs = database.getUncalculatedGraphs();
+			graphs = database.getUncalculatedGraph();
 		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException |
 				ConnectionFailedException e) {
 			e.printStackTrace();

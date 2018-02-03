@@ -230,15 +230,18 @@ public interface DatabaseManager {
 			AccessDeniedForUserException, UnexpectedObjectException;
 
 	/**
-	 *
-	 * @return all PropertyGraph-Objects in the MySQL-Database that are marked as uncalculated.
+	 * @return a PropertyGraph-Object in the MySQL-Database that is marked as uncalculated.
 	 * @throws AccessDeniedForUserException
 	 * @throws DatabaseDoesNotExistException
 	 * @throws ConnectionFailedException
 	 * @throws TablesNotAsExpectedException
 	 */
-	LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs()
+	PropertyGraph<Integer, Integer> getUncalculatedGraph()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			TablesNotAsExpectedException, UnexpectedObjectException;
+
+	boolean hasUncalculatedGraphs()
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 
 	/**
@@ -254,5 +257,6 @@ public interface DatabaseManager {
 	LinkedList<Double> getValues(String[][] filters, String column)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
+
 }
 
