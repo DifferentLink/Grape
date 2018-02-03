@@ -26,7 +26,6 @@ public class GenerateController {
 	private BulkGraphGenerator generator;
 	private StatusbarController log;
 	private NonEditableTableModel table;
-	private FilterController filter;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -34,7 +33,6 @@ public class GenerateController {
 	private GenerateController() {
 		this.log = StatusbarController.getInstance();
 		this.generator = new BulkRandomConnectedGraphGenerator();
-		this.filter = FilterController.getInstance();
 	}
 
 	/**
