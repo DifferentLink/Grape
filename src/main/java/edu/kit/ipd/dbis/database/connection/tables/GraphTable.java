@@ -103,7 +103,7 @@ public class GraphTable extends Table {
 			}
 		}
 
-		graph.setId(this.getId());
+		this.setIdGraph(graph);
 		columns += "graph, id, bfscode, state, iscalculated)";
 		values += "?, " + graph.getId()
 				+ ", '" + this.minimalBfsCodeToString(graph) + "'"
@@ -347,6 +347,16 @@ public class GraphTable extends Table {
 		BfsCodeAlgorithm.BfsCode code = (BfsCodeAlgorithm.BfsCode) bfs.getValue();
 		return code.toString();
 
+	}
+
+	private void setIdGraph(PropertyGraph<Integer, Integer> graph)
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
+		try {
+			graph.getId();
+		} catch (NullPointerException e) {
+			graph.setId(this.getId());
+		}
 	}
 
 }
