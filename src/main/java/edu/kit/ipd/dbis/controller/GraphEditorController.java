@@ -63,7 +63,7 @@ public class GraphEditorController {
 	 * @param newGraph the PropertyGraph<V,E> to add.
 	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
-	public void addEditedGraph(PropertyGraph newGraph, int oldID) {
+	public void addEditedGraph(PropertyGraph<Integer, Integer> newGraph, int oldID) {
 		Boolean isDuplicate = null;
 		try {
 			isDuplicate = database.graphExists(newGraph);
@@ -71,9 +71,7 @@ public class GraphEditorController {
 				| AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		if (isDuplicate) {
-			return;
-		} else {
+		if (!isDuplicate) {
 			try {
 				database.addGraph(newGraph);
 				log.addEvent(ADD, newGraph.getId());
@@ -96,7 +94,7 @@ public class GraphEditorController {
 	 *
 	 * @param graph the graph
 	 */
-	public void addNewGraph(PropertyGraph graph) throws InvalidGraphInputException { // todo only duplicate check??
+	public void addNewGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException { // todo only duplicate check??
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
@@ -114,7 +112,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
 	 */
-	public Boolean isValidGraph(PropertyGraph graph) throws InvalidGraphInputException {
+	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
 		Boolean duplicate = true;
 		try {
 			duplicate = database.graphExists(graph);
@@ -133,7 +131,7 @@ public class GraphEditorController {
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 */
-	public void addNextDenserToDatabase(PropertyGraph graph) {
+	public void addNextDenserToDatabase(PropertyGraph<Integer, Integer> graph) {
 		NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(graph);
 		PropertyGraph<Integer, Integer> denserGraph;
 		denserGraph = denserGraphFinder.getNextDenserGraph();
@@ -152,7 +150,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the graphcolorization.
 	 */
-	public VertexColoringAlgorithm.Coloring getVertexColoring(PropertyGraph graph) {
+	public VertexColoringAlgorithm.Coloring getVertexColoring(PropertyGraph<Integer, Integer> graph) {
 		MinimalVertexColoring coloring = new MinimalVertexColoring(graph);
 		return coloring.getColoring();
 	}
@@ -163,7 +161,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the graphcolorization.
 	 */
-	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph graph) {
+	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph<Integer, Integer> graph) {
 		MinimalTotalColoring coloring = new MinimalTotalColoring(graph);
 		return coloring.getColoring();
 	}
