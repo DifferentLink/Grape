@@ -25,6 +25,7 @@ public class GenerateController {
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
 	private StatusbarController log;
+	private CalculationController calculation;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -32,6 +33,8 @@ public class GenerateController {
 	private GenerateController() {
 		this.log = StatusbarController.getInstance();
 		this.generator = new BulkRandomConnectedGraphGenerator();
+		this.log = StatusbarController.getInstance();
+		this.calculation = CalculationController.getInstance();
 	}
 
 	/**
@@ -93,10 +96,9 @@ public class GenerateController {
 	 * @param bfsCode the BFS Code of the graph to save.
 	 * @throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
-	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
-		if (isValidBFS(bfsCode)) {
+	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException { //TODO: check for valid BFS input
 			// Parsing String into int[]
-			String[] splitCode = bfsCode.split("\\[,]");
+			String[] splitCode = bfsCode.split(",");
 			int[] code = new int[splitCode.length];
 			for (int i = 0; i < splitCode.length; i++) {
 				code[i] = Integer.parseInt(splitCode[i]);
@@ -110,9 +112,6 @@ public class GenerateController {
 					| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-		} else {
-			throw new InvalidBfsCodeInputException("BfsCode is not valid");
-		}
 	}
 
 	/**
