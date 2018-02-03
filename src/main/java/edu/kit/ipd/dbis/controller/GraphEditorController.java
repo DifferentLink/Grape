@@ -102,13 +102,11 @@ public class GraphEditorController {
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
+				log.addEvent(ADD, graph.getId());
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
 					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-			// Creating Event
-			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
-			log.addEvent(ADD, graph.getId());
 		}
 	}
 
@@ -138,11 +136,12 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 */
 	public void addNextDenserToDatabase(PropertyGraph graph) {
-		NextDenserGraphFinder denserGraph = new NextDenserGraphFinder(graph);
+		NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(graph);
+		PropertyGraph<Integer, Integer> denserGraph;
+		denserGraph = denserGraphFinder.getNextDenserGraph();
 		try {
-			database.addGraph(denserGraph.getNextDenserGraph());
-			// TODO get right id!
-			log.addEvent(ADD, denserGraph.getNextDenserGraph().getId());
+			database.addGraph(denserGraph);
+			log.addEvent(ADD, denserGraph.getId());
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
 				| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
