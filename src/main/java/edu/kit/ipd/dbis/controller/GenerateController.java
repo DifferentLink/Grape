@@ -58,10 +58,6 @@ public class GenerateController {
 		this.database = database;
 	}
 
-	public void setTableModel(NonEditableTableModel table) {
-		this.table = table;
-	}
-
 	/**
 	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
 	 *
@@ -74,19 +70,12 @@ public class GenerateController {
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InvalidGeneratorInputException {
-
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
-		// todo: solange generieren bis die gewünschte anzahl von graphen existiert!
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
-		try {
-			table.update(filter.getFilteredAndSortedGraphs());
-		} catch (SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-		}
 	}
 
 	/**

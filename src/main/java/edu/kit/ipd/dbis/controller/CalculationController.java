@@ -18,13 +18,13 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 /**
  * The type Calculation controller.
  */
-public class CalculationController implements Runnable {
+public class CalculationController {
 
 	private Boolean calculationStatus;
 	private StatusbarController log;
 	private GraphDatabase database;
 	private FilterController filter;
-	private NonEditableTableModel table; // todo initialize table
+	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static CalculationController calculation;
@@ -56,11 +56,15 @@ public class CalculationController implements Runnable {
 		this.database = database;
 	}
 
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
+	}
+
 	/**
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
 	 */
-	public void run() {
+	public void calculateAndSaveProperties() {
 		LinkedList<PropertyGraph<Integer, Integer>> graphs = null;
 		try {
 			graphs = database.getUncalculatedGraphs();
@@ -72,24 +76,21 @@ public class CalculationController implements Runnable {
 			return;
 		}
 		// Trigger Graph calculation
-
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
-				graph.calculateProperties();
-				// Replacing graphs
-				try {
-					database.replaceGraph(graph.getId(), graph);
-				} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException
-						| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
-					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-				}
+			graph.calculateProperties();
+			// Replacing graphs
 			try {
-				table.update(filter.getFilteredAndSortedGraphs()); // todo implement calculatedGraphProperties()
+				database.replaceGraph(graph.getId(), graph);
+			} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException
+					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
+				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			}
+			try {
+				tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (SQLException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-
 		}
-
 	}
 
 	/**
