@@ -25,7 +25,6 @@ public class GenerateController {
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
 	private StatusbarController log;
-	private NonEditableTableModel table;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
