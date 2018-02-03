@@ -76,21 +76,19 @@ public class GraphEditorController {
 		} else {
 			try {
 				database.addGraph(newGraph);
+				log.addEvent(ADD, newGraph.getId());
+				try {
+					database.deleteGraph(oldID);
+					log.addEvent(REMOVE, oldID);
+				} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
+						| ConnectionFailedException e) {
+					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+				}
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
 					| ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
-			log.addEvent(ADD, newGraph.getId());
-			try {
-				database.deleteGraph(oldID);
-			} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
-					| ConnectionFailedException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
-			log.addEvent(REMOVE, oldID);
 		}
-
 	}
 
 	/**
