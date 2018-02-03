@@ -349,11 +349,21 @@ public class GraphTable extends Table {
 
 	}
 
+	/**
+	 * Sets the id of a graph
+	 * @param graph the PropertyGraph-object
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 */
 	private void setIdGraph(PropertyGraph<Integer, Integer> graph)
 			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
 			ConnectionFailedException {
 		try {
-			graph.getId();
+			if (this.getIds().contains(graph.getId())) {
+				graph.setId(this.getId());
+			}
 		} catch (NullPointerException e) {
 			graph.setId(this.getId());
 		}
