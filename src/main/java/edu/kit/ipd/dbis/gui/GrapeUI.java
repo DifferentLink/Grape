@@ -25,6 +25,14 @@ import java.util.ResourceBundle;
 
 public class GrapeUI {
 
+	private final CalculationController calculationController;
+	private final CorrelationController correlationController;
+	private final DatabaseController databaseController;
+	private final FilterController filterController;
+	private final GenerateController generateController;
+	private final GraphEditorController graphEditorController;
+	private final NonEditableTableModel tableModel;
+
 	private GraphEditorUI graphEditorUI;
 	private MenuUI menuUI;
 	private FilterUI filterUI;
@@ -47,6 +55,12 @@ public class GrapeUI {
 	               Log log,
 	               ResourceBundle language,
 	               Theme theme) {
+		this.calculationController = calculationController;
+		this.correlationController = correlationController;
+		this.databaseController = databaseController;
+		this.filterController = filterController;
+		this.generateController = generateController;
+		this.graphEditorController = graphEditorController;
 
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,7 +107,7 @@ public class GrapeUI {
 		statusbarUI = new StatusbarUI(language, theme);
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
-		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
+		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		generateController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
 		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -133,17 +147,19 @@ public class GrapeUI {
 	private class DeleteGraphAction implements KeyListener { // todo implement delete graphs
 		@Override
 		public void keyTyped(KeyEvent keyEvent) {
-
+			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
+				if (tableUI.getSelectedRow() >= 0) {
+					generateController.delGraph((int) tableModel.getValueAt(tableUI.getSelectedRow(), 0));
+				}
+			}
 		}
 
 		@Override
 		public void keyPressed(KeyEvent keyEvent) {
-
 		}
 
 		@Override
 		public void keyReleased(KeyEvent keyEvent) {
-
 		}
 	}
 }
