@@ -44,12 +44,22 @@ public class DatabaseController {
 		this.connector = new FileManager();
 	}
 
-	// TODO: Instance of TableModel
+	/**
+	 * Sets table model.
+	 *
+	 * @param tableModel the table model
+	 */
+// TODO: Instance of TableModel
 	public void setTableModel(NonEditableTableModel tableModel) {
 		this.tableModel = tableModel;
 	}
 
-	// TODO: new Getter
+	/**
+	 * Gets current database.
+	 *
+	 * @return the current database
+	 */
+// TODO: new Getter
 	public GraphDatabase getCurrentDatabase() {
 		return this.database;
 	}
