@@ -93,14 +93,9 @@ public class CalculationController {
 	 *
 	 * @return the length of the graphlist of CalculationController.
 	 */
-	public int getNumberNotCalculatedGraphs() {
+	public int getNumberNotCalculatedGraphs() { //Todo: perhaps remove method
 		int numberGraphs = 0;
-		try {
-			numberGraphs = database.getUncalculatedGraph().size();
-		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-		}
+		//numberGraphs = database.getUncalculatedGraph().size();
 		return numberGraphs;
 	}
 
