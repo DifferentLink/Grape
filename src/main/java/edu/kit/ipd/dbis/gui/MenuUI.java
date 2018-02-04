@@ -6,6 +6,7 @@ package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
 import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.popups.AboutUI;
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
@@ -22,15 +23,15 @@ import java.util.ResourceBundle;
 
 public class MenuUI extends JMenuBar {
 
-	private final Log log;
+	private final StatusbarController statusbarController;
 	private final Theme theme;
 
 	public MenuUI(GenerateController generateController,
 	              DatabaseController databaseController,
-	              Log log, ResourceBundle language,
+	              StatusbarController statusbarController, ResourceBundle language,
 	              Theme theme) {
 
-		this.log = log;
+		this.statusbarController = statusbarController;
 		this.theme = theme;
 
 		JMenu file = new JMenu(language.getString("file"));
@@ -61,9 +62,9 @@ public class MenuUI extends JMenuBar {
 		JMenuItem readBFSCode = new JMenuItem(language.getString("readBFSCode"));
 		readBFSCode.addActionListener(new ReadBFSCodeAction(generateController, language, theme));
 		JMenuItem undo = new JMenuItem(language.getString("undo"));
-		undo.addActionListener(new UndoAction(this.log));
+		undo.addActionListener(new UndoAction());
 		JMenuItem redo = new JMenuItem(language.getString("redo"));
-		redo.addActionListener(new RedoAction(this.log));
+		redo.addActionListener(new RedoAction());
 		edit.add(generateGraphs);
 		edit.add(emptyGraph);
 		edit.add(readBFSCode);
@@ -323,34 +324,16 @@ public class MenuUI extends JMenuBar {
 	}
 
 	private class UndoAction implements ActionListener {
-
-		private final Log log;
-
-		private UndoAction(Log log) {
-			this.log = log;
-		}
-
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			try {
-				log.undo();
-			} catch (Exception e) {} // todo try/catch only added so that the project is compilable. It's not the GUI's job to handle any exceptions here
+			statusbarController.undo();
 		}
 	}
 
 	private class RedoAction implements ActionListener {
-
-		private final Log log;
-
-		private RedoAction(Log log) {
-			this.log = log;
-		}
-
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			try {
-				log.redo();
-			} catch (Exception e) {} // todo try/catch only added so that the project is compilable. It's not the GUI's job to handle any exceptions here
+			statusbarController.redo();
 		}
 	}
 }
