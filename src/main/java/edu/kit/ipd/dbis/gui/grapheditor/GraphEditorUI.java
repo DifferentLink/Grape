@@ -161,7 +161,9 @@ public class GraphEditorUI extends JPanel {
 							history.addToHistory(graph);
 						}
 					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Released right mouse button
+						graph = graph.deepCopy();
 						graph.remove(mTarget);
+						history.addToHistory(graph);
 					}
 					repaint();
 				}

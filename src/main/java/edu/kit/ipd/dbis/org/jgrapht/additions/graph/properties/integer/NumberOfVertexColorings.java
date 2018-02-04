@@ -2,7 +2,10 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.kohsuke.MetaInfServices;
+
+import java.util.List;
 
 /**
  * Calculates the number of vertex colorings.
@@ -20,6 +23,6 @@ public class NumberOfVertexColorings extends IntegerProperty {
 
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
-		return null;
+		return ((List<VertexColoring>) graph.getProperty(VertexColoring.class).getValue()).size();
 	}
 }
