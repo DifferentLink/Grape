@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
@@ -21,8 +22,11 @@ import java.util.ResourceBundle;
 public class StatusbarUI extends JPanel {
 
 	private final int statusbarHeight = 15;
+	private final StatusbarController statusbarController;
+	private boolean isCalculationRunning = true;
 
-	public StatusbarUI(ResourceBundle language, Theme theme) {
+	public StatusbarUI(StatusbarController statusbarController, ResourceBundle language, Theme theme) {
+		this.statusbarController = statusbarController;
 
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.add(Box.createHorizontalStrut(2));
@@ -83,6 +87,26 @@ public class StatusbarUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			if (isCalculationRunning) {
+				statusbarController.pauseCalculation();
+				try {
+					Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Continue.png"));
+					image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
+					button.setIcon(new ImageIcon(image));
+				} catch (IOException e) {
+					button.setText("R");
+				}
+			} else {
+				statusbarController.continueCalculation();
+				try {
+					Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Pause.png"));
+					image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
+					button.setIcon(new ImageIcon(image));
+				} catch (IOException e) {
+					button.setText("P");
+				}
+			}
+			isCalculationRunning = !isCalculationRunning;
 		}
 	}
 

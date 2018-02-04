@@ -26,7 +26,7 @@ public class Main {
 				FilterController.getInstance(),
 				GenerateController.getInstance(),
 				GraphEditorController.getInstance(),
-				new Log(100),
+				StatusbarController.getInstance(),
 				getLanguage(), new GrapeTheme()));
 	}
 
