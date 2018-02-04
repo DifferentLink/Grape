@@ -30,8 +30,11 @@ public class PropertyFactory {
 		properties.add(new StructureDensity(graph));
 		properties.add(new NodeSpecificDensity(graph));
 		properties.add(new BinomialDensity(graph));
+		properties.add(new DisjointFromSubgraphs(graph));
 		properties.add(new GreatestDegree(graph));
 		properties.add(new KkGraphNumberOfSubgraphs(graph));
+		properties.add(new LargestCliqueSize(graph));
+		properties.add(new LargestSubgraphSize(graph));
 		properties.add(new NumberOfCliques(graph));
 		properties.add(new NumberOfEdges(graph));
 		properties.add(new NumberOfTotalColorings(graph));

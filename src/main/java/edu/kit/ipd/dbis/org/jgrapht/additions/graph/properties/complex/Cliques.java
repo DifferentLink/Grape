@@ -6,7 +6,6 @@ import org.jgrapht.alg.clique.BronKerboschCliqueFinder;
 import org.kohsuke.MetaInfServices;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -28,9 +27,7 @@ public class Cliques extends ComplexProperty {
 	protected List<Set<Object>> calculateAlgorithm(PropertyGraph graph) {
 		ArrayList<Set<Object>> result = new ArrayList<>();
 		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(graph);
-		Iterator<Set<Object>> it = alg.iterator();
-		while (it.hasNext()) {
-			Set<Object> clique = it.next();
+		for (Set<Object> clique : (Iterable<Set<Object>>) alg) {
 			result.add(clique);
 		}
 		return result;
