@@ -39,7 +39,7 @@ public class GrapeUI {
 	               FilterController filterController,
 	               GenerateController generateController,
 	               GraphEditorController graphEditorController,
-	               Log log,
+	               StatusbarController statusbarController,
 	               ResourceBundle language,
 	               Theme theme) {
 
@@ -54,7 +54,7 @@ public class GrapeUI {
 		} catch (IOException e) {}
 
 
-		menuUI = new MenuUI(generateController, databaseController, log, language, theme);
+		menuUI = new MenuUI(generateController, databaseController, statusbarController, language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
 		filterUI = new FilterUI(filterController, language, theme);
@@ -85,7 +85,7 @@ public class GrapeUI {
 
 		graphEditorDivider.setResizeWeight(.55f);
 
-		statusbarUI = new StatusbarUI(language, theme);
+		statusbarUI = new StatusbarUI(statusbarController, language, theme);
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);

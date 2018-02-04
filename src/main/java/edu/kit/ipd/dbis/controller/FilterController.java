@@ -98,7 +98,12 @@ public class FilterController {
 	 * @throws InvalidInputException the invalid input exception
 	 */
 	public void updateFilterGroup(String filterInput, int id) throws InvalidInputException {
-		filter.updateFiltergroup(filterInput, id);
+		try {
+			filter.updateFiltergroup(filterInput, id);
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
+				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException e) {
+		log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**
