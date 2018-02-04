@@ -43,7 +43,7 @@ public class StatusbarUI extends JPanel {
 		this.setForeground(theme.foregroundColor);
 
 		JButton log = new JButton("Log");
-		log.addActionListener(new ShowLogAction(new LogUI(new History(20), language, theme), log));
+		log.addActionListener(new ShowLogAction(new LogUI(statusbarController, language, theme), log));
 		log.setBackground(theme.backgroundColor);
 		log.setForeground(theme.foregroundColor);
 		log.setFont(theme.defaultFont);
