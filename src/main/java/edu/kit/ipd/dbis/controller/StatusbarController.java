@@ -30,7 +30,6 @@ public class StatusbarController {
 
 	private StatusbarController() {
 		this.log = new Log(100);
-		this.calculation = CalculationController.getInstance();
 	}
 
 	/**
@@ -47,6 +46,10 @@ public class StatusbarController {
 
 	public void setDatabase(GraphDatabase database) {
 		log.setDatabase(database);
+	}
+
+	private void setCalculation() {
+		this.calculation = CalculationController.getInstance();
 	}
 
 	/**
@@ -155,6 +158,9 @@ public class StatusbarController {
 	 * pauses the method calculateGraphProperties().
 	 */
 	public void pauseCalculation() {
+		if (calculation == null) {
+			setCalculation();
+		}
 		calculation.pauseCalculation();
 	}
 
@@ -162,6 +168,9 @@ public class StatusbarController {
 	 * continues the method calculateGraphProperties().
 	 */
 	public void continueCalculation() {
+		if (calculation == null) {
+			setCalculation();
+		}
 		calculation.continueCalculation();
 	}
 }
