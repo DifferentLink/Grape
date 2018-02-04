@@ -62,7 +62,7 @@ public class Filtermanagement {
     private int removeFiltersegmentAngGetID(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException,
             ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException,
             InsertionFailedException {
-        for (Filtersegment element : availableFilter) {
+        for (Filter element : availableFilter) {
             if (element.id == id) {
                 availableFilter.remove(element);
                 database.deleteFilter(id);
@@ -99,7 +99,7 @@ public class Filtermanagement {
     public void removeFiltersegment(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException,
             ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException,
             InsertionFailedException {
-        for (Filtersegment element: availableFilter) {
+        for (Filter element: availableFilter) {
             if (element.id == id) {
                 availableFilter.remove(element);
                 database.deleteFilter(id);
@@ -417,7 +417,7 @@ public class Filtermanagement {
     }
 
     private static Property testProperty(String input) throws InvalidInputException {
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Property property;
         switch (input) {
 			case "profile":
