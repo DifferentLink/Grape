@@ -55,16 +55,6 @@ public class DatabaseController {
 	}
 
 	/**
-	 * Gets current database.
-	 *
-	 * @return the current database
-	 */
-// TODO: new Getter
-	public GraphDatabase getCurrentDatabase() {
-		return this.database;
-	}
-
-	/**
 	 * Triggers the database to open a new database table.
 	 *
 	 * @param url      the url
