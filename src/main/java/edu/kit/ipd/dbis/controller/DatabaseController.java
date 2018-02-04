@@ -62,7 +62,6 @@ public class DatabaseController {
 				| ConnectionFailedException | AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-
 	}
 
 	/**
@@ -70,17 +69,15 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the database.
 	 */
-	//TODO: nix
 	public void loadDatabase(String filepath) {
 		try {
 			database = connector.loadGraphDatabase(filepath);
+			this.updateDatabases();
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | TablesNotAsExpectedException | FileContentCouldNotBeReadException
 				| ConnectionFailedException | DatabaseDoesNotExistException e) {
-			e.printStackTrace();
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		this.updateDatabases();
 	}
 
 	/**
@@ -95,17 +92,15 @@ public class DatabaseController {
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException
 				| TablesNotAsExpectedException | FileContentCouldNotBeReadException e) {
-			e.printStackTrace();
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		try {
 			database.merge(mergeDatabase);
+			this.updateDatabases();
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
 				| AccessDeniedForUserException e) {
-			e.printStackTrace();
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		this.updateDatabases();
 	}
 
 	/**
