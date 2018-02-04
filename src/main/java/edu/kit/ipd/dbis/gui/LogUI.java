@@ -50,7 +50,7 @@ public class LogUI extends JFrame {
 		switch (event.getType()) {
 			case MESSAGE : return renderMESSAGE(event);
 			case REMOVE : return renderREMOVE(event);
-			case ADD : return renderREMOVE(event);
+			case ADD : return renderADD(event);
 		}
 		return null;
 	}
