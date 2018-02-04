@@ -23,21 +23,14 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 public class StatusbarController {
 
 	private Log log;
-
-	/**
-	 * Gets as string.
-	 *
-	 * @return the as string
-	 */
-	public String getAsString() {
-		return log.getAsString();
-	}
+	private CalculationController calculation;
 
 	//TODO: Singleton pattern
 	private static StatusbarController statusbar;
 
 	private StatusbarController() {
 		this.log = new Log(100);
+		this.calculation = CalculationController.getInstance();
 	}
 
 	/**
@@ -54,6 +47,15 @@ public class StatusbarController {
 
 	public void setDatabase(GraphDatabase database) {
 		log.setDatabase(database);
+	}
+
+	/**
+	 * Gets as string.
+	 *
+	 * @return the as string
+	 */
+	public String getAsString() {
+		return log.getAsString();
 	}
 
 	/**
@@ -152,19 +154,15 @@ public class StatusbarController {
 	/**
 	 * pauses the method calculateGraphProperties().
 	 */
-	public void pauseCalculation() { //TODO
-
+	public void pauseCalculation() {
+		calculation.pauseCalculation();
 	}
 
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public void continueCalculation() { //TODO
-
-	}
-
-	public Log getLog() {
-		return log;
+	public void continueCalculation() {
+		calculation.continueCalculation();
 	}
 }
 

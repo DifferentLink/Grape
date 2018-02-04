@@ -65,32 +65,6 @@ public class CalculationController {
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
 	 */
-	public void calculateAndSaveProperties() {
-		PropertyGraph<Integer, Integer> graph = null;
-		Boolean hasUncalculatedGraph = false;
-		try {
-			hasUncalculatedGraph = database.hasUncalculatedGraphs();
-		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-		}
-		if (hasUncalculatedGraph) {
-			graph.calculateProperties();
-			// Replacing graphs
-			try {
-				database.replaceGraph(graph.getId(), graph);
-			} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException
-					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
-			try {
-				tableModel.update(filter.getFilteredAndSortedGraphs());
-			} catch (SQLException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
-		}
-	}
-
 	public void triggerCalculation() {
 		if (isCalculating) {
 			try {
@@ -99,37 +73,20 @@ public class CalculationController {
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
 				}
-			} catch (DatabaseDoesNotExistException e) {
-				e.printStackTrace();
-			} catch (AccessDeniedForUserException e) {
-				e.printStackTrace();
-			} catch (ConnectionFailedException e) {
-				e.printStackTrace();
-			} catch (TablesNotAsExpectedException e) {
-				e.printStackTrace();
-			} catch (UnexpectedObjectException e) {
-				e.printStackTrace();
-			} catch (InsertionFailedException e) {
+			} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				e.printStackTrace();
 			}
-
 			try {
 				tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-
+			// start recursion
 			try {
 				if (database.hasUncalculatedGraphs()) {
 					triggerCalculation();
 				}
-			} catch (DatabaseDoesNotExistException e) {
-				e.printStackTrace();
-			} catch (AccessDeniedForUserException e) {
-				e.printStackTrace();
-			} catch (ConnectionFailedException e) {
-				e.printStackTrace();
-			} catch (TablesNotAsExpectedException e) {
+			} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException e) {
 				e.printStackTrace();
 			}
 		}
@@ -154,7 +111,6 @@ public class CalculationController {
 	public Boolean getCalcStatus() {
 		return isCalculating;
 	}
-
 
 	/**
 	 * pauses the method calculateGraphProperties().
