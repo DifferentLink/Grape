@@ -76,12 +76,7 @@ public class GenerateController {
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
-		Thread calculate = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				calculation.triggerCalculation();
-			}
-		});
+		Thread calculate = new Thread(CalculationController.getInstance());
 		calculate.start();
 	}
 

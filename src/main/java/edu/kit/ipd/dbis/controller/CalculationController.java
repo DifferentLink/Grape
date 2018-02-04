@@ -18,7 +18,7 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 /**
  * The type Calculation controller.
  */
-public class CalculationController {
+public class CalculationController implements Runnable {
 
 	private Boolean isCalculating;
 	private StatusbarController log;
@@ -65,7 +65,7 @@ public class CalculationController {
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
 	 */
-	public void triggerCalculation() {
+	public void run() {
 		if (isCalculating) {
 			try {
 				if (database.hasUncalculatedGraphs()) {
@@ -84,7 +84,7 @@ public class CalculationController {
 			// start recursion
 			try {
 				if (database.hasUncalculatedGraphs()) {
-					triggerCalculation();
+					run();
 				}
 			} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException e) {
 				e.printStackTrace();
@@ -124,7 +124,7 @@ public class CalculationController {
 	 */
 	public synchronized void continueCalculation() {
 		isCalculating = true;
-		triggerCalculation();
+		run();
 	}
 
 }
