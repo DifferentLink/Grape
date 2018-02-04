@@ -5,10 +5,13 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
@@ -17,7 +20,7 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
  */
 public class CalculationController {
 
-	private Boolean calculationStatus;
+	private Boolean isCalculating;
 	private StatusbarController log;
 	private GraphDatabase database;
 	private FilterController filter;
@@ -29,7 +32,7 @@ public class CalculationController {
 	private CalculationController() {
 		this.log = StatusbarController.getInstance();
 		this.filter = FilterController.getInstance();
-		this.calculationStatus = false;
+		this.isCalculating = true;
 	}
 
 	/**
@@ -88,6 +91,49 @@ public class CalculationController {
 		}
 	}
 
+	public void triggerCalculation() {
+		if (isCalculating) {
+			try {
+				if (database.hasUncalculatedGraphs()) {
+					PropertyGraph<Integer, Integer> graph = database.getUncalculatedGraph();
+					graph.calculateProperties();
+					database.replaceGraph(graph.getId(), graph);
+				}
+			} catch (DatabaseDoesNotExistException e) {
+				e.printStackTrace();
+			} catch (AccessDeniedForUserException e) {
+				e.printStackTrace();
+			} catch (ConnectionFailedException e) {
+				e.printStackTrace();
+			} catch (TablesNotAsExpectedException e) {
+				e.printStackTrace();
+			} catch (UnexpectedObjectException e) {
+				e.printStackTrace();
+			} catch (InsertionFailedException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				tableModel.update(filter.getFilteredAndSortedGraphs());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				if (database.hasUncalculatedGraphs()) {
+					triggerCalculation();
+				}
+			} catch (DatabaseDoesNotExistException e) {
+				e.printStackTrace();
+			} catch (AccessDeniedForUserException e) {
+				e.printStackTrace();
+			} catch (ConnectionFailedException e) {
+				e.printStackTrace();
+			} catch (TablesNotAsExpectedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/**
 	 * Gets number not calculated graphs.
@@ -106,7 +152,7 @@ public class CalculationController {
 	 * @return true if the calculation is running.
 	 */
 	public Boolean getCalcStatus() {
-		return calculationStatus;
+		return isCalculating;
 	}
 
 
@@ -114,14 +160,15 @@ public class CalculationController {
 	 * pauses the method calculateGraphProperties().
 	 */
 	public void pauseCalculation() {
-		calculationStatus = false;
+		isCalculating = false;
 	}
 
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public void continueCalculation() {
-		calculationStatus = true;
+	public synchronized void continueCalculation() {
+		isCalculating = true;
+		triggerCalculation();
 	}
 
 }
