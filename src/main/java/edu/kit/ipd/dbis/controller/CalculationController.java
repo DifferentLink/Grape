@@ -53,6 +53,7 @@ public class CalculationController {
 		this.database = database;
 	}
 
+	// TODO: Instance of TableModel
 	public void setTableModel(NonEditableTableModel tableModel) {
 		this.tableModel = tableModel;
 	}
