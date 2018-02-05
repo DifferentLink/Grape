@@ -107,9 +107,11 @@ public class GenerateController {
 	 * @throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
-		if (isValidBFS(bfsCode)) {
+		if (!isValidBFS(bfsCode)) {
+			throw new InvalidBfsCodeInputException("BfsCode is not valid");
+		}
 			// Parsing String into int[]
-			String[] splitCode = bfsCode.split("\\[,]");
+			String[] splitCode = bfsCode.split(",");
 			int[] code = new int[splitCode.length];
 			for (int i = 0; i < splitCode.length; i++) {
 				code[i] = Integer.parseInt(splitCode[i]);
@@ -123,9 +125,6 @@ public class GenerateController {
 					| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-		} else {
-			throw new InvalidBfsCodeInputException("BfsCode is not valid");
-		}
 	}
 
 	/**
@@ -165,18 +164,9 @@ public class GenerateController {
 	 * @return the boolean
 	 */
 	public Boolean isValidBFS(String bfsCode) {
-		if (!bfsCode.contains("[") || !bfsCode.contains("]")) {
-			return false;
-		}
-		String[] splitCode = bfsCode.split("\\[*,]");
+		String[] splitCode = bfsCode.split(",");
 		for (int i = 0; i < splitCode.length; i++) {
-			if (splitCode[i].length() != 1) {
-				return false;
-			} else if (!isNumeric(splitCode[i])) {
-				return false;
-			} else if (Integer.parseInt(splitCode[i]) > splitCode.length) {
-				return false;
-			} else if (Integer.parseInt(splitCode[i]) < -1) {
+			if (!isNumeric(splitCode[i])) {
 				return false;
 			}
 		}
