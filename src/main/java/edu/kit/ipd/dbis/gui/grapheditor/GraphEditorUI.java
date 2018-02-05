@@ -120,7 +120,8 @@ public class GraphEditorUI extends JPanel {
 
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
 		this.graph = new RenderableGraph(graph);
-		history = new GraphEditorHistory();
+		history.clear();
+		graphEditor.repaint();
 	}
 
 	private class Editor extends JComponent {
@@ -212,12 +213,12 @@ public class GraphEditorUI extends JPanel {
 				kanvas.draw(vertexShape);
 			});
 
-			graph.getSubgraphs().forEach(subgraph -> {
+/*			graph.getSubgraphs().forEach(subgraph -> {
 				Shape subgraphOutline = subgraph.outline();
 				kanvas.setPaint(theme.outlineColor);
 				kanvas.fill(subgraphOutline);
 				kanvas.draw(subgraphOutline);
-			});
+			});*/
 		}
 	}
 

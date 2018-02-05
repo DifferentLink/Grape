@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Log;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -142,9 +143,9 @@ public class GrapeUI {
 	private class TableSelectionChangeAction implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
-			int id = (int) tableModel.getValueAt(tableUI.getSelectedRow(), 1);
-			graphEditorUI.displayGraph(
-					graphEditorController.getGraphById(id));
+			int id = 1;
+			PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
+			graphEditorUI.displayGraph(graph);
 		}
 	}
 
