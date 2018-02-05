@@ -16,7 +16,7 @@ public class JGraphAdditionsTest {
 		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator();
 		HashSet<PropertyGraph> target = new HashSet<>();
 		try {
-			bulkGen.generateBulk(target, 10, 1, 15, 1, 55);
+			bulkGen.generateBulk(target, 1, 1, 6, 1, 55);
 		} catch (IllegalArgumentException e) {
 			System.out.println("error by generating graphs");
 			return;
