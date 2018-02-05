@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.KkGraph;
@@ -24,7 +25,7 @@ public class DisjointFromSubgraphs extends IntegerProperty {
 
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
-		List<Set<Object>> subgraphs = (List<Set<Object>>) graph.getProperty(KkGraph.class).getValue();
+		List<Set<Object>> subgraphs = (List<Set<Object>>) ((KkGraphAlgorithm.KkGraph) graph.getProperty(KkGraph.class).getValue()).getSubgraphs();
 		Set<Object> subgraphVertices = new HashSet<>();
 		for (Set<Object> s : subgraphs) {
 			subgraphVertices.addAll(s);
