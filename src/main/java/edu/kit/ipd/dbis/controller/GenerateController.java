@@ -97,6 +97,7 @@ public class GenerateController {
 	 * @param bfsCode the BFS Code of the graph to save.
 	 * @throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
+
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException { //TODO: check for valid BFS input
 			// Parsing String into int[]
 			String[] splitCode = bfsCode.split(",");
@@ -152,18 +153,9 @@ public class GenerateController {
 	 * @return the boolean
 	 */
 	public Boolean isValidBFS(String bfsCode) {
-		if (!bfsCode.contains("[") || !bfsCode.contains("]")) {
-			return false;
-		}
-		String[] splitCode = bfsCode.split("\\[*,]");
+		String[] splitCode = bfsCode.split(",");
 		for (int i = 0; i < splitCode.length; i++) {
-			if (splitCode[i].length() != 1) {
-				return false;
-			} else if (!isNumeric(splitCode[i])) {
-				return false;
-			} else if (Integer.parseInt(splitCode[i]) > splitCode.length) {
-				return false;
-			} else if (Integer.parseInt(splitCode[i]) < -1) {
+			if (!isNumeric(splitCode[i])) {
 				return false;
 			}
 		}

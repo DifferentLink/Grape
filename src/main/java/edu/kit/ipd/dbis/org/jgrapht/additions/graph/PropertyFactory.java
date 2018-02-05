@@ -41,6 +41,8 @@ public class PropertyFactory {
 		properties.add(new NumberOfVertexColorings(graph));
 		properties.add(new NumberOfVertices(graph));
 		properties.add(new SmallestDegree(graph));
+		properties.add(new TotalColoringNumberOfColors(graph));
+		properties.add(new VertexColoringNumberOfColors(graph));
 		return properties;
 	}
 }
