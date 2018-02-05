@@ -91,6 +91,7 @@ public class GrapeUI {
 		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		calculationController.setTableModel(tableModel);
 		databaseController.setTableModel(tableModel);
+		filterController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
 		JScrollPane scrollPane = new JScrollPane(tableUI);
 		tableUI.setFillsViewportHeight(true);
