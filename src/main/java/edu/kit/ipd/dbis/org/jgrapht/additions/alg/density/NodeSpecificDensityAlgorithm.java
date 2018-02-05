@@ -35,6 +35,6 @@ public class NodeSpecificDensityAlgorithm<V, E> implements NumberDensityAlgorith
 		for (int i = graph.vertexSet().size() - 1; i > 0; i--) {
 			maxEdges += i;
 		}
-		return maxEdges / graph.edgeSet().size();
+		return (double) graph.edgeSet().size() / maxEdges;
 	}
 }

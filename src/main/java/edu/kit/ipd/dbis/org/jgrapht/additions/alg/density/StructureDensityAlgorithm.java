@@ -38,12 +38,12 @@ public class StructureDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
 		List<int[]> backwardEdges = bfsCode.getBackwardEdges();
 		double numerator = 0;
 		for (int[] edge : backwardEdges) {
-			numerator += (1 / (Math.abs(edge[0] - edge[1])));
+			numerator += (1.0 / (Math.abs(edge[0] - edge[1])));
 		}
 		double denumerator = 0;
 		int k = graph.vertexSet().size(); //number of vertices
 		for (int i = 1; i <= k - 2; i++) {
-			denumerator += (i * (1 / (k - 1 - i)));
+			denumerator += (i * (1.0 / (k - 1 - i)));
 		}
 		return numerator / denumerator;
 	}
