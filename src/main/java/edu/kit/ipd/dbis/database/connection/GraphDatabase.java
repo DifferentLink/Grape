@@ -71,9 +71,10 @@ public class GraphDatabase implements DatabaseManager {
 		try {
 			this.graphTable.insert(graph);
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new TablesNotAsExpectedException("Selected table does not exist " +
+					"or does not contain the required columns to store graph" + graph.getId() + ".");
 		} catch (IOException e) {
-			throw new InsertionFailedException();
+			throw new InsertionFailedException("Graph " + graph.getId() + " could not be saved.");
 		}
 	}
 
@@ -84,9 +85,10 @@ public class GraphDatabase implements DatabaseManager {
 		try {
 			this.filterTable.insert(filter);
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new TablesNotAsExpectedException("Selected table does not exist " +
+					"or does not contain the required columns to store filter " + filter.getID() + ".");
 		} catch (IOException e) {
-			throw new InsertionFailedException();
+			throw new InsertionFailedException("Filter " + filter.getID() + " could not be saved.");
 		}
 	}
 
@@ -216,10 +218,8 @@ public class GraphDatabase implements DatabaseManager {
 			return this.filterTable.getContent(id);
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (IOException e) {
-			throw new UnexpectedObjectException();
-		} catch (ClassNotFoundException e) {
-			throw new UnexpectedObjectException();
+		} catch (ClassNotFoundException | IOException e) {
+			throw new UnexpectedObjectException("The Object identified by id " + id + " is not a Filter-object.");
 		}
 	}
 
@@ -242,10 +242,8 @@ public class GraphDatabase implements DatabaseManager {
 			return this.graphTable.getContent(id);
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (IOException e) {
-			throw new UnexpectedObjectException();
-		} catch (ClassNotFoundException e) {
-			throw new UnexpectedObjectException();
+		} catch (ClassNotFoundException | IOException e) {
+			throw new UnexpectedObjectException("The Object identified by id " + id + " is not a PropertyGraph-object.");
 		}
 	}
 
@@ -257,10 +255,8 @@ public class GraphDatabase implements DatabaseManager {
 			return this.graphTable.getUncalculatedGraph();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
-		} catch (IOException e) {
-			throw new UnexpectedObjectException();
-		} catch (ClassNotFoundException e) {
-			throw new ConnectionFailedException();
+		} catch (ClassNotFoundException | IOException e) {
+			throw new UnexpectedObjectException("The given Object is not a PropertyGraph-object.");
 		}
 	}
 

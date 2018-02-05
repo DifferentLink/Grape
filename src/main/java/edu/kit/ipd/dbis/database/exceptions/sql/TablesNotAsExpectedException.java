@@ -6,6 +6,6 @@ public class TablesNotAsExpectedException extends Exception {
 	}
 
 	public TablesNotAsExpectedException() {
-
+		super("Selected table does not exist or does not contain the required columns.");
 	}
 }

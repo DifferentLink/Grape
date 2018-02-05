@@ -83,7 +83,7 @@ public class FilterTable extends Table {
 		if (result.next()) {
 			return this.getInstanceOf(this.byteArrayToObject(result.getBytes("filter")));
 		}
-		throw new UnexpectedObjectException();
+		return null;
 	}
 
 	/**
