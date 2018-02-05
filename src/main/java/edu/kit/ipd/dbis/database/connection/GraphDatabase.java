@@ -7,6 +7,7 @@ import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.IOException;
+import java.io.ObjectStreamException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -249,11 +250,26 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs()
+	public PropertyGraph<Integer, Integer> getUncalculatedGraph()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			TablesNotAsExpectedException, UnexpectedObjectException {
+		try {
+			return this.graphTable.getUncalculatedGraph();
+		} catch (SQLException e) {
+			throw new TablesNotAsExpectedException();
+		} catch (IOException e) {
+			throw new UnexpectedObjectException();
+		} catch (ClassNotFoundException e) {
+			throw new ConnectionFailedException();
+		}
+	}
+
+	@Override
+	public boolean hasUncalculatedGraphs()
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
 			TablesNotAsExpectedException {
 		try {
-			return this.graphTable.getUncalculatedGraphs();
+			return this.graphTable.hasUncalculated();
 		} catch (SQLException e) {
 			throw new TablesNotAsExpectedException();
 		}

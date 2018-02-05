@@ -25,8 +25,7 @@ public class GenerateController {
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
 	private StatusbarController log;
-	private NonEditableTableModel table;
-	private FilterController filter;
+	private CalculationController calculation;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -34,7 +33,8 @@ public class GenerateController {
 	private GenerateController() {
 		this.log = StatusbarController.getInstance();
 		this.generator = new BulkRandomConnectedGraphGenerator();
-		this.filter = FilterController.getInstance();
+		this.log = StatusbarController.getInstance();
+		this.calculation = CalculationController.getInstance();
 	}
 
 	/**
@@ -58,10 +58,6 @@ public class GenerateController {
 		this.database = database;
 	}
 
-	public void setTableModel(NonEditableTableModel table) {
-		this.table = table;
-	}
-
 	/**
 	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
 	 *
@@ -74,19 +70,14 @@ public class GenerateController {
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InvalidGeneratorInputException {
-
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
-		// todo: solange generieren bis die gewünschte anzahl von graphen existiert!
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
-		try {
-			table.update(filter.getFilteredAndSortedGraphs());
-		} catch (SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-		}
+		Thread calculate = new Thread(CalculationController.getInstance());
+		calculate.start();
 	}
 
 	/**
@@ -106,10 +97,8 @@ public class GenerateController {
 	 * @param bfsCode the BFS Code of the graph to save.
 	 * @throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
-	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
-		if (!isValidBFS(bfsCode)) {
-			throw new InvalidBfsCodeInputException("BfsCode is not valid");
-		}
+
+	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException { //TODO: check for valid BFS input
 			// Parsing String into int[]
 			String[] splitCode = bfsCode.split(",");
 			int[] code = new int[splitCode.length];

@@ -5,13 +5,13 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
@@ -20,11 +20,11 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
  */
 public class CalculationController implements Runnable {
 
-	private Boolean calculationStatus;
+	private Boolean isCalculating;
 	private StatusbarController log;
 	private GraphDatabase database;
 	private FilterController filter;
-	private NonEditableTableModel table; // todo initialize table
+	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static CalculationController calculation;
@@ -32,7 +32,7 @@ public class CalculationController implements Runnable {
 	private CalculationController() {
 		this.log = StatusbarController.getInstance();
 		this.filter = FilterController.getInstance();
-		this.calculationStatus = false;
+		this.isCalculating = true;
 	}
 
 	/**
@@ -56,40 +56,40 @@ public class CalculationController implements Runnable {
 		this.database = database;
 	}
 
+	// TODO: Instance of TableModel
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
+	}
+
 	/**
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
 	 */
 	public void run() {
-		LinkedList<PropertyGraph<Integer, Integer>> graphs = null;
-		try {
-			graphs = database.getUncalculatedGraphs();
-		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-		}
-		if (graphs == null) {
-			return;
-		}
-		// Trigger Graph calculation
-
-		for (PropertyGraph<Integer, Integer> graph : graphs) {
-				graph.calculateProperties();
-				// Replacing graphs
-				try {
-					database.replaceGraph(graph.getId(), graph);
-				} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | ConnectionFailedException
-						| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
-					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-				}
+		if (isCalculating) {
 			try {
-				table.update(filter.getFilteredAndSortedGraphs()); // todo implement calculatedGraphProperties()
-			} catch (SQLException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+				if (database.hasUncalculatedGraphs()) {
+					PropertyGraph<Integer, Integer> graph = database.getUncalculatedGraph();
+					graph.calculateProperties();
+					database.replaceGraph(graph.getId(), graph);
+				}
+			} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+				e.printStackTrace();
 			}
-
+			try {
+				tableModel.update(filter.getFilteredAndSortedGraphs());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			// start recursion
+			try {
+				if (database.hasUncalculatedGraphs()) {
+					run();
+				}
+			} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	/**
@@ -97,14 +97,9 @@ public class CalculationController implements Runnable {
 	 *
 	 * @return the length of the graphlist of CalculationController.
 	 */
-	public int getNumberNotCalculatedGraphs() {
+	public int getNumberNotCalculatedGraphs() { //Todo: perhaps remove method
 		int numberGraphs = 0;
-		try {
-			numberGraphs = database.getUncalculatedGraphs().size();
-		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-		}
+		//numberGraphs = database.getUncalculatedGraph().size();
 		return numberGraphs;
 	}
 
@@ -114,22 +109,22 @@ public class CalculationController implements Runnable {
 	 * @return true if the calculation is running.
 	 */
 	public Boolean getCalcStatus() {
-		return calculationStatus;
+		return isCalculating;
 	}
-
 
 	/**
 	 * pauses the method calculateGraphProperties().
 	 */
 	public void pauseCalculation() {
-		calculationStatus = false;
+		isCalculating = false;
 	}
 
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public void continueCalculation() {
-		calculationStatus = true;
+	public synchronized void continueCalculation() {
+		isCalculating = true;
+		run();
 	}
 
 }

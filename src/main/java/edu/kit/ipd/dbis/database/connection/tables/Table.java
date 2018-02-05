@@ -251,7 +251,7 @@ public abstract class Table {
 		for (int i = 0; i < ids.size(); i++) {
 			if (!ids.contains(i)) return i;
 		}
-		return ids.size() + 1;
+		return ids.size();
 	}
 
 	/**
