@@ -1,5 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.LargestCliqueSize;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
@@ -26,7 +28,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	/**
 	 * The input graph
 	 */
-	protected final Graph<V, E> graph;
+	protected final PropertyGraph<V, E> graph;
 	private List<Coloring<V>> colorings;
 
 	/**
@@ -34,7 +36,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 *
 	 * @param graph the input graph
 	 */
-	public MinimalVertexColoring(Graph<V, E> graph) {
+	public MinimalVertexColoring(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 		this.colorings = new ArrayList<>();
 	}
@@ -46,6 +48,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 */
 	public List<Coloring<V>> getAllColorings() {
 		int numberOfVertices = this.graph.vertexSet().size();
+		int largestCliqueSize = (int) this.graph.getProperty(LargestCliqueSize.class).getValue();
 
 		// give vertices an order
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
@@ -62,7 +65,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		}
 
 		// get integer partitions
-		List<int[]> partitions = this.integerPartitioning(numberOfVertices);
+		List<int[]> partitions = this.integerPartitioning(numberOfVertices, largestCliqueSize);
 
 		int numberOfColors = Integer.MAX_VALUE;
 
@@ -106,16 +109,15 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 				}
 			}
 		}
-		return this.getNonEquivalentColorings(this.colorings);
+		return this.colorings;
 	}
 
 	@Override
 	public Coloring<V> getColoring() {
 		if (this.colorings.isEmpty()) {
-			return this.getAllColorings().get(0);
-		} else {
-			return this.colorings.get(0);
+			this.getAllColorings();
 		}
+		return this.colorings.get(0);
 	}
 
 	private Integer[] parseIntegerPartitioning(int[] partitioning, int numberOfVertices) {
@@ -130,15 +132,25 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return result;
 	}
 
-	//TODO: make me iterative
-	private List<int[]> integerPartitioning(int numberOfVertices) {
+	private int[] getFirstPartitioning(int numberOfVertices, int largestCliqueSize) {
+		int[] result = new int[largestCliqueSize];
+		result[0] = numberOfVertices - (largestCliqueSize - 1);
+		for (int i = 1; i < result.length; i++) {
+			result[i] = 1;
+		}
+		return result;
+	}
+
+	private List<int[]> integerPartitioning(int numberOfVertices, int largestCliqueSize) {
 		List<int[]> result = new LinkedList<>();
 
 		// create first partitioning
-		int numberOfColors = 2;
-		int[] array = new int[numberOfColors];
-		array[0] = numberOfVertices - 1;
-		array[1] = 1;
+		int numberOfColors = largestCliqueSize;
+		int[] array = getFirstPartitioning(numberOfVertices, largestCliqueSize);
+		if (numberOfColors == numberOfVertices) {
+			result.add(array);
+			return result;
+		}
 
 		// iterate over all possible partitions
 		// for numberOfVertices.
@@ -284,6 +296,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 * @param <V> type
 	 * @return true if they are equal, false if they are not.
 	 */
+	@Deprecated
 	public static <V> boolean equivalentColoring(Coloring<V> c1, Coloring<V> c2) {
 		if (c1.getNumberColors() != c2.getNumberColors()) {
 			return false;
@@ -302,6 +315,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return true;
 	}
 
+	@Deprecated
 	private List<Coloring<V>> getNonEquivalentColorings(List<Coloring<V>> colorings) {
 		List<Coloring<V>> result = new ArrayList<>();
 		Map<Coloring<V>, Boolean> addedMap = new HashMap<>();
