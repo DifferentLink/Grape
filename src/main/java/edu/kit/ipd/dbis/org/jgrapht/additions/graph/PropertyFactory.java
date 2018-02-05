@@ -28,7 +28,6 @@ public class PropertyFactory {
 		properties.add(new AverageDegree(graph));
 		properties.add(new ProportionDensity(graph));
 		properties.add(new StructureDensity(graph));
-		properties.add(new NodeSpecificDensity(graph));
 		properties.add(new BinomialDensity(graph));
 		properties.add(new DisjointFromSubgraphs(graph));
 		properties.add(new GreatestDegree(graph));

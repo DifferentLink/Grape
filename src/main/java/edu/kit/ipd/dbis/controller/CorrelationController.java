@@ -60,7 +60,7 @@ public class CorrelationController {
 	 */
 	public List<CorrelationOutput> addNewCorrelation(String input) throws InvalidCorrelationInputException {
 		List<CorrelationOutput> output = null;
-		CorrelationRequest request = new CorrelationRequest(input, null);
+		CorrelationRequest request = new CorrelationRequest(input, this.database);
 		try {
 			output = request.applyCorrelation();
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException
