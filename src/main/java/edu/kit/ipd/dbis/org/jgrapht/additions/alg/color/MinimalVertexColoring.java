@@ -147,7 +147,10 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		// create first partitioning
 		int numberOfColors = largestCliqueSize;
 		int[] array = getFirstPartitioning(numberOfVertices, largestCliqueSize);
-		result.add(array);
+		if (numberOfColors == numberOfVertices) {
+			result.add(array);
+			return result;
+		}
 
 		// iterate over all possible partitions
 		// for numberOfVertices.
