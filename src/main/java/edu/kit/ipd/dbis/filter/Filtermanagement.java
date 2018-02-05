@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.filter;
 
+import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
@@ -358,6 +359,9 @@ public class Filtermanagement {
             Operator operator1 = Filtermanagement.testOperator(firstOperator);
 
             String firstValueString = parameters[2];
+            if (!StringUtils.isStrictlyNumeric(firstValueString) || firstValueString.length() == 0) {
+                throw new InvalidInputException();
+            }
             checkFilterInputNull(parameters[2]);
             int firstValue = Integer.parseInt(firstValueString);
 
@@ -375,6 +379,9 @@ public class Filtermanagement {
             Operator operator2 = Filtermanagement.testOperator(operator2String);
 
             String secondValueString = parameters[6];
+            if (!StringUtils.isStrictlyNumeric(secondValueString) || secondValueString.length() == 0) {
+                throw new InvalidInputException();
+            }
             int secondValue = Integer.parseInt(secondValueString);
 
             return new ConnectedFilter(input, false, property1, property2, operator1,
@@ -385,6 +392,9 @@ public class Filtermanagement {
             Relation relation = Filtermanagement.testRelation(relationString);
 
             String valueString = parameters[2];
+            if (!StringUtils.isStrictlyNumeric(valueString) || valueString.length() == 0) {
+                throw new InvalidInputException();
+            }
             checkFilterInputNull(parameters[2]);
             int value = Integer.parseInt(valueString);
             return new BasicFilter(input, false, value, relation, property1, id);
