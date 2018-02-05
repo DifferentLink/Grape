@@ -119,27 +119,53 @@ public class RenderableGraph {
 	}
 
 	public void remove(Vertex vertex) {
-		Set<Edge> edgesRemove = new HashSet();
+		Set<Edge> edgesRemove = new HashSet<>();
 		for (Edge edge : edges) {
 			if (edge.isIncidentTo(vertex)) {
 				edgesRemove.add(edge);
 			}
 		}
 		vertices.remove(vertex);
-		edges.remove(edgesRemove);
+		edges.removeAll(edgesRemove);
 	}
 
 	public void remove(Point point) {
 		Vertex foundVertex = getVertexAt(point);
 		if (foundVertex != null) {
-			vertices.remove(foundVertex);
+			remove(foundVertex);
 		}
 	}
 
 	public void add(Edge edge) {
-		vertices.add(edge.getStart());
-		vertices.add(edge.getEnd());
-		edges.add(edge);
+
+		Vertex start = getVertexAt(edge.getStart().getPosition());
+		Vertex end = getVertexAt(edge.getEnd().getPosition());
+
+		if (start == null) {
+			vertices.add(edge.getStart());
+		} else {
+			edge.setStart(start);
+		}
+		if (end == null) {
+			vertices.add(edge.getEnd());
+		} else {
+			edge.setEnd(end);
+		}
+
+		if (!areConnected(edge.getStart(), edge.getEnd())) {
+			edges.add(edge);
+		}
+	}
+
+	public boolean areConnected(Vertex start, Vertex end) {
+		for (Edge edge : edges) {
+			if ((edge.getStart() == start && edge.getEnd() == end)
+					|| (edge.getEnd() == start && edge.getStart() == end)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public void remove(Edge edge) {

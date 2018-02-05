@@ -63,6 +63,7 @@ public interface Connector {
 	 * Deletes given database by deleting its MySQL-Tables and the text file that belongs to it.
 	 * @param database GraphDatabase-Object that should be deleted.
 	 */
-	void deleteGraphDatabase(GraphDatabase database) throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, SQLException;
+	void deleteGraphDatabase(GraphDatabase database) 
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, SQLException;
 
 }

@@ -103,7 +103,7 @@ public class GraphTable extends Table {
 			}
 		}
 
-		graph.setId(this.getId());
+		this.setIdGraph(graph);
 		columns += "graph, id, bfscode, state, iscalculated)";
 		values += "?, " + graph.getId()
 				+ ", '" + this.minimalBfsCodeToString(graph) + "'"
@@ -143,52 +143,52 @@ public class GraphTable extends Table {
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	public LinkedList<PropertyGraph<Integer, Integer>> getContent(String[][] filters, String column, boolean ascending)
+	public ResultSet getContent(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			SQLException {
 
-		String sql = this.filtersToString(filters, column, ascending);
+		String sql = this.getFilteredTableQuery(filters, column, ascending);
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
-		while (result.next()) {
-			try {
-				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
-			} catch(Exception e) {
 
-			}
-		}
-		return graphs;
+		return result;
 	}
 
 	/**
-	 *@return all PropertyGraph-Objects in the represented MySQL-Table that are marked as uncalculated.
+	 *@return a PropertyGraph-Object in the represented MySQL-Table that is marked as uncalculated.
 	 * @throws AccessDeniedForUserException
 	 * @throws DatabaseDoesNotExistException
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	public LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs() throws AccessDeniedForUserException,
-			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
+	public PropertyGraph<Integer, Integer> getUncalculatedGraph() throws AccessDeniedForUserException,
+			DatabaseDoesNotExistException, ConnectionFailedException, SQLException, IOException,
+			ClassNotFoundException, UnexpectedObjectException {
 
-		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false";
+		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false LIMIT 1";
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
 		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 
-		while (result.next()) {
-			try {
-				graphs.add((PropertyGraph<Integer, Integer>) this.byteArrayToObject(result.getBytes("graph")));
-			} catch (Exception e) {
-
-			}
+		if (result.next()) {
+			return this.getInstanceOf(this.byteArrayToObject(result.getBytes("graph")));
 		}
-		return graphs;
+		return null;
 
 	}
 
+	/**
+	 * Returns the values of a certain column of every graph that matches the filter criteria
+	 * @param filters determines how the database should be filters
+	 * @param column the column
+	 * @return the value of every given column
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
 	public LinkedList<Double> getValues(String[][] filters, String column) throws AccessDeniedForUserException,
 			DatabaseDoesNotExistException, ConnectionFailedException, SQLException {
 
-		String sql = this.filtersToString(filters, column);
+		String sql = this.getValuesQuery(filters, column);
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
 		LinkedList<Double> values = new LinkedList<>();
 		while (result.next()) {
@@ -268,16 +268,39 @@ public class GraphTable extends Table {
 
 	}
 
-	private String filtersToString(String[][] filters, String column, boolean ascending) {
+	/**
+	 * Determines if there are uncalculated graphs in the database.
+	 * @return true if there are
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws SQLException
+	 */
+	public boolean hasUncalculated() throws AccessDeniedForUserException, DatabaseDoesNotExistException,
+			ConnectionFailedException, SQLException {
+		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false LIMIT 1";
+		return this.getConnection().prepareStatement(sql).executeQuery().next();
 
-		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = true";
+	}
+
+	/**
+	 * Generates the MySQL-Query necessary to filter and sort the represented MySQL-table
+	 * @param filters determines how the MySQL-table should be filtered
+	 * @param column determines how the MySQL-table should be sorted
+	 * @param ascending determines whether the MySQL-table should be sorted ascending or descending
+	 * @return the according MySQL-Query
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 */
+	private String getFilteredTableQuery(String[][] filters, String column, boolean ascending)
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
+
+		String sql = "SELECT " + this.getPropertyColumns() + " FROM " + this.name + " WHERE iscalculated = true";
 		String order = (ascending) ? ("ASC") : ("DESC");
-
-		for (int i = 0; i < filters.length; i++) {
-			for (int j = 0; j < filters[i].length; j++) {
-				sql += " AND" + filters[i][j];
-			}
-		}
+		sql += this.filtersToQuery(filters);
 
 		if (!column.equals("bfscode")) {
 			sql += " ORDER BY " + column + " " + order;
@@ -287,9 +310,25 @@ public class GraphTable extends Table {
 		return sql;
 	}
 
-	private String filtersToString(String[][] filters, String column) {
+	/**
+	 * Generates the MySQL-Query necessary to get the values of a certain column
+	 * @param filters determines how the MySQL-table should be filtered
+	 * @param column determines which values should be returned
+	 * @return the according MySQL-Query
+	 */
+	private String getValuesQuery(String[][] filters, String column) {
 		String sql = "SELECT " + column + " FROM " + this.name + " WHERE 0 = 0";
+		sql += this.filtersToQuery(filters);
+		return sql;
+	}
 
+	/**
+	 * Generates the part of a MySQL-Query that is responsible for filtering
+	 * @param filters determines how the MySQL-table should be filtered
+	 * @return the according part of a MySQL-Query
+	 */
+	private String filtersToQuery(String[][] filters) {
+		String sql = "";
 		for (int i = 0; i < filters.length; i++) {
 			for (int j = 0; j < filters[i].length; j++) {
 				sql += " AND" + filters[i][j];
@@ -299,22 +338,35 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 * Parses a BfsCode of a PropertyGraph
+	 * Returns the string of the BfsCode of a PropertyGraph by using its toString()-method
 	 * @param graph a PropertyGraph-object
 	 * @return the BfsCode of the given graph as String
 	 */
 	private String minimalBfsCodeToString(PropertyGraph<Integer, Integer> graph) {
-
-		String s = "";
 		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
 		BfsCodeAlgorithm.BfsCode code = (BfsCodeAlgorithm.BfsCode) bfs.getValue();
-		int[] bfsCode = code.getCode();
+		return code.toString();
 
-		for (int i = 0; i < bfsCode.length; i++) {
-			s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
+	}
+
+	/**
+	 * Sets the id of a graph
+	 * @param graph the PropertyGraph-object
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 */
+	private void setIdGraph(PropertyGraph<Integer, Integer> graph)
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
+		try {
+			if (this.getIds().contains(graph.getId())) {
+				graph.setId(this.getId());
+			}
+		} catch (NullPointerException e) {
+			graph.setId(this.getId());
 		}
-		return s;
-
 	}
 
 }

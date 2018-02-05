@@ -1,7 +1,13 @@
 package edu.kit.ipd.dbis.filter;
 
+import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -9,8 +15,19 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.VertexColoringNumberOfColors;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.TotalColoringNumberOfColors;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfTotalColorings;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.KkGraphNumberOfSubgraphs;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertexColorings;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.LargestSubgraphSize;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +78,7 @@ public class Filtermanagement {
     private int removeFiltersegmentAngGetID(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException,
             ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException,
             InsertionFailedException {
-        for (Filtersegment element : availableFilter) {
+        for (Filter element : availableFilter) {
             if (element.id == id) {
                 availableFilter.remove(element);
                 database.deleteFilter(id);
@@ -98,7 +115,7 @@ public class Filtermanagement {
     public void removeFiltersegment(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException,
             ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException,
             InsertionFailedException {
-        for (Filtersegment element: availableFilter) {
+        for (Filter element: availableFilter) {
             if (element.id == id) {
                 availableFilter.remove(element);
                 database.deleteFilter(id);
@@ -223,13 +240,24 @@ public class Filtermanagement {
      * method which offers the opportunity to modify a specific filtergroup
      * @param input new name of the filtergroup
      * @param id id of the filtergroup which should be modified
+     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws InsertionFailedException thrown if filter could not be added to database
+     * @throws AccessDeniedForUserException thrown if there is no access to database
+     * @throws UnexpectedObjectException thrown if there is an unknown object
+     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public void updateFiltergroup(String input, int id) {
+    public void updateFiltergroup(String input, int id) throws TablesNotAsExpectedException,
+            ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException,
+            UnexpectedObjectException, DatabaseDoesNotExistException {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 element.name = input;
+                return;
             }
         }
+        Filtergroup myGroup = new Filtergroup(input, false, id);
+        this.addFilterGroup(myGroup);
     }
 
     /**
@@ -241,7 +269,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public LinkedList<PropertyGraph<Integer, Integer>> getFilteredAndAscendingSortedGraphs(Property property) throws
+	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), true);
@@ -256,7 +284,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public LinkedList<PropertyGraph<Integer, Integer>> getFilteredAndDescendingSortedGraphs(Property property) throws
+	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), false);
@@ -270,7 +298,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
+	public ResultSet getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
             AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), "id", true);
     }
@@ -310,85 +338,78 @@ public class Filtermanagement {
      * @throws UnexpectedObjectException thrown if there is an unknown object
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public void addFilter(String input, int id) throws InvalidInputException, TablesNotAsExpectedException,
+    private void addFilter(String input, int id) throws InvalidInputException, TablesNotAsExpectedException,
             ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException,
             UnexpectedObjectException, DatabaseDoesNotExistException {
         this.addFilter(Filtermanagement.parseToFilter(input, id));
     }
 
     private static Filter parseToFilter(String input, int id) throws InvalidInputException {
-        int i = 0;
-        String property1String = "";
-        while (i < input.length() && input.charAt(i) != ' ') {
-            property1String = property1String + input.charAt(i);
-            i++;
+        String inputCopy = input.toLowerCase();
+        String[] parameters = inputCopy.split(" ", 7);
+        if (parameters.length == 1) {
+            switch (parameters[0]) {
+                case "hadwigerconjecture":
+                    inputCopy = "vertexcoloringnumberofcolors + 0 = largestsubgraphsize + 0";
+                    parameters = inputCopy.split(" ", 7);
+                    break;
+                default: throw new InvalidInputException();
+            }
         }
+        if (parameters.length != 3 && parameters.length != 7) {
+            throw new InvalidInputException();
+        }
+
+        String property1String = parameters[0];
+        checkFilterInputNull(parameters[0]);
         property1String = property1String.toLowerCase();
         Property property1 = Filtermanagement.testProperty(property1String);
 
-        String firstOperator = "";
-        i++;
-        while (i < input.length() && input.charAt(i) != ' ') {
-            firstOperator = firstOperator + input.charAt(i);
-            i++;
-        }
-        try {
+        if (parameters.length == 7) {
+            String firstOperator = parameters[1];
+            checkFilterInputNull(parameters[1]);
             Operator operator1 = Filtermanagement.testOperator(firstOperator);
 
-            String firstValueString = "";
-            i++;
-            while (i < input.length() && input.charAt(i) != ' ') {
-                firstValueString = firstValueString + input.charAt(i);
-                i++;
+            String firstValueString = parameters[2];
+            if (!StringUtils.isStrictlyNumeric(firstValueString) || firstValueString.length() == 0) {
+                throw new InvalidInputException();
             }
+            checkFilterInputNull(parameters[2]);
             int firstValue = Integer.parseInt(firstValueString);
 
-            String relationString = "";
-            i++;
-            while (i < input.length() && input.charAt(i) != ' ') {
-                relationString = relationString + input.charAt(i);
-                i++;
-            }
+            String relationString = parameters[3];
+            checkFilterInputNull(parameters[3]);
             Relation relation = Filtermanagement.testRelation(relationString);
 
-            String property2String = "";
-            i++;
-            while (i < input.length() && input.charAt(i) != ' ') {
-                property2String = property2String + input.charAt(i);
-                i++;
-            }
+            String property2String = parameters[4];
+            checkFilterInputNull(parameters[4]);
             property2String = property2String.toLowerCase();
             Property property2 = Filtermanagement.testProperty(property2String);
 
-            String operator2String = "";
-            i++;
-            while (i < input.length() && input.charAt(i) != ' ') {
-                operator2String = operator2String + input.charAt(i);
-                i++;
-            }
+            String operator2String = parameters[5];
+            checkFilterInputNull(parameters[5]);
             Operator operator2 = Filtermanagement.testOperator(operator2String);
 
-            String secondValueString = "";
-            i++;
-            while (i < input.length() && input.charAt(i) != ' ') {
-                secondValueString = secondValueString + input.charAt(i);
-                i++;
+            String secondValueString = parameters[6];
+            if (!StringUtils.isStrictlyNumeric(secondValueString) || secondValueString.length() == 0) {
+                throw new InvalidInputException();
             }
             int secondValue = Integer.parseInt(secondValueString);
 
             return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
-        } catch (InvalidInputException e) {
-            Relation basicRelation = Filtermanagement.testRelation(firstOperator);
+        } else {
+            String relationString = parameters[1];
+            checkFilterInputNull(parameters[1]);
+            Relation relation = Filtermanagement.testRelation(relationString);
 
-            String valueString = "";
-            i++;
-            while (i < input.length() && input.charAt(i) != ' ') {
-                valueString = valueString + input.charAt(i);
-                i++;
+            String valueString = parameters[2];
+            if (!StringUtils.isStrictlyNumeric(valueString) || valueString.length() == 0) {
+                throw new InvalidInputException();
             }
+            checkFilterInputNull(parameters[2]);
             int value = Integer.parseInt(valueString);
-            return new BasicFilter(input, false, value, basicRelation, property1, id);
+            return new BasicFilter(input, false, value, relation, property1, id);
         }
     }
 
@@ -416,7 +437,7 @@ public class Filtermanagement {
     }
 
     private static Property testProperty(String input) throws InvalidInputException {
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Property property;
         switch (input) {
 			case "profile":
@@ -455,28 +476,17 @@ public class Filtermanagement {
 			case "smallestdegree":
 				property = new SmallestDegree(graph);
 				return property;
+            case "totalcoloringnumberofcolors":
+                property = new TotalColoringNumberOfColors(graph);
+                return property;
+            case "vertexcoloringnumberofcolors":
+                property = new VertexColoringNumberOfColors(graph);
+                return property;
+            case "largestsubgraphsize":
+                property = new LargestSubgraphSize(graph);
+                return property;
             default: throw new InvalidInputException();
         }
-    }
-
-    /**
-     * checks whether the input string codes a valid Filter. In case of success the method
-     * addFiltersegment(filtersegment: Filtersegment): void is called and a new
-     * Filter is added to the list of class Filtermanagement
-     * @param input string which might code a Filter
-     * @param id unique identifier of the new Filterobject
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
-     * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws InsertionFailedException thrown if filter could not be added to database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
-     * @throws UnexpectedObjectException thrown if there is an unknown object
-     * @throws DatabaseDoesNotExistException thrown if there is no database
-     */
-    public void addFiltergroup(String input, int id) throws TablesNotAsExpectedException, ConnectionFailedException,
-            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
-            DatabaseDoesNotExistException {
-        Filtergroup myFiltergroup = new Filtergroup(input, true, id);
-        this.addFilterGroup(myFiltergroup);
     }
 
     /**
@@ -511,10 +521,26 @@ public class Filtermanagement {
      * @return returns a two-dimensional string array which codes all filter which are currently activ
      */
     public String[][] parseFilterList() {
-        int arrayLenght = availableFilter.size() + availableFilterGroups.size();
+        ArrayList<Filter> activatedFilter = new ArrayList<>();
+        for (Filter current: availableFilter) {
+            if (current.isActivated) {
+                activatedFilter.add(current);
+            }
+        }
+        for (Filtergroup current: availableFilterGroups) {
+            if (current.isActivated) {
+                List<Filter> filterInGroup = current.availableFilter;
+                for (Filter currentFilterInGroup: filterInGroup) {
+                    if (current.isActivated) {
+                        activatedFilter.add(currentFilterInGroup);
+                    }
+                }
+            }
+        }
+        int arrayLenght = activatedFilter.size();
         String[][] stringArray = new String[arrayLenght][7];
         int currentColumn = 0;
-        for (Filter element: availableFilter) {
+        for (Filter element: activatedFilter) {
             stringArray = Filtermanagement.fillColumn(stringArray, currentColumn, element);
             currentColumn++;
         }
@@ -535,7 +561,7 @@ public class Filtermanagement {
             stringArray[currentColumn][1] = "+";
             stringArray[currentColumn][2] = "0";
             stringArray[currentColumn][3] = Filtermanagement.transformRelationToString(element);
-            stringArray[currentColumn][4] = "nothing";
+            stringArray[currentColumn][4] = "0";
             stringArray[currentColumn][5] = "+";
             stringArray[currentColumn][6] = String.valueOf(element.getValue1());
         } else if (element.getClass() == ConnectedFilter.class && element.isActivated) {
@@ -579,6 +605,12 @@ public class Filtermanagement {
             case "LESSTHAN": returnString = "<"; return returnString;
             case "GREATHEROREQUAL": returnString = ">="; return returnString;
             default: returnString = "<="; return returnString;
+        }
+    }
+
+    private static void checkFilterInputNull(String input) throws InvalidInputException {
+        if (input == null) {
+            throw new InvalidInputException();
         }
     }
 }

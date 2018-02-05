@@ -63,7 +63,7 @@ public class GraphEditorController {
 	 * @param newGraph the PropertyGraph<V,E> to add.
 	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
-	public void addEditedGraph(PropertyGraph newGraph, int oldID) {
+	public void addEditedGraph(PropertyGraph<Integer, Integer> newGraph, int oldID) {
 		Boolean isDuplicate = null;
 		try {
 			isDuplicate = database.graphExists(newGraph);
@@ -71,26 +71,22 @@ public class GraphEditorController {
 				| AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		if (isDuplicate) {
-			return;
-		} else {
+		if (!isDuplicate) {
 			try {
 				database.addGraph(newGraph);
+				log.addEvent(ADD, newGraph.getId());
+				try {
+					database.deleteGraph(oldID);
+					log.addEvent(REMOVE, oldID);
+				} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
+						| ConnectionFailedException e) {
+					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+				}
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
 					| ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
-			log.addEvent(ADD, newGraph.getId());
-			try {
-				database.deleteGraph(oldID);
-			} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
-					| ConnectionFailedException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
-			log.addEvent(REMOVE, oldID);
 		}
-
 	}
 
 	/**
@@ -98,18 +94,26 @@ public class GraphEditorController {
 	 *
 	 * @param graph the graph
 	 */
-	public void addNewGraph(PropertyGraph graph) throws InvalidGraphInputException { // todo only duplicate check??
+	public void addNewGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException { // todo only duplicate check??
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
+				log.addEvent(ADD, graph.getId());
 			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
 					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-			// Creating Event
-			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
-			log.addEvent(ADD, graph.getId());
 		}
+	}
+
+	public PropertyGraph<Integer, Integer> getGraphById(int id) {
+		PropertyGraph<Integer, Integer> graph = null;
+		try {
+			graph = database.getGraphById(id);
+		} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException | DatabaseDoesNotExistException | UnexpectedObjectException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
+		return graph;
 	}
 
 	/**
@@ -118,7 +122,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
 	 */
-	public Boolean isValidGraph(PropertyGraph graph) {
+	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
 		Boolean duplicate = true;
 		try {
 			duplicate = database.graphExists(graph);
@@ -126,7 +130,10 @@ public class GraphEditorController {
 				| AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		return duplicate;
+		if (duplicate) {
+			throw new InvalidGraphInputException("Given graph is a duplicate.");
+		}
+		return true;
 	}
 
 	/**
@@ -134,12 +141,13 @@ public class GraphEditorController {
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 */
-	public void addNextDenserToDatabase(PropertyGraph graph) {
-		NextDenserGraphFinder denserGraph = new NextDenserGraphFinder(graph);
+	public void addNextDenserToDatabase(PropertyGraph<Integer, Integer> graph) {
+		NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(graph);
+		PropertyGraph<Integer, Integer> denserGraph;
+		denserGraph = denserGraphFinder.getNextDenserGraph();
 		try {
-			database.addGraph(denserGraph.getNextDenserGraph());
-			// TODO get right id!
-			log.addEvent(ADD, denserGraph.getNextDenserGraph().getId());
+			database.addGraph(denserGraph);
+			log.addEvent(ADD, denserGraph.getId());
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
 				| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
@@ -152,7 +160,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the graphcolorization.
 	 */
-	public VertexColoringAlgorithm.Coloring getVertexColoring(PropertyGraph graph) {
+	public VertexColoringAlgorithm.Coloring getVertexColoring(PropertyGraph<Integer, Integer> graph) {
 		MinimalVertexColoring coloring = new MinimalVertexColoring(graph);
 		return coloring.getColoring();
 	}
@@ -163,7 +171,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the graphcolorization.
 	 */
-	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph graph) {
+	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph<Integer, Integer> graph) {
 		MinimalTotalColoring coloring = new MinimalTotalColoring(graph);
 		return coloring.getColoring();
 	}

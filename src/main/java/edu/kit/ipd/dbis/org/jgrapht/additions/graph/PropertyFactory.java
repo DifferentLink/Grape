@@ -28,16 +28,20 @@ public class PropertyFactory {
 		properties.add(new AverageDegree(graph));
 		properties.add(new ProportionDensity(graph));
 		properties.add(new StructureDensity(graph));
-		properties.add(new NodeSpecificDensity(graph));
 		properties.add(new BinomialDensity(graph));
+		properties.add(new DisjointFromSubgraphs(graph));
 		properties.add(new GreatestDegree(graph));
 		properties.add(new KkGraphNumberOfSubgraphs(graph));
+		properties.add(new LargestCliqueSize(graph));
+		properties.add(new LargestSubgraphSize(graph));
 		properties.add(new NumberOfCliques(graph));
 		properties.add(new NumberOfEdges(graph));
 		properties.add(new NumberOfTotalColorings(graph));
 		properties.add(new NumberOfVertexColorings(graph));
 		properties.add(new NumberOfVertices(graph));
 		properties.add(new SmallestDegree(graph));
+		properties.add(new TotalColoringNumberOfColors(graph));
+		properties.add(new VertexColoringNumberOfColors(graph));
 		return properties;
 	}
 }

@@ -23,8 +23,6 @@ public class BfsCode extends ComplexProperty {
 
 	@Override
 	protected BfsCodeAlgorithm.BfsCode calculateAlgorithm(PropertyGraph graph) {
-		BfsCodeAlgorithm.BfsCodeImpl bfs =
-				(BfsCodeAlgorithm.BfsCodeImpl) (((ProfileDensityAlgorithm.ProfileImpl) graph.getProperty(Profile.class).getValue()).getMinBfsCode());
-		return bfs;
+		return (((ProfileDensityAlgorithm.ProfileImpl) graph.getProperty(Profile.class).getValue()).getMinBfsCode());
 	}
 }

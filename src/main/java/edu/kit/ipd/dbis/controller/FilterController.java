@@ -4,10 +4,13 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
+import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +24,7 @@ public class FilterController {
 
 	private Filtermanagement filter;
 	private StatusbarController log;
+	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static FilterController filterController;
@@ -40,6 +44,11 @@ public class FilterController {
 			filterController = new FilterController();
 		}
 		return filterController;
+	}
+
+	// TODO: Instance of TableModel
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
 	}
 
 	/**
@@ -66,8 +75,10 @@ public class FilterController {
 	public void updateFilter(String filterInput, int id) throws InvalidInputException {
 		try {
 			filter.updateFilter(filterInput, id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException
-				| InsertionFailedException | DatabaseDoesNotExistException | UnexpectedObjectException e) {
+				| InsertionFailedException | DatabaseDoesNotExistException | UnexpectedObjectException
+				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -97,7 +108,13 @@ public class FilterController {
 	 * @throws InvalidInputException the invalid input exception
 	 */
 	public void updateFilterGroup(String filterInput, int id) throws InvalidInputException {
-		filter.updateFiltergroup(filterInput, id);
+		try {
+			filter.updateFiltergroup(filterInput, id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
+				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+		log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**
@@ -108,8 +125,10 @@ public class FilterController {
 	public void removeFiltersegment(int id) {
 		try {
 			filter.removeFiltersegment(id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
-				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException e) {
+				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException
+				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -122,8 +141,10 @@ public class FilterController {
 	public void activate(int id) {
 		try {
 			filter.activate(id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | UnexpectedObjectException
-				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException e) {
+				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException
+				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -136,8 +157,10 @@ public class FilterController {
 	public void deactivate(int id) {
 		try {
 			filter.deactivate(id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | UnexpectedObjectException
-				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException e) {
+				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException
+				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -147,15 +170,14 @@ public class FilterController {
 	 *
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndSortedGraphs() {
-		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+	public ResultSet getFilteredAndSortedGraphs() {
 		try {
-			graphs = filter.getFilteredAndSortedGraphs();
+			return filter.getFilteredAndSortedGraphs();
 		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
 				| AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		return graphs;
+		return null;
 	}
 
 	/**
@@ -165,15 +187,14 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndAscendingSortedGraphs(Property property) {
-		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) {
 		try {
-			graphs = filter.getFilteredAndAscendingSortedGraphs(property);
+			return filter.getFilteredAndAscendingSortedGraphs(property);
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
 				| TablesNotAsExpectedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		return graphs;
+		return null;
 	}
 
 	/**
@@ -182,15 +203,14 @@ public class FilterController {
 	 * @param property the property to sort after.
 	 * @return a list of PropertyGraph<V,E>.
 	 */
-	public List<PropertyGraph<Integer, Integer>> getFilteredAndDescendingSortedGraphs(Property property) {
-		List<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
+	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) {
 		try {
-			graphs = filter.getFilteredAndDescendingSortedGraphs(property);
+			return filter.getFilteredAndDescendingSortedGraphs(property);
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
 				| TablesNotAsExpectedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		return graphs;
+		return null;
 	}
 }
 

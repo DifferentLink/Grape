@@ -68,6 +68,9 @@ public interface BfsCodeAlgorithm<V, E> {
 		@Override
 		int compareTo(Object o);
 
+		@Override
+		String toString();
+
 
 	}
 	/**
@@ -153,5 +156,17 @@ public interface BfsCodeAlgorithm<V, E> {
 
 			return Integer.compare(this.code.length, b2.length);
 		}
+
+		@Override
+		public String toString() {
+			String s = "";
+			int[] bfsCode = this.code;
+
+			for (int i = 0; i < bfsCode.length; i++) {
+				s += (i != bfsCode.length - 1) ? (bfsCode[i] + ";") : (bfsCode[i]);
+			}
+			return s;
+		}
+
 	}
 }

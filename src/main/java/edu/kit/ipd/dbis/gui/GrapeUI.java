@@ -7,7 +7,6 @@ package edu.kit.ipd.dbis.gui;
 import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
-import edu.kit.ipd.dbis.gui.grapheditor.RenderableGraph;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Log;
 
@@ -52,7 +51,7 @@ public class GrapeUI {
 	               FilterController filterController,
 	               GenerateController generateController,
 	               GraphEditorController graphEditorController,
-	               Log log,
+	               StatusbarController statusbarController,
 	               ResourceBundle language,
 	               Theme theme) {
 		this.calculationController = calculationController;
@@ -73,7 +72,7 @@ public class GrapeUI {
 		} catch (IOException e) {}
 
 
-		menuUI = new MenuUI(generateController, databaseController, log, language, theme);
+		menuUI = new MenuUI(generateController, databaseController, statusbarController, language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
 		filterUI = new FilterUI(filterController, language, theme);
@@ -104,11 +103,14 @@ public class GrapeUI {
 
 		graphEditorDivider.setResizeWeight(.55f);
 
-		statusbarUI = new StatusbarUI(language, theme);
+		statusbarUI = new StatusbarUI(statusbarController, language, theme);
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
-		generateController.setTableModel(tableModel);
+		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
+		calculationController.setTableModel(tableModel);
+		databaseController.setTableModel(tableModel);
+		filterController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
 		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());

@@ -8,8 +8,8 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 
 public class Edge {
-	private final Vertex start;
-	private final Vertex end;
+	private Vertex start;
+	private Vertex end;
 
 	private Color color = GraphLook.edgeColor;
 	private int thickness = GraphLook.edgeThickness;
@@ -42,6 +42,14 @@ public class Edge {
 
 	public Vertex getStart() {
 		return this.start;
+	}
+
+	public void setStart(Vertex vertex) {
+		this.start = vertex;
+	}
+
+	public void setEnd(Vertex vertex) {
+		this.end = vertex;
 	}
 
 	public Vertex getEnd() {

@@ -211,6 +211,32 @@ public abstract class Table {
 	}
 
 	/**
+	 * Returns every column that shall be displayed on the gui-table
+	 * @return the column names
+	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException
+	 * @throws AccessDeniedForUserException
+	 * @throws ConnectionFailedException
+	 */
+	protected String getPropertyColumns()
+			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
+
+		LinkedList<String> list = this.getColumns();
+		list.remove("graph");
+		list.remove("state");
+		list.remove("iscalculated");
+
+		String columns = "";
+		for (String element : list) {
+			columns += (element + ", ");
+		}
+		columns = (columns.length() > 0) ? (columns.substring(0, columns.length() - 2)) : (columns);
+		return columns;
+
+	}
+
+	/**
 	 *
 	 * @return Value of the next free id.
 	 * @throws DatabaseDoesNotExistException
@@ -225,7 +251,7 @@ public abstract class Table {
 		for (int i = 0; i < ids.size(); i++) {
 			if (!ids.contains(i)) return i;
 		}
-		return ids.size() + 1;
+		return ids.size();
 	}
 
 	/**

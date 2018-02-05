@@ -4,6 +4,8 @@ import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 /**
@@ -209,7 +211,7 @@ public interface DatabaseManager {
 	 * @throws ConnectionFailedException
 	 * @throws TablesNotAsExpectedException
 	 */
-	LinkedList<PropertyGraph<Integer, Integer>> getGraphs(String[][] filters, String column, boolean ascending)
+	ResultSet getGraphs(String[][] filters, String column, boolean ascending)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 
@@ -228,19 +230,33 @@ public interface DatabaseManager {
 			AccessDeniedForUserException, UnexpectedObjectException;
 
 	/**
-	 *
-	 * @return all PropertyGraph-Objects in the MySQL-Database that are marked as uncalculated.
+	 * @return a PropertyGraph-Object in the MySQL-Database that is marked as uncalculated.
 	 * @throws AccessDeniedForUserException
 	 * @throws DatabaseDoesNotExistException
 	 * @throws ConnectionFailedException
 	 * @throws TablesNotAsExpectedException
 	 */
-	LinkedList<PropertyGraph<Integer, Integer>> getUncalculatedGraphs()
+	PropertyGraph<Integer, Integer> getUncalculatedGraph()
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
+			TablesNotAsExpectedException, UnexpectedObjectException;
+
+	boolean hasUncalculatedGraphs()
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
 			TablesNotAsExpectedException;
 
+	/**
+	 * Returns the values of a certain column of every graph that matches the filter criteria
+	 * @param filters determines how the database should be filters
+	 * @param column the column
+	 * @return the value of every given column
+	 * @throws AccessDeniedForUserException
+	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException
+	 * @throws TablesNotAsExpectedException
+	 */
 	LinkedList<Double> getValues(String[][] filters, String column)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
 			TablesNotAsExpectedException;
+
 }
 
