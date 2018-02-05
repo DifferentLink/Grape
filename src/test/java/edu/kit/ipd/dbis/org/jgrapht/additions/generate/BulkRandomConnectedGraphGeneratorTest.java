@@ -78,6 +78,14 @@ public class BulkRandomConnectedGraphGeneratorTest {
 		}
 	}
 
+	@Test
+	public void twoVertiecesTest() {
+		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator<>();
+		HashSet<PropertyGraph> target = new HashSet<>();
+		bulkGen.generateBulk(target,1, 2, 2, 1, 1);
+		Assert.assertTrue(target.size() == 1);
+	}
+
 	@Ignore
 	@Test
 	public void largeParameterTest() {
