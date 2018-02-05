@@ -85,20 +85,21 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 
 			// iterate over vertex v's edges
 			for (Object e : this.graph.outgoingEdgesOf(v)) {
-				if (!transformedEdges.contains(((E) e).toString())) {
+				V edgeTarget = (V) this.graph.getEdgeTarget(e);
+				if (!transformedEdges.contains((e).toString())
+						&& !v.equals(edgeTarget)) {
 					// make edge to vertex by creating new
 					// vertex that is situated inbetween
 					// v and the edges' target and creating
 					// edges from the new vertex to those two
 					// vertices.
-					V edgeTarget = (V) this.graph.getEdgeTarget(e);
 
 					transformedEdges.add((e.toString()));
 					transformedEdges.add("(" + edgeTarget.toString() + " : " + v.toString() + ")");
 
 					Integer newTargetVertex;
 					if (vIntegerMap.containsKey(edgeTarget)) {
-						newTargetVertex = (Integer) vIntegerMap.get(edgeTarget);
+						newTargetVertex = vIntegerMap.get(edgeTarget);
 					} else {
 						newTargetVertex = (Integer) vertexFactory.createVertex();
 					}
