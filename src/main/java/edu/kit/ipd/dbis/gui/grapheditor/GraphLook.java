@@ -28,7 +28,7 @@ public class GraphLook {
 	public static Color[] spreadColors(final int numColors) {
 		Color[] colors = new Color[numColors];
 
-		final float step = 1 / numColors;
+		final float step = (float) 1 / numColors;
 
 		for (int color = 0; color < numColors; color++) {
 			colors[color] = Color.getHSBColor(step * color, 1f, 1f);
