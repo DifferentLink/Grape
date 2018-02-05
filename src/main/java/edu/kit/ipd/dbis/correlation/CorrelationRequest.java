@@ -21,6 +21,8 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfE
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.KkGraphNumberOfSubgraphs;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.TotalColoringNumberOfColors;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.VertexColoringNumberOfColors;
 
 
 import java.util.ArrayList;
@@ -183,6 +185,12 @@ public class CorrelationRequest {
 			case "smallestdegree":
 				property = new SmallestDegree(graph);
 				return property;
+            case "totalcoloringnumberofcolors":
+                property = new TotalColoringNumberOfColors(graph);
+                return property;
+            case "vertexcoloringnumberofcolors":
+                property = new VertexColoringNumberOfColors(graph);
+                return property;
             default: throw new InvalidCorrelationInputException();
         }
     }
