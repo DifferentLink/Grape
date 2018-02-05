@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.correlation;
 
+import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
@@ -12,7 +13,15 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfTotalColorings;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertexColorings;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.KkGraphNumberOfSubgraphs;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,66 +77,52 @@ public class CorrelationRequest {
     }
 
     private static List<CorrelationOutput> parseToList(TreeSet<CorrelationOutput> input) {
-        List<CorrelationOutput> output = new ArrayList<>();
-        for (CorrelationOutput current: input) {
-            output.add(current);
+        return new ArrayList<>(input);
+    }
+
+    private static void checkCorrelationInputNull(String input) throws InvalidCorrelationInputException {
+        if (input == null) {
+            throw new InvalidCorrelationInputException();
         }
-        return output;
     }
 
     private static Correlation parseCorrelationToString(String correlationInput) throws
             InvalidCorrelationInputException {
-        int i = 0;
-        String input = correlationInput.toLowerCase();
-        String maxOrMin = "";
-        while (i < input.length() && input.charAt(i) != ' ') {
-            maxOrMin = maxOrMin + input.charAt(i);
-            i++;
+
+        String inputCopy = correlationInput.toLowerCase();
+        String[] parameters = inputCopy.split(" ", 4);
+        if (parameters.length < 3) {
+            throw new InvalidCorrelationInputException();
         }
+
+        String maxOrMin = parameters[0];
+        checkCorrelationInputNull(maxOrMin);
         boolean maximum = CorrelationRequest.testMaxOrMin(maxOrMin);
 
-        String correlationString = "";
-        i++;
-        while (i < input.length() && input.charAt(i) != ' ') {
-            correlationString = correlationString + input.charAt(i);
-            i++;
-        }
+        String correlationString = parameters[1];
+        checkCorrelationInputNull(correlationString);
         Correlation correlation = CorrelationRequest.testCorrelationString(correlationString);
 
-        try {
-            String propertyString = "";
-            int j = i;
-            j++;
-            while (j < input.length() && input.charAt(j) != ' ') {
-                propertyString = propertyString + input.charAt(j);
-                j++;
-            }
+        int paramStart = 2;
+        if (parameters.length == 4) {
+            String propertyString = parameters[paramStart];
+            checkCorrelationInputNull(propertyString);
             Property property = CorrelationRequest.testProperty(propertyString);
-
-            String propertyCounterString = "";
-            j++;
-            while (j < input.length() && input.charAt(j) != ' ') {
-                propertyCounterString = propertyCounterString + input.charAt(j);
-                j++;
-            }
-            int attributeCounter = Integer.parseInt(propertyCounterString);
-
-            correlation.setAttributeCounter(attributeCounter);
+            paramStart++;
             correlation.setProperty(property);
-            correlation.setMaximum(maximum);
-            return correlation;
-        } catch (InvalidCorrelationInputException e) {
-            String propertyCounterString = "";
-            i++;
-            while (i < input.length() && input.charAt(i) != ' ') {
-                propertyCounterString = propertyCounterString + input.charAt(i);
-                i++;
-            }
-            int attributeCounter = Integer.parseInt(propertyCounterString);
-            correlation.setAttributeCounter(attributeCounter);
-            correlation.setMaximum(maximum);
-            return correlation;
         }
+
+        String propertyCounterString = parameters[paramStart];
+        checkCorrelationInputNull(propertyCounterString);
+        if (!StringUtils.isStrictlyNumeric(propertyCounterString) || propertyCounterString.length() == 0) {
+            throw new InvalidCorrelationInputException();
+        }
+        int attributeCounter = Integer.parseInt(propertyCounterString);
+
+
+        correlation.setMaximum(maximum);
+        correlation.setAttributeCounter(attributeCounter);
+        return correlation;
     }
 
     private static boolean testMaxOrMin(String input) throws InvalidCorrelationInputException {
@@ -149,7 +144,7 @@ public class CorrelationRequest {
     }
 
     private static Property testProperty(String input) throws InvalidCorrelationInputException {
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Property property;
         switch (input) {
 			case "profile":

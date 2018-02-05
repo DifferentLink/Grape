@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.History;
@@ -20,8 +21,8 @@ public class LogUI extends JFrame {
 	private ResourceBundle language;
 	private Theme theme;
 
-	public LogUI(History history, ResourceBundle language, Theme theme) {
-		this.history = history;
+	public LogUI(StatusbarController statusbarController, ResourceBundle language, Theme theme) {
+		this.history = statusbarController.getHistory();
 		this.language = language;
 		this.theme = theme;
 		this.setUndecorated(true);
@@ -50,7 +51,7 @@ public class LogUI extends JFrame {
 		switch (event.getType()) {
 			case MESSAGE : return renderMESSAGE(event);
 			case REMOVE : return renderREMOVE(event);
-			case ADD : return renderREMOVE(event);
+			case ADD : return renderADD(event);
 		}
 		return null;
 	}

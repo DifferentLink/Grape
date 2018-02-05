@@ -10,6 +10,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -81,7 +82,11 @@ public class GenerateController {
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
 		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		this.saveGraphs(graphs);
-		table.update(filter.getFilteredAndSortedGraphs());
+		try {
+			table.update(filter.getFilteredAndSortedGraphs());
+		} catch (SQLException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**
