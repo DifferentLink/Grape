@@ -15,14 +15,17 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.VertexColoringNumberOfColors;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.TotalColoringNumberOfColors;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfTotalColorings;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.KkGraphNumberOfSubgraphs;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertexColorings;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.KkGraphNumberOfSubgraphs;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.LargestSubgraphSize;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -344,6 +347,15 @@ public class Filtermanagement {
     private static Filter parseToFilter(String input, int id) throws InvalidInputException {
         String inputCopy = input.toLowerCase();
         String[] parameters = inputCopy.split(" ", 7);
+        if (parameters.length == 1) {
+            switch (parameters[0]) {
+                case "hadwigerconjecture":
+                    inputCopy = "vertexcoloringnumberofcolors + 0 = largestsubgraphsize + 0";
+                    parameters = inputCopy.split(" ", 7);
+                    break;
+                default: throw new InvalidInputException();
+            }
+        }
         if (parameters.length != 3 && parameters.length != 7) {
             throw new InvalidInputException();
         }
@@ -464,6 +476,15 @@ public class Filtermanagement {
 			case "smallestdegree":
 				property = new SmallestDegree(graph);
 				return property;
+            case "totalcoloringnumberofcolors":
+                property = new TotalColoringNumberOfColors(graph);
+                return property;
+            case "vertexcoloringnumberofcolors":
+                property = new VertexColoringNumberOfColors(graph);
+                return property;
+            case "largestsubgraphsize":
+                property = new LargestSubgraphSize(graph);
+                return property;
             default: throw new InvalidInputException();
         }
     }
@@ -500,10 +521,26 @@ public class Filtermanagement {
      * @return returns a two-dimensional string array which codes all filter which are currently activ
      */
     public String[][] parseFilterList() {
-        int arrayLenght = availableFilter.size() + availableFilterGroups.size();
+        ArrayList<Filter> activatedFilter = new ArrayList<>();
+        for (Filter current: availableFilter) {
+            if (current.isActivated) {
+                activatedFilter.add(current);
+            }
+        }
+        for (Filtergroup current: availableFilterGroups) {
+            if (current.isActivated) {
+                List<Filter> filterInGroup = current.availableFilter;
+                for (Filter currentFilterInGroup: filterInGroup) {
+                    if (current.isActivated) {
+                        activatedFilter.add(currentFilterInGroup);
+                    }
+                }
+            }
+        }
+        int arrayLenght = activatedFilter.size();
         String[][] stringArray = new String[arrayLenght][7];
         int currentColumn = 0;
-        for (Filter element: availableFilter) {
+        for (Filter element: activatedFilter) {
             stringArray = Filtermanagement.fillColumn(stringArray, currentColumn, element);
             currentColumn++;
         }
@@ -524,7 +561,7 @@ public class Filtermanagement {
             stringArray[currentColumn][1] = "+";
             stringArray[currentColumn][2] = "0";
             stringArray[currentColumn][3] = Filtermanagement.transformRelationToString(element);
-            stringArray[currentColumn][4] = "nothing";
+            stringArray[currentColumn][4] = "0";
             stringArray[currentColumn][5] = "+";
             stringArray[currentColumn][6] = String.valueOf(element.getValue1());
         } else if (element.getClass() == ConnectedFilter.class && element.isActivated) {

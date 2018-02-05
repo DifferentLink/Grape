@@ -47,8 +47,8 @@ public class MinimalTotalColoringTest {
 		graph.addEdge(3, 4);
 		graph.addEdge(4, 5);
 
-		MinimalTotalColoring<String, String> totalColoring = new MinimalTotalColoring<>(graph);
-		List<TotalColoringAlgorithm.TotalColoring<String, String>> colorings = totalColoring.getAllColorings();
+		MinimalTotalColoring<Integer, Integer> totalColoring = new MinimalTotalColoring<>(graph);
+		List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>> colorings = totalColoring.getAllColorings();
 		assertEquals(true, colorings.size() > 1);
 	}
 }

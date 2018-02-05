@@ -35,7 +35,7 @@ public class Main {
 		try {
 			Locale currentLocale = Locale.getDefault();
 			return ResourceBundle.getBundle("languages", currentLocale);
-		} catch (MissingResourceException lanuageNotFound) {
+		} catch (MissingResourceException languageNotFound) {
 			// Set default language to english (en_US)
 			return ResourceBundle.getBundle(
 					"languages",
