@@ -279,12 +279,16 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			PropertyGraph propertyGraph = graph.asPropertyGraph();
-			if (graphEditorController.isValidGraph(propertyGraph)) {
-				graphEditorController.addEditedGraph(propertyGraph, graph.getId());
-				graph = new RenderableGraph();
-				history = new GraphEditorHistory();
-			} else {
-				System.out.println("Invalid graph");
+			try {
+				if (graphEditorController.isValidGraph(propertyGraph)) {
+					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
+					graph = new RenderableGraph();
+					history = new GraphEditorHistory();
+				} else {
+					System.out.println("Invalid graph");
+				}
+			} catch (InvalidGraphInputException e) {
+				e.printStackTrace();
 			}
 		}
 	}
