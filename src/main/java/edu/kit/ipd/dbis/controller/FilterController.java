@@ -4,11 +4,13 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
+import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class FilterController {
 
 	private Filtermanagement filter;
 	private StatusbarController log;
+	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static FilterController filterController;
@@ -41,6 +44,11 @@ public class FilterController {
 			filterController = new FilterController();
 		}
 		return filterController;
+	}
+
+	// TODO: Instance of TableModel
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
 	}
 
 	/**
@@ -67,8 +75,10 @@ public class FilterController {
 	public void updateFilter(String filterInput, int id) throws InvalidInputException {
 		try {
 			filter.updateFilter(filterInput, id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException
-				| InsertionFailedException | DatabaseDoesNotExistException | UnexpectedObjectException e) {
+				| InsertionFailedException | DatabaseDoesNotExistException | UnexpectedObjectException
+				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -100,8 +110,9 @@ public class FilterController {
 	public void updateFilterGroup(String filterInput, int id) throws InvalidInputException {
 		try {
 			filter.updateFiltergroup(filterInput, id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
-				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException e) {
+				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 		log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -114,8 +125,10 @@ public class FilterController {
 	public void removeFiltersegment(int id) {
 		try {
 			filter.removeFiltersegment(id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
-				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException e) {
+				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException
+				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -128,8 +141,10 @@ public class FilterController {
 	public void activate(int id) {
 		try {
 			filter.activate(id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | UnexpectedObjectException
-				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException e) {
+				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException
+				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -142,8 +157,10 @@ public class FilterController {
 	public void deactivate(int id) {
 		try {
 			filter.deactivate(id);
+			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | UnexpectedObjectException
-				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException e) {
+				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException
+				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
