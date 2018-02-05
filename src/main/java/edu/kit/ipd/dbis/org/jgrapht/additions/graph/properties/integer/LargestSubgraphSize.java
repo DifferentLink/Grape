@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.KkGraph;
@@ -20,11 +21,10 @@ public class LargestSubgraphSize extends IntegerProperty {
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		int largestSubgraphSize = 0;
-		for (Set<Object> s : (List<Set<Object>>) graph.getProperty(KkGraph.class).getValue()) {
+		for (Set<Object> s : (List<Set<Object>>) ((KkGraphAlgorithm.KkGraph) graph.getProperty(KkGraph.class).getValue()).getSubgraphs())
 			if (s.size() > largestSubgraphSize) {
 				largestSubgraphSize = s.size();
 			}
-		}
 		return largestSubgraphSize;
 	}
 }
