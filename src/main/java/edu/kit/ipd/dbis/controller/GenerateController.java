@@ -166,13 +166,7 @@ public class GenerateController {
 	public Boolean isValidBFS(String bfsCode) {
 		String[] splitCode = bfsCode.split(",");
 		for (int i = 0; i < splitCode.length; i++) {
-			if (splitCode[i].length() != 1) {
-				return false;
-			} else if (!isNumeric(splitCode[i])) {
-				return false;
-			} else if (Integer.parseInt(splitCode[i]) > splitCode.length) {
-				return false;
-			} else if (Integer.parseInt(splitCode[i]) < -1) {
+			if (!isNumeric(splitCode[i])) {
 				return false;
 			}
 		}
