@@ -8,7 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Vector;
 
 public class NonEditableTableModel extends DefaultTableModel {
 
@@ -27,9 +26,9 @@ public class NonEditableTableModel extends DefaultTableModel {
 			}
 
 			while (resultSet.next()) {
-				Vector<Object> row = new Vector<>();
+				Object[] row = new Object[metaData.getColumnCount()];
 				for (int i = 1; i <= metaData.getColumnCount(); i++) {
-					row.add(resultSet.getObject(i));
+					row[i - 1] = resultSet.getObject(i);
 				}
 				this.addRow(row);
 			}
