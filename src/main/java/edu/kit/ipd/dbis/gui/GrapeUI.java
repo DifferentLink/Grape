@@ -142,9 +142,9 @@ public class GrapeUI {
 	private class TableSelectionChangeAction implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
+			int id = (int) tableModel.getValueAt(tableUI.getSelectedRow(), 1);
 			graphEditorUI.displayGraph(
-					graphEditorController.getGraphById(
-							(int) tableModel.getValueAt(tableUI.getSelectedRow(), 0)));
+					graphEditorController.getGraphById(id));
 		}
 	}
 
