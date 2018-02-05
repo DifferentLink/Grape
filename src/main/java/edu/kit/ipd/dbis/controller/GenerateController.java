@@ -107,7 +107,9 @@ public class GenerateController {
 	 * @throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
-		if (isValidBFS(bfsCode)) {
+		if (!isValidBFS(bfsCode)) {
+			throw new InvalidBfsCodeInputException("BfsCode is not valid");
+		}
 			// Parsing String into int[]
 			String[] splitCode = bfsCode.split(",");
 			int[] code = new int[splitCode.length];
@@ -123,9 +125,6 @@ public class GenerateController {
 					| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-		} else {
-			throw new InvalidBfsCodeInputException("BfsCode is not valid");
-		}
 	}
 
 	/**
