@@ -166,7 +166,6 @@ public class GraphTable extends Table {
 
 		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false LIMIT 1";
 		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
-		LinkedList<PropertyGraph<Integer, Integer>> graphs = new LinkedList<>();
 
 		if (result.next()) {
 			return this.getInstanceOf(this.byteArrayToObject(result.getBytes("graph")));
@@ -331,7 +330,7 @@ public class GraphTable extends Table {
 		String sql = "";
 		for (int i = 0; i < filters.length; i++) {
 			for (int j = 0; j < filters[i].length; j++) {
-				sql += " AND" + filters[i][j];
+				sql += " AND " + filters[i][j];
 			}
 		}
 		return sql;
