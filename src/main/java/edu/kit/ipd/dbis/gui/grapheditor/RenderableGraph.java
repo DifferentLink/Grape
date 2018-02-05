@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
@@ -74,6 +75,64 @@ public class RenderableGraph {
 			}
 		}
 	}
+
+	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring) {
+		this.edges = new HashSet<>();
+		this.vertices = new HashSet<>();
+		this.id = propertyGraph.getId();
+
+		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
+		Map<Integer, Color> colorsToColorObjectMap = new HashMap<>();
+		Map<V, Integer> colors = coloring.getColors();
+
+		// associate integer value of colorings
+		// with Color object
+		int i = 0;
+		for (V key : coloring.getColors().keySet()) {
+			colorsToColorObjectMap.put(colors.get(key), colorArray[i]);
+			if (i + 1 < colorArray.length) {
+				i++;
+			} else {
+				break;
+			}
+		}
+
+		Map<Object, Vertex> objectVertexMap = new HashMap<>();
+		Set addedEdges = new HashSet();
+
+		// iterate over vertices
+		for (Object v : propertyGraph.vertexSet()) {
+			// check if vertex was already added as
+			// 'edgeTarget' in loop below
+			if (!objectVertexMap.containsKey(v)) {
+				Vertex vertex1 = new Vertex(0, 0);
+				vertex1.setFillColor(colorsToColorObjectMap.get(colors.get(v)));
+				this.vertices.add(vertex1);
+				objectVertexMap.put(v, vertex1);
+			}
+
+			// iterate over vertex v's edges
+			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+
+				// check if vertex was already added
+				if (!objectVertexMap.containsKey(edgeTarget)) {
+					Vertex vertex2 = new Vertex(0, 0);
+					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
+					this.vertices.add(vertex2);
+					objectVertexMap.put(edgeTarget, vertex2);
+				}
+
+				// check if edge was already added
+				if (!addedEdges.contains(e)
+						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
+					addedEdges.add(e);
+					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
+				}
+			}
+		}
+	}
+
 
 	public PropertyGraph asPropertyGraph() {
 		PropertyGraph graph = new PropertyGraph();
