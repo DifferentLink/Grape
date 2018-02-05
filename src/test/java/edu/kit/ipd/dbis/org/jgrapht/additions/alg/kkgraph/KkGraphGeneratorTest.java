@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.kkgraph;
 
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.Assert;
@@ -168,5 +169,16 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+	}
+
+	@Test
+	public void generatedGraphTest() {
+		int[] code = {1,1,2,1,1,3,1,1,4,1,1,5,1,2,6,1,6,7};
+		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+		PropertyGraph graph = new PropertyGraph(bfs);
+
+		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
+		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 2);
 	}
 }
