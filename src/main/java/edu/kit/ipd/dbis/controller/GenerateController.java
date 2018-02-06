@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
@@ -12,6 +13,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +28,9 @@ public class GenerateController {
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
 	private StatusbarController log;
+	private FilterController filter;
 	private CalculationController calculation;
+	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -36,6 +40,7 @@ public class GenerateController {
 		this.generator = new BulkRandomConnectedGraphGenerator();
 		this.log = StatusbarController.getInstance();
 		this.calculation = CalculationController.getInstance();
+		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -58,6 +63,17 @@ public class GenerateController {
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
 	}
+
+	/**
+	 * Sets table model.
+	 *
+	 * @param tableModel the table model
+	 */
+// TODO: Instance of TableModel
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
+	}
+
 
 	/**
 	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
@@ -120,8 +136,8 @@ public class GenerateController {
 		PropertyGraph graph = new PropertyGraph(bfs);
 		try {
 			database.addGraph(graph);
-		} catch (ConnectionFailedException
-				| UnexpectedObjectException | InsertionFailedException e) {
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -134,7 +150,8 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
-		} catch (ConnectionFailedException e) {
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (ConnectionFailedException | SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}

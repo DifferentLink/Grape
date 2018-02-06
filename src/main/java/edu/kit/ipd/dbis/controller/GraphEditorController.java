@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
@@ -11,6 +12,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
+import java.sql.SQLException;
 import java.util.Collections;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
@@ -24,12 +26,15 @@ public class GraphEditorController {
 
 	private GraphDatabase database;
 	private StatusbarController log;
+	private FilterController filter;
+	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
 	private GraphEditorController() {
 		this.log = StatusbarController.getInstance();
+		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -53,6 +58,10 @@ public class GraphEditorController {
 		this.database = database;
 	}
 
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
+	}
+
 	/**
 	 * checks the given graph for duplicates then adds the graph to the not yet calculated
 	 * graphlist of CalculationController and deletes the old graph from the
@@ -72,13 +81,10 @@ public class GraphEditorController {
 			try {
 				database.addGraph(newGraph);
 				log.addEvent(ADD, newGraph.getId());
-				try {
-					database.deleteGraph(oldID);
-					log.addEvent(REMOVE, oldID);
-				} catch (ConnectionFailedException e) {
-					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-				}
-			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
+				database.deleteGraph(oldID);
+				log.addEvent(REMOVE, oldID);
+				this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
@@ -93,9 +99,11 @@ public class GraphEditorController {
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
+				log.continueCalculation();
 				log.addEvent(ADD, graph.getId());
+				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException
-					| InsertionFailedException | UnexpectedObjectException e) {
+					| InsertionFailedException | UnexpectedObjectException | SQLException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
@@ -142,8 +150,8 @@ public class GraphEditorController {
 		try {
 			database.addGraph(denserGraph);
 			log.addEvent(ADD, denserGraph.getId());
-		} catch (ConnectionFailedException
-				| UnexpectedObjectException | InsertionFailedException e) {
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
