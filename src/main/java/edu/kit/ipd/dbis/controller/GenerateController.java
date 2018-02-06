@@ -5,9 +5,11 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
@@ -26,7 +28,9 @@ public class GenerateController {
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
 	private StatusbarController log;
+	private FilterController filter;
 	private CalculationController calculation;
+	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -36,6 +40,7 @@ public class GenerateController {
 		this.generator = new BulkRandomConnectedGraphGenerator();
 		this.log = StatusbarController.getInstance();
 		this.calculation = CalculationController.getInstance();
+		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -60,6 +65,17 @@ public class GenerateController {
 	}
 
 	/**
+	 * Sets table model.
+	 *
+	 * @param tableModel the table model
+	 */
+// TODO: Instance of TableModel
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
+	}
+
+
+	/**
 	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
 	 *
 	 * @param minVertices lower bound of vertices
@@ -75,10 +91,19 @@ public class GenerateController {
 			throw new InvalidGeneratorInputException();
 		}
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
-		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-		this.saveGraphs(graphs);
-		Thread calculate = new Thread(CalculationController.getInstance());
-		SwingUtilities.invokeLater(calculate);
+		try {
+			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			this.saveGraphs(graphs);
+			Thread calculate = new Thread(CalculationController.getInstance());
+			SwingUtilities.invokeLater(calculate);
+		} catch (IllegalArgumentException e) {
+			throw new InvalidGeneratorInputException();
+		} catch (NotEnoughGraphsException e) {
+			log.addMessage(EventType.MESSAGE, e.getMessage());
+			this.saveGraphs(graphs);
+			Thread calculate = new Thread(CalculationController.getInstance());
+			SwingUtilities.invokeLater(calculate);
+		}
 	}
 
 	/**
@@ -100,21 +125,22 @@ public class GenerateController {
 	 */
 
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException { //TODO: check for valid BFS input
-			// Parsing String into int[]
-			String[] splitCode = bfsCode.split(",");
-			int[] code = new int[splitCode.length];
-			for (int i = 0; i < splitCode.length; i++) {
-				code[i] = Integer.parseInt(splitCode[i]);
-			}
-			// Creating BfsCode Object
-			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-			PropertyGraph graph = new PropertyGraph(bfs);
-			try {
-				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-					| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
+		// Parsing String into int[]
+		String[] splitCode = bfsCode.split(",");
+		int[] code = new int[splitCode.length];
+		for (int i = 0; i < splitCode.length; i++) {
+			code[i] = Integer.parseInt(splitCode[i]);
+		}
+		// Creating BfsCode Object
+		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
+		try {
+			database.addGraph(graph);
+			calculation.run();
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**
@@ -125,8 +151,8 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
-		} catch (TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException
-				| DatabaseDoesNotExistException e) {
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (ConnectionFailedException | SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -140,8 +166,7 @@ public class GenerateController {
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
-					| ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}

@@ -30,6 +30,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 */
 	protected final PropertyGraph<V, E> graph;
 	private List<Coloring<V>> colorings;
+	private int[][] matrix;
 
 	/**
 	 * Construct a new coloring algorithm.
@@ -39,6 +40,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	public MinimalVertexColoring(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 		this.colorings = new ArrayList<>();
+		this.matrix = graph.getAdjacencyMatrix();
 	}
 
 	/**
@@ -52,59 +54,49 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 
 		// give vertices an order
 		ArrayList<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.graph.vertexSet()));
-		Integer[] colors = new Integer[numberOfVertices];
-		// initialize colors
-		for (int i = 0; i < colors.length; i++) {
-			colors[i] = 0;
-		}
+		int[] colors;
 
 		if (numberOfVertices == 1) {
 			//trivial case
-			this.colorings.add(createColoringObject(new Integer[]{0}, sortedVertices));
+			this.colorings.add(createColoringObject(new int[]{0}, sortedVertices));
 			return this.colorings;
 		}
 
-		// get integer partitions
 		List<int[]> partitions = this.integerPartitioning(numberOfVertices, largestCliqueSize);
-
 		int numberOfColors = Integer.MAX_VALUE;
 
 		// iterate over partitions
-		for (Object partition : partitions) {
+		for (int[] partitioning : partitions) {
 			// because different partitionings can have the
 			// same length (= number of colors), this is
 			// needed in order to determine every isomorphic
 			// coloring, and then break.
-			if (((int[]) partition).length > numberOfColors) {
+			if (partitioning.length > numberOfColors) {
 				break;
 			}
 
-			// partitions have the following format:
+			// partitionings have the following format:
 			// (e.g. for 8 vertices and 2 numbers):
 			// 7 1
 			// the algorithm needs this format:
 			// 0 0 0 0 0 0 0 1
-			colors = this.parseIntegerPartitioning((int[]) partition, numberOfVertices);
+			colors = this.parseIntegerPartitioning(partitioning, numberOfVertices);
 
-			// create copy of array
-			Integer[] colorCopy = new Integer[colors.length];
-			System.arraycopy(colors, 0, colorCopy, 0, colors.length);
-
+			// create copy of array and
 			// sort it backwards.
 			// when all permutations are checked,
 			// the color array is in ascending order.
 			// using colorCopy, we can define an end
 			// for the while loop below.
-			Arrays.sort(colorCopy, Collections.reverseOrder());
+			int[] colorCopy = this.reverseArray(colors);
 
 			// get all permutations of partitioning
-			while (!Arrays.equals(colorCopy, colors)) {
+			while (!Arrays.equals(colors, colorCopy)) {
 				colors = getNextPermutation(colors);
-				Coloring<V> coloring = createColoringObject(colors, sortedVertices);
-				if (isValidVertexColoring(coloring, graph)) {
+				if (isValidVertexColoring(colors)) {
 					// found one coloring of this partitioning.
-					this.colorings.add(coloring);
-					numberOfColors = ((int[]) partition).length;
+					this.colorings.add(createColoringObject(colors, sortedVertices));
+					numberOfColors = partitioning.length;
 					break;
 				}
 			}
@@ -120,8 +112,8 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return this.colorings.get(0);
 	}
 
-	private Integer[] parseIntegerPartitioning(int[] partitioning, int numberOfVertices) {
-		Integer[] result = new Integer[numberOfVertices];
+	private int[] parseIntegerPartitioning(int[] partitioning, int numberOfVertices) {
+		int[] result = new int[numberOfVertices];
 		int index = 0;
 		for (int i = 0; i < partitioning.length; i++) {
 			for (int j = index; j < result.length; j++) {
@@ -224,7 +216,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return true;
 	}
 
-	private Integer[] getNextPermutation(Integer[] ascendingArray) {
+	private int[] getNextPermutation(int[] ascendingArray) {
 		for (int i = ascendingArray.length - 1; i > 0; i--) {
 			if (ascendingArray[i - 1] < ascendingArray[i]) {
 				// find last element which does not exceed ascendingArray[i-1]
@@ -243,13 +235,29 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return ascendingArray;
 	}
 
-	private void swap(Integer[] array, int a, int b) {
+	private void swap(int[] array, int a, int b) {
 		int tmp = array[a];
 		array[a] = array[b];
 		array[b] = tmp;
 	}
 
-	private Coloring<V> createColoringObject(Integer[] coloring, List<V> sortedNodes) {
+	/**
+	 * Reverses input array while
+	 * leaving it intact.
+	 *
+	 * @param array input array
+	 * @return reversed new array
+	 */
+	private int[] reverseArray(int[] array) {
+		int[] result = new int[array.length];
+		for (int x = 0, y = array.length - 1; x <= y; x++, y--) {
+			result[y] = array[x];
+			result[x] = array[y];
+		}
+		return result;
+	}
+
+	private Coloring<V> createColoringObject(int[] coloring, List<V> sortedNodes) {
 		Map<V, Integer> colors = new HashMap<>();
 		Set<Integer> differentColors = new HashSet<>();
 		for (int j = 0; j < coloring.length; j++) {
@@ -289,6 +297,23 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	}
 
 	/**
+	 * Checks if a coloring is valid.
+	 *
+	 * @param colors the coloring
+	 * @return true if valid, false if invalid
+	 */
+	public boolean isValidVertexColoring(int[] colors) {
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = i + 1; j < matrix.length; j++) {
+				if (matrix[i][j] == 1 && colors[i] == colors[j]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Checks if two colorings are isomorphic.
 	 *
 	 * @param c1 first coloring
@@ -313,32 +338,5 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			}
 		}
 		return true;
-	}
-
-	@Deprecated
-	private List<Coloring<V>> getNonEquivalentColorings(List<Coloring<V>> colorings) {
-		List<Coloring<V>> result = new ArrayList<>();
-		Map<Coloring<V>, Boolean> addedMap = new HashMap<>();
-		addedMap.put(colorings.get(0), true);
-		result.add(colorings.get(0));
-		for (Coloring<V> c1 : colorings) {
-			for (Coloring<V> c2 : colorings) {
-				if (c1 != c2 && !equivalentColoring(c1, c2)) {
-					if (!addedMap.containsKey(c1) && !addedMap.containsKey(c2)) {
-						result.add(c1);
-						result.add(c2);
-						addedMap.put(c1, true);
-						addedMap.put(c2, true);
-					} else if (!addedMap.containsKey(c1) && addedMap.containsKey(c2)) {
-						result.add(c1);
-						addedMap.put(c1, true);
-					} else if (addedMap.containsKey(c1) && !addedMap.containsKey(c2)) {
-						result.add(c2);
-						addedMap.put(c2, true);
-					}
-				}
-			}
-		}
-		return result;
 	}
 }

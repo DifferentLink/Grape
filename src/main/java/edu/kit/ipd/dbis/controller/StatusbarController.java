@@ -2,9 +2,8 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.log.History;
@@ -74,8 +73,7 @@ public class StatusbarController {
 	public void undo() {
 		try {
 			log.undo();
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
 		}
 	}
@@ -86,8 +84,7 @@ public class StatusbarController {
 	public void redo() {
 		try {
 			log.redo();
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
 		}
 	}

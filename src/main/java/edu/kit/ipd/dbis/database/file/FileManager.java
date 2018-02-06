@@ -39,7 +39,7 @@ public class FileManager implements Connector {
 			ConnectionFailedException, SQLException {
 		Connection connection = getConnection(url, user, password);
 		if (tableExists(connection, name) || name.equals("database")) {
-			throw new TableAlreadyExistsException();
+			throw new TableAlreadyExistsException("There already is a table called " + name);
 		}
 		GraphTable graphTable = new GraphTable(url, user, password, name);
 		FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
@@ -52,23 +52,22 @@ public class FileManager implements Connector {
 
 		File file = new File(directory);
 		if (file.exists()) {
-			throw new FileNameAlreadyTakenException();
+			throw new FileNameAlreadyTakenException(directory + " is an invalid name.");
 		} else {
 			SaveParser save = new SaveParser(database);
 			save.parse();
 			try {
 				Files.write(Paths.get(directory), save.getInformation().getBytes());
-			} catch (Exception e) {
-				throw new FileCouldNotBeSavedException();
+			} catch (IOException e) {
+				throw new FileCouldNotBeSavedException(e.getMessage());
 			}
 		}
 	}
 
 	@Override
 	public GraphDatabase loadGraphDatabase(String directory)
-			throws FileNotFoundException, FileContentNotAsExpectedException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException, DatabaseDoesNotExistException, FileContentCouldNotBeReadException,
-			TablesNotAsExpectedException {
+			throws FileNotFoundException, FileContentNotAsExpectedException, SQLException,
+			FileContentCouldNotBeReadException, ConnectionFailedException {
 
 		FileReader file = new FileReader(directory);
 		BufferedReader reader = new BufferedReader(file);
@@ -77,8 +76,8 @@ public class FileManager implements Connector {
 			load = new LoadParser(reader.readLine());
 			file.close();
 			reader.close();
-		} catch (Exception e) {
-			throw new FileContentCouldNotBeReadException();
+		} catch (IOException e) {
+			throw new FileContentCouldNotBeReadException(e.getMessage());
 		}
 
 		load.parse();
@@ -87,7 +86,7 @@ public class FileManager implements Connector {
 			database.setDirectory(directory);
 			return database;
 		}
-		throw new TablesNotAsExpectedException();
+		throw new ConnectionFailedException("Selected Table does not contain the required columns.");
 	}
 
 	@Override
@@ -142,11 +141,11 @@ public class FileManager implements Connector {
 			Connection connection = DriverManager.getConnection(url, user, password);
 			return connection;
 		} catch (MySQLSyntaxErrorException e) {
-			throw new DatabaseDoesNotExistException();
+			throw new DatabaseDoesNotExistException(e.getMessage());
 		} catch (SQLException e) {
-			throw new AccessDeniedForUserException();
-		} catch (Exception e) {
-			throw new ConnectionFailedException();
+			throw new AccessDeniedForUserException(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
@@ -178,9 +177,7 @@ public class FileManager implements Connector {
 	 * @throws ConnectionFailedException
 	 * @throws DatabaseDoesNotExistException
 	 */
-	private boolean validFilterTable(FilterTable filterTable)
-			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
-			DatabaseDoesNotExistException {
+	private boolean validFilterTable(FilterTable filterTable) throws SQLException {
 
 		LinkedList<String> columns = filterTable.getColumns();
 		HashSet<String> names = new HashSet<>();
@@ -202,9 +199,7 @@ public class FileManager implements Connector {
 	 * @throws ConnectionFailedException
 	 * @throws DatabaseDoesNotExistException
 	 */
-	private boolean validGraphTable(GraphTable graphTable)
-			throws SQLException, AccessDeniedForUserException, ConnectionFailedException,
-			DatabaseDoesNotExistException {
+	private boolean validGraphTable(GraphTable graphTable) throws SQLException {
 
 		LinkedList<String> columns = graphTable.getColumns();
 		HashSet<String> names = new HashSet<>();

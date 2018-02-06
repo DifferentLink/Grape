@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.filter;
 import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
-import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
@@ -26,10 +25,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfV
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.LargestSubgraphSize;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.DisjointFromSubgraphs;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.LargestCliqueSize;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
-
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -54,23 +49,20 @@ public class Filtermanagement {
         availableFilter = new ArrayList<>();
     }
 
-    private void addFilterGroup(Filtergroup filtergroup) throws TablesNotAsExpectedException, ConnectionFailedException,
-            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
-            DatabaseDoesNotExistException {
+    private void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
+            UnexpectedObjectException, InsertionFailedException {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
     }
 
-    private void addFilter(Filter filter) throws TablesNotAsExpectedException, ConnectionFailedException,
-            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
-            DatabaseDoesNotExistException {
+    private void addFilter(Filter filter) throws ConnectionFailedException,
+            InsertionFailedException, UnexpectedObjectException {
         database.addFilter(filter);
         availableFilter.add(filter);
     }
 
-    private void addFilterToFiltergroup(Filter filter, int groupID) throws TablesNotAsExpectedException,
-            ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException,
-            UnexpectedObjectException, DatabaseDoesNotExistException {
+    private void addFilterToFiltergroup(Filter filter, int groupID) throws ConnectionFailedException,
+            InsertionFailedException, UnexpectedObjectException {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == groupID) {
                 element.availableFilter.add(filter);
@@ -79,8 +71,7 @@ public class Filtermanagement {
         }
     }
 
-    private int removeFiltersegmentAngGetID(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException,
-            ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException,
+    private int removeFiltersegmentAngGetID(int id) throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
         for (Filter element : availableFilter) {
             if (element.id == id) {
@@ -112,12 +103,11 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws AccessDeniedForUserException thrown if there is no access to the database
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws TablesNotAsExpectedException thrown if the tables in database are bad
+     * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
      * @throws InsertionFailedException thrown if the database operation failed
      */
-    public void removeFiltersegment(int id) throws DatabaseDoesNotExistException, AccessDeniedForUserException,
-            ConnectionFailedException, TablesNotAsExpectedException, UnexpectedObjectException,
+    public void removeFiltersegment(int id) throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
         for (Filter element: availableFilter) {
             if (element.id == id) {
@@ -149,13 +139,11 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws AccessDeniedForUserException thrown if there is no access to the database
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws TablesNotAsExpectedException thrown if the tables in database are bad
+     * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
      * @throws InsertionFailedException thrown if the database operation failed
      */
-    public void activate(int id) throws TablesNotAsExpectedException, ConnectionFailedException,
-            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
-            DatabaseDoesNotExistException {
+    public void activate(int id) throws InsertionFailedException, UnexpectedObjectException, ConnectionFailedException {
         for (Filtersegment element: availableFilter) {
             if (element.id == id) {
                 element.activate();
@@ -186,13 +174,12 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws AccessDeniedForUserException thrown if there is no access to the database
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws TablesNotAsExpectedException thrown if the tables in database are bad
+     * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
      * @throws InsertionFailedException thrown if the database operation failed
      */
-    public void deactivate(int id) throws TablesNotAsExpectedException, ConnectionFailedException,
-            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
-            DatabaseDoesNotExistException {
+    public void deactivate(int id) throws ConnectionFailedException,
+            InsertionFailedException, UnexpectedObjectException {
         for (Filter element: availableFilter) {
             if (element.id == id) {
                 element.deactivate();
@@ -221,7 +208,7 @@ public class Filtermanagement {
      * method which offers the oppotunity to modify a specific filter
      * @param input code of the modified filter
      * @param id id of the filter to modify
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws AccessDeniedForUserException thrown if there is no access to database
@@ -229,7 +216,7 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws InvalidInputException thrown if no valid filter is coded in iput string
      */
-    public void updateFilter(String input, int id) throws TablesNotAsExpectedException, ConnectionFailedException,
+    public void updateFilter(String input, int id) throws ConnectionFailedException,
             InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
             DatabaseDoesNotExistException, InvalidInputException {
         int groupID = this.removeFiltersegmentAngGetID(id);
@@ -244,16 +231,14 @@ public class Filtermanagement {
      * method which offers the opportunity to modify a specific filtergroup
      * @param input new name of the filtergroup
      * @param id id of the filtergroup which should be modified
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public void updateFiltergroup(String input, int id) throws TablesNotAsExpectedException,
-            ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException,
-            UnexpectedObjectException, DatabaseDoesNotExistException {
+    public void updateFiltergroup(String input, int id) throws ConnectionFailedException, InsertionFailedException,
+            UnexpectedObjectException {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == id) {
                 element.name = input;
@@ -271,11 +256,9 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
-    public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws
-            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-            TablesNotAsExpectedException {
+	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), true);
     }
 
@@ -286,11 +269,9 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
-    public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws
-            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-            TablesNotAsExpectedException {
+	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), false);
     }
 
@@ -300,10 +281,9 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
-    public ResultSet getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+	public ResultSet getFilteredAndSortedGraphs() throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), "id", true);
     }
 
@@ -315,7 +295,7 @@ public class Filtermanagement {
      * @param id unique identifier of the new filterobject
      * @param groupID unique identifier of the filtergroup on which the filter should be add to
      * @throws InvalidInputException this exception is thrown if the input string does not code a valid filter
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws AccessDeniedForUserException thrown if there is no access to database
@@ -323,8 +303,7 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
     public void addFilterToGroup(String input, int id, int groupID) throws InvalidInputException,
-            TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException,
-            AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+            ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
     }
 
@@ -335,16 +314,15 @@ public class Filtermanagement {
      * @param input string which might code a filter
      * @param id unique identifier of the new filterobject
      * @throws InvalidInputException this exception is thrown if the input string does not code a valid filter
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    private void addFilter(String input, int id) throws InvalidInputException, TablesNotAsExpectedException,
-            ConnectionFailedException, InsertionFailedException, AccessDeniedForUserException,
-            UnexpectedObjectException, DatabaseDoesNotExistException {
+    private void addFilter(String input, int id) throws InvalidInputException,
+            ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         this.addFilter(Filtermanagement.parseToFilter(input, id));
     }
 
@@ -478,10 +456,9 @@ public class Filtermanagement {
      * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
-    public void setDatabase(GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+    public void setDatabase(GraphDatabase database) throws ConnectionFailedException {
         availableFilterGroups.clear();
         availableFilter.clear();
         this.database = database;

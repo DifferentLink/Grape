@@ -4,9 +4,8 @@ import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
@@ -52,13 +51,13 @@ public class CorrelationRequest {
     /**
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
-     * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
     public List<CorrelationOutput> applyCorrelation() throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(database));
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
