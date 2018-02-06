@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.*;
+import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -20,6 +21,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -149,9 +151,11 @@ public class GrapeUI {
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
 			tableModel.fireTableDataChanged();
 			tableModel.fireTableStructureChanged();
-			int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
+			try {
+				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
 			PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
 			graphEditorUI.displayGraph(graph);
+			} catch (IndexOutOfBoundsException ignored) {}
 		}
 	}
 
@@ -159,9 +163,10 @@ public class GrapeUI {
 		@Override
 		public void keyTyped(KeyEvent keyEvent) {
 			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
-				if (tableUI.getSelectedRow() >= 0) {
-					generateController.delGraph((int) tableModel.getValueAt(tableUI.getSelectedRow(), 0));
-				}
+				try {
+					generateController.delGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
+					tableModel.update(filterController.getFilteredAndSortedGraphs());
+				} catch (IndexOutOfBoundsException | SQLException ignored) {}
 			}
 		}
 
