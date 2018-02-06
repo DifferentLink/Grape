@@ -18,7 +18,7 @@ public class ReadBFSCodeUI extends JFrame{
 	private JTextField bfsCodeInput;
 
 	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) { // todo use basic regex matching for BFS-Code
-		super(language.getString("generateGraphs"));
+		super("Read BFS-Code"); // todo use language resource
 		this.setSize(350, 200);
 		this.setResizable(false);
 
@@ -31,7 +31,7 @@ public class ReadBFSCodeUI extends JFrame{
 		bfsCodeInput.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		content.add(bfsCodeInput);
 
-		JButton readGraph = new JButton(language.getString("generateGraphs"));
+		JButton readGraph = new JButton("Read BFS-Code"); // todo use language resource
 		readGraph.addActionListener(new ReadBFSCodeAction(generateController, this));
 		readGraph.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		readGraph.setBackground(theme.assertiveBackground);
