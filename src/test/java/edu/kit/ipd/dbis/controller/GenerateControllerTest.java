@@ -88,7 +88,7 @@ public class GenerateControllerTest {
 		GraphDatabase database = null;
 		try {
 			database = new FileManager().createGraphDatabase("", "", "", "");
-		} catch (TableAlreadyExistsException | DatabaseDoesNotExistException | ConnectionFailedException |
+		} catch (DatabaseDoesNotExistException | ConnectionFailedException |
 				AccessDeniedForUserException | SQLException e) {
 			e.printStackTrace();
 		}
