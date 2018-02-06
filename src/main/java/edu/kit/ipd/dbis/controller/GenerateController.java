@@ -133,9 +133,10 @@ public class GenerateController {
 		}
 		// Creating BfsCode Object
 		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-		PropertyGraph graph = new PropertyGraph(bfs);
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 		try {
 			database.addGraph(graph);
+			calculation.run();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
