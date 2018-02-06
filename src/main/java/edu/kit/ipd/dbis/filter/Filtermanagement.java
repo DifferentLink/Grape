@@ -3,9 +3,9 @@ package edu.kit.ipd.dbis.filter;
 import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -231,6 +231,7 @@ public class Filtermanagement {
      * method which offers the opportunity to modify a specific filtergroup
      * @param input new name of the filtergroup
      * @param id id of the filtergroup which should be modified
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws AccessDeniedForUserException thrown if there is no access to database
