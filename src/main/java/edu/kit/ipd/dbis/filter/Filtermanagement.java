@@ -269,7 +269,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws
+    public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), true);
@@ -284,7 +284,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws
+    public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), false);
@@ -298,7 +298,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws TablesNotAsExpectedException thrown if the table in database is not as expected
      */
-	public ResultSet getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
+    public ResultSet getFilteredAndSortedGraphs() throws DatabaseDoesNotExistException,
             AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
         return database.getGraphs(this.parseFilterList(), "id", true);
     }
@@ -356,7 +356,7 @@ public class Filtermanagement {
                 default: throw new InvalidInputException();
             }
         }
-        if (parameters.length != 3 && parameters.length != 7) {
+        if (parameters.length < 3 || parameters.length == 4 || parameters.length == 6) {
             throw new InvalidInputException();
         }
 
@@ -398,7 +398,7 @@ public class Filtermanagement {
 
             return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
-        } else {
+        } else if (parameters.length == 3 && StringUtils.isStrictlyNumeric(parameters[2])) {
             String relationString = parameters[1];
             checkFilterInputNull(parameters[1]);
             Relation relation = Filtermanagement.testRelation(relationString);
@@ -410,6 +410,15 @@ public class Filtermanagement {
             checkFilterInputNull(parameters[2]);
             int value = Integer.parseInt(valueString);
             return new BasicFilter(input, false, value, relation, property1, id);
+        } else if (parameters.length == 3) {
+            return Filtermanagement.parseToFilter(parameters[0] + " + 0 " + parameters[1] + " "
+                    + parameters[2] + " + 0", id);
+        } else if (parameters.length == 5 && StringUtils.isStrictlyNumeric(parameters[2])) {
+            return Filtermanagement.parseToFilter(parameters[0] + " " + parameters[1] + " " + parameters[2]
+                    + " " + parameters[3] + " " + parameters[4] + " + 0", id);
+        } else {
+            return Filtermanagement.parseToFilter(parameters[0] + " + 0 " + parameters[1] + " " + parameters[2]
+                    + " " + parameters[3] + " " + parameters[4], id);
         }
     }
 
@@ -437,45 +446,45 @@ public class Filtermanagement {
     }
 
     private static Property testProperty(String input) throws InvalidInputException {
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Property property;
         switch (input) {
-			case "profile":
-				property = new Profile(graph);
-				return property;
-			case "averagedegree":
-				property = new AverageDegree(graph);
-				return property;
-			case "proportiondensity":
-				property = new ProportionDensity(graph);
-				return property;
-			case "structuredensity":
-				property = new StructureDensity(graph);
-				return property;
-			case "greatestDegree":
-				property = new GreatestDegree(graph);
-				return property;
-			case "kkgraphnumberofsubgraphs":
-				property = new KkGraphNumberOfSubgraphs(graph);
-				return property;
-			case "numberofcliques":
-				property = new NumberOfCliques(graph);
-				return property;
-			case "numberofedges":
-				property = new NumberOfEdges(graph);
-				return property;
-			case "numberoftotalcolorings":
-				property = new NumberOfTotalColorings(graph);
-				return property;
-			case "numberofvertexcolorings":
-				property = new NumberOfVertexColorings(graph);
-				return property;
-			case "numberofvertices":
-				property = new NumberOfVertices(graph);
-				return property;
-			case "smallestdegree":
-				property = new SmallestDegree(graph);
-				return property;
+            case "profile":
+                property = new Profile(graph);
+                return property;
+            case "averagedegree":
+                property = new AverageDegree(graph);
+                return property;
+            case "proportiondensity":
+                property = new ProportionDensity(graph);
+                return property;
+            case "structuredensity":
+                property = new StructureDensity(graph);
+                return property;
+            case "greatestDegree":
+                property = new GreatestDegree(graph);
+                return property;
+            case "kkgraphnumberofsubgraphs":
+                property = new KkGraphNumberOfSubgraphs(graph);
+                return property;
+            case "numberofcliques":
+                property = new NumberOfCliques(graph);
+                return property;
+            case "numberofedges":
+                property = new NumberOfEdges(graph);
+                return property;
+            case "numberoftotalcolorings":
+                property = new NumberOfTotalColorings(graph);
+                return property;
+            case "numberofvertexcolorings":
+                property = new NumberOfVertexColorings(graph);
+                return property;
+            case "numberofvertices":
+                property = new NumberOfVertices(graph);
+                return property;
+            case "smallestdegree":
+                property = new SmallestDegree(graph);
+                return property;
             case "totalcoloringnumberofcolors":
                 property = new TotalColoringNumberOfColors(graph);
                 return property;
