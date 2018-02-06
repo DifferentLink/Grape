@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.*;
+import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -148,9 +149,11 @@ public class GrapeUI {
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
 			tableModel.fireTableDataChanged();
 			tableModel.fireTableStructureChanged();
-			int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
+			try {
+				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
 			PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
 			graphEditorUI.displayGraph(graph);
+			} catch (IndexOutOfBoundsException ignored) {}
 		}
 	}
 
