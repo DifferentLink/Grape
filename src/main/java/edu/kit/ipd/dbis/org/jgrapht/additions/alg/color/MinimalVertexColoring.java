@@ -250,7 +250,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 */
 	private int[] reverseArray(int[] array) {
 		int[] result = new int[array.length];
-		for (int x = 0, y = array.length - 1; x < y; x++, y--) {
+		for (int x = 0, y = array.length - 1; x <= y; x++, y--) {
 			result[y] = array[x];
 			result[x] = array[y];
 		}
