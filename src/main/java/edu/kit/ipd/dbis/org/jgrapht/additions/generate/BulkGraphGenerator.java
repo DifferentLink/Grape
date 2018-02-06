@@ -22,7 +22,8 @@ public interface BulkGraphGenerator<V, E> {
 	 * @param minEdges the minimal number of edges
 	 * @param maxEdges the maximal number of edges
 	 * @throws IllegalArgumentException if the parameters are not valid
+	 * @throws NotEnoughGraphsException if there are not enough no isomorphic graphs
 	 */
 	void generateBulk(Set<PropertyGraph> target, int quantity, int minVertices, int maxVertices, int minEdges,
-					  int maxEdges);
+					  int maxEdges) throws IllegalArgumentException, NotEnoughGraphsException;
 }

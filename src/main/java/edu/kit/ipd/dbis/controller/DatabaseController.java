@@ -84,7 +84,7 @@ public class DatabaseController {
 			this.updateDatabases();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | TablesNotAsExpectedException | FileContentCouldNotBeReadException
+				| SQLException | FileContentCouldNotBeReadException
 				| ConnectionFailedException | DatabaseDoesNotExistException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
@@ -103,8 +103,7 @@ public class DatabaseController {
 			this.updateDatabases();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException
-				| TablesNotAsExpectedException | FileContentCouldNotBeReadException e) {
+				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -117,7 +116,7 @@ public class DatabaseController {
 	public void saveDatabase(String filepath) {
 		try {
 			connector.saveGraphDatabase(filepath, database);
-		} catch (GraphDatabaseAlreadySavedException | FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
+		} catch (FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}

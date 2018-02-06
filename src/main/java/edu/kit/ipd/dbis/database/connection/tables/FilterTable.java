@@ -1,8 +1,8 @@
 package edu.kit.ipd.dbis.database.connection.tables;
 
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 
@@ -36,9 +36,7 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	protected void createTable()
-			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException,
-			ConnectionFailedException {
+	protected void createTable() throws SQLException {
 
 		String sql = "CREATE TABLE IF NOT EXISTS "
 				+ this.name +" ("
@@ -46,7 +44,7 @@ public class FilterTable extends Table {
 				+ "id int NOT NULL, "
 				+ "state boolean, "
 				+ "PRIMARY KEY(id))";
-		this.getConnection().prepareStatement(sql).executeUpdate();
+		this.connection.prepareStatement(sql).executeUpdate();
 	}
 
 	@Override
@@ -58,32 +56,29 @@ public class FilterTable extends Table {
 	}
 
 	@Override
-	public void insert(Serializable object)
-			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
-			SQLException, UnexpectedObjectException, IOException {
+	public void insert(Serializable object) throws SQLException, UnexpectedObjectException, IOException {
 
 		Filtersegment filter = this.getInstanceOf(object);
 		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, "
 				+ filter.getID() + ", "
 				+ filter.getIsActivated() + ")";
 
-		PreparedStatement statement = this.getConnection().prepareStatement(sql);
+		PreparedStatement statement = this.connection.prepareStatement(sql);
 		statement.setObject(1, this.objectToByteArray(filter));
 		statement.executeUpdate();
 	}
 
 	@Override
 	public Filtersegment getContent(int id)
-			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
-			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
+			throws SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
 
 		String sql = "SELECT filter FROM " + this.name + " WHERE id = " + id;
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 
 		if (result.next()) {
 			return this.getInstanceOf(this.byteArrayToObject(result.getBytes("filter")));
 		}
-		throw new UnexpectedObjectException();
+		return null;
 	}
 
 	/**
@@ -93,18 +88,16 @@ public class FilterTable extends Table {
 	 * @throws DatabaseDoesNotExistException
 	 * @throws SQLException
 	 */
-	public LinkedList<Filtersegment> getContent()
-			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
-			SQLException {
+	public LinkedList<Filtersegment> getContent() throws SQLException {
 
 		String sql = "SELECT filter FROM " + this.name;
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		LinkedList<Filtersegment> filters = new LinkedList<>();
 
 		while (result.next()) {
 			try {
 				filters.add(this.getInstanceOf(this.byteArrayToObject(result.getBytes("filter"))));
-			} catch(Exception e) {
+			} catch(UnexpectedObjectException | IOException | ClassNotFoundException e) {
 
 			}
 		}
