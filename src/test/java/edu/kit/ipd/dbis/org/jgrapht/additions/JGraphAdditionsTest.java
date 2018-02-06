@@ -22,7 +22,6 @@ public class JGraphAdditionsTest {
 			return;
 		}
 		for (PropertyGraph graph : target) {
-			System.out.println(graph);
 			graph.calculateProperties();
 		}
 	}
