@@ -20,14 +20,13 @@ public interface Connector {
 	 * @param password password of the user.
 	 * @param name determines the name of the MySQL-Table in which the Graphs will be stored.
 	 @return GraphDatabase-Object will be created and returned.
-	 * @throws TableAlreadyExistsException
 	 * @throws DatabaseDoesNotExistException
 	 * @throws AccessDeniedForUserException
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
 	GraphDatabase createGraphDatabase(String url, String user, String password, String name)
-			throws TableAlreadyExistsException, DatabaseDoesNotExistException, AccessDeniedForUserException,
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException,
 			ConnectionFailedException, SQLException;
 
 	/**
