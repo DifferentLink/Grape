@@ -37,4 +37,9 @@ public class NonEditableTableModel extends DefaultTableModel {
 		this.fireTableDataChanged();
 		this.fireTableStructureChanged();
 	}
+
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		return false;
+	}
 }

@@ -151,8 +151,7 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | SQLException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
