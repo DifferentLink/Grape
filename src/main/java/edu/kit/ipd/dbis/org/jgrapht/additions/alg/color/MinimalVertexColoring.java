@@ -321,6 +321,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 * @param <V> type
 	 * @return true if they are equal, false if they are not.
 	 */
+	@Deprecated
 	public static <V> boolean equivalentColoring(Coloring<V> c1, Coloring<V> c2) {
 		if (c1.getNumberColors() != c2.getNumberColors()) {
 			return false;
