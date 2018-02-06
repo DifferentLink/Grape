@@ -72,7 +72,7 @@ public class FilterController {
 		try {
 			filter.updateFilter(filterInput, id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch ( ConnectionFailedException | AccessDeniedForUserException
+		} catch (ConnectionFailedException | AccessDeniedForUserException
 				| InsertionFailedException | DatabaseDoesNotExistException | UnexpectedObjectException
 				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
@@ -90,7 +90,7 @@ public class FilterController {
 	public void addFilterToGroup(String filterInput, int filterId, int groupId) throws InvalidInputException {
 		try {
 			filter.addFilterToGroup(filterInput, filterId, groupId);
-		} catch ( ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+		} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -107,7 +107,7 @@ public class FilterController {
 			filter.updateFiltergroup(filterInput, id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
-		log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
 

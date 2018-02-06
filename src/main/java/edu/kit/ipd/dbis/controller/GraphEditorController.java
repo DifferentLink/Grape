@@ -78,7 +78,7 @@ public class GraphEditorController {
 				} catch (ConnectionFailedException e) {
 					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
-			} catch ( ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
+			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
@@ -94,7 +94,7 @@ public class GraphEditorController {
 			try {
 				database.addGraph(graph);
 				log.addEvent(ADD, graph.getId());
-			} catch ( ConnectionFailedException
+			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
@@ -105,7 +105,7 @@ public class GraphEditorController {
 		PropertyGraph<Integer, Integer> graph = null;
 		try {
 			graph = database.getGraphById(id);
-		} catch ( ConnectionFailedException | UnexpectedObjectException e) {
+		} catch (ConnectionFailedException | UnexpectedObjectException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		return graph;
@@ -142,7 +142,7 @@ public class GraphEditorController {
 		try {
 			database.addGraph(denserGraph);
 			log.addEvent(ADD, denserGraph.getId());
-		} catch ( ConnectionFailedException
+		} catch (ConnectionFailedException
 				| UnexpectedObjectException | InsertionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}

@@ -98,21 +98,21 @@ public class GenerateController {
 	 */
 
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException { //TODO: check for valid BFS input
-			// Parsing String into int[]
-			String[] splitCode = bfsCode.split(",");
-			int[] code = new int[splitCode.length];
-			for (int i = 0; i < splitCode.length; i++) {
-				code[i] = Integer.parseInt(splitCode[i]);
-			}
-			// Creating BfsCode Object
-			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-			PropertyGraph graph = new PropertyGraph(bfs);
-			try {
-				database.addGraph(graph);
-			} catch ( ConnectionFailedException
-					| UnexpectedObjectException | InsertionFailedException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
+		// Parsing String into int[]
+		String[] splitCode = bfsCode.split(",");
+		int[] code = new int[splitCode.length];
+		for (int i = 0; i < splitCode.length; i++) {
+			code[i] = Integer.parseInt(splitCode[i]);
+		}
+		// Creating BfsCode Object
+		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+		PropertyGraph graph = new PropertyGraph(bfs);
+		try {
+			database.addGraph(graph);
+		} catch (ConnectionFailedException
+				| UnexpectedObjectException | InsertionFailedException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**

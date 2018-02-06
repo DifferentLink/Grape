@@ -66,7 +66,7 @@ public class CalculationController implements Runnable {
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
 				}
-			} catch ( ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				e.printStackTrace();
 			}
 			try {
