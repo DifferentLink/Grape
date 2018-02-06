@@ -73,7 +73,8 @@ public class GrapeUI {
 		} catch (IOException e) {}
 
 
-		menuUI = new MenuUI(generateController, databaseController, statusbarController, language, theme);
+		menuUI = new MenuUI(
+				generateController, databaseController, statusbarController, graphEditorController, language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
 		filterUI = new FilterUI(filterController, language, theme);
@@ -87,6 +88,7 @@ public class GrapeUI {
 		filterCorrelationDivider.add(correlationUI);
 
 		graphEditorUI = new GraphEditorUI(graphEditorController, language, theme);
+		graphEditorController.setGraphEditor(graphEditorUI);
 
 		JSplitPane graphEditorDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
