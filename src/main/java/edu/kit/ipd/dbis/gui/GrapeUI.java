@@ -112,6 +112,8 @@ public class GrapeUI {
 		calculationController.setTableModel(tableModel);
 		databaseController.setTableModel(tableModel);
 		filterController.setTableModel(tableModel);
+		graphEditorController.setTableModel(tableModel);
+		generateController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
 		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
