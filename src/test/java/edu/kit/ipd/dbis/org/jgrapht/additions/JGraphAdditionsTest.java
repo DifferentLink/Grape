@@ -16,12 +16,13 @@ public class JGraphAdditionsTest {
 		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator();
 		HashSet<PropertyGraph> target = new HashSet<>();
 		try {
-			bulkGen.generateBulk(target, 10, 1, 6, 1, 55);
+			bulkGen.generateBulk(target, 10, 1, 6, 1, 8);
 		} catch (IllegalArgumentException e) {
 			System.out.println("error by generating graphs");
 			return;
 		}
 		for (PropertyGraph graph : target) {
+			System.out.println(graph);
 			graph.calculateProperties();
 		}
 	}
