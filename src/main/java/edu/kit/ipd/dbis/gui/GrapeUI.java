@@ -199,10 +199,12 @@ public class GrapeUI {
 			for (Property property : new PropertyGraph<>().getProperties()) {
 				if ((property.getClass().getSimpleName().toLowerCase()).equals(columnName)) {
 					try {
-						if (isSortedAscending) {
-							tableModel.update(filterController.getFilteredAndAscendingSortedGraphs(property));
-						} else {
+						if (!isSortedAscending) {
 							tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
+							break;
+						} else {
+							tableModel.update(filterController.getFilteredAndAscendingSortedGraphs(property));
+							break;
 						}
 					} catch (SQLException ignored) {}
 				}
