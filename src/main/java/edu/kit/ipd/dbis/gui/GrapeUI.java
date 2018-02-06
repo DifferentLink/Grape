@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Log;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.imageio.ImageIO;
@@ -22,6 +23,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -45,6 +47,9 @@ public class GrapeUI {
 
 	private String programName = "Grape";
 	private JFrame mainWindow;
+
+	private String lastSortedColumn = "";
+	private boolean isSortedAscending = true;
 
 	private float verticalSplitRatio = .1f;
 
@@ -189,6 +194,19 @@ public class GrapeUI {
 		public void mouseReleased(MouseEvent mouseEvent) {
 			final int column = tableUI.columnAtPoint(mouseEvent.getPoint());
 			final String columnName = tableUI.getColumnName(column);
+			isSortedAscending = !columnName.equals(lastSortedColumn) || !isSortedAscending;
+			lastSortedColumn = columnName;
+			for (Property property : new PropertyGraph<>().getProperties()) {
+				if ((property.getClass().getSimpleName().toLowerCase()).equals(columnName)) {
+					try {
+						if (isSortedAscending) {
+							tableModel.update(filterController.getFilteredAndAscendingSortedGraphs(property));
+						} else {
+							tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
+						}
+					} catch (SQLException ignored) {}
+				}
+			}
 		}
 
 		@Override
