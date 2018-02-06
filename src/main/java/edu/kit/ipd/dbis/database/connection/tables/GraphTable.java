@@ -330,8 +330,9 @@ public class GraphTable extends Table {
 	private String filtersToQuery(String[][] filters) {
 		String sql = "";
 		for (int i = 0; i < filters.length; i++) {
+			sql += " AND ";
 			for (int j = 0; j < filters[i].length; j++) {
-				sql += " AND" + filters[i][j];
+				sql += filters[i][j];
 			}
 		}
 		return sql;
