@@ -19,6 +19,8 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -121,7 +123,7 @@ public class GrapeUI {
 		JScrollPane scrollPane = new JScrollPane(tableUI);
 		tableUI.setFillsViewportHeight(true);
 		tableUI.setBackground(theme.backgroundColor);
-		tableUI.setAutoCreateRowSorter(true); // todo use own row-sorter if necessary
+		tableUI.getTableHeader().addMouseListener(new TableHeaderAction());
 		tableUI.setSelectionBackground(theme.lightNeutralColor);
 		tableUI.setSelectionForeground(theme.foregroundColor);
 		rightUI.add(scrollPane, BorderLayout.CENTER);
@@ -169,6 +171,34 @@ public class GrapeUI {
 
 		@Override
 		public void keyReleased(KeyEvent keyEvent) {
+		}
+	}
+
+	private class TableHeaderAction implements MouseListener {
+		@Override
+		public void mouseClicked(MouseEvent mouseEvent) {
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent mouseEvent) {
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent mouseEvent) {
+			final int column = tableUI.columnAtPoint(mouseEvent.getPoint());
+			final String columnName = tableUI.getColumnName(column);
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent mouseEvent) {
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent mouseEvent) {
+
 		}
 	}
 }
