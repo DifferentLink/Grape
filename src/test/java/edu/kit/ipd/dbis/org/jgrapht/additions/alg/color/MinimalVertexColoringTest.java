@@ -29,7 +29,7 @@ public class MinimalVertexColoringTest {
 		colors.put("b", 1);
 		colors.put("c", 1);
 		colors.put("d", 0);
-		Coloring coloring = new VertexColoringAlgorithm.ColoringImpl<String>(colors, 2);
+		Coloring coloring = new VertexColoringAlgorithm.ColoringImpl<>(colors, 2);
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
 
 		assertEquals(false, alg.isValidVertexColoring(coloring, graph));
