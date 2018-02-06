@@ -1,5 +1,7 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.kkgraph.NoKkGraphException;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -13,8 +15,9 @@ public interface KkGraphAlgorithm<V, E> {
 	/**
 	 * Get the kk-graph.
 	 * @return the kk-graph
+	 * @throws NoKkGraphException if the kk graph can't be calculated
 	 */
-	KkGraph getKkGraph();
+	KkGraph getKkGraph() throws NoKkGraphException;
 
 	/**
 	 * A kk-graph.

@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -180,5 +181,37 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 2);
+	}
+
+	@Ignore
+	@Test
+	public void bfsPaperGraphTest2() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addVertex("e");
+		graph.addVertex("f");
+		graph.addVertex("g");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "d");
+		graph.addEdge("a", "e");
+		graph.addEdge("a", "f");
+		graph.addEdge("b", "c");
+		graph.addEdge("b", "d");
+		graph.addEdge("b", "e");
+		graph.addEdge("b", "g");
+		graph.addEdge("c", "d");
+		graph.addEdge("c", "f");
+		graph.addEdge("c", "g");
+		graph.addEdge("d", "e");
+		graph.addEdge("d", "f");
+		graph.addEdge("e", "f");
+		graph.addEdge("f", "g");
+		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
+		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		System.out.println(kkGraph.getNumberOfSubgraphs());
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
 	}
 }
