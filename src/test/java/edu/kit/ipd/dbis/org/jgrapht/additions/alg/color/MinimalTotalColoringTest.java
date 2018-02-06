@@ -51,4 +51,28 @@ public class MinimalTotalColoringTest {
 		List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>> colorings = totalColoring.getAllColorings();
 		assertEquals(true, colorings.size() > 1);
 	}
+
+	@Test
+	public void getColoring2() {
+		PropertyGraph graph = createCompleteGraph(4);
+		MinimalTotalColoring<String, String> totalColoring = new MinimalTotalColoring<>(graph);
+		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
+		assertEquals(5, coloring.getNumberColors());
+	}
+
+	private PropertyGraph createCompleteGraph(int numberOfVertices) {
+		PropertyGraph graph = new PropertyGraph();
+		for (int i = 0; i < numberOfVertices; i++) {
+			graph.addVertex(i);
+		}
+		for (int i = 0; i < numberOfVertices; i++) {
+			for (int j = 0; j < numberOfVertices; j++) {
+				if (j != i && !graph.containsEdge(graph.getEdgeFactory().createEdge(j, i))) {
+					graph.addEdge(i, j);
+
+				}
+			}
+		}
+		return graph;
+	}
 }

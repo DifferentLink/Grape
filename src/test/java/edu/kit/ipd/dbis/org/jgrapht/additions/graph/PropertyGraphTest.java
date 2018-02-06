@@ -70,7 +70,7 @@ public class PropertyGraphTest {
 	}
 
 	@Test
-	public void twoVertiecesTest() {
+	public void twoVerticesTest() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -80,7 +80,7 @@ public class PropertyGraphTest {
 	}
 
 	@Test
-	public void threeVertiecesTest() {
+	public void threeVerticesTest() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -91,8 +91,9 @@ public class PropertyGraphTest {
 		Assert.assertTrue(true);
 	}
 
+	@Ignore
 	@Test
-	public void sixVertiecesTest() {
+	public void sixVerticesTest() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
