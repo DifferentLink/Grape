@@ -54,7 +54,6 @@ public class MinimalTotalColoringTest {
 
 	@Test
 	public void getColoring2() {
-		// ~ 780-800ms
 		PropertyGraph graph = createCompleteGraph(4);
 		MinimalTotalColoring<String, String> totalColoring = new MinimalTotalColoring<>(graph);
 		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
