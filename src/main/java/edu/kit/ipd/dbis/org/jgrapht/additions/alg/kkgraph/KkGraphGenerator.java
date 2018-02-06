@@ -32,7 +32,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 	}
 
 	@Override
-	public KkGraph getKkGraph() throws NoKkGraphException {
+	public KkGraph getKkGraph() {
 		VertexColoringAlgorithm.ColoringImpl vertexColoring = (VertexColoringAlgorithm.ColoringImpl)
 				((List<VertexColoringAlgorithm.Coloring>) graph.getProperty(VertexColoring.class).getValue()).get(0);
 		int numberOfColors = vertexColoring.getNumberColors();
@@ -97,7 +97,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 		//kk graph not found
 		if (!found) {
-			throw new NoKkGraphException("kkGraph can't be calculated");
+			return new KkGraphImpl(new HashMap<V, Integer>(), 0);
 		}
 		Collection<Integer> values = graphMap.values();
 		Set<Integer> v = new HashSet<>();

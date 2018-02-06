@@ -5,7 +5,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -183,7 +182,7 @@ public class KkGraphGeneratorTest {
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 2);
 	}
 
-	@Ignore
+
 	@Test
 	public void bfsPaperGraphTest2() {
 		PropertyGraph graph = new PropertyGraph();
@@ -211,7 +210,6 @@ public class KkGraphGeneratorTest {
 		graph.addEdge("f", "g");
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		System.out.println(kkGraph.getNumberOfSubgraphs());
-		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
 	}
 }
