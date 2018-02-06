@@ -23,6 +23,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -192,23 +193,10 @@ public class GrapeUI {
 
 		@Override
 		public void mouseReleased(MouseEvent mouseEvent) {
-			final int column = tableUI.columnAtPoint(mouseEvent.getPoint());
-			final String columnName = tableUI.getColumnName(column);
+			final String columnName = tableUI.getColumnName(tableUI.columnAtPoint(mouseEvent.getPoint()));
 			isSortedAscending = !columnName.equals(lastSortedColumn) || !isSortedAscending;
 			lastSortedColumn = columnName;
-			for (Property property : new PropertyGraph<>().getProperties()) {
-				if ((property.getClass().getSimpleName().toLowerCase()).equals(columnName)) {
-					try {
-						if (!isSortedAscending) {
-							tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
-							break;
-						} else {
-							tableModel.update(filterController.getFilteredAndAscendingSortedGraphs(property));
-							break;
-						}
-					} catch (SQLException ignored) {}
-				}
-			}
+			updateTable();
 		}
 
 		@Override
@@ -220,5 +208,20 @@ public class GrapeUI {
 		public void mouseExited(MouseEvent mouseEvent) {
 
 		}
+	}
+
+	public void updateTable() {
+		for (Property property : (new PropertyGraph<>()).getProperties()) {
+			if ((property.getClass().getSimpleName().toLowerCase()).equals(lastSortedColumn)) {
+				try {
+					if (isSortedAscending) {
+						tableModel.update(filterController.getFilteredAndAscendingSortedGraphs(property));
+					} else {
+						tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
+					}
+				} catch (SQLException ignored) {}
+			}
+		}
+
 	}
 }
