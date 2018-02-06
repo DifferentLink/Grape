@@ -120,8 +120,8 @@ public class GrapeUI {
 		tableUI.setFillsViewportHeight(true);
 		tableUI.setBackground(theme.backgroundColor);
 		tableUI.setAutoCreateRowSorter(true); // todo use own row-sorter if necessary
-		tableUI.setSelectionBackground(theme.assertiveBackground);
-		tableUI.setSelectionForeground(theme.unassertiveBackground);
+		tableUI.setSelectionBackground(theme.lightNeutralColor);
+		tableUI.setSelectionForeground(theme.foregroundColor);
 		rightUI.add(scrollPane, BorderLayout.CENTER);
 		rightUI.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
 		rightUI.add(statusbarUI, BorderLayout.SOUTH);
@@ -143,7 +143,9 @@ public class GrapeUI {
 	private class TableSelectionChangeAction implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
-			int id = 1;
+			tableModel.fireTableDataChanged();
+			tableModel.fireTableStructureChanged();
+			int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
 			PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
 			graphEditorUI.displayGraph(graph);
 		}

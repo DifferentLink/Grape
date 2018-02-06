@@ -121,6 +121,7 @@ public class GraphEditorUI extends JPanel {
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
 		this.graph = new RenderableGraph(graph);
 		history.clear();
+		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
 		graphEditor.repaint();
 	}
 
