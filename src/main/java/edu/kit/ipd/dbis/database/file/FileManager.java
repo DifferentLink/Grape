@@ -35,15 +35,19 @@ public class FileManager implements Connector {
 
 	@Override
 	public GraphDatabase createGraphDatabase(String url, String user, String password, String name)
-			throws TableAlreadyExistsException, DatabaseDoesNotExistException, AccessDeniedForUserException,
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException,
 			ConnectionFailedException, SQLException {
+
 		Connection connection = getConnection(url, user, password);
-		if (tableExists(connection, name) || name.equals("database")) {
-			throw new TableAlreadyExistsException("There already is a table called " + name);
-		}
 		GraphTable graphTable = new GraphTable(url, user, password, name);
 		FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
-		return new GraphDatabase(graphTable, filterTable);
+		GraphDatabase database = new GraphDatabase(graphTable, filterTable);
+
+		if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
+			return database;
+		} else {
+			throw new ConnectionFailedException("Selected Table does not contain the required columns.");
+		}
 	}
 
 	@Override
