@@ -26,6 +26,10 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfV
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.LargestSubgraphSize;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.DisjointFromSubgraphs;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.LargestCliqueSize;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
+
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -353,6 +357,10 @@ public class Filtermanagement {
                     inputCopy = "vertexcoloringnumberofcolors + 0 = largestsubgraphsize + 0";
                     parameters = inputCopy.split(" ", 7);
                     break;
+                case "totalcoloringconjecture":
+                    inputCopy = "largestcliquesize + 0 = totalcoloringnumberofcolors + 0";
+                    parameters = inputCopy.split(" ", 7);
+                    break;
                 default: throw new InvalidInputException();
             }
         }
@@ -363,7 +371,7 @@ public class Filtermanagement {
         String property1String = parameters[0];
         checkFilterInputNull(parameters[0]);
         property1String = property1String.toLowerCase();
-        Property property1 = Filtermanagement.testProperty(property1String);
+        String property1 = Filtermanagement.testProperty(property1String);
 
         if (parameters.length == 7) {
             String firstOperator = parameters[1];
@@ -384,7 +392,7 @@ public class Filtermanagement {
             String property2String = parameters[4];
             checkFilterInputNull(parameters[4]);
             property2String = property2String.toLowerCase();
-            Property property2 = Filtermanagement.testProperty(property2String);
+            String property2 = Filtermanagement.testProperty(property2String);
 
             String operator2String = parameters[5];
             checkFilterInputNull(parameters[5]);
@@ -445,10 +453,11 @@ public class Filtermanagement {
         }
     }
 
-    private static Property testProperty(String input) throws InvalidInputException {
+    private static String testProperty(String input) throws InvalidInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Property property;
-        switch (input) {
+        return input;
+        /*switch (input) {
             case "profile":
                 property = new Profile(graph);
                 return property;
@@ -494,8 +503,17 @@ public class Filtermanagement {
             case "largestsubgraphsize":
                 property = new LargestSubgraphSize(graph);
                 return property;
-            default: throw new InvalidInputException();
-        }
+            case "binomialdensity":
+                property = new BinomialDensity(graph);
+                return property;
+            case "largestcliquesize":
+                property = new LargestCliqueSize(graph);
+                return property;
+            case "disjointfromsubgraph":
+                property = new DisjointFromSubgraphs(graph);
+                return property;
+            default: throw new InvalidInputException(); **/
+        //}
     }
 
     /**
@@ -566,7 +584,7 @@ public class Filtermanagement {
 
     private static String[][] fillColumn(String[][] stringArray, int currentColumn, Filter element) {
         if (element.getClass() == BasicFilter.class && element.isActivated) {
-            stringArray[currentColumn][0] = String.valueOf(element.getProperty1());
+            stringArray[currentColumn][0] = element.getProperty1();
             stringArray[currentColumn][1] = "+";
             stringArray[currentColumn][2] = "0";
             stringArray[currentColumn][3] = Filtermanagement.transformRelationToString(element);
@@ -574,11 +592,11 @@ public class Filtermanagement {
             stringArray[currentColumn][5] = "+";
             stringArray[currentColumn][6] = String.valueOf(element.getValue1());
         } else if (element.getClass() == ConnectedFilter.class && element.isActivated) {
-            stringArray[currentColumn][0] = String.valueOf(element.getProperty1());
+            stringArray[currentColumn][0] = element.getProperty1();
             stringArray[currentColumn][1] = Filtermanagement.transformFirstOperatorToString(element);
             stringArray[currentColumn][2] = String.valueOf(element.getValue1());
             stringArray[currentColumn][3] = Filtermanagement.transformRelationToString(element);
-            stringArray[currentColumn][4] = String.valueOf(element.getProperty2());
+            stringArray[currentColumn][4] = element.getProperty2();
             stringArray[currentColumn][5] = Filtermanagement.transformSecondOperatorToString(element);
             stringArray[currentColumn][6] = String.valueOf(element.getValue2());
         }

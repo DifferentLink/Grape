@@ -11,18 +11,10 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfTotalColorings;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertexColorings;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.KkGraphNumberOfSubgraphs;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.TotalColoringNumberOfColors;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.VertexColoringNumberOfColors;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 
 import java.util.ArrayList;
@@ -190,6 +182,18 @@ public class CorrelationRequest {
                 return property;
             case "vertexcoloringnumberofcolors":
                 property = new VertexColoringNumberOfColors(graph);
+                return property;
+            case "largestsubgraphsize":
+                property = new LargestSubgraphSize(graph);
+                return property;
+            case "binomialdensity":
+                property = new BinomialDensity(graph);
+                return property;
+            case "largestcliquesize":
+                property = new LargestCliqueSize(graph);
+                return property;
+            case "disjointfromsubgraph":
+                property = new DisjointFromSubgraphs(graph);
                 return property;
             default: throw new InvalidCorrelationInputException();
         }
