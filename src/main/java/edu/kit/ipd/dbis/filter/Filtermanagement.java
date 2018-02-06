@@ -336,17 +336,21 @@ public class Filtermanagement {
                     inputCopy = "vertexcoloringnumberofcolors + 0 = largestsubgraphsize + 0";
                     parameters = inputCopy.split(" ", 7);
                     break;
+                case "totalcoloringconjecture":
+                    inputCopy = "largestcliquesize + 0 = totalcoloringnumberofcolors + 0";
+                    parameters = inputCopy.split(" ", 7);
+                    break;
                 default: throw new InvalidInputException();
             }
         }
-        if (parameters.length != 3 && parameters.length != 7) {
+        if (parameters.length < 3 || parameters.length == 4 || parameters.length == 6) {
             throw new InvalidInputException();
         }
 
         String property1String = parameters[0];
         checkFilterInputNull(parameters[0]);
         property1String = property1String.toLowerCase();
-        Property property1 = Filtermanagement.testProperty(property1String);
+        String property1 = Filtermanagement.testProperty(property1String);
 
         if (parameters.length == 7) {
             String firstOperator = parameters[1];
@@ -367,7 +371,7 @@ public class Filtermanagement {
             String property2String = parameters[4];
             checkFilterInputNull(parameters[4]);
             property2String = property2String.toLowerCase();
-            Property property2 = Filtermanagement.testProperty(property2String);
+            String property2 = Filtermanagement.testProperty(property2String);
 
             String operator2String = parameters[5];
             checkFilterInputNull(parameters[5]);
@@ -381,7 +385,7 @@ public class Filtermanagement {
 
             return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
-        } else {
+        } else if (parameters.length == 3 && StringUtils.isStrictlyNumeric(parameters[2])) {
             String relationString = parameters[1];
             checkFilterInputNull(parameters[1]);
             Relation relation = Filtermanagement.testRelation(relationString);
@@ -393,6 +397,15 @@ public class Filtermanagement {
             checkFilterInputNull(parameters[2]);
             int value = Integer.parseInt(valueString);
             return new BasicFilter(input, false, value, relation, property1, id);
+        } else if (parameters.length == 3) {
+            return Filtermanagement.parseToFilter(parameters[0] + " + 0 " + parameters[1] + " "
+                    + parameters[2] + " + 0", id);
+        } else if (parameters.length == 5 && StringUtils.isStrictlyNumeric(parameters[2])) {
+            return Filtermanagement.parseToFilter(parameters[0] + " " + parameters[1] + " " + parameters[2]
+                    + " " + parameters[3] + " " + parameters[4] + " + 0", id);
+        } else {
+            return Filtermanagement.parseToFilter(parameters[0] + " + 0 " + parameters[1] + " " + parameters[2]
+                    + " " + parameters[3] + " " + parameters[4], id);
         }
     }
 
@@ -419,57 +432,21 @@ public class Filtermanagement {
         }
     }
 
-    private static Property testProperty(String input) throws InvalidInputException {
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+    private static String testProperty(String input) throws InvalidInputException {
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Property property;
-        switch (input) {
-			case "profile":
-				property = new Profile(graph);
-				return property;
-			case "averagedegree":
-				property = new AverageDegree(graph);
-				return property;
-			case "proportiondensity":
-				property = new ProportionDensity(graph);
-				return property;
-			case "structuredensity":
-				property = new StructureDensity(graph);
-				return property;
-			case "greatestDegree":
-				property = new GreatestDegree(graph);
-				return property;
-			case "kkgraphnumberofsubgraphs":
-				property = new KkGraphNumberOfSubgraphs(graph);
-				return property;
-			case "numberofcliques":
-				property = new NumberOfCliques(graph);
-				return property;
-			case "numberofedges":
-				property = new NumberOfEdges(graph);
-				return property;
-			case "numberoftotalcolorings":
-				property = new NumberOfTotalColorings(graph);
-				return property;
-			case "numberofvertexcolorings":
-				property = new NumberOfVertexColorings(graph);
-				return property;
-			case "numberofvertices":
-				property = new NumberOfVertices(graph);
-				return property;
-			case "smallestdegree":
-				property = new SmallestDegree(graph);
-				return property;
-            case "totalcoloringnumberofcolors":
-                property = new TotalColoringNumberOfColors(graph);
-                return property;
-            case "vertexcoloringnumberofcolors":
-                property = new VertexColoringNumberOfColors(graph);
-                return property;
-            case "largestsubgraphsize":
-                property = new LargestSubgraphSize(graph);
-                return property;
-            default: throw new InvalidInputException();
+        if (input.equals("profile") || input.equals("averagedegree") || input.equals("proportiondensity")
+                || input.equals("structuredensity") || input.equals("greatestDegree")
+                || input.equals("kkgraphnumberofsubgraphs") || input.equals("numberofcliques")
+                || input.equals("numberofedges") || input.equals("numberoftotalcolorings")
+                || input.equals("numberofvertexcolorings") || input.equals("numberofvertices")
+                || input.equals("smallestdegree") || input.equals("totalcoloringnumberofcolors")
+                || input.equals("vertexcoloringnumberofcolors") || input.equals("largestsubgraphsize")
+                || input.equals("binomialdensity") || input.equals("largestcliquesize")
+                || input.equals("disjointfromsubgraph")) {
+            return input;
         }
+        throw new InvalidInputException();
     }
 
     /**
@@ -539,7 +516,7 @@ public class Filtermanagement {
 
     private static String[][] fillColumn(String[][] stringArray, int currentColumn, Filter element) {
         if (element.getClass() == BasicFilter.class && element.isActivated) {
-            stringArray[currentColumn][0] = String.valueOf(element.getProperty1());
+            stringArray[currentColumn][0] = element.getProperty1();
             stringArray[currentColumn][1] = "+";
             stringArray[currentColumn][2] = "0";
             stringArray[currentColumn][3] = Filtermanagement.transformRelationToString(element);
@@ -547,11 +524,11 @@ public class Filtermanagement {
             stringArray[currentColumn][5] = "+";
             stringArray[currentColumn][6] = String.valueOf(element.getValue1());
         } else if (element.getClass() == ConnectedFilter.class && element.isActivated) {
-            stringArray[currentColumn][0] = String.valueOf(element.getProperty1());
+            stringArray[currentColumn][0] = element.getProperty1();
             stringArray[currentColumn][1] = Filtermanagement.transformFirstOperatorToString(element);
             stringArray[currentColumn][2] = String.valueOf(element.getValue1());
             stringArray[currentColumn][3] = Filtermanagement.transformRelationToString(element);
-            stringArray[currentColumn][4] = String.valueOf(element.getProperty2());
+            stringArray[currentColumn][4] = element.getProperty2();
             stringArray[currentColumn][5] = Filtermanagement.transformSecondOperatorToString(element);
             stringArray[currentColumn][6] = String.valueOf(element.getValue2());
         }
