@@ -19,7 +19,7 @@ public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerat
 
 	@Override
 	public  void generateBulk(Set<PropertyGraph> target, int quantity, int minVertices, int maxVertices, int minEdges,
-							 int maxEdges) {
+							 int maxEdges) throws IllegalArgumentException, NotEnoughGraphsException {
 		if (quantity < 0) {
 			throw new IllegalArgumentException("negative quantity not valid");
 		}
