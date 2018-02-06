@@ -128,7 +128,7 @@ public class RandomConnectedGraphGeneratorTest {
 		PropertyGraph graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 		Assert.assertTrue((graph.vertexSet().size() > 0) && (graph.vertexSet().size() <= 20));
-		Assert.assertTrue((graph.edgeSet().size() > 0) && (graph.edgeSet().size() <= 400));
+		Assert.assertTrue((graph.edgeSet().size() >= 0) && (graph.edgeSet().size() <= 400));
 	}
 
 }

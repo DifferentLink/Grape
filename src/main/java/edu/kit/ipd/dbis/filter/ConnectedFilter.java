@@ -1,7 +1,5 @@
 package edu.kit.ipd.dbis.filter;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-
 /**
  * class which connectes two objects of class BasicFilter to a new filter
  */
@@ -21,7 +19,7 @@ class ConnectedFilter extends Filter {
      * @param id unique identifier the connected filter should have
      */
     ConnectedFilter(String name, boolean isActivated,
-                           Property property1, Property property2,
+                           String property1, String property2,
                            Operator operator1, Operator operator2,
                            int value1, int value2, Relation relation, int id) {
         this.name = name;
