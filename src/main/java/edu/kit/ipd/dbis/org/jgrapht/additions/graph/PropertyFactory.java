@@ -26,7 +26,7 @@ public class PropertyFactory {
 		properties.add(new BfsCode(graph));
 		properties.add(new Cliques(graph));
 		properties.add(new KkGraph(graph));
-		//properties.add(new TotalColoring(graph));
+		properties.add(new TotalColoring(graph));
 		properties.add(new VertexColoring(graph));
 		properties.add(new AverageDegree(graph));
 		properties.add(new ProportionDensity(graph));
@@ -39,11 +39,11 @@ public class PropertyFactory {
 		properties.add(new LargestSubgraphSize(graph));
 		properties.add(new NumberOfCliques(graph));
 		properties.add(new NumberOfEdges(graph));
-		//properties.add(new NumberOfTotalColorings(graph));
+		properties.add(new NumberOfTotalColorings(graph));
 		properties.add(new NumberOfVertexColorings(graph));
 		properties.add(new NumberOfVertices(graph));
 		properties.add(new SmallestDegree(graph));
-		//properties.add(new TotalColoringNumberOfColors(graph));
+		properties.add(new TotalColoringNumberOfColors(graph));
 		properties.add(new VertexColoringNumberOfColors(graph));
 		return properties;
 	}

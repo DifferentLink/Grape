@@ -92,13 +92,13 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 
 			// get all permutations of partitioning
 			while (!Arrays.equals(colors, colorCopy)) {
-				colors = getNextPermutation(colors);
 				if (isValidVertexColoring(colors)) {
 					// found one coloring of this partitioning.
 					this.colorings.add(createColoringObject(colors, sortedVertices));
 					numberOfColors = partitioning.length;
 					break;
 				}
+				colors = getNextPermutation(colors);
 			}
 		}
 		return this.colorings;
