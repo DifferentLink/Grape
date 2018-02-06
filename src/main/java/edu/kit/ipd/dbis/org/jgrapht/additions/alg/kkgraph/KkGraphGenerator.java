@@ -97,7 +97,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 		//kk graph not found
 		if (!found) {
-			return null;
+			return new KkGraphImpl(new HashMap<V, Integer>(), 0);
 		}
 		Collection<Integer> values = graphMap.values();
 		Set<Integer> v = new HashSet<>();

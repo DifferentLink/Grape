@@ -112,6 +112,21 @@ public class PropertyGraphTest {
 		Assert.assertTrue(true);
 	}
 
+
+	@Test
+	public void largestSubgraphSizeNPETest() {
+		// ([1, 2, 3], [{1,3}, {2,3}])
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 3);
+
+		graph.calculateProperties();
+	}
+
 	@Test
 	public void getAdjacencyMatrix() {
 		PropertyGraph graph = new PropertyGraph();

@@ -1,7 +1,10 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.*;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.*;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 import java.util.HashSet;

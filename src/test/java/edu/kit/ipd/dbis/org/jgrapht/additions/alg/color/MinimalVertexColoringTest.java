@@ -288,6 +288,20 @@ public class MinimalVertexColoringTest {
 		assertEquals(false, MinimalVertexColoring.equivalentColoring(c1, c2));
 	}
 
+	@Test
+	public void getColoring3() {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 3);
+
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		assertEquals(2, alg.getColoring().getNumberColors());
+	}
+
 	private PropertyGraph createCompleteGraph(int numberOfVertices) {
 		PropertyGraph graph = new PropertyGraph();
 		for (int i = 0; i < numberOfVertices; i++) {
