@@ -70,6 +70,49 @@ public class PropertyGraphTest {
 	}
 
 	@Test
+	public void twoVerticesTest() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addEdge("a", "b");
+		graph.calculateProperties();
+		Assert.assertTrue(true);
+	}
+
+	@Test
+	public void threeVerticesTest() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addEdge("a", "b");
+		graph.addEdge("c", "a");
+		graph.calculateProperties();
+		Assert.assertTrue(true);
+	}
+
+	@Ignore
+	@Test
+	public void sixVerticesTest() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addVertex("e");
+		graph.addVertex("f");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("a", "d");
+		graph.addEdge("b", "e");
+		graph.addEdge("b", "f");
+		graph.addEdge("e", "f");
+		graph.addEdge("f", "d");
+		graph.calculateProperties();
+		Assert.assertTrue(true);
+	}
+
+	@Test
 	public void getAdjacencyMatrix() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
