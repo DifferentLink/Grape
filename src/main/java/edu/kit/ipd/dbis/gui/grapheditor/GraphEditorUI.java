@@ -118,6 +118,13 @@ public class GraphEditorUI extends JPanel {
 		this.add(bottomBarButtons, BorderLayout.SOUTH);
 	}
 
+	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
+		this.graph = new RenderableGraph(graph);
+		history.clear();
+		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		graphEditor.repaint();
+	}
+
 	private class Editor extends JComponent {
 
 		private Point mStart;
@@ -207,12 +214,12 @@ public class GraphEditorUI extends JPanel {
 				kanvas.draw(vertexShape);
 			});
 
-			graph.getSubgraphs().forEach(subgraph -> {
+/*			graph.getSubgraphs().forEach(subgraph -> {
 				Shape subgraphOutline = subgraph.outline();
 				kanvas.setPaint(theme.outlineColor);
 				kanvas.fill(subgraphOutline);
 				kanvas.draw(subgraphOutline);
-			});
+			});*/
 		}
 	}
 
@@ -255,8 +262,10 @@ public class GraphEditorUI extends JPanel {
 
 			if (coloringType.getSelectedItem().toString().equals("Total Coloring")) { // todo make this work with different languages
 				graphEditorController.getTotalColoring(graph.asPropertyGraph()); // todo this simply returns a coloring. Use this color in the RenderableGraph
+				history.addToHistory(graph);
 			} else if (coloringType.getSelectedItem().toString().equals("Vertex Coloring")) { // todo make this work with different languages
 				graphEditorController.getVertexColoring(graph.asPropertyGraph()); // todo this simply returns a coloring. Use this color in the RenderableGraph
+				history.addToHistory(graph);
 			}
 		}
 	}
@@ -272,15 +281,16 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			PropertyGraph propertyGraph = graph.asPropertyGraph();
-			Boolean isValid = false;
 			try {
-				isValid = graphEditorController.isValidGraph(propertyGraph);
+				if (graphEditorController.isValidGraph(propertyGraph)) {
+					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
+					graph = new RenderableGraph();
+					history = new GraphEditorHistory();
+				} else {
+					System.out.println("Invalid graph");
+				}
 			} catch (InvalidGraphInputException e) {
-				//TODO: implement that
 				e.printStackTrace();
-			}
-			if (isValid) {
-				graphEditorController.addEditedGraph(propertyGraph, graph.getId());
 			}
 		}
 	}

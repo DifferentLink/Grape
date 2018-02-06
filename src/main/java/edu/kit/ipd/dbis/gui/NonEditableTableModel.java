@@ -37,24 +37,4 @@ public class NonEditableTableModel extends DefaultTableModel {
 		this.fireTableDataChanged();
 		this.fireTableStructureChanged();
 	}
-
-	@Override
-	public int getRowCount() {
-		return super.getRowCount();
-	}
-
-	@Override
-	public int getColumnCount() {
-		return super.getColumnCount();
-	}
-
-	@Override
-	public Object getValueAt(int i, int i1) {
-		return super.getValueAt(i, i1);
-	}
-
-	@Override
-	public Class getColumnClass(int column) {
-		return super.getColumnClass(column);
-	}
 }
