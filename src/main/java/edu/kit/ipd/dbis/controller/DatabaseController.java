@@ -67,7 +67,7 @@ public class DatabaseController {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (TableAlreadyExistsException | SQLException | DatabaseDoesNotExistException
+		} catch (SQLException | DatabaseDoesNotExistException
 				| ConnectionFailedException | AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
