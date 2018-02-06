@@ -7,9 +7,9 @@ import edu.kit.ipd.dbis.filter.Filtersegment;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.io.IOException;
-import java.io.ObjectStreamException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.util.LinkedList;
 
 /**
@@ -66,102 +66,104 @@ public class GraphDatabase implements DatabaseManager {
 
 	@Override
 	public void addGraph(PropertyGraph<Integer, Integer> graph)
-			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
-			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
+			throws ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
 			this.graphTable.insert(graph);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException("Selected table does not exist " +
+					"or does not contain the required columns to store graph" + graph.getId() + ".");
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		} catch (IOException e) {
-			throw new InsertionFailedException();
+			throw new InsertionFailedException("Graph " + graph.getId() + " could not be saved.");
 		}
 	}
 
 	@Override
 	public void addFilter(Filtersegment filter)
-			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
-			ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
+			throws ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		try {
 			this.filterTable.insert(filter);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException("Selected table does not exist " +
+					"or does not contain the required columns to store filter " + filter.getID() + ".");
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		} catch (IOException e) {
-			throw new InsertionFailedException();
+			throw new InsertionFailedException("Filter " + filter.getID() + " could not be saved.");
 		}
 	}
 
 	@Override
-	public void deleteGraph(int id)
-			throws TablesNotAsExpectedException, AccessDeniedForUserException, DatabaseDoesNotExistException,
-			ConnectionFailedException {
+	public void deleteGraph(int id) throws ConnectionFailedException {
 		try {
 			this.graphTable.switchState(id);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void deleteFilter(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			TablesNotAsExpectedException {
+	public void deleteFilter(int id) throws ConnectionFailedException {
 		try {
 			this.filterTable.delete(id);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void restoreGraph(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			TablesNotAsExpectedException {
+	public void restoreGraph(int id) throws ConnectionFailedException {
 
 		try {
 			this.graphTable.switchState(id);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void changeStateOfFilter(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			TablesNotAsExpectedException {
+	public void changeStateOfFilter(int id) throws ConnectionFailedException {
 		try {
 			this.filterTable.switchState(id);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void permanentlyDeleteGraphs()
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			TablesNotAsExpectedException {
-
+	public void permanentlyDeleteGraphs() throws ConnectionFailedException {
 		try {
 			this.graphTable.deleteAll();
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException();
 		}
 	}
 
 	@Override
-	public void permanentlyDeleteGraph(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			TablesNotAsExpectedException {
+	public void permanentlyDeleteGraph(int id) throws ConnectionFailedException {
 		try {
 			this.graphTable.delete(id);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
 	public void replaceGraph(int id, PropertyGraph<Integer, Integer> graph)
-			throws TablesNotAsExpectedException, ConnectionFailedException, InsertionFailedException,
-			AccessDeniedForUserException, UnexpectedObjectException, DatabaseDoesNotExistException {
+			throws ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
 		this.permanentlyDeleteGraph(id);
 		graph.setId(id);
 		this.addGraph(graph);
@@ -169,121 +171,116 @@ public class GraphDatabase implements DatabaseManager {
 
 	@Override
 	public void replaceFilter(int id, Filtersegment filter)
-			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-			TablesNotAsExpectedException, UnexpectedObjectException, InsertionFailedException {
+			throws ConnectionFailedException, UnexpectedObjectException, InsertionFailedException {
 		this.deleteFilter(id);
 		this.addFilter(filter);
 	}
 
 	@Override
-	public void merge(GraphDatabase database)
-			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
-			ConnectionFailedException {
+	public void merge(GraphDatabase database) throws ConnectionFailedException {
 		try {
 			this.graphTable.merge(database.getGraphTable());
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public boolean graphExists(PropertyGraph<Integer, Integer> graph)
-			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
-			ConnectionFailedException {
+	public boolean graphExists(PropertyGraph<Integer, Integer> graph) throws ConnectionFailedException {
 		try {
 			return this.graphTable.graphExists(graph);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public LinkedList<Filtersegment> getFilters()
-			throws DatabaseDoesNotExistException, TablesNotAsExpectedException, AccessDeniedForUserException,
-			ConnectionFailedException {
+	public LinkedList<Filtersegment> getFilters() throws ConnectionFailedException {
 		try {
 			return this.filterTable.getContent();
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public Filtersegment getFilterById(int id)
-			throws UnexpectedObjectException, TablesNotAsExpectedException, DatabaseDoesNotExistException,
-			ConnectionFailedException, AccessDeniedForUserException {
+	public Filtersegment getFilterById(int id) throws UnexpectedObjectException, ConnectionFailedException {
 		try {
 			return this.filterTable.getContent(id);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
-		} catch (IOException e) {
-			throw new UnexpectedObjectException();
-		} catch (ClassNotFoundException e) {
-			throw new UnexpectedObjectException();
+			throw new ConnectionFailedException(e.getMessage());
+		} catch (ClassNotFoundException | IOException e) {
+			throw new UnexpectedObjectException("The Object identified by id " + id + " is not a Filter-object.");
 		}
 	}
 
 	@Override
 	public ResultSet getGraphs(String[][] filters, String column, boolean ascending)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			TablesNotAsExpectedException {
+			throws ConnectionFailedException {
 		try {
 			return this.graphTable.getContent(filters, column, ascending);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
 	public PropertyGraph<Integer, Integer> getGraphById(int id)
-			throws TablesNotAsExpectedException, ConnectionFailedException, DatabaseDoesNotExistException,
-			AccessDeniedForUserException, UnexpectedObjectException {
+			throws ConnectionFailedException, UnexpectedObjectException {
 		try {
 			return this.graphTable.getContent(id);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
-		} catch (IOException e) {
-			throw new UnexpectedObjectException();
-		} catch (ClassNotFoundException e) {
-			throw new UnexpectedObjectException();
+			throw new ConnectionFailedException(e.getMessage());
+		} catch (ClassNotFoundException | IOException e) {
+			throw new UnexpectedObjectException("The Object identified by id " + id + " is not a PropertyGraph-object.");
 		}
 	}
 
 	@Override
 	public PropertyGraph<Integer, Integer> getUncalculatedGraph()
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			TablesNotAsExpectedException, UnexpectedObjectException {
+			throws ConnectionFailedException, UnexpectedObjectException {
 		try {
 			return this.graphTable.getUncalculatedGraph();
-		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
-		} catch (IOException e) {
-			throw new UnexpectedObjectException();
-		} catch (ClassNotFoundException e) {
+		} catch (SQLSyntaxErrorException e) {
 			throw new ConnectionFailedException();
+		} catch (SQLException e) {
+			throw new ConnectionFailedException(e.getMessage());
+		} catch (ClassNotFoundException | IOException e) {
+			throw new UnexpectedObjectException("The given Object is not a PropertyGraph-object.");
 		}
 	}
 
 	@Override
-	public boolean hasUncalculatedGraphs()
-			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-			TablesNotAsExpectedException {
+	public boolean hasUncalculatedGraphs() throws ConnectionFailedException {
 		try {
 			return this.graphTable.hasUncalculated();
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public LinkedList<Double> getValues(String[][] filters, String column)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			TablesNotAsExpectedException {
-
+	public LinkedList<Double> getValues(String[][] filters, String column) throws ConnectionFailedException {
 		try {
 			return this.graphTable.getValues(filters, column);
+		} catch (SQLSyntaxErrorException e) {
+			throw new ConnectionFailedException();
 		} catch (SQLException e) {
-			throw new TablesNotAsExpectedException();
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 }

@@ -4,16 +4,9 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
-import edu.kit.ipd.dbis.log.Event;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 /**
  * The type Calculation controller.
@@ -73,7 +66,7 @@ public class CalculationController implements Runnable {
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
 				}
-			} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				e.printStackTrace();
 			}
 			try {
@@ -86,7 +79,7 @@ public class CalculationController implements Runnable {
 				if (database.hasUncalculatedGraphs()) {
 					run();
 				}
-			} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException | ConnectionFailedException e) {
+			} catch (ConnectionFailedException e) {
 				e.printStackTrace();
 			}
 		}

@@ -7,13 +7,10 @@ import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
@@ -59,8 +56,7 @@ public class FilterController {
 	public void setDatabase(GraphDatabase database) {
 		try {
 			filter.setDatabase(database);
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -76,7 +72,7 @@ public class FilterController {
 		try {
 			filter.updateFilter(filterInput, id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException
+		} catch (ConnectionFailedException | AccessDeniedForUserException
 				| InsertionFailedException | DatabaseDoesNotExistException | UnexpectedObjectException
 				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
@@ -94,8 +90,7 @@ public class FilterController {
 	public void addFilterToGroup(String filterInput, int filterId, int groupId) throws InvalidInputException {
 		try {
 			filter.addFilterToGroup(filterInput, filterId, groupId);
-		} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException
-				| InsertionFailedException | UnexpectedObjectException | DatabaseDoesNotExistException e) {
+		} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -111,9 +106,8 @@ public class FilterController {
 		try {
 			filter.updateFiltergroup(filterInput, id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
-				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
-		log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
 
@@ -126,8 +120,7 @@ public class FilterController {
 		try {
 			filter.removeFiltersegment(id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
-				| TablesNotAsExpectedException | UnexpectedObjectException | InsertionFailedException
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException
 				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
@@ -142,8 +135,8 @@ public class FilterController {
 		try {
 			filter.activate(id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | UnexpectedObjectException
-				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException
+		} catch (UnexpectedObjectException
+				| InsertionFailedException | ConnectionFailedException
 				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
@@ -158,8 +151,8 @@ public class FilterController {
 		try {
 			filter.deactivate(id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (TablesNotAsExpectedException | DatabaseDoesNotExistException | UnexpectedObjectException
-				| AccessDeniedForUserException | InsertionFailedException | ConnectionFailedException
+		} catch (UnexpectedObjectException
+				| InsertionFailedException | ConnectionFailedException
 				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
@@ -173,8 +166,7 @@ public class FilterController {
 	public ResultSet getFilteredAndSortedGraphs() {
 		try {
 			return filter.getFilteredAndSortedGraphs();
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-				| AccessDeniedForUserException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		return null;
@@ -190,8 +182,7 @@ public class FilterController {
 	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) {
 		try {
 			return filter.getFilteredAndAscendingSortedGraphs(property);
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
-				| TablesNotAsExpectedException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		return null;
@@ -206,8 +197,7 @@ public class FilterController {
 	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) {
 		try {
 			return filter.getFilteredAndDescendingSortedGraphs(property);
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException
-				| TablesNotAsExpectedException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		return null;

@@ -12,8 +12,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexCol
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
 import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
@@ -67,8 +65,7 @@ public class GraphEditorController {
 		Boolean isDuplicate = null;
 		try {
 			isDuplicate = database.graphExists(newGraph);
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-				| AccessDeniedForUserException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		if (!isDuplicate) {
@@ -78,12 +75,10 @@ public class GraphEditorController {
 				try {
 					database.deleteGraph(oldID);
 					log.addEvent(REMOVE, oldID);
-				} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
-						| ConnectionFailedException e) {
+				} catch (ConnectionFailedException e) {
 					log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 				}
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
-					| ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
+			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
@@ -99,8 +94,8 @@ public class GraphEditorController {
 			try {
 				database.addGraph(graph);
 				log.addEvent(ADD, graph.getId());
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (ConnectionFailedException
+					| InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
@@ -110,7 +105,7 @@ public class GraphEditorController {
 		PropertyGraph<Integer, Integer> graph = null;
 		try {
 			graph = database.getGraphById(id);
-		} catch (TablesNotAsExpectedException | ConnectionFailedException | AccessDeniedForUserException | DatabaseDoesNotExistException | UnexpectedObjectException e) {
+		} catch (ConnectionFailedException | UnexpectedObjectException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		return graph;
@@ -126,8 +121,7 @@ public class GraphEditorController {
 		Boolean duplicate = true;
 		try {
 			duplicate = database.graphExists(graph);
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-				| AccessDeniedForUserException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		if (duplicate) {
@@ -148,8 +142,8 @@ public class GraphEditorController {
 		try {
 			database.addGraph(denserGraph);
 			log.addEvent(ADD, denserGraph.getId());
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-				| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
+		} catch (ConnectionFailedException
+				| UnexpectedObjectException | InsertionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
