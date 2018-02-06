@@ -125,6 +125,13 @@ public class GraphEditorUI extends JPanel {
 		graphEditor.repaint();
 	}
 
+	public void showEmptyGraph() {
+		this.graph = new RenderableGraph();
+		this.history = new GraphEditorHistory();
+		this.history.addToHistory(graph);
+		repaint();
+	}
+
 	private class Editor extends JComponent {
 
 		private Point mStart;

@@ -3,6 +3,8 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
+import edu.kit.ipd.dbis.gui.grapheditor.RenderableGraph;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
@@ -28,6 +30,7 @@ public class GraphEditorController {
 	private StatusbarController log;
 	private FilterController filter;
 	private NonEditableTableModel tableModel;
+	private GraphEditorUI graphEditor;
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
@@ -60,6 +63,10 @@ public class GraphEditorController {
 
 	public void setTableModel(NonEditableTableModel tableModel) {
 		this.tableModel = tableModel;
+	}
+
+	public void setGraphEditor(GraphEditorUI graphEditor) {
+		this.graphEditor = graphEditor;
 	}
 
 	/**
@@ -200,4 +207,7 @@ public class GraphEditorController {
 		return null;
 	}
 
+	public void emptyGraphToGraphEditor() {
+		graphEditor.showEmptyGraph();
+	}
 }
