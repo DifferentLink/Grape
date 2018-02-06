@@ -456,64 +456,18 @@ public class Filtermanagement {
     private static String testProperty(String input) throws InvalidInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Property property;
-        return input;
-        /*switch (input) {
-            case "profile":
-                property = new Profile(graph);
-                return property;
-            case "averagedegree":
-                property = new AverageDegree(graph);
-                return property;
-            case "proportiondensity":
-                property = new ProportionDensity(graph);
-                return property;
-            case "structuredensity":
-                property = new StructureDensity(graph);
-                return property;
-            case "greatestDegree":
-                property = new GreatestDegree(graph);
-                return property;
-            case "kkgraphnumberofsubgraphs":
-                property = new KkGraphNumberOfSubgraphs(graph);
-                return property;
-            case "numberofcliques":
-                property = new NumberOfCliques(graph);
-                return property;
-            case "numberofedges":
-                property = new NumberOfEdges(graph);
-                return property;
-            case "numberoftotalcolorings":
-                property = new NumberOfTotalColorings(graph);
-                return property;
-            case "numberofvertexcolorings":
-                property = new NumberOfVertexColorings(graph);
-                return property;
-            case "numberofvertices":
-                property = new NumberOfVertices(graph);
-                return property;
-            case "smallestdegree":
-                property = new SmallestDegree(graph);
-                return property;
-            case "totalcoloringnumberofcolors":
-                property = new TotalColoringNumberOfColors(graph);
-                return property;
-            case "vertexcoloringnumberofcolors":
-                property = new VertexColoringNumberOfColors(graph);
-                return property;
-            case "largestsubgraphsize":
-                property = new LargestSubgraphSize(graph);
-                return property;
-            case "binomialdensity":
-                property = new BinomialDensity(graph);
-                return property;
-            case "largestcliquesize":
-                property = new LargestCliqueSize(graph);
-                return property;
-            case "disjointfromsubgraph":
-                property = new DisjointFromSubgraphs(graph);
-                return property;
-            default: throw new InvalidInputException(); **/
-        //}
+        if (input.equals("profile") || input.equals("averagedegree") || input.equals("proportiondensity")
+                || input.equals("structuredensity") || input.equals("greatestDegree")
+                || input.equals("kkgraphnumberofsubgraphs") || input.equals("numberofcliques")
+                || input.equals("numberofedges") || input.equals("numberoftotalcolorings")
+                || input.equals("numberofvertexcolorings") || input.equals("numberofvertices")
+                || input.equals("smallestdegree") || input.equals("totalcoloringnumberofcolors")
+                || input.equals("vertexcoloringnumberofcolors") || input.equals("largestsubgraphsize")
+                || input.equals("binomialdensity") || input.equals("largestcliquesize")
+                || input.equals("disjointfromsubgraph")) {
+            return input;
+        }
+        throw new InvalidInputException();
     }
 
     /**
