@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
@@ -11,7 +10,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphG
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -111,8 +109,8 @@ public class GenerateController {
 			PropertyGraph graph = new PropertyGraph(bfs);
 			try {
 				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-					| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
+			} catch ( ConnectionFailedException
+					| UnexpectedObjectException | InsertionFailedException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 	}
@@ -125,8 +123,7 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
-		} catch (TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException
-				| DatabaseDoesNotExistException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -140,8 +137,7 @@ public class GenerateController {
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
-					| ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
