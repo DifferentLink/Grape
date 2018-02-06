@@ -5,13 +5,10 @@ import edu.kit.ipd.dbis.correlation.CorrelationRequest;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
-import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.log.EventType;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,8 +60,7 @@ public class CorrelationController {
 		CorrelationRequest request = new CorrelationRequest(input, this.database);
 		try {
 			output = request.applyCorrelation();
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			e.printStackTrace();
 			log.addMessage(EventType.MESSAGE, e.getMessage());
 		}

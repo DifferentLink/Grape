@@ -34,12 +34,11 @@ public interface Connector {
 	 * Saves the information of the given GraphDatabase-Object in a text file.
 	 * @param directory localizes where the text file will be saved.
 	 * @param database GraphDatabase that will be saved as text file.
-	 * @throws GraphDatabaseAlreadySavedException
 	 * @throws FileNameAlreadyTakenException
 	 * @throws FileCouldNotBeSavedException
 	 */
 	void saveGraphDatabase(String directory, GraphDatabase database)
-			throws GraphDatabaseAlreadySavedException, FileNameAlreadyTakenException, FileCouldNotBeSavedException;
+			throws FileNameAlreadyTakenException, FileCouldNotBeSavedException;
 
 	/**
 	 *
@@ -53,11 +52,11 @@ public interface Connector {
 	 * @throws ConnectionFailedException
 	 * @throws DatabaseDoesNotExistException
 	 * @throws FileContentCouldNotBeReadException
-	 * @throws TablesNotAsExpectedException
+	 * @throws ConnectionFailedException
 	 */
 	GraphDatabase loadGraphDatabase(String directory) throws FileNotFoundException, FileContentNotAsExpectedException,
-			SQLException, AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
-			FileContentCouldNotBeReadException, TablesNotAsExpectedException;
+			SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException,
+			FileContentCouldNotBeReadException, ConnectionFailedException;
 
 	/**
 	 * Deletes given database by deleting its MySQL-Tables and the text file that belongs to it.

@@ -2,9 +2,8 @@ package edu.kit.ipd.dbis.log;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 
 /**
  * The type Log.
@@ -82,10 +81,10 @@ public class Log {
 	 * @throws DatabaseDoesNotExistException the database does not exist exception
 	 * @throws AccessDeniedForUserException  the access denied for user exception
 	 * @throws ConnectionFailedException     the connection failed exception
-	 * @throws TablesNotAsExpectedException  the tables not as expected exception
+	 * @throws ConnectionFailedException  the tables not as expected exception
 	 */
 	public void undo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-			TablesNotAsExpectedException {
+			ConnectionFailedException {
 		Event action = history.getActiveState();
 		history.moveBackward();
 		action.getType().undo(this.database, action.getChangedGraphs());
@@ -97,10 +96,10 @@ public class Log {
 	 * @throws DatabaseDoesNotExistException the database does not exist exception
 	 * @throws AccessDeniedForUserException  the access denied for user exception
 	 * @throws ConnectionFailedException     the connection failed exception
-	 * @throws TablesNotAsExpectedException  the tables not as expected exception
+	 * @throws ConnectionFailedException  the tables not as expected exception
 	 */
 	public void redo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-			TablesNotAsExpectedException {
+			ConnectionFailedException {
 		Event action = history.getActiveState();
 		history.moveForward();
 		action.getType().redo(this.database, action.getChangedGraphs());

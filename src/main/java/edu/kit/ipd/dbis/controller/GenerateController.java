@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
@@ -13,7 +12,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -111,21 +109,21 @@ public class GenerateController {
 	 */
 
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException { //TODO: check for valid BFS input
-			// Parsing String into int[]
-			String[] splitCode = bfsCode.split(",");
-			int[] code = new int[splitCode.length];
-			for (int i = 0; i < splitCode.length; i++) {
-				code[i] = Integer.parseInt(splitCode[i]);
-			}
-			// Creating BfsCode Object
-			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-			PropertyGraph graph = new PropertyGraph(bfs);
-			try {
-				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-					| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
+		// Parsing String into int[]
+		String[] splitCode = bfsCode.split(",");
+		int[] code = new int[splitCode.length];
+		for (int i = 0; i < splitCode.length; i++) {
+			code[i] = Integer.parseInt(splitCode[i]);
+		}
+		// Creating BfsCode Object
+		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+		PropertyGraph graph = new PropertyGraph(bfs);
+		try {
+			database.addGraph(graph);
+		} catch (ConnectionFailedException
+				| UnexpectedObjectException | InsertionFailedException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
 	}
 
 	/**
@@ -136,8 +134,7 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
-		} catch (TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException
-				| DatabaseDoesNotExistException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -151,8 +148,7 @@ public class GenerateController {
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
-					| ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
