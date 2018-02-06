@@ -4,9 +4,11 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
@@ -73,10 +75,19 @@ public class GenerateController {
 			throw new InvalidGeneratorInputException();
 		}
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
-		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-		this.saveGraphs(graphs);
-		Thread calculate = new Thread(CalculationController.getInstance());
-		SwingUtilities.invokeLater(calculate);
+		try {
+			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			this.saveGraphs(graphs);
+			Thread calculate = new Thread(CalculationController.getInstance());
+			SwingUtilities.invokeLater(calculate);
+		} catch (IllegalArgumentException e) {
+			throw new InvalidGeneratorInputException();
+		} catch (NotEnoughGraphsException e) {
+			log.addMessage(EventType.MESSAGE, e.getMessage());
+			this.saveGraphs(graphs);
+			Thread calculate = new Thread(CalculationController.getInstance());
+			SwingUtilities.invokeLater(calculate);
+		}
 	}
 
 	/**
