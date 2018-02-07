@@ -69,7 +69,7 @@ public class DatabaseController {
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (SQLException | DatabaseDoesNotExistException
 				| ConnectionFailedException | AccessDeniedForUserException e) {
-			statusbar.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -86,7 +86,7 @@ public class DatabaseController {
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | FileContentCouldNotBeReadException
 				| ConnectionFailedException | DatabaseDoesNotExistException e) {
-			statusbar.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -104,7 +104,7 @@ public class DatabaseController {
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
-			statusbar.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -117,7 +117,7 @@ public class DatabaseController {
 		try {
 			connector.saveGraphDatabase(filepath, database);
 		} catch (FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
-			statusbar.addMessage(MESSAGE, e.getMessage());
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
