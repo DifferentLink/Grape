@@ -411,6 +411,16 @@ public class RenderableGraph {
 		return new RoundRectangle2D.Double(upperleft.x, upperleft.y, lowerright.x, lowerright.y, 1 , 2);
 	}
 
+	public Set<Vertex> getUnpositionedVertices() {
+		Set<Vertex> unpositionedVertices = new HashSet<>();
+		vertices.forEach(vertex -> {
+			if (vertex.x == 0 && vertex.y == 0) {
+				unpositionedVertices.add(vertex);
+			}
+		});
+		return unpositionedVertices;
+	}
+
 	public RenderableGraph deepCopy() {
 		Set<Vertex> newVertices = (this.vertices == null) ? new HashSet<>() : new HashSet<>(vertices);
 		Set<Edge> newEdges = (this.edges == null) ? new HashSet<>() : new HashSet<>(edges);
