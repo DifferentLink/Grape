@@ -17,7 +17,7 @@ public class RenderableGraph {
 	private Set<Vertex> vertices;
 	private Set<Edge> edges;
 	private int id;
-	private Set<RenderableGraph> subgraphs;
+	private Set<Set<Vertex>> subgraphs;
 
 	public RenderableGraph() {
 		vertices = new HashSet<>();
@@ -31,7 +31,7 @@ public class RenderableGraph {
 		this.id = id;
 	}
 
-	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id, Set<RenderableGraph> subgraphs) {
+	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id, Set<Set<Vertex>> subgraphs) {
 		this.vertices = vertices;
 		this.edges = edges;
 		this.id = id;
@@ -373,11 +373,11 @@ public class RenderableGraph {
 		this.id = id;
 	}
 
-	public Set<RenderableGraph> getSubgraphs() {
+	public Set<Set<Vertex>> getSubgraphs() {
 		return subgraphs;
 	}
 
-	public void setSubgraphs(Set<RenderableGraph> subgraphs) {
+	public void setSubgraphs(Set<Set<Vertex>> subgraphs) {
 		this.subgraphs = subgraphs;
 	}
 
@@ -414,7 +414,7 @@ public class RenderableGraph {
 	public RenderableGraph deepCopy() {
 		Set<Vertex> newVertices = (this.vertices == null) ? new HashSet<>() : new HashSet<>(vertices);
 		Set<Edge> newEdges = (this.edges == null) ? new HashSet<>() : new HashSet<>(edges);
-		Set<RenderableGraph> newSubgraphs = (this.subgraphs == null) ? new HashSet<>() : new HashSet<>(subgraphs);
+		Set<Set<Vertex>> newSubgraphs = (this.subgraphs == null) ? new HashSet<>() : new HashSet<>(subgraphs);
 		return new RenderableGraph(newVertices, newEdges, id, newSubgraphs);
 	}
 }
