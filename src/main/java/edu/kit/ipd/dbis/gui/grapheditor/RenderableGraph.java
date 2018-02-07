@@ -421,6 +421,22 @@ public class RenderableGraph {
 		return unpositionedVertices;
 	}
 
+	public Set<Vertex> getVerticesNotContainedInSubgraphs() {
+		Set<Vertex> notContainedVertices = new HashSet<>();
+		for (Vertex vertex : vertices) {
+			boolean contained = false;
+			for (Set<Vertex> subgraph : subgraphs) {
+				if (subgraph.contains(vertex)) {
+					contained = true;
+				}
+			}
+			if (!contained) {
+				notContainedVertices.add(vertex);
+			}
+		}
+		return notContainedVertices;
+	}
+
 	public RenderableGraph deepCopy() {
 		Set<Vertex> newVertices = (this.vertices == null) ? new HashSet<>() : new HashSet<>(vertices);
 		Set<Edge> newEdges = (this.edges == null) ? new HashSet<>() : new HashSet<>(edges);
