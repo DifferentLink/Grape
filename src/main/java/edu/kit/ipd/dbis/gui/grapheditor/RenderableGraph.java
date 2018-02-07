@@ -149,23 +149,27 @@ public class RenderableGraph {
 		// with Color object
 		int i = 0;
 		for (V key : vertexColors.keySet()) {
-			vertexColorsToColorMap.put(vertexColors.get(key), colorArray[i]);
-			if (i + 1 < colorArray.length) {
-				i++;
-			} else {
-				break;
+			if (!vertexColorsToColorMap.containsKey(vertexColors.get(key))) {
+				vertexColorsToColorMap.put(vertexColors.get(key), colorArray[i]);
+				if (i + 1 < colorArray.length) {
+					i++;
+				} else {
+					break;
+				}
 			}
 		}
 
 		for (E key : edgeColors.keySet()) {
-			int integerColorValue = edgeColors.get(key);
-			if (vertexColorsToColorMap.containsKey(integerColorValue)) {
-				edgeColorsToColorMap.put(integerColorValue, vertexColorsToColorMap.get(integerColorValue));
-			} else if (i + 1 == colorArray.length) {
-				edgeColorsToColorMap.put(edgeColors.get(key), colorArray[i]);
-			} else if (i + 1 < colorArray.length) {
-				edgeColorsToColorMap.put(edgeColors.get(key), colorArray[i]);
-				i++;
+			if (!edgeColorsToColorMap.containsKey(edgeColors.get(key))) {
+				int integerColorValue = edgeColors.get(key);
+				if (vertexColorsToColorMap.containsKey(integerColorValue)) {
+					edgeColorsToColorMap.put(integerColorValue, vertexColorsToColorMap.get(integerColorValue));
+				} else if (i + 1 == colorArray.length) {
+					edgeColorsToColorMap.put(edgeColors.get(key), colorArray[i]);
+				} else if (i + 1 < colorArray.length) {
+					edgeColorsToColorMap.put(edgeColors.get(key), colorArray[i]);
+					i++;
+				}
 			}
 		}
 
