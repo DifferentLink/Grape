@@ -7,11 +7,14 @@ import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * class which communicates with other packages of Grpape
@@ -393,16 +396,19 @@ public class Filtermanagement {
     }
 
     private static String testProperty(String input) throws InvalidInputException {
-        if (input.equals("profile") || input.equals("averagedegree") || input.equals("proportiondensity")
-                || input.equals("structuredensity") || input.equals("greatestDegree")
-                || input.equals("kkgraphnumberofsubgraphs") || input.equals("numberofcliques")
-                || input.equals("numberofedges") || input.equals("numberoftotalcolorings")
-                || input.equals("numberofvertexcolorings") || input.equals("numberofvertices")
-                || input.equals("smallestdegree") || input.equals("totalcoloringnumberofcolors")
-                || input.equals("vertexcoloringnumberofcolors") || input.equals("largestsubgraphsize")
-                || input.equals("binomialdensity") || input.equals("largestcliquesize")
-                || input.equals("disjointfromsubgraph")) {
-            return input;
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        Set<Property> propertySet = PropertyFactory.createAllProperties(graph);
+        String[] propertyStrings = new String[propertySet.size()];
+        int i = 0;
+        for (Property currentProperty: propertySet) {
+            propertyStrings[i] = currentProperty.getClass().getSimpleName();
+            i++;
+        }
+        for (String currentString: propertyStrings) {
+            currentString = currentString.toLowerCase();
+            if (currentString.equals(input)) {
+                return input;
+            }
         }
         throw new InvalidInputException();
     }
