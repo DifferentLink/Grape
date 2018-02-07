@@ -116,8 +116,8 @@ public class Pearson extends Correlation {
             }
         }
         double result = (sum / (firstPropertyValues.size() - 1));
-        return (result / (Pearson.getSampleVariationskeffizient(firstPropertyValues, firstRandomMedium)
-            * Pearson.getSampleVariationskeffizient(secondPropertyValues, secondRandomMedium)));
+        return (result / (Pearson.getSampleVariationskoeffizient(firstPropertyValues, firstRandomMedium)
+            * Pearson.getSampleVariationskoeffizient(secondPropertyValues, secondRandomMedium)));
     }
 
     private static double createRandomMedium(LinkedList<Double> inputList) {
@@ -128,7 +128,7 @@ public class Pearson extends Correlation {
         return (sum / inputList.size());
     }
 
-    private static double getSampleVariationskeffizient(LinkedList<Double> inputList, double randomMedium) {
+    private static double getSampleVariationskoeffizient(LinkedList<Double> inputList, double randomMedium) {
         double sum = 0;
         for (double currentValue: inputList) {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));

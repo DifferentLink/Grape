@@ -99,8 +99,7 @@ public class MutualCorrelation extends Correlation {
     }
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty,
-                                               GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+                                               GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
@@ -156,5 +155,28 @@ public class MutualCorrelation extends Correlation {
             }
         }
         return minimum;
+    }
+
+    private static String[] getStringProperties() {
+        String[] returnArray = new String[18];
+        returnArray[0] = "profile";
+        returnArray[1] = "averagedegree";
+        returnArray[2] = "proportiondensity";
+        returnArray[3] = "structuredensity";
+        returnArray[4] = "greatestDegree";
+        returnArray[5] = "kkgraphnumberofsubgraphs";
+        returnArray[6] = "numberofcliques";
+        returnArray[7] = "numberofedges";
+        returnArray[8] = "numberoftotalcolorings";
+        returnArray[9] = "numberofvertexcolorings";
+        returnArray[10] = "numberofvertices";
+        returnArray[11] = "smallestdegree";
+        returnArray[12] = "totalcoloringnumberofcolors";
+        returnArray[13] = "vertexcoloringnumberofcolors";
+        returnArray[14] = "largestsubgraphsize";
+        returnArray[15] = "binomialdensity";
+        returnArray[16] = "largestcliquesize";
+        returnArray[17] = "disjointfromsubgraph";
+        return returnArray;
     }
 }
