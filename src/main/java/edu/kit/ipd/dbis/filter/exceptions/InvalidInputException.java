@@ -6,4 +6,9 @@ package edu.kit.ipd.dbis.filter.exceptions;
  */
 public class InvalidInputException extends Throwable {
 
+    @Override
+    public String getMessage() {
+        return "The input does not code a valid filter";
+    }
+
 }
