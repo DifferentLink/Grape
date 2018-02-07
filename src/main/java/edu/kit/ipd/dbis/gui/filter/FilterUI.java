@@ -282,6 +282,7 @@ public class FilterUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			uiFilterManager.remove(id);
+			filterController.removeFiltersegment(id);
 			update();
 			repaint();
 			revalidate();
