@@ -33,13 +33,13 @@ public class Main {
 	private static ResourceBundle getLanguage() {
 		// Try to use system language.
 		try {
-			Locale currentLocale = Locale.getDefault();
-			return ResourceBundle.getBundle("languages", currentLocale);
-		} catch (MissingResourceException languageNotFound) {
-			// Set default language to english (en_US)
+			// Locale currentLocale = Locale.getDefault();
+			// return ResourceBundle.getBundle("languages", currentLocale);
 			return ResourceBundle.getBundle(
 					"languages",
 					new Locale.Builder().setLanguage("en").setRegion("US").build());
+		} catch (MissingResourceException languageNotFound) {
+			return null;
 		}
 	}
 }
