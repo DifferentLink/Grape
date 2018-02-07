@@ -4,6 +4,7 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.sql.SQLException;
@@ -65,14 +66,11 @@ public class CalculationController implements Runnable {
 					PropertyGraph<Integer, Integer> graph = database.getUncalculatedGraph();
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
+					tableModel.update(filter.getFilteredAndSortedGraphs());
 				}
-			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException | SQLException e) {
 				e.printStackTrace();
-			}
-			try {
-				tableModel.update(filter.getFilteredAndSortedGraphs());
-			} catch (SQLException e) {
-				e.printStackTrace();
+				log.addMessage(EventType.MESSAGE, e.getMessage());
 			}
 			// start recursion
 			try {
@@ -81,6 +79,7 @@ public class CalculationController implements Runnable {
 				}
 			} catch (ConnectionFailedException e) {
 				e.printStackTrace();
+				log.addMessage(EventType.MESSAGE, e.getMessage());
 			}
 		}
 	}
