@@ -1,8 +1,6 @@
 package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -19,8 +17,7 @@ import java.util.TreeSet;
 public class MutualCorrelation extends Correlation {
 
     @Override
-    public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+    public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws ConnectionFailedException {
         Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -41,7 +38,6 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum(Property property1, GraphDatabase database) throws
-            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             ConnectionFailedException {
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -59,8 +55,7 @@ public class MutualCorrelation extends Correlation {
     }
 
     @Override
-    public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+    public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws ConnectionFailedException {
         Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -81,7 +76,6 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum(Property property1, GraphDatabase database) throws
-            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             ConnectionFailedException {
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -99,16 +93,15 @@ public class MutualCorrelation extends Correlation {
     }
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty,
-                                               GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+                                               GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
-                firstProperty.toString());
+                firstProperty.getClass().getSimpleName());
         double returnValue = 0;
         while (!firstPropertyValues.isEmpty()) {
             LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
-                    secondProperty.toString());
+                    secondProperty.getClass().getSimpleName());
             double i = MutualCorrelation.getMinimum(firstPropertyValues);
             while (!secondPropertyValues.isEmpty()) {
                 double j = MutualCorrelation.getMinimum(secondPropertyValues);

@@ -5,4 +5,9 @@ package edu.kit.ipd.dbis.correlation.exceptions;
  */
 public class InvalidCorrelationInputException extends Throwable {
 
+    @Override
+    public String getMessage() {
+        return "The input does not code a valid correlation";
+    }
+
 }
