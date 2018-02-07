@@ -1,6 +1,5 @@
 package edu.kit.ipd.dbis.database.connection.tables;
 
-import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
@@ -8,7 +7,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 
 import java.io.*;
 import java.sql.*;
-import java.util.*;
+import java.util.LinkedList;
 
 /**
  * This class represents a MySQL-Table.
@@ -40,7 +39,7 @@ public abstract class Table {
 		this.user = user;
 		this.password = password;
 		this.name = name;
-		this.connection = null;
+		this.connection = this.getConnection();
 		this.createTable();
 	}
 
@@ -83,8 +82,7 @@ public abstract class Table {
 	 * @throws DatabaseDoesNotExistException
 	 * @throws ConnectionFailedException
 	 */
-	protected abstract void createTable()
-			throws SQLException, AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException;
+	protected abstract void createTable() throws SQLException;
 
 	/**
 	 * decides if a object is a Filtersegment or a PropertyGraph
@@ -104,9 +102,7 @@ public abstract class Table {
 	 * @throws IOException
 	 * @throws UnexpectedObjectException
 	 */
-	public abstract void insert(Serializable object)
-			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException, IOException, UnexpectedObjectException;
+	public abstract void insert(Serializable object) throws SQLException, IOException, UnexpectedObjectException;
 
 	/**
 	 * returns the Object identified by the given id.
@@ -121,8 +117,7 @@ public abstract class Table {
 	 * @throws UnexpectedObjectException
 	 */
 	public abstract Serializable getContent(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException, IOException, ClassNotFoundException, UnexpectedObjectException;
+			throws SQLException, IOException, ClassNotFoundException, UnexpectedObjectException;
 
 	/**
 	 * Creates and returns a Connection-Objcect.
@@ -142,12 +137,12 @@ public abstract class Table {
 				return this.connection;
 			}
 
-		} catch (MySQLSyntaxErrorException e) {
-			throw new DatabaseDoesNotExistException();
+		} catch (SQLSyntaxErrorException e) {
+			throw new DatabaseDoesNotExistException(e.getMessage());
 		} catch (SQLException e) {
-			throw new AccessDeniedForUserException();
-		} catch (Exception e) {
-			throw new ConnectionFailedException();
+			throw new AccessDeniedForUserException(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
 
@@ -159,16 +154,14 @@ public abstract class Table {
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	public void switchState(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException {
+	public void switchState(int id) throws SQLException {
 
 		String sql = "SELECT state FROM " + this.name + " WHERE id = " + id;
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		if (result.next()) {
 			boolean value = (result.getInt("state") != 1);
 			sql = "UPDATE " + this.name + " SET state = " + value + " WHERE id = " + id;
-			this.getConnection().prepareStatement(sql).executeUpdate();
+			this.connection.prepareStatement(sql).executeUpdate();
 		}
 
 	}
@@ -181,12 +174,10 @@ public abstract class Table {
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	public void delete(int id)
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException {
+	public void delete(int id) throws SQLException {
 
 		String sql = "DELETE FROM " + this.name + " WHERE id = " + id;
-		this.getConnection().prepareStatement(sql).executeUpdate();
+		this.connection.prepareStatement(sql).executeUpdate();
 	}
 
 	/**
@@ -197,12 +188,10 @@ public abstract class Table {
 	 * @throws DatabaseDoesNotExistException
 	 * @throws SQLException
 	 */
-	public LinkedList<String> getColumns()
-			throws AccessDeniedForUserException, ConnectionFailedException, DatabaseDoesNotExistException,
-			SQLException {
+	public LinkedList<String> getColumns() throws SQLException {
 
 		String sql = "SHOW COLUMNS FROM " + this.name;
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		LinkedList<String> columns = new LinkedList<>();
 		while (result.next()) {
 			columns.add(result.getString(1));
@@ -218,9 +207,7 @@ public abstract class Table {
 	 * @throws AccessDeniedForUserException
 	 * @throws ConnectionFailedException
 	 */
-	protected String getPropertyColumns()
-			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException {
+	protected String getPropertyColumns() throws SQLException {
 
 		LinkedList<String> list = this.getColumns();
 		list.remove("graph");
@@ -244,14 +231,12 @@ public abstract class Table {
 	 * @throws AccessDeniedForUserException
 	 * @throws ConnectionFailedException
 	 */
-	protected int getId()
-			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException {
+	protected int getId() throws SQLException {
 		LinkedList<Integer> ids = this.getIds();
 		for (int i = 0; i < ids.size(); i++) {
 			if (!ids.contains(i)) return i;
 		}
-		return ids.size() + 1;
+		return ids.size();
 	}
 
 	/**
@@ -262,12 +247,10 @@ public abstract class Table {
 	 * @throws ConnectionFailedException
 	 * @throws SQLException
 	 */
-	protected LinkedList<Integer> getIds()
-			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException,
-			SQLException {
+	protected LinkedList<Integer> getIds() throws SQLException {
 
 		String sql = "SELECT id FROM " + this.name;
-		ResultSet result = this.getConnection().prepareStatement(sql).executeQuery();
+		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		LinkedList<Integer> ids = new LinkedList<>();
 		while (result.next()) {
 			ids.add(result.getInt("id"));

@@ -8,7 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Vector;
 
 public class NonEditableTableModel extends DefaultTableModel {
 
@@ -27,9 +26,9 @@ public class NonEditableTableModel extends DefaultTableModel {
 			}
 
 			while (resultSet.next()) {
-				Vector<Object> row = new Vector<>();
+				Object[] row = new Object[metaData.getColumnCount()];
 				for (int i = 1; i <= metaData.getColumnCount(); i++) {
-					row.add(resultSet.getObject(i));
+					row[i - 1] = resultSet.getObject(i);
 				}
 				this.addRow(row);
 			}
@@ -40,22 +39,7 @@ public class NonEditableTableModel extends DefaultTableModel {
 	}
 
 	@Override
-	public int getRowCount() {
-		return super.getRowCount();
-	}
-
-	@Override
-	public int getColumnCount() {
-		return super.getColumnCount();
-	}
-
-	@Override
-	public Object getValueAt(int i, int i1) {
-		return super.getValueAt(i, i1);
-	}
-
-	@Override
-	public Class getColumnClass(int column) {
-		return super.getColumnClass(column);
+	public boolean isCellEditable(int row, int column) {
+		return false;
 	}
 }

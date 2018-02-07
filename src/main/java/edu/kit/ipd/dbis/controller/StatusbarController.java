@@ -4,7 +4,6 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.log.History;
@@ -23,15 +22,7 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 public class StatusbarController {
 
 	private Log log;
-
-	/**
-	 * Gets as string.
-	 *
-	 * @return the as string
-	 */
-	public String getAsString() {
-		return log.getAsString();
-	}
+	private CalculationController calculation;
 
 	//TODO: Singleton pattern
 	private static StatusbarController statusbar;
@@ -56,6 +47,19 @@ public class StatusbarController {
 		log.setDatabase(database);
 	}
 
+	private void setCalculation() {
+		this.calculation = CalculationController.getInstance();
+	}
+
+	/**
+	 * Gets as string.
+	 *
+	 * @return the as string
+	 */
+	public String getAsString() {
+		return log.getAsString();
+	}
+
 	/**
 	 * Removes all events of the type MESSAGE from the current history
 	 */
@@ -69,8 +73,7 @@ public class StatusbarController {
 	public void undo() {
 		try {
 			log.undo();
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
 		}
 	}
@@ -81,8 +84,7 @@ public class StatusbarController {
 	public void redo() {
 		try {
 			log.redo();
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | TablesNotAsExpectedException
-				| ConnectionFailedException e) {
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
 		}
 	}
@@ -152,19 +154,21 @@ public class StatusbarController {
 	/**
 	 * pauses the method calculateGraphProperties().
 	 */
-	public void pauseCalculation() { //TODO
-
+	public void pauseCalculation() {
+		if (calculation == null) {
+			setCalculation();
+		}
+		calculation.pauseCalculation();
 	}
 
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public void continueCalculation() { //TODO
-
-	}
-
-	public Log getLog() {
-		return log;
+	public void continueCalculation() {
+		if (calculation == null) {
+			setCalculation();
+		}
+		calculation.continueCalculation();
 	}
 }
 

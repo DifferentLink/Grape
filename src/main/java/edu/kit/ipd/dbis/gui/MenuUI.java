@@ -6,13 +6,13 @@ package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
 import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.popups.AboutUI;
-import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
+import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import edu.kit.ipd.dbis.log.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -27,9 +27,11 @@ public class MenuUI extends JMenuBar {
 	private final Theme theme;
 
 	public MenuUI(GenerateController generateController,
-	              DatabaseController databaseController,
-	              StatusbarController statusbarController, ResourceBundle language,
-	              Theme theme) {
+				  DatabaseController databaseController,
+				  StatusbarController statusbarController,
+				  GraphEditorController graphEditorController,
+				  ResourceBundle language,
+				  Theme theme) {
 
 		this.statusbarController = statusbarController;
 		this.theme = theme;
@@ -59,6 +61,7 @@ public class MenuUI extends JMenuBar {
 		JMenuItem generateGraphs = new JMenuItem(language.getString("generateGraphs"));
 		generateGraphs.addActionListener(new GenerateGraphAction(generateController, language, theme));
 		JMenuItem emptyGraph = new JMenuItem(language.getString("emptyGraph"));
+		emptyGraph.addActionListener(new CreateEmptyGraphAction(graphEditorController));
 		JMenuItem readBFSCode = new JMenuItem(language.getString("readBFSCode"));
 		readBFSCode.addActionListener(new ReadBFSCodeAction(generateController, language, theme));
 		JMenuItem undo = new JMenuItem(language.getString("undo"));
@@ -334,6 +337,19 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			statusbarController.redo();
+		}
+	}
+
+	private class CreateEmptyGraphAction implements ActionListener {
+		private final GraphEditorController graphEditorController;
+
+		public CreateEmptyGraphAction(GraphEditorController graphEditorController) {
+			this.graphEditorController = graphEditorController;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			graphEditorController.emptyGraphToGraphEditor();
 		}
 	}
 }

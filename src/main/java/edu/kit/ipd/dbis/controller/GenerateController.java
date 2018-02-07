@@ -2,14 +2,19 @@ package edu.kit.ipd.dbis.controller;
 
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,8 +30,9 @@ public class GenerateController {
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
 	private StatusbarController log;
-	private NonEditableTableModel table;
 	private FilterController filter;
+	private CalculationController calculation;
+	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -34,6 +40,8 @@ public class GenerateController {
 	private GenerateController() {
 		this.log = StatusbarController.getInstance();
 		this.generator = new BulkRandomConnectedGraphGenerator();
+		this.log = StatusbarController.getInstance();
+		this.calculation = CalculationController.getInstance();
 		this.filter = FilterController.getInstance();
 	}
 
@@ -58,9 +66,16 @@ public class GenerateController {
 		this.database = database;
 	}
 
-	public void setTableModel(NonEditableTableModel table) {
-		this.table = table;
+	/**
+	 * Sets table model.
+	 *
+	 * @param tableModel the table model
+	 */
+// TODO: Instance of TableModel
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
 	}
+
 
 	/**
 	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
@@ -74,18 +89,22 @@ public class GenerateController {
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InvalidGeneratorInputException {
-
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
-		// todo: solange generieren bis die gewünschte anzahl von graphen existiert!
 		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
-		generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-		this.saveGraphs(graphs);
 		try {
-			table.update(filter.getFilteredAndSortedGraphs());
-		} catch (SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			this.saveGraphs(graphs);
+			Thread calculate = new Thread(CalculationController.getInstance());
+			SwingUtilities.invokeLater(calculate);
+		} catch (IllegalArgumentException e) {
+			throw new InvalidGeneratorInputException();
+		} catch (NotEnoughGraphsException e) {
+			log.addMessage(EventType.MESSAGE, e.getMessage());
+			this.saveGraphs(graphs);
+			Thread calculate = new Thread(CalculationController.getInstance());
+			SwingUtilities.invokeLater(calculate);
 		}
 	}
 
@@ -106,25 +125,23 @@ public class GenerateController {
 	 * @param bfsCode the BFS Code of the graph to save.
 	 * @throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
-	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
-		if (isValidBFS(bfsCode)) {
-			// Parsing String into int[]
-			String[] splitCode = bfsCode.split("\\[,]");
-			int[] code = new int[splitCode.length];
-			for (int i = 0; i < splitCode.length; i++) {
-				code[i] = Integer.parseInt(splitCode[i]);
-			}
-			// Creating BfsCode Object
-			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-			PropertyGraph graph = new PropertyGraph(bfs);
-			try {
-				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-					| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
-		} else {
-			throw new InvalidBfsCodeInputException("BfsCode is not valid");
+
+	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException { //TODO: check for valid BFS input
+		// Parsing String into int[]
+		String[] splitCode = bfsCode.split(",");
+		int[] code = new int[splitCode.length];
+		for (int i = 0; i < splitCode.length; i++) {
+			code[i] = Integer.parseInt(splitCode[i]);
+		}
+		// Creating BfsCode Object
+		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
+		try {
+			database.addGraph(graph);
+			calculation.run();
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
 
@@ -136,8 +153,7 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
-		} catch (TablesNotAsExpectedException | AccessDeniedForUserException | ConnectionFailedException
-				| DatabaseDoesNotExistException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -151,8 +167,7 @@ public class GenerateController {
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
-					| ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
 		}
@@ -165,18 +180,9 @@ public class GenerateController {
 	 * @return the boolean
 	 */
 	public Boolean isValidBFS(String bfsCode) {
-		if (!bfsCode.contains("[") || !bfsCode.contains("]")) {
-			return false;
-		}
-		String[] splitCode = bfsCode.split("\\[*,]");
+		String[] splitCode = bfsCode.split(",");
 		for (int i = 0; i < splitCode.length; i++) {
-			if (splitCode[i].length() != 1) {
-				return false;
-			} else if (!isNumeric(splitCode[i])) {
-				return false;
-			} else if (Integer.parseInt(splitCode[i]) > splitCode.length) {
-				return false;
-			} else if (Integer.parseInt(splitCode[i]) < -1) {
+			if (!isNumeric(splitCode[i])) {
 				return false;
 			}
 		}

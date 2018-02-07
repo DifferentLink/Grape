@@ -1,7 +1,10 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.*;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.*;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
 
 import java.util.HashSet;
@@ -28,7 +31,6 @@ public class PropertyFactory {
 		properties.add(new AverageDegree(graph));
 		properties.add(new ProportionDensity(graph));
 		properties.add(new StructureDensity(graph));
-		properties.add(new NodeSpecificDensity(graph));
 		properties.add(new BinomialDensity(graph));
 		properties.add(new DisjointFromSubgraphs(graph));
 		properties.add(new GreatestDegree(graph));
@@ -41,6 +43,8 @@ public class PropertyFactory {
 		properties.add(new NumberOfVertexColorings(graph));
 		properties.add(new NumberOfVertices(graph));
 		properties.add(new SmallestDegree(graph));
+		properties.add(new TotalColoringNumberOfColors(graph));
+		properties.add(new VertexColoringNumberOfColors(graph));
 		return properties;
 	}
 }

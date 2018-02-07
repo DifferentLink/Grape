@@ -1,7 +1,9 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.NumberDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 
 import java.util.Objects;
 
@@ -26,23 +28,20 @@ public class ProportionDensityAlgorithm<V, E> implements NumberDensityAlgorithm 
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 	}
 
-	private int factorial(int n) {
-		if (n < 0) {
-			throw new IllegalArgumentException("n has to be positive!");
+	private int getNumberOfBackwardEdges(int[] code) {
+		int cnt = 0;
+		for (int i = 0; i < code.length; i++) {
+			if (code[i] == -1) {
+				cnt++;
+			}
 		}
-		if (n == 0) {
-			return 1;
-		}
-		int result = 1;
-		for (int i = n; i > 0; i--) {
-			result = result * i;
-		}
-		return result;
+		return cnt;
 	}
 
 	@Override
 	public double getDensity() {
-		int maxEdge = factorial(graph.vertexSet().size() - 1); //Computes the max edge number
-		return graph.edgeSet().size() / maxEdge;
+		int[] code = ((BfsCodeAlgorithm.BfsCode) graph.getProperty(BfsCode.class).getValue()).getCode();
+		int b = getNumberOfBackwardEdges(code);
+		return (double) b / graph.edgeSet().size();
 	}
 }

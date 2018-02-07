@@ -8,17 +8,28 @@ import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import edu.kit.ipd.dbis.log.Log;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.TableColumn;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class GrapeUI {
+
+	private final CalculationController calculationController;
+	private final CorrelationController correlationController;
+	private final DatabaseController databaseController;
+	private final FilterController filterController;
+	private final GenerateController generateController;
+	private final GraphEditorController graphEditorController;
+	private final NonEditableTableModel tableModel;
 
 	private GraphEditorUI graphEditorUI;
 	private MenuUI menuUI;
@@ -42,6 +53,12 @@ public class GrapeUI {
 	               StatusbarController statusbarController,
 	               ResourceBundle language,
 	               Theme theme) {
+		this.calculationController = calculationController;
+		this.correlationController = correlationController;
+		this.databaseController = databaseController;
+		this.filterController = filterController;
+		this.generateController = generateController;
+		this.graphEditorController = graphEditorController;
 
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,7 +71,8 @@ public class GrapeUI {
 		} catch (IOException e) {}
 
 
-		menuUI = new MenuUI(generateController, databaseController, statusbarController, language, theme);
+		menuUI = new MenuUI(
+				generateController, databaseController, statusbarController, graphEditorController, language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
 		filterUI = new FilterUI(filterController, language, theme);
@@ -68,6 +86,7 @@ public class GrapeUI {
 		filterCorrelationDivider.add(correlationUI);
 
 		graphEditorUI = new GraphEditorUI(graphEditorController, language, theme);
+		graphEditorController.setGraphEditor(graphEditorUI);
 
 		JSplitPane graphEditorDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
@@ -88,15 +107,23 @@ public class GrapeUI {
 		statusbarUI = new StatusbarUI(statusbarController, language, theme);
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
+		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
+		calculationController.setTableModel(tableModel);
+		databaseController.setTableModel(tableModel);
+		filterController.setTableModel(tableModel);
+		graphEditorController.setTableModel(tableModel);
 		generateController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
+		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
+		tableUI.addKeyListener(new DeleteGraphAction());
 		JScrollPane scrollPane = new JScrollPane(tableUI);
 		tableUI.setFillsViewportHeight(true);
 		tableUI.setBackground(theme.backgroundColor);
 		tableUI.setAutoCreateRowSorter(true); // todo use own row-sorter if necessary
-		tableUI.setSelectionBackground(theme.assertiveBackground);
-		tableUI.setSelectionForeground(theme.unassertiveBackground);
+		tableUI.setSelectionBackground(theme.lightNeutralColor);
+		tableUI.setSelectionForeground(theme.foregroundColor);
 		rightUI.add(scrollPane, BorderLayout.CENTER);
 		rightUI.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
 		rightUI.add(statusbarUI, BorderLayout.SOUTH);
@@ -113,5 +140,40 @@ public class GrapeUI {
 		mainWindow.add(verticalDivider);
 
 		mainWindow.setVisible(true);
+	}
+
+	private class TableSelectionChangeAction implements ListSelectionListener {
+		@Override
+		public void valueChanged(ListSelectionEvent listSelectionEvent) {
+			tableModel.fireTableDataChanged();
+			tableModel.fireTableStructureChanged();
+			try {
+				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
+				PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
+				graphEditorUI.displayGraph(graph);
+			} catch (IndexOutOfBoundsException ignored) {
+			}
+		}
+	}
+
+	private class DeleteGraphAction implements KeyListener { // todo implement delete graphs
+		@Override
+		public void keyTyped(KeyEvent keyEvent) {
+			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
+				try {
+					generateController.delGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
+					tableModel.update(filterController.getFilteredAndSortedGraphs());
+				} catch (IndexOutOfBoundsException | SQLException ignored) {
+				}
+			}
+		}
+
+		@Override
+		public void keyPressed(KeyEvent keyEvent) {
+		}
+
+		@Override
+		public void keyReleased(KeyEvent keyEvent) {
+		}
 	}
 }

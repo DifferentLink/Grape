@@ -1,7 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import org.jgrapht.alg.isomorphism.VF2GraphIsomorphismInspector;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
@@ -128,7 +127,7 @@ public class RandomConnectedGraphGeneratorTest {
 		PropertyGraph graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 		Assert.assertTrue((graph.vertexSet().size() > 0) && (graph.vertexSet().size() <= 20));
-		Assert.assertTrue((graph.edgeSet().size() > 0) && (graph.edgeSet().size() <= 400));
+		Assert.assertTrue((graph.edgeSet().size() >= 0) && (graph.edgeSet().size() <= 400));
 	}
 
 }

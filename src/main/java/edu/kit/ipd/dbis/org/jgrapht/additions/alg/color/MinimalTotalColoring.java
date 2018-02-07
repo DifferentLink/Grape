@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.Graph;
-import org.jgrapht.VertexFactory;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 
@@ -17,7 +16,7 @@ import java.util.*;
  *
  */
 public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> {
-	private final Graph<V, E> graph;
+	private final PropertyGraph<V, E> graph;
 	private Map<Integer, V> integerVMap;
 	private Map<Integer, E> integerEMap;
 	private List<TotalColoring<V, E>> totalColorings;
@@ -27,7 +26,7 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 	 *
 	 * @param graph the input graph
 	 */
-	public MinimalTotalColoring(Graph<V, E> graph) {
+	public MinimalTotalColoring(PropertyGraph<V, E> graph) {
 		this.graph = Objects.requireNonNull(graph, "Graph cannot be null");
 		this.totalColorings = new ArrayList<>();
 	}
@@ -41,7 +40,7 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		if (!this.totalColorings.isEmpty()) {
 			return this.totalColorings;
 		}
-		Graph<Integer, Integer> edgeToVertexGraph = this.makeEdgesToVertices();
+		PropertyGraph<Integer, Integer> edgeToVertexGraph = this.makeEdgesToVertices();
 		List<VertexColoringAlgorithm.Coloring<Integer>> colorings = new MinimalVertexColoring<>(edgeToVertexGraph).getAllColorings();
 		for (VertexColoringAlgorithm.Coloring<Integer> c : colorings) {
 			this.totalColorings.add(this.createTotalColoringObject(c));
@@ -58,68 +57,70 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		}
 	}
 
-	private Graph<Integer, Integer> makeEdgesToVertices() {
+	private PropertyGraph<Integer, Integer> makeEdgesToVertices() {
 		this.integerVMap = new HashMap<>();
 		this.integerEMap = new HashMap<>();
 
 		// quick hack. there probably exists a better solution.
 		Map<V, Integer> vIntegerMap = new HashMap<>();
 
-		Graph<Integer, Integer> edgeToVertexGraph = new PropertyGraph<>();
-		VertexFactory vertexFactory = new IntegerVertexFactory();
+		PropertyGraph<Integer, Integer> edgeToVertexGraph = new PropertyGraph<>();
+		IntegerVertexFactory vertexFactory = new IntegerVertexFactory();
 		Set<String> transformedEdges = new HashSet<>();
 
 		Set<Integer> vEdgeToVertexSet = new HashSet<>();
 
 		// iterate over vertices
-		for (V v : this.graph.vertexSet()) {
-			Integer newV;
+		for (Object v : this.graph.vertexSet()) {
+			Integer createdV;
 			if (!integerVMap.values().contains(v)) {
-				newV = (Integer) vertexFactory.createVertex();
-				edgeToVertexGraph.addVertex(newV);
-				integerVMap.put(newV, v);
-				vIntegerMap.put(v, newV);
+				createdV = vertexFactory.createVertex();
+				edgeToVertexGraph.addVertex(createdV);
+				integerVMap.put(createdV, (V) v);
+				vIntegerMap.put((V) v, createdV);
 			} else {
-				newV = vIntegerMap.get(v);
+				createdV = vIntegerMap.get(v);
 			}
 
 			// iterate over vertex v's edges
-			for (E e : this.graph.outgoingEdgesOf(v)) {
-				if (!transformedEdges.contains(e.toString())) {
+			for (Object e : this.graph.outgoingEdgesOf(v)) {
+				V edgeTarget = (V) this.graph.getEdgeTarget(e);
+				if (!transformedEdges.contains((e).toString())
+						&& !v.equals(edgeTarget)) {
 					// make edge to vertex by creating new
 					// vertex that is situated inbetween
 					// v and the edges' target and creating
 					// edges from the new vertex to those two
 					// vertices.
-					V edgeTarget = this.graph.getEdgeTarget(e);
 
 					transformedEdges.add((e.toString()));
 					transformedEdges.add("(" + edgeTarget.toString() + " : " + v.toString() + ")");
 
-					Integer newTargetVertex;
+					Integer createdEdgeTarget;
 					if (vIntegerMap.containsKey(edgeTarget)) {
-						newTargetVertex = (Integer) vIntegerMap.get(edgeTarget);
+						createdEdgeTarget = vIntegerMap.get(edgeTarget);
 					} else {
-						newTargetVertex = (Integer) vertexFactory.createVertex();
+						createdEdgeTarget = vertexFactory.createVertex();
 					}
 
-					Integer edgeToVertex = (Integer) vertexFactory.createVertex();
+					Integer createdEdgeToVertex = vertexFactory.createVertex();
 
-					edgeToVertexGraph.addVertex(newTargetVertex);
-					edgeToVertexGraph.addVertex(edgeToVertex);
-					edgeToVertexGraph.addEdge(newV, edgeToVertex);
-					edgeToVertexGraph.addEdge(edgeToVertex, newTargetVertex);
-					edgeToVertexGraph.addEdge(newV, newTargetVertex);
+					edgeToVertexGraph.addVertex(createdEdgeTarget);
+					edgeToVertexGraph.addVertex(createdEdgeToVertex);
+					edgeToVertexGraph.addEdge(createdV, createdEdgeToVertex);
+					edgeToVertexGraph.addEdge(createdEdgeToVertex, createdEdgeTarget);
+					edgeToVertexGraph.addEdge(createdV, createdEdgeTarget);
 
-					integerEMap.put(edgeToVertex, e);
-					integerVMap.put(newTargetVertex, edgeTarget);
+					integerEMap.put(createdEdgeToVertex, (E) e);
+					integerVMap.put(createdEdgeTarget, edgeTarget);
 
-					vIntegerMap.put(edgeTarget, newTargetVertex);
+					vIntegerMap.put(edgeTarget, createdEdgeTarget);
 
-					vEdgeToVertexSet.add(edgeToVertex);
+					vEdgeToVertexSet.add(createdEdgeToVertex);
 				}
 			}
 		}
+
 		Set<String> addedEdges = new HashSet<>();
 		// create edges between all vertices that
 		// were created from edges and share at

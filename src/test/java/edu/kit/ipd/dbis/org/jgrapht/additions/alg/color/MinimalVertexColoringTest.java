@@ -29,7 +29,7 @@ public class MinimalVertexColoringTest {
 		colors.put("b", 1);
 		colors.put("c", 1);
 		colors.put("d", 0);
-		Coloring coloring = new VertexColoringAlgorithm.ColoringImpl<String>(colors, 2);
+		Coloring coloring = new VertexColoringAlgorithm.ColoringImpl<>(colors, 2);
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
 
 		assertEquals(false, alg.isValidVertexColoring(coloring, graph));
@@ -55,6 +55,18 @@ public class MinimalVertexColoringTest {
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
 
 		assertEquals(true, alg.isValidVertexColoring(coloring, graph));
+	}
+
+	@Test
+	public void isValidVertexColoring3() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex(0);
+		graph.addVertex(1);
+		graph.addEdge(0, 1);
+		int[] colors = new int[]{0, 1};
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+
+		assertEquals(true, alg.isValidVertexColoring(colors));
 	}
 
 	@Test
@@ -274,6 +286,20 @@ public class MinimalVertexColoringTest {
 		Coloring<Integer> c2 = new VertexColoringAlgorithm.ColoringImpl<>(c2colors, 3);
 
 		assertEquals(false, MinimalVertexColoring.equivalentColoring(c1, c2));
+	}
+
+	@Test
+	public void getColoring3() {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 3);
+
+		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		assertEquals(2, alg.getColoring().getNumberColors());
 	}
 
 	private PropertyGraph createCompleteGraph(int numberOfVertices) {

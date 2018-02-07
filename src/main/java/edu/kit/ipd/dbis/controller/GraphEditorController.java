@@ -1,7 +1,11 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
@@ -11,13 +15,10 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
+import java.sql.SQLException;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
-import static edu.kit.ipd.dbis.log.EventType.ADD;
-import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
-import static edu.kit.ipd.dbis.log.EventType.REMOVE;
+import static edu.kit.ipd.dbis.log.EventType.*;
 
 /**
  * The type Graph editor controller.
@@ -26,12 +27,16 @@ public class GraphEditorController {
 
 	private GraphDatabase database;
 	private StatusbarController log;
+	private FilterController filter;
+	private NonEditableTableModel tableModel;
+	private GraphEditorUI graphEditor;
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
 	private GraphEditorController() {
 		this.log = StatusbarController.getInstance();
+		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -55,6 +60,14 @@ public class GraphEditorController {
 		this.database = database;
 	}
 
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
+	}
+
+	public void setGraphEditor(GraphEditorUI graphEditor) {
+		this.graphEditor = graphEditor;
+	}
+
 	/**
 	 * checks the given graph for duplicates then adds the graph to the not yet calculated
 	 * graphlist of CalculationController and deletes the old graph from the
@@ -63,34 +76,24 @@ public class GraphEditorController {
 	 * @param newGraph the PropertyGraph<V,E> to add.
 	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
-	public void addEditedGraph(PropertyGraph newGraph, int oldID) {
+	public void addEditedGraph(PropertyGraph<Integer, Integer> newGraph, int oldID) {
 		Boolean isDuplicate = null;
 		try {
 			isDuplicate = database.graphExists(newGraph);
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-				| AccessDeniedForUserException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		if (isDuplicate) {
-			return;
-		} else {
+		if (!isDuplicate) {
 			try {
 				database.addGraph(newGraph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | AccessDeniedForUserException
-					| ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-			}
-			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
-			log.addEvent(ADD, newGraph.getId());
-			try {
+				log.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
-			} catch (TablesNotAsExpectedException | AccessDeniedForUserException | DatabaseDoesNotExistException
-					| ConnectionFailedException e) {
+				log.addEvent(REMOVE, oldID);
+				this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-			log.addEvent(REMOVE, oldID);
 		}
-
 	}
 
 	/**
@@ -98,18 +101,28 @@ public class GraphEditorController {
 	 *
 	 * @param graph the graph
 	 */
-	public void addNewGraph(PropertyGraph graph) throws InvalidGraphInputException { // todo only duplicate check??
+	public void addNewGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException { // todo only duplicate check??
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
-			} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-					| AccessDeniedForUserException | InsertionFailedException | UnexpectedObjectException e) {
+				log.continueCalculation();
+				log.addEvent(ADD, graph.getId());
+				this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			} catch (ConnectionFailedException
+					| InsertionFailedException | UnexpectedObjectException | SQLException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
-			// Creating Event
-			// TODO: NEED METHOD GETID(GRAPH) from DATABASE
-			log.addEvent(ADD, graph.getId());
 		}
+	}
+
+	public PropertyGraph<Integer, Integer> getGraphById(int id) {
+		PropertyGraph<Integer, Integer> graph = null;
+		try {
+			graph = database.getGraphById(id);
+		} catch (ConnectionFailedException | UnexpectedObjectException e) {
+			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		}
+		return graph;
 	}
 
 	/**
@@ -118,12 +131,11 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
 	 */
-	public Boolean isValidGraph(PropertyGraph graph) throws InvalidGraphInputException {
+	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
 		Boolean duplicate = true;
 		try {
 			duplicate = database.graphExists(graph);
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-				| AccessDeniedForUserException e) {
+		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 		if (duplicate) {
@@ -137,14 +149,15 @@ public class GraphEditorController {
 	 *
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 */
-	public void addNextDenserToDatabase(PropertyGraph graph) {
-		NextDenserGraphFinder denserGraph = new NextDenserGraphFinder(graph);
+	public void addNextDenserToDatabase(PropertyGraph<Integer, Integer> graph) {
+		NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(graph);
+		PropertyGraph<Integer, Integer> denserGraph;
+		denserGraph = denserGraphFinder.getNextDenserGraph();
 		try {
-			database.addGraph(denserGraph.getNextDenserGraph());
-			// TODO get right id!
-			log.addEvent(ADD, denserGraph.getNextDenserGraph().getId());
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-				| AccessDeniedForUserException | UnexpectedObjectException | InsertionFailedException e) {
+			database.addGraph(denserGraph);
+			log.addEvent(ADD, denserGraph.getId());
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -155,7 +168,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the graphcolorization.
 	 */
-	public VertexColoringAlgorithm.Coloring getVertexColoring(PropertyGraph graph) {
+	public VertexColoringAlgorithm.Coloring getVertexColoring(PropertyGraph<Integer, Integer> graph) {
 		MinimalVertexColoring coloring = new MinimalVertexColoring(graph);
 		return coloring.getColoring();
 	}
@@ -166,7 +179,7 @@ public class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to calculate.
 	 * @return the graphcolorization.
 	 */
-	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph graph) {
+	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph<Integer, Integer> graph) {
 		MinimalTotalColoring coloring = new MinimalTotalColoring(graph);
 		return coloring.getColoring();
 	}
@@ -193,4 +206,7 @@ public class GraphEditorController {
 		return null;
 	}
 
+	public void emptyGraphToGraphEditor() {
+		graphEditor.showEmptyGraph();
+	}
 }

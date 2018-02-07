@@ -1,17 +1,15 @@
 package edu.kit.ipd.dbis.filter;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-
 /**
  * a specific filter might be a BasicFilter or a ConnectedFilter
  */
 public abstract class Filter extends Filtersegment {
 
-    Property property1;
+	String property1;
     Operator operator1;
     int value1;
     Relation relation;
-    Property property2;
+	String property2;
     Operator operator2;
     int value2;
 
@@ -35,7 +33,7 @@ public abstract class Filter extends Filtersegment {
      * getter of attribute property2
      * @return value of attribute property1
      */
-    public Property getProperty2() {
+	public String getProperty2() {
         return property2;
     }
 
@@ -67,7 +65,7 @@ public abstract class Filter extends Filtersegment {
      * getter of attribute property1
      * @return value of attribute property1
      */
-    public Property getProperty1() {
+	public String getProperty1() {
         return property1;
     }
 

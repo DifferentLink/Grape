@@ -4,11 +4,11 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.TablesNotAsExpectedException;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -20,7 +20,7 @@ public class Pearson extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+			AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
         Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -42,7 +42,7 @@ public class Pearson extends Correlation {
     @Override
     public TreeSet<CorrelationOutput> useMaximum(Property property2, GraphDatabase database) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-            TablesNotAsExpectedException {
+			ConnectionFailedException {
         Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property1: firstPropertyList) {
@@ -60,7 +60,7 @@ public class Pearson extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+			AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
         Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -82,7 +82,7 @@ public class Pearson extends Correlation {
     @Override
     public TreeSet<CorrelationOutput> useMinimum(Property property2, GraphDatabase database) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-            TablesNotAsExpectedException {
+			ConnectionFailedException {
         Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (Property property1: firstPropertyList) {
@@ -100,7 +100,7 @@ public class Pearson extends Correlation {
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty,
                                                GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, TablesNotAsExpectedException {
+			AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),

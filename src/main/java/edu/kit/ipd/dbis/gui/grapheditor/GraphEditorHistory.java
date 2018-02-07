@@ -48,4 +48,9 @@ public class GraphEditorHistory {
 
 	private void cutTrailingHistory() { // todo implement cutTrailingHistory()
 	}
+
+	public void clear() {
+		this.history = new ConcurrentLinkedList<>();
+		activeState = history.last();
+	}
 }

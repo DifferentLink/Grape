@@ -1,10 +1,16 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.files.*;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.files.FileContentCouldNotBeReadException;
+import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedException;
+import edu.kit.ipd.dbis.database.exceptions.files.FileCouldNotBeSavedException;
+import edu.kit.ipd.dbis.database.exceptions.files.FileNameAlreadyTakenException;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
+import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 
 import java.io.FileNotFoundException;
@@ -26,6 +32,7 @@ public class DatabaseController {
 	private StatusbarController log;
 	private CorrelationController correlation;
 
+	private NonEditableTableModel tableModel;
 	private Connector connector;
 	private GraphDatabase database;
 
@@ -42,10 +49,16 @@ public class DatabaseController {
 		this.connector = new FileManager();
 	}
 
-	// TODO: new Getter
-	public GraphDatabase getCurrentDatabase() {
-		return this.database;
+	/**
+	 * Sets table model.
+	 *
+	 * @param tableModel the table model
+	 */
+// TODO: Instance of TableModel
+	public void setTableModel(NonEditableTableModel tableModel) {
+		this.tableModel = tableModel;
 	}
+
 	/**
 	 * Triggers the database to open a new database table.
 	 *
@@ -58,11 +71,11 @@ public class DatabaseController {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
-		} catch (TableAlreadyExistsException | SQLException | DatabaseDoesNotExistException
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (SQLException | DatabaseDoesNotExistException
 				| ConnectionFailedException | AccessDeniedForUserException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-
 	}
 
 	/**
@@ -70,17 +83,16 @@ public class DatabaseController {
 	 *
 	 * @param filepath the file path of the database.
 	 */
-	//TODO: nix
 	public void loadDatabase(String filepath) {
 		try {
 			database = connector.loadGraphDatabase(filepath);
+			this.updateDatabases();
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | TablesNotAsExpectedException | FileContentCouldNotBeReadException
+				| SQLException | FileContentCouldNotBeReadException
 				| ConnectionFailedException | DatabaseDoesNotExistException e) {
-			e.printStackTrace();
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		this.updateDatabases();
 	}
 
 	/**
@@ -92,20 +104,13 @@ public class DatabaseController {
 		GraphDatabase mergeDatabase = null;
 		try {
 			mergeDatabase = connector.loadGraphDatabase(filepath);
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException
-				| TablesNotAsExpectedException | FileContentCouldNotBeReadException e) {
-			e.printStackTrace();
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
-		}
-		try {
 			database.merge(mergeDatabase);
-		} catch (DatabaseDoesNotExistException | TablesNotAsExpectedException | ConnectionFailedException
-				| AccessDeniedForUserException e) {
-			e.printStackTrace();
+			this.updateDatabases();
+			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
+				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
-		this.updateDatabases();
 	}
 
 	/**
@@ -116,7 +121,7 @@ public class DatabaseController {
 	public void saveDatabase(String filepath) {
 		try {
 			connector.saveGraphDatabase(filepath, database);
-		} catch (GraphDatabaseAlreadySavedException | FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
+		} catch (FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
@@ -142,5 +147,4 @@ public class DatabaseController {
 		correlation.setDatabase(database);
 		log.setDatabase(database);
 	}
-
 }

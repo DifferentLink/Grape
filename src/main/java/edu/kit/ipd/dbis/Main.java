@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis;
 import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.themes.GrapeTheme;
-import edu.kit.ipd.dbis.log.Log;
 
 import javax.swing.*;
 import java.util.Locale;
@@ -35,7 +34,7 @@ public class Main {
 		try {
 			Locale currentLocale = Locale.getDefault();
 			return ResourceBundle.getBundle("languages", currentLocale);
-		} catch (MissingResourceException lanuageNotFound) {
+		} catch (MissingResourceException languageNotFound) {
 			// Set default language to english (en_US)
 			return ResourceBundle.getBundle(
 					"languages",

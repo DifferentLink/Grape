@@ -1,7 +1,9 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.Ignore;
@@ -88,7 +90,7 @@ public class GenerateControllerTest {
 		GraphDatabase database = null;
 		try {
 			database = new FileManager().createGraphDatabase("", "", "", "");
-		} catch (TableAlreadyExistsException | DatabaseDoesNotExistException | ConnectionFailedException |
+		} catch (DatabaseDoesNotExistException | ConnectionFailedException |
 				AccessDeniedForUserException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -100,12 +102,6 @@ public class GenerateControllerTest {
 			e.printStackTrace();
 		}
 		LinkedList<PropertyGraph<Integer, Integer>> graphs = null;
-		try {
-			graphs = database.getUncalculatedGraphs();
-		} catch (AccessDeniedForUserException | DatabaseDoesNotExistException | TablesNotAsExpectedException |
-				ConnectionFailedException e) {
-			e.printStackTrace();
-		}
 		assert (graphs.isEmpty());
 	}
 }
