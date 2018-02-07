@@ -150,6 +150,7 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
+			statusbar.addEvent(EventType.REMOVE, id);
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}

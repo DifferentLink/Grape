@@ -158,7 +158,7 @@ public class GraphEditorController {
 		try {
 			denserGraph = denserGraphFinder.getNextDenserGraph();
 			database.addGraph(denserGraph);
-			statusbar.addEvent(ADD, denserGraph.getId());
+			statusbar.continueCalculation();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException |
 				NoDenserGraphException e) {
