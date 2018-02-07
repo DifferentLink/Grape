@@ -279,7 +279,7 @@ public class GraphTable extends Table {
 	private String getFilteredTableQuery(String[][] filters, String column, boolean ascending) throws SQLException {
 
 		String sql = "SELECT " + this.getPropertyColumns() + " FROM " + this.name
-				+ " WHERE iscalculated = true AND state = true";
+				+ " WHERE iscalculated = true AND state = false";
 		String order = (ascending) ? ("ASC") : ("DESC");
 		sql += this.filtersToQuery(filters);
 
