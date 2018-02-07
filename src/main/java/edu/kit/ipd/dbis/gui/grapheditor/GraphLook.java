@@ -40,9 +40,8 @@ public class GraphLook {
 
 	private static void arrangeInCircle(Set<Vertex> vertices, Point upperLeft, Point lowerRight) {
 
-		final int smallerSide = Math.abs(Math.max(upperLeft.x - lowerRight.x, upperLeft.y - lowerRight.y));
 		final Point center =
-				new Point(smallerSide / 2, smallerSide / 2);
+				new Point(Math.abs(upperLeft.x - lowerRight.x) / 2, Math.abs(upperLeft.y - lowerRight.y) / 2);
 		final double radius = Math.min(center.x, center.y) * .75;
 		final double angle = Math.toRadians(360d / (double) vertices.size());
 		int i = 0;
@@ -58,7 +57,7 @@ public class GraphLook {
 	public static void arrangeInGrid(Set<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
 	                                 Point upperLeft, Point lowerRight) {
 
-		final int numberGridcells = subgraphs.size() + otherVertices.size();
+		final int numberGridcells = subgraphs.size() + 1;
 		final int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
 		final int xStepsize = (lowerRight.x - upperLeft.x) / xCells;
 		final int yCells = (int) Math.floor(Math.sqrt(numberGridcells));

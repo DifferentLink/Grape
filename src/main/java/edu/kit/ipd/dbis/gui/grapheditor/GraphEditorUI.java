@@ -122,7 +122,7 @@ public class GraphEditorUI extends JPanel {
 		this.graph = new RenderableGraph(graph);
 		history.clear();
 		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVerticesNotContainedInSubgraphs(),
-				new Point(0, 0), new Point(getWidth(), getHeight()));
+				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
 		graphEditor.repaint();
 	}
 
@@ -335,7 +335,7 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
-					new Point(0, 0), new Point(getWidth(), getHeight()));
+					new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
 			repaint();
 		}
 	}
