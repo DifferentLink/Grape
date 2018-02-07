@@ -25,10 +25,10 @@ public class GraphLook {
 	 * @param numColors number of colors to spread
 	 * @return an array with n Colors
 	 */
-	public Color[] spreadColors(final int numColors) {
+	public static Color[] spreadColors(final int numColors) {
 		Color[] colors = new Color[numColors];
 
-		final float step = 1/numColors;
+		final float step = 1 / (float) numColors;
 
 		for (int color = 0; color < numColors; color++) {
 			colors[color] = Color.getHSBColor(step * color, 1f, 1f);
