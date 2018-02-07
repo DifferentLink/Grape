@@ -1,8 +1,6 @@
 package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -19,8 +17,7 @@ import java.util.TreeSet;
 public class MutualCorrelation extends Correlation {
 
     @Override
-    public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+    public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws ConnectionFailedException {
         Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -41,7 +38,6 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum(Property property1, GraphDatabase database) throws
-            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             ConnectionFailedException {
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -59,8 +55,7 @@ public class MutualCorrelation extends Correlation {
     }
 
     @Override
-    public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+    public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws ConnectionFailedException {
         Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -81,7 +76,6 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum(Property property1, GraphDatabase database) throws
-            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
             ConnectionFailedException {
         Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
@@ -103,11 +97,11 @@ public class MutualCorrelation extends Correlation {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
-                firstProperty.toString());
+                firstProperty.getClass().getSimpleName());
         double returnValue = 0;
         while (!firstPropertyValues.isEmpty()) {
             LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
-                    secondProperty.toString());
+                    secondProperty.getClass().getSimpleName());
             double i = MutualCorrelation.getMinimum(firstPropertyValues);
             while (!secondPropertyValues.isEmpty()) {
                 double j = MutualCorrelation.getMinimum(secondPropertyValues);
@@ -155,28 +149,5 @@ public class MutualCorrelation extends Correlation {
             }
         }
         return minimum;
-    }
-
-    private static String[] getStringProperties() {
-        String[] returnArray = new String[18];
-        returnArray[0] = "profile";
-        returnArray[1] = "averagedegree";
-        returnArray[2] = "proportiondensity";
-        returnArray[3] = "structuredensity";
-        returnArray[4] = "greatestDegree";
-        returnArray[5] = "kkgraphnumberofsubgraphs";
-        returnArray[6] = "numberofcliques";
-        returnArray[7] = "numberofedges";
-        returnArray[8] = "numberoftotalcolorings";
-        returnArray[9] = "numberofvertexcolorings";
-        returnArray[10] = "numberofvertices";
-        returnArray[11] = "smallestdegree";
-        returnArray[12] = "totalcoloringnumberofcolors";
-        returnArray[13] = "vertexcoloringnumberofcolors";
-        returnArray[14] = "largestsubgraphsize";
-        returnArray[15] = "binomialdensity";
-        returnArray[16] = "largestcliquesize";
-        returnArray[17] = "disjointfromsubgraph";
-        return returnArray;
     }
 }

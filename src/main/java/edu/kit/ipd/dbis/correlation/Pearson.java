@@ -98,14 +98,13 @@ public class Pearson extends Correlation {
     }
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty,
-                                               GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+                                               GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
-                firstProperty.toString());
+                firstProperty.getClass().getSimpleName());
         LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
-                secondProperty.toString());
+                secondProperty.getClass().getSimpleName());
         double firstRandomMedium = Pearson.createRandomMedium(firstPropertyValues);
         double secondRandomMedium = Pearson.createRandomMedium(secondPropertyValues);
         double sum = 0;
