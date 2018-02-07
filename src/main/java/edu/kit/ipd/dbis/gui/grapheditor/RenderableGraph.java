@@ -200,7 +200,7 @@ public class RenderableGraph {
 						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
 					addedEdges.add(e);
 					Edge edge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
-					edge.setColor(edgeColorsToColorMap.get(edgeColors.get(e)));
+					edge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
 					this.edges.add(edge);
 				}
 			}
