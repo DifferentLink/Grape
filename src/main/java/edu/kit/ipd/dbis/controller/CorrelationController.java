@@ -16,14 +16,14 @@ import java.util.List;
  */
 public class CorrelationController {
 
-	private StatusbarController log;
+	private StatusbarController statusbar;
 	private GraphDatabase database;
 
 	//TODO: Singleton pattern
 	private static CorrelationController correlationController;
 
 	private CorrelationController() {
-		this.log = StatusbarController.getInstance();
+		this.statusbar = StatusbarController.getInstance();
 	}
 
 	/**
@@ -61,8 +61,7 @@ public class CorrelationController {
 		try {
 			output = request.applyCorrelation();
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
-			e.printStackTrace();
-			log.addMessage(EventType.MESSAGE, e.getMessage());
+			statusbar.addMessage(e.getMessage());
 		}
 		return output;
 	}

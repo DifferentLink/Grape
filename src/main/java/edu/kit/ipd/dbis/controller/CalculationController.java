@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class CalculationController implements Runnable {
 
 	private Boolean isCalculating;
-	private StatusbarController log;
+	private StatusbarController statusbar;
 	private GraphDatabase database;
 	private FilterController filter;
 	private NonEditableTableModel tableModel;
@@ -24,7 +24,7 @@ public class CalculationController implements Runnable {
 	private static CalculationController calculation;
 
 	private CalculationController() {
-		this.log = StatusbarController.getInstance();
+		this.statusbar = StatusbarController.getInstance();
 		this.filter = FilterController.getInstance();
 		this.isCalculating = true;
 	}
@@ -66,11 +66,11 @@ public class CalculationController implements Runnable {
 					PropertyGraph<Integer, Integer> graph = database.getUncalculatedGraph();
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
+					statusbar.addEvent(EventType.ADD, graph.getId());
 					tableModel.update(filter.getFilteredAndSortedGraphs());
 				}
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException | SQLException e) {
-				e.printStackTrace();
-				log.addMessage(EventType.MESSAGE, e.getMessage());
+				statusbar.addMessage(e.getMessage());
 			}
 			// start recursion
 			try {
@@ -78,8 +78,7 @@ public class CalculationController implements Runnable {
 					run();
 				}
 			} catch (ConnectionFailedException e) {
-				e.printStackTrace();
-				log.addMessage(EventType.MESSAGE, e.getMessage());
+				statusbar.addMessage(e.getMessage());
 			}
 		}
 	}
