@@ -4,6 +4,7 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
@@ -31,6 +32,7 @@ public class GenerateController {
 	private FilterController filter;
 	private CalculationController calculation;
 	private NonEditableTableModel tableModel;
+	private StatusbarUI statusbarUI;
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -53,6 +55,11 @@ public class GenerateController {
 			generate = new GenerateController();
 		}
 		return generate;
+	}
+
+
+	public void setStatusbarUI(StatusbarUI statusbarUI) {
+		this.statusbarUI = statusbarUI;
 	}
 
 	/**
@@ -137,6 +144,7 @@ public class GenerateController {
 		try {
 			database.addGraph(graph);
 			calculation.run();
+			this.statusbarUI.updateUI();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
@@ -151,6 +159,7 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
+			this.statusbarUI.updateUI();
 		} catch (ConnectionFailedException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
@@ -165,6 +174,7 @@ public class GenerateController {
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
+				this.statusbarUI.updateUI();
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 			}
