@@ -3,33 +3,18 @@ package edu.kit.ipd.dbis.filter;
 import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.VertexColoringNumberOfColors;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.TotalColoringNumberOfColors;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfTotalColorings;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.KkGraphNumberOfSubgraphs;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertexColorings;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.LargestSubgraphSize;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * class which communicates with other packages of Grpape
@@ -100,8 +85,6 @@ public class Filtermanagement {
     /**
      * removes a filtersegment out of the list of class Filtermanagement
      * @param id unique identifier of the filtersegment which should be removed
-     * @throws DatabaseDoesNotExistException thrown if there is no database
-     * @throws AccessDeniedForUserException thrown if there is no access to the database
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
@@ -136,8 +119,6 @@ public class Filtermanagement {
      * enables a filtersegment which means that the criteria of the fitersegment are now
      * used to filter graphs
      * @param id unique identifier of the filtersegment which should be enabled
-     * @throws DatabaseDoesNotExistException thrown if there is no database
-     * @throws AccessDeniedForUserException thrown if there is no access to the database
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
@@ -171,8 +152,6 @@ public class Filtermanagement {
      * disables a filtersegment which means that the criteria of the fitersegment are now
      * used to filter graphs
      * @param id unique identifier of the filtersegment which should be enabled
-     * @throws DatabaseDoesNotExistException thrown if there is no database
-     * @throws AccessDeniedForUserException thrown if there is no access to the database
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
@@ -211,14 +190,11 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      * @throws InvalidInputException thrown if no valid filter is coded in iput string
      */
     public void updateFilter(String input, int id) throws ConnectionFailedException,
-            InsertionFailedException, AccessDeniedForUserException, UnexpectedObjectException,
-            DatabaseDoesNotExistException, InvalidInputException {
+            InsertionFailedException, UnexpectedObjectException, InvalidInputException {
         int groupID = this.removeFiltersegmentAngGetID(id);
         if (groupID != 0) {
             this.addFilterToGroup(input, id, groupID);
@@ -231,12 +207,9 @@ public class Filtermanagement {
      * method which offers the opportunity to modify a specific filtergroup
      * @param input new name of the filtergroup
      * @param id id of the filtergroup which should be modified
-     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
     public void updateFiltergroup(String input, int id) throws ConnectionFailedException, InsertionFailedException,
             UnexpectedObjectException {
@@ -254,12 +227,10 @@ public class Filtermanagement {
      * method which returns all graphs sorted by a specific property ascending
      * @param property property to sort after
      * @return returns all graphs sorted by a specific property
-     * @throws DatabaseDoesNotExistException thrown if there is no database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
-	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws ConnectionFailedException {
+    public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), true);
     }
 
@@ -267,24 +238,20 @@ public class Filtermanagement {
      * method which returns all graphs sorted by a specific property descending
      * @param property property to sort after
      * @return returns all graphs sorted by a specific property
-     * @throws DatabaseDoesNotExistException thrown if there is no database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
-	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws ConnectionFailedException {
+    public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), false);
     }
 
     /**
      * method which returns all graphs sorted by a specific property
      * @return returns all graphs sorted by a specific property
-     * @throws DatabaseDoesNotExistException thrown if there is no database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
-	public ResultSet getFilteredAndSortedGraphs() throws ConnectionFailedException {
+    public ResultSet getFilteredAndSortedGraphs() throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), "id", true);
     }
 
@@ -299,9 +266,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
     public void addFilterToGroup(String input, int id, int groupID) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
@@ -318,9 +283,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
     private void addFilter(String input, int id) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
@@ -434,17 +397,18 @@ public class Filtermanagement {
 
     private static String testProperty(String input) throws InvalidInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Property property;
-        if (input.equals("profile") || input.equals("averagedegree") || input.equals("proportiondensity")
-                || input.equals("structuredensity") || input.equals("greatestDegree")
-                || input.equals("kkgraphnumberofsubgraphs") || input.equals("numberofcliques")
-                || input.equals("numberofedges") || input.equals("numberoftotalcolorings")
-                || input.equals("numberofvertexcolorings") || input.equals("numberofvertices")
-                || input.equals("smallestdegree") || input.equals("totalcoloringnumberofcolors")
-                || input.equals("vertexcoloringnumberofcolors") || input.equals("largestsubgraphsize")
-                || input.equals("binomialdensity") || input.equals("largestcliquesize")
-                || input.equals("disjointfromsubgraph")) {
-            return input;
+        Set<Property> propertySet = PropertyFactory.createAllProperties(graph);
+        String[] propertyStrings = new String[propertySet.size()];
+        int i = 0;
+        for (Property currentProperty: propertySet) {
+            propertyStrings[i] = currentProperty.getClass().getSimpleName();
+            i++;
+        }
+        for (String currentString: propertyStrings) {
+            currentString = currentString.toLowerCase();
+            if (currentString.equals(input)) {
+                return input;
+            }
         }
         throw new InvalidInputException();
     }
@@ -454,8 +418,6 @@ public class Filtermanagement {
      * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
      * Filtersegment): void for every Filter element of the new database
      * @param database new database which should be used in future
-     * @throws DatabaseDoesNotExistException thrown if there is no database
-     * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      */

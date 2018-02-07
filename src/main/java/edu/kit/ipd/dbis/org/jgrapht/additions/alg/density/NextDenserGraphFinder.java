@@ -31,7 +31,7 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 	}
 
 	@Override
-	public PropertyGraph getNextDenserGraph() {
+	public PropertyGraph getNextDenserGraph() throws NoDenserGraphException {
 		if (graph.vertexSet().size() == 0) {
 			throw new NoDenserGraphException("empty graph");
 		}
@@ -49,6 +49,10 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 		int b = 2;
 		int arrayCnt = 1;
 		boolean denserGraphExist = false;
+		int numberOfEdgesForDensestGraph = (graph.vertexSet().size() - 2) * (graph.vertexSet().size() - 1) / 2 + 1;
+		if (graph.edgeSet().size() > numberOfEdgesForDensestGraph) {
+			denserGraphExist = true;
+		}
 		while (cnt < graph.edgeSet().size() && !denserGraphExist && !((a == 2) && (b == graph.vertexSet().size()))) {
 			if (!(codeArray[arrayCnt] == a && codeArray[arrayCnt + 1] == b)) {
 				denserGraphExist = true;
@@ -88,10 +92,18 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 				for (int i = 0; i < absolutNextDenserMinimalCodeArray.length; i++) {
 					absolutNextDenserMinimalCodeArray[i] = Math.abs(nextDenserGraphMinimalBfsCode[i]);
 				}
+
 				//checks if the nextDenser bfs codee is a minimal code
 				BfsCodeAlgorithm.BfsCodeImpl absMinCode =
 						new BfsCodeAlgorithm.BfsCodeImpl(absolutNextDenserMinimalCodeArray);
-				if (absMinCode.compareTo(new BfsCodeAlgorithm.BfsCodeImpl<>(nextDenserBfsCode)) == 0) {
+
+				int[] absNextDenserBfsCode = new int[nextDenserBfsCode.length];
+				for (int i = 0; i < absNextDenserBfsCode.length; i++) {
+					absNextDenserBfsCode[i] = Math.abs(nextDenserBfsCode[i]);
+				}
+				BfsCodeAlgorithm.BfsCodeImpl absNextCode = new BfsCodeAlgorithm.BfsCodeImpl(absNextDenserBfsCode);
+
+				if (absMinCode.compareTo(absNextCode) == 0) {
 					isMinimalCode = true;
 				}
 			}
@@ -141,4 +153,5 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 		}
 		return nextCode;
 	}
+
 }

@@ -98,14 +98,13 @@ public class Pearson extends Correlation {
     }
 
     private static double calculateCorrelation(Property firstProperty, Property secondProperty,
-                                               GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+                                               GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
-                firstProperty.toString());
+                firstProperty.getClass().getSimpleName());
         LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
-                secondProperty.toString());
+                secondProperty.getClass().getSimpleName());
         double firstRandomMedium = Pearson.createRandomMedium(firstPropertyValues);
         double secondRandomMedium = Pearson.createRandomMedium(secondPropertyValues);
         double sum = 0;
@@ -116,8 +115,8 @@ public class Pearson extends Correlation {
             }
         }
         double result = (sum / (firstPropertyValues.size() - 1));
-        return (result / (Pearson.getSampleVariationskeffizient(firstPropertyValues, firstRandomMedium)
-            * Pearson.getSampleVariationskeffizient(secondPropertyValues, secondRandomMedium)));
+        return (result / (Pearson.getSampleVariationskoeffizient(firstPropertyValues, firstRandomMedium)
+            * Pearson.getSampleVariationskoeffizient(secondPropertyValues, secondRandomMedium)));
     }
 
     private static double createRandomMedium(LinkedList<Double> inputList) {
@@ -128,7 +127,7 @@ public class Pearson extends Correlation {
         return (sum / inputList.size());
     }
 
-    private static double getSampleVariationskeffizient(LinkedList<Double> inputList, double randomMedium) {
+    private static double getSampleVariationskoeffizient(LinkedList<Double> inputList, double randomMedium) {
         double sum = 0;
         for (double currentValue: inputList) {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));

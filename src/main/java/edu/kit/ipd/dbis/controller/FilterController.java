@@ -72,8 +72,8 @@ public class FilterController {
 		try {
 			filter.updateFilter(filterInput, id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | AccessDeniedForUserException
-				| InsertionFailedException | DatabaseDoesNotExistException | UnexpectedObjectException
+		} catch (ConnectionFailedException
+				| InsertionFailedException | UnexpectedObjectException
 				| SQLException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
