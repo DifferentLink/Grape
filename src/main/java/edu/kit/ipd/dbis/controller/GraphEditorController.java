@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
@@ -152,13 +153,15 @@ public class GraphEditorController {
 	 */
 	public void addNextDenserToDatabase(PropertyGraph<Integer, Integer> graph) {
 		NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(graph);
+
 		PropertyGraph<Integer, Integer> denserGraph;
-		denserGraph = denserGraphFinder.getNextDenserGraph();
 		try {
+			denserGraph = denserGraphFinder.getNextDenserGraph();
 			database.addGraph(denserGraph);
 			log.addEvent(ADD, denserGraph.getId());
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException |
+				NoDenserGraphException e) {
 			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
 		}
 	}
