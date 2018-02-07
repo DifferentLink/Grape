@@ -121,7 +121,7 @@ public class GraphEditorUI extends JPanel {
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
 		this.graph = new RenderableGraph(graph);
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
 		graphEditor.repaint();
 	}
 
@@ -333,7 +333,7 @@ public class GraphEditorUI extends JPanel {
 	private class CenterVerticesAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			GraphLook.arrangeInCircle(graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+			GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
 			repaint();
 		}
 	}
