@@ -9,12 +9,6 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,21 +46,20 @@ public class CorrelationRequest {
     /**
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
-     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
     public List<CorrelationOutput> applyCorrelation() throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+            AccessDeniedForUserException, ConnectionFailedException {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(database));
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMinimum(database));
         } else if (correlation.getMaximum() && correlation.getProperty() != null) {
-            return CorrelationRequest.parseToList(correlation.useMaximum(null /**correlation.getProperty()**/, database));
+            return CorrelationRequest.parseToList(correlation.useMaximum(correlation.getProperty(), database));
         } else {
-            return CorrelationRequest.parseToList(correlation.useMinimum(null /**correlation.getProperty()**/, database));
+            return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty(), database));
         }
     }
 

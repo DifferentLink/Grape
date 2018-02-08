@@ -40,7 +40,7 @@ abstract class Correlation {
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMaximum(Property property1, GraphDatabase database) throws
+    public abstract TreeSet<CorrelationOutput> useMaximum(String property1, GraphDatabase database) throws
             DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException;
 
     /**
@@ -65,7 +65,7 @@ abstract class Correlation {
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMinimum(Property property1, GraphDatabase database)
+    public abstract TreeSet<CorrelationOutput> useMinimum(String property1, GraphDatabase database)
             throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException;
 
     /**
