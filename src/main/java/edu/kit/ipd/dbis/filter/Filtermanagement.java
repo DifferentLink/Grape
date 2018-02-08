@@ -285,7 +285,7 @@ public class Filtermanagement {
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
      */
-    private void addFilter(String input, int id) throws InvalidInputException,
+    public void addFilter(String input, int id) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         this.addFilter(Filtermanagement.parseToFilter(input, id));
     }
