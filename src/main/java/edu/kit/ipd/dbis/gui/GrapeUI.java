@@ -230,6 +230,8 @@ public class GrapeUI {
 				} catch (SQLException ignored) {}
 			}
 		}
-
+		try {
+			tableModel.update(filterController.getFilteredAndSortedGraphs());
+		} catch (SQLException ignored) {}
 	}
 }
