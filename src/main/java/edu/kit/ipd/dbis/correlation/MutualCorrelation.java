@@ -18,11 +18,24 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws ConnectionFailedException {
-        Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
-        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        Set<Property> firstPropertySet = PropertyFactory.createAllProperties(graph);
+        String[] firstPropertyList = new String[firstPropertySet.size()];
+        int h = 0;
+        for (Property currentProperty: firstPropertySet) {
+            firstPropertyList[h] = currentProperty.getClass().getSimpleName();
+            h++;
+        }
+        Set<Property> secondPropertySet = PropertyFactory.createAllProperties(graph);
+        String[] secondPropertyList = new String[secondPropertySet.size()];
+        int j = 0;
+        for (Property currentProperty: secondPropertySet) {
+            secondPropertyList[j] = currentProperty.getClass().getSimpleName();
+            j++;
+        }
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (Property property1: firstPropertyList) {
-            for (Property property2: secondPropertyList) {
+        for (String property1: firstPropertyList) {
+            for (String property2: secondPropertyList) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         MutualCorrelation.calculateCorrelation(property1, property2, database));
                 resultSet.add(outputObject);
@@ -37,11 +50,18 @@ public class MutualCorrelation extends Correlation {
     }
 
     @Override
-    public TreeSet<CorrelationOutput> useMaximum(Property property1, GraphDatabase database) throws
+    public TreeSet<CorrelationOutput> useMaximum(String property1, GraphDatabase database) throws
             ConnectionFailedException {
-        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        Set<Property> secondPropertySet = PropertyFactory.createAllProperties(graph);
+        String[] secondPropertyList = new String[secondPropertySet.size()];
+        int h = 0;
+        for (Property currentProperty: secondPropertySet) {
+            secondPropertyList[h] = currentProperty.getClass().getSimpleName();
+            h++;
+        }
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (Property property2: secondPropertyList) {
+        for (String property2: secondPropertyList) {
             CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                     MutualCorrelation.calculateCorrelation(property1, property2, database));
             resultSet.add(outputObject);
@@ -56,11 +76,24 @@ public class MutualCorrelation extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws ConnectionFailedException {
-        Set<Property> firstPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
-        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        Set<Property> firstPropertySet = PropertyFactory.createAllProperties(graph);
+        String[] firstPropertyList = new String[firstPropertySet.size()];
+        int h = 0;
+        for (Property currentProperty: firstPropertySet) {
+            firstPropertyList[h] = currentProperty.getClass().getSimpleName();
+            h++;
+        }
+        Set<Property> secondPropertySet = PropertyFactory.createAllProperties(graph);
+        String[] secondPropertyList = new String[secondPropertySet.size()];
+        int j = 0;
+        for (Property currentProperty: secondPropertySet) {
+            secondPropertyList[j] = currentProperty.getClass().getSimpleName();
+            j++;
+        }
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (Property property1: firstPropertyList) {
-            for (Property property2: secondPropertyList) {
+        for (String property1: firstPropertyList) {
+            for (String property2: secondPropertyList) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         MutualCorrelation.calculateCorrelation(property1, property2, database));
                 resultSet.add(outputObject);
@@ -75,11 +108,18 @@ public class MutualCorrelation extends Correlation {
     }
 
     @Override
-    public TreeSet<CorrelationOutput> useMinimum(Property property1, GraphDatabase database) throws
+    public TreeSet<CorrelationOutput> useMinimum(String property1, GraphDatabase database) throws
             ConnectionFailedException {
-        Set<Property> secondPropertyList = PropertyFactory.createAllProperties(new PropertyGraph());
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        Set<Property> secondPropertySet = PropertyFactory.createAllProperties(graph);
+        String[] secondPropertyList = new String[secondPropertySet.size()];
+        int h = 0;
+        for (Property currentProperty: secondPropertySet) {
+            secondPropertyList[h] = currentProperty.getClass().getSimpleName();
+            h++;
+        }
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (Property property2: secondPropertyList) {
+        for (String property2: secondPropertyList) {
             CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                     MutualCorrelation.calculateCorrelation(property1, property2, database));
             resultSet.add(outputObject);
@@ -92,7 +132,7 @@ public class MutualCorrelation extends Correlation {
         return outputSet;
     }
 
-    private static double calculateCorrelation(Property firstProperty, Property secondProperty,
+    private static double calculateCorrelation(String firstProperty, String secondProperty,
                                                GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);

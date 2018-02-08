@@ -21,7 +21,7 @@ class ConnectedFilter extends Filter {
     ConnectedFilter(String name, boolean isActivated,
                            String property1, String property2,
                            Operator operator1, Operator operator2,
-                           int value1, int value2, Relation relation, int id) {
+                           double value1, double value2, Relation relation, int id) {
         this.name = name;
         this.isActivated = isActivated;
         this.property1 = property1;
