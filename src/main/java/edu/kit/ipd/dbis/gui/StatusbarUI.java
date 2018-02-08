@@ -153,6 +153,7 @@ public class StatusbarUI extends JPanel {
 
 	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
 		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
+		updateStatusbarText();
 	}
 
 	private void updateStatusbarText() {
