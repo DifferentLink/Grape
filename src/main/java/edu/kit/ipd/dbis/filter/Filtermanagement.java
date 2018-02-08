@@ -34,7 +34,7 @@ public class Filtermanagement {
         availableFilter = new ArrayList<>();
     }
 
-    private void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
+    public void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
             UnexpectedObjectException, InsertionFailedException {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
