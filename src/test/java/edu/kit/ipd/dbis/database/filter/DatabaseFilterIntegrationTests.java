@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.database.filter;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
 import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
@@ -41,6 +42,16 @@ public class DatabaseFilterIntegrationTests {
 		manager.addFilter("AverageDegree + 27 = AverageDegree / 66", 1);
 		assertEquals(true,
 				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 66"));
+	}
+
+	@Ignore
+	@Test (expected = NullPointerException.class)
+	public void removeFilterfromDatabase() throws Exception, InvalidInputException {
+		manager.addFilter("AverageDegree = 10", 2);
+		System.out.println(database.getFilterById(2).getName().equals("AverageDegree = 10"));
+		manager.removeFiltersegment(2);
+		database.getFilterById(2).getName();
+
 	}
 
 }
