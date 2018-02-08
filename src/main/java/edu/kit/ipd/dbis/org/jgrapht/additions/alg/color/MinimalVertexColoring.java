@@ -90,16 +90,24 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			// for the while loop below.
 			int[] colorCopy = this.reverseArray(colors);
 
-			// get all permutations of partitioning
-			while (!Arrays.equals(colors, colorCopy)) {
-				if (isValidVertexColoring(colors)) {
-					// found one coloring of this partitioning.
-					this.colorings.add(createColoringObject(colors, sortedVertices));
-					numberOfColors = partitioning.length;
-					break;
+			if (isValidVertexColoring(colors)) {
+				// found one coloring of this partitioning.
+				this.colorings.add(createColoringObject(colors, sortedVertices));
+				numberOfColors = partitioning.length;
+			} else {
+				// get all permutations of partitioning
+				while (!Arrays.equals(colors, colorCopy)) {
+					colors = getNextPermutation(colors);
+					System.out.println(Arrays.toString(colors));
+					if (isValidVertexColoring(colors)) {
+						// found one coloring of this partitioning.
+						this.colorings.add(createColoringObject(colors, sortedVertices));
+						numberOfColors = partitioning.length;
+						break;
+					}
 				}
-				colors = getNextPermutation(colors);
 			}
+
 		}
 		return this.colorings;
 	}
