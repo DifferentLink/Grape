@@ -27,6 +27,9 @@ public class BinomialDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
 	}
 
 	private int binomialCoefficient(int n, int k) {
+		if (n == k) {
+			return 1;
+		}
 		int result = 1;
 		//formula for the binomial coefficient
 		for (int j = 1; j <= k; j++) {

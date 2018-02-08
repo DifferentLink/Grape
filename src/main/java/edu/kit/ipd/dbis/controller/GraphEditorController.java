@@ -3,10 +3,13 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
+import edu.kit.ipd.dbis.gui.grapheditor.RenderableGraph;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
@@ -25,15 +28,16 @@ import static edu.kit.ipd.dbis.log.EventType.REMOVE;
 public class GraphEditorController {
 
 	private GraphDatabase database;
-	private StatusbarController log;
+	private StatusbarController statusbar;
 	private FilterController filter;
 	private NonEditableTableModel tableModel;
+	private GraphEditorUI graphEditor;
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
 	private GraphEditorController() {
-		this.log = StatusbarController.getInstance();
+		this.statusbar = StatusbarController.getInstance();
 		this.filter = FilterController.getInstance();
 	}
 
@@ -62,6 +66,10 @@ public class GraphEditorController {
 		this.tableModel = tableModel;
 	}
 
+	public void setGraphEditor(GraphEditorUI graphEditor) {
+		this.graphEditor = graphEditor;
+	}
+
 	/**
 	 * checks the given graph for duplicates then adds the graph to the not yet calculated
 	 * graphlist of CalculationController and deletes the old graph from the
@@ -75,17 +83,17 @@ public class GraphEditorController {
 		try {
 			isDuplicate = database.graphExists(newGraph);
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		if (!isDuplicate) {
 			try {
 				database.addGraph(newGraph);
-				log.addEvent(ADD, newGraph.getId());
+				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
-				log.addEvent(REMOVE, oldID);
+				statusbar.addEvent(REMOVE, oldID);
 				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+				statusbar.addMessage(e.getMessage());
 			}
 		}
 	}
@@ -99,12 +107,12 @@ public class GraphEditorController {
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
-				log.continueCalculation();
-				log.addEvent(ADD, graph.getId());
+				statusbar.continueCalculation();
+				statusbar.addEvent(ADD, graph.getId());
 				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException | SQLException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+				statusbar.addMessage(e.getMessage());
 			}
 		}
 	}
@@ -114,7 +122,7 @@ public class GraphEditorController {
 		try {
 			graph = database.getGraphById(id);
 		} catch (ConnectionFailedException | UnexpectedObjectException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		return graph;
 	}
@@ -130,7 +138,7 @@ public class GraphEditorController {
 		try {
 			duplicate = database.graphExists(graph);
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		if (duplicate) {
 			throw new InvalidGraphInputException("Given graph is a duplicate.");
@@ -145,14 +153,16 @@ public class GraphEditorController {
 	 */
 	public void addNextDenserToDatabase(PropertyGraph<Integer, Integer> graph) {
 		NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(graph);
+
 		PropertyGraph<Integer, Integer> denserGraph;
-		denserGraph = denserGraphFinder.getNextDenserGraph();
 		try {
+			denserGraph = denserGraphFinder.getNextDenserGraph();
 			database.addGraph(denserGraph);
-			log.addEvent(ADD, denserGraph.getId());
+			statusbar.continueCalculation();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException |
+				NoDenserGraphException e) {
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -200,4 +210,7 @@ public class GraphEditorController {
 		return null;
 	}
 
+	public void emptyGraphToGraphEditor() {
+		graphEditor.showEmptyGraph();
+	}
 }

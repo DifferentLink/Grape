@@ -5,6 +5,7 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.*;
+import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -23,6 +24,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -81,7 +83,8 @@ public class GrapeUI {
 		} catch (IOException e) {}
 
 
-		menuUI = new MenuUI(generateController, databaseController, statusbarController, language, theme);
+		menuUI = new MenuUI(
+				generateController, databaseController, statusbarController, graphEditorController, language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
 		filterUI = new FilterUI(filterController, language, theme);
@@ -95,6 +98,7 @@ public class GrapeUI {
 		filterCorrelationDivider.add(correlationUI);
 
 		graphEditorUI = new GraphEditorUI(graphEditorController, language, theme);
+		graphEditorController.setGraphEditor(graphEditorUI);
 
 		JSplitPane graphEditorDivider = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT,
@@ -155,9 +159,12 @@ public class GrapeUI {
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
 			tableModel.fireTableDataChanged();
 			tableModel.fireTableStructureChanged();
-			int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
-			PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
-			graphEditorUI.displayGraph(graph);
+			try {
+				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
+				PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
+				graphEditorUI.displayGraph(graph);
+				statusbarUI.changeSelectedRow(tableUI.getSelectedRow());
+			} catch (IndexOutOfBoundsException ignored) {}
 		}
 	}
 
@@ -165,9 +172,10 @@ public class GrapeUI {
 		@Override
 		public void keyTyped(KeyEvent keyEvent) {
 			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
-				if (tableUI.getSelectedRow() >= 0) {
-					generateController.delGraph((int) tableModel.getValueAt(tableUI.getSelectedRow(), 0));
-				}
+				try {
+					generateController.delGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
+					tableModel.update(filterController.getFilteredAndSortedGraphs());
+				} catch (IndexOutOfBoundsException | SQLException ignored) {}
 			}
 		}
 

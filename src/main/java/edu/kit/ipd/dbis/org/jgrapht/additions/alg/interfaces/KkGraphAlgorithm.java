@@ -11,7 +11,7 @@ import java.util.*;
  */
 public interface KkGraphAlgorithm<V, E> {
 	/**
-	 * Get the kk-graph.
+	 * Get the kk-graph. If the kk graph was not found, the returned KkGraph contains an empty list
 	 * @return the kk-graph
 	 */
 	KkGraph getKkGraph();
