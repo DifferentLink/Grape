@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.database.exceptions.files.*;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 
@@ -30,6 +31,12 @@ public class DatabaseController {
 	private NonEditableTableModel tableModel;
 	private Connector connector;
 	private GraphDatabase database;
+
+	private GrapeUI grapeUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	/**
 	 * Instantiates a new Database controller.
