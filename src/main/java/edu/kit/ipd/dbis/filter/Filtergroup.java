@@ -11,6 +11,14 @@ public class Filtergroup extends Filtersegment {
     List<Filter> availableFilter;
 
     /**
+     * getter-method for availableFilter
+     * @return availableFilter
+     */
+    public List<Filter> getAvailableFilter() {
+        return availableFilter;
+    }
+
+    /**
      * Constructor of class Filtergroup
      * @param name name of the filtergroup (name of filtergroup should be equal to user
      * input)
