@@ -31,7 +31,6 @@ public class GraphEditorController {
 	private GraphDatabase database;
 	private StatusbarController statusbar;
 	private FilterController filter;
-	private NonEditableTableModel tableModel;
 	private GraphEditorUI graphEditor;
 
 	private GrapeUI grapeUI;
@@ -67,10 +66,6 @@ public class GraphEditorController {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
-	}
-
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 	public void setGraphEditor(GraphEditorUI graphEditor) {

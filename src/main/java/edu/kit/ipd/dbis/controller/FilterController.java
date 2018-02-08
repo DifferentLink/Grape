@@ -22,7 +22,6 @@ public class FilterController {
 
 	private Filtermanagement filter;
 	private StatusbarController statusbar;
-	private NonEditableTableModel tableModel;
 
 	private GrapeUI grapeUI;
 
@@ -48,11 +47,6 @@ public class FilterController {
 			filterController = new FilterController();
 		}
 		return filterController;
-	}
-
-	// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 	/**

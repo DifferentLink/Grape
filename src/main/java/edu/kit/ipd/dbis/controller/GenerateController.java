@@ -31,7 +31,6 @@ public class GenerateController {
 	private StatusbarController statusbar;
 	private FilterController filter;
 	private CalculationController calculation;
-	private NonEditableTableModel tableModel;
 
 	private GrapeUI grapeUI;
 
@@ -68,16 +67,6 @@ public class GenerateController {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
-	}
-
-	/**
-	 * Sets table model.
-	 *
-	 * @param tableModel the table model
-	 */
-// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 

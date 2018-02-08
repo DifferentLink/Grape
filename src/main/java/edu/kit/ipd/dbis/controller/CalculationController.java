@@ -19,7 +19,6 @@ public class CalculationController implements Runnable {
 	private StatusbarController statusbar;
 	private GraphDatabase database;
 	private FilterController filter;
-	private NonEditableTableModel tableModel;
 
 	private GrapeUI grapeUI;
 
@@ -55,11 +54,6 @@ public class CalculationController implements Runnable {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
-	}
-
-	// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 	/**

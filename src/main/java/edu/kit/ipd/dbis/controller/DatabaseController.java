@@ -28,10 +28,8 @@ public class DatabaseController {
 	private StatusbarController statusbar;
 	private CorrelationController correlation;
 
-	private NonEditableTableModel tableModel;
 	private Connector connector;
 	private GraphDatabase database;
-
 	private GrapeUI grapeUI;
 
 	public void setGrapeUI(GrapeUI grapeUI) {
@@ -49,16 +47,6 @@ public class DatabaseController {
 		this.statusbar = StatusbarController.getInstance();
 		this.correlation = CorrelationController.getInstance();
 		this.connector = new FileManager();
-	}
-
-	/**
-	 * Sets table model.
-	 *
-	 * @param tableModel the table model
-	 */
-// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 	/**
