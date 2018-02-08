@@ -77,8 +77,8 @@ public class RenderableGraph {
 		}
 	}
 
-	public PropertyGraph asPropertyGraph() {
-		PropertyGraph graph = new PropertyGraph();
+	public PropertyGraph<Integer, Integer> asPropertyGraph() {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		Map<Vertex, Integer> vertexIntegerMap = new HashMap<>();
 		int vertexName = 0;
 
@@ -98,7 +98,8 @@ public class RenderableGraph {
 					vertexIntegerMap.get(edge.getEnd())))
 					&& !graph.containsEdge(graph.getEdgeFactory().createEdge(
 					vertexIntegerMap.get(edge.getEnd()),
-					vertexIntegerMap.get(edge.getStart())))) {
+					vertexIntegerMap.get(edge.getStart())))
+					&& !edge.getStart().equals(edge.getEnd())) {
 				graph.addEdge(
 						vertexIntegerMap.get(edge.getStart()),
 						vertexIntegerMap.get(edge.getEnd())
