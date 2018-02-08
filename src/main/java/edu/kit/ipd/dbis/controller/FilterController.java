@@ -72,10 +72,9 @@ public class FilterController {
 	public void updateFilter(String filterInput, int id) throws InvalidInputException {
 		try {
 			filter.updateFilter(filterInput, id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (ConnectionFailedException
-				| InsertionFailedException | UnexpectedObjectException
-				| SQLException e) {
+				| InsertionFailedException | UnexpectedObjectException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -106,8 +105,8 @@ public class FilterController {
 	public void updateFilterGroup(String filterInput, int id) throws InvalidInputException {
 		try {
 			filter.updateFiltergroup(filterInput, id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+			this.grapeUI.updateTable();
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -120,9 +119,8 @@ public class FilterController {
 	public void removeFiltersegment(int id) {
 		try {
 			filter.removeFiltersegment(id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException
-				| SQLException e) {
+			this.grapeUI.updateTable();
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -135,10 +133,9 @@ public class FilterController {
 	public void activate(int id) {
 		try {
 			filter.activate(id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (UnexpectedObjectException
-				| InsertionFailedException | ConnectionFailedException
-				| SQLException e) {
+				| InsertionFailedException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -151,10 +148,9 @@ public class FilterController {
 	public void deactivate(int id) {
 		try {
 			filter.deactivate(id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (UnexpectedObjectException
-				| InsertionFailedException | ConnectionFailedException
-				| SQLException e) {
+				| InsertionFailedException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}

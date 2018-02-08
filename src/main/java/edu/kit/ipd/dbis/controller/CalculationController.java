@@ -68,9 +68,9 @@ public class CalculationController implements Runnable {
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
 					statusbar.addEvent(EventType.ADD, graph.getId());
-					tableModel.update(filter.getFilteredAndSortedGraphs());
+					grapeUI.updateTable();
 				}
-			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException | SQLException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
 			}
 			// start recursion

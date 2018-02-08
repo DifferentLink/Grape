@@ -61,7 +61,7 @@ public class DatabaseController {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (SQLException | DatabaseDoesNotExistException
 				| ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());
@@ -77,7 +77,7 @@ public class DatabaseController {
 		try {
 			database = connector.loadGraphDatabase(filepath);
 			this.updateDatabases();
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | FileContentCouldNotBeReadException
 				| ConnectionFailedException | DatabaseDoesNotExistException e) {
@@ -96,7 +96,7 @@ public class DatabaseController {
 			mergeDatabase = connector.loadGraphDatabase(filepath);
 			database.merge(mergeDatabase);
 			this.updateDatabases();
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
