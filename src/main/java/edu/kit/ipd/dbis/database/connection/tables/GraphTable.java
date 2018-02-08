@@ -27,10 +27,10 @@ public class GraphTable extends Table {
 	 * @param user username of the MySQL-Database user.
 	 * @param password password of the user.
 	 * @param name name of the MySQL-Table which is represented by a subclass of Table.
-	 * @throws SQLException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
+	 * @throws ConnectionFailedException if a database connection could not be established
+	 * @throws AccessDeniedForUserException if the username or the password is invalid
+	 * @throws DatabaseDoesNotExistException if the database does not exist
 	 */
 	public GraphTable(String url, String user, String password, String name)
 			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException,
@@ -132,10 +132,7 @@ public class GraphTable extends Table {
 	 * @param column determines how the GraphTable should be sorted
 	 * @param ascending determines if the GraphTable should be sorted ascending or descending
 	 * @return all PropertyGraph-Objects in the MySQL-Database that fulfill the current filters.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public ResultSet getContent(String[][] filters, String column, boolean ascending) throws SQLException {
 
@@ -146,11 +143,11 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 *@return a PropertyGraph-Object in the represented MySQL-Table that is marked as uncalculated.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @return a PropertyGraph-Object in the represented MySQL-Table that is marked as uncalculated.
+	 * @throws SQLException if the connection to the database fails
+	 * @throws IOException if the serialization of the object fails
+	 * @throws ClassNotFoundException if the serialization of the object fails
+	 * @throws UnexpectedObjectException if the given object is not as expected
 	 */
 	public PropertyGraph<Integer, Integer> getUncalculatedGraph()
 			throws SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
@@ -170,10 +167,7 @@ public class GraphTable extends Table {
 	 * @param filters determines how the database should be filters
 	 * @param column the column
 	 * @return the value of every given column
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public LinkedList<Double> getValues(String[][] filters, String column) throws SQLException {
 
@@ -194,10 +188,7 @@ public class GraphTable extends Table {
 	/**
 	 * All PropertyGraph-Objects that are marked as deleted will be removed from
 	 * the represented MySQL-Table.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public void deleteAll() throws SQLException {
 
@@ -209,10 +200,7 @@ public class GraphTable extends Table {
 	/**
 	 * The given content will be inserted into the represented MySQL-Table.
 	 * @param table content of another MySQL-Table.
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public void merge(GraphTable table) throws SQLException {
 
@@ -235,10 +223,7 @@ public class GraphTable extends Table {
 	 * Checks if a PropertyGraph-Object already Exists.
 	 * @param graph PropertyGaph-Object.
 	 * @return true if the given graph already exists in the represented MySQLTable.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public boolean graphExists(PropertyGraph<Integer, Integer> graph) throws SQLException {
 
@@ -254,10 +239,7 @@ public class GraphTable extends Table {
 	/**
 	 * Determines if there are uncalculated graphs in the database.
 	 * @return true if there are
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public boolean hasUncalculated() throws SQLException {
 		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false LIMIT 1";
@@ -271,10 +253,7 @@ public class GraphTable extends Table {
 	 * @param column determines how the MySQL-table should be sorted
 	 * @param ascending determines whether the MySQL-table should be sorted ascending or descending
 	 * @return the according MySQL-Query
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	private String getFilteredTableQuery(String[][] filters, String column, boolean ascending) throws SQLException {
 
@@ -334,10 +313,7 @@ public class GraphTable extends Table {
 	/**
 	 * Sets the id of a graph
 	 * @param graph the PropertyGraph-object
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	private void setIdGraph(PropertyGraph<Integer, Integer> graph) throws SQLException {
 		try {
