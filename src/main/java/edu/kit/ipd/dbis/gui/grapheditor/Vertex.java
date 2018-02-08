@@ -7,7 +7,10 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
-public class Vertex {
+public class Vertex implements Comparable {
+	static int idCount = 0;
+	private int id;
+
 	public int x;
 	public int y;
 	private float diameter = GraphLook.vertexDiameter;
@@ -16,17 +19,23 @@ public class Vertex {
 	private float outlineThickness = GraphLook.vertexOutLineThickness;
 
 	public Vertex(int x, int y) {
+		this.id = idCount;
+		idCount++;
 		this.x = x;
 		this.y = y;
 	}
 
 	public Vertex(int x, int y, Color fillColor) {
+		this.id = idCount;
+		idCount++;
 		this.x = x;
 		this.y = y;
 		this.fillColor = fillColor;
 	}
 
 	public Vertex(Point point) {
+		this.id = idCount;
+		idCount++;
 		this.x = point.x;
 		this.y = point.y;
 	}
@@ -86,5 +95,14 @@ public class Vertex {
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return Integer.compare(this.getId(), ((Vertex) o).getId());
 	}
 }
