@@ -13,6 +13,7 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -63,11 +64,16 @@ public class CorrelationRequestUI extends JFrame {
 	}
 
 	private JTable populateTable() throws InvalidCorrelationInputException {
-		List<CorrelationOutput> rows = correlationController.addNewCorrelation(correlationRequest);
-		for (CorrelationOutput row : rows) {
-
+		List<CorrelationOutput> columns = correlationController.addNewCorrelation(correlationRequest);
+		Object[][] data = new Object[columns.size()][3];
+		int i = 0;
+		for (Iterator<CorrelationOutput> iterator = columns.iterator(); iterator.hasNext(); i++) {
+			CorrelationOutput column = iterator.next();
+			data[i][0] = column.getFirstProperty().getClass().getSimpleName();
+			data[i][1] = column.getSecondProperty().getClass().getSimpleName();
+			data[i][2] = column.getOutputNumber();
 		}
 
-		return new JTable(new NonEditableTableModel(null, null));
+		return new JTable(new NonEditableTableModel(null, data));
 	}
 }
