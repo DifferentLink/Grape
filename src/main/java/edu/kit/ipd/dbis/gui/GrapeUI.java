@@ -127,11 +127,6 @@ public class GrapeUI {
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
-		calculationController.setTableModel(tableModel);
-		databaseController.setTableModel(tableModel);
-		filterController.setTableModel(tableModel);
-		graphEditorController.setTableModel(tableModel);
-		generateController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
 		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
