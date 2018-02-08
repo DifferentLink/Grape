@@ -44,11 +44,13 @@ public interface Connector {
 	 * @param directory localizes the text file from which a GraphDatabase-Object can be created.
 	 * @return GraphDatabase-Object that contains the connection to an already used MySQL-Database.
 	 * @throws FileContentNotAsExpectedException if the given file does not contain the required information
+	 * @throws FileContentCouldNotBeReadException if the file content is not accessible
 	 * @throws ConnectionFailedException if the selected table does not contain the required columns
 	 * @throws FileNotFoundException if the directory is invalid
 	 */
 	GraphDatabase loadGraphDatabase(String directory)
-			throws FileNotFoundException, FileContentNotAsExpectedException, ConnectionFailedException;
+			throws FileNotFoundException, FileContentNotAsExpectedException, ConnectionFailedException,
+			FileContentCouldNotBeReadException;
 
 	/**
 	 * Deletes given database by deleting its MySQL-Tables and the text file that belongs to it.
