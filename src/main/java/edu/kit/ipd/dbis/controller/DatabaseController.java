@@ -25,7 +25,7 @@ public class DatabaseController {
 	private CalculationController calculation;
 	private GraphEditorController editor;
 	private FilterController filter;
-	private StatusbarController log;
+	private StatusbarController statusbar;
 	private CorrelationController correlation;
 
 	private NonEditableTableModel tableModel;
@@ -41,7 +41,7 @@ public class DatabaseController {
 		this.calculation = CalculationController.getInstance();
 		this.editor = GraphEditorController.getInstance();
 		this.filter = FilterController.getInstance();
-		this.log = StatusbarController.getInstance();
+		this.statusbar = StatusbarController.getInstance();
 		this.correlation = CorrelationController.getInstance();
 		this.connector = new FileManager();
 	}
@@ -77,7 +77,7 @@ public class DatabaseController {
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (SQLException | DatabaseDoesNotExistException
 				| ConnectionFailedException | AccessDeniedForUserException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -96,7 +96,7 @@ public class DatabaseController {
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | FileContentCouldNotBeReadException
 				| ConnectionFailedException | DatabaseDoesNotExistException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -116,7 +116,7 @@ public class DatabaseController {
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -129,7 +129,7 @@ public class DatabaseController {
 		try {
 			connector.saveGraphDatabase(filepath, database);
 		} catch (FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -152,6 +152,6 @@ public class DatabaseController {
 		editor.setDatabase(database);
 		filter.setDatabase(database);
 		correlation.setDatabase(database);
-		log.setDatabase(database);
+		statusbar.setDatabase(database);
 	}
 }

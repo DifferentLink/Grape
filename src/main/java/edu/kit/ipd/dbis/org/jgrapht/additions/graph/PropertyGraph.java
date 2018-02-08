@@ -103,7 +103,9 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	public boolean equals(PropertyGraph graph) {
 		VF2GraphIsomorphismInspector<Integer, DefaultEdge> iI =
 				new VF2GraphIsomorphismInspector<Integer, DefaultEdge>(graph, this);
-		return iI.isomorphismExists();
+		return iI.isomorphismExists(
+
+		);
 	}
 
 	/**

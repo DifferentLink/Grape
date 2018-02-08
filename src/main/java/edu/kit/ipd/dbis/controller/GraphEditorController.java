@@ -29,7 +29,7 @@ import static edu.kit.ipd.dbis.log.EventType.REMOVE;
 public class GraphEditorController {
 
 	private GraphDatabase database;
-	private StatusbarController log;
+	private StatusbarController statusbar;
 	private FilterController filter;
 	private NonEditableTableModel tableModel;
 	private GraphEditorUI graphEditor;
@@ -45,7 +45,7 @@ public class GraphEditorController {
 
 
 	private GraphEditorController() {
-		this.log = StatusbarController.getInstance();
+		this.statusbar = StatusbarController.getInstance();
 		this.filter = FilterController.getInstance();
 	}
 
@@ -91,18 +91,18 @@ public class GraphEditorController {
 		try {
 			isDuplicate = database.graphExists(newGraph);
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		if (!isDuplicate) {
 			try {
 				database.addGraph(newGraph);
-				log.addEvent(ADD, newGraph.getId());
+				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
-				log.addEvent(REMOVE, oldID);
+				statusbar.addEvent(REMOVE, oldID);
 				this.statusbarUI.updateUI();
 				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+				statusbar.addMessage(e.getMessage());
 			}
 		}
 	}
@@ -116,13 +116,13 @@ public class GraphEditorController {
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
-				log.continueCalculation();
-				log.addEvent(ADD, graph.getId());
+				statusbar.continueCalculation();
+				statusbar.addEvent(ADD, graph.getId());
 				this.statusbarUI.updateUI();
 				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException | SQLException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+				statusbar.addMessage(e.getMessage());
 			}
 		}
 	}
@@ -132,7 +132,7 @@ public class GraphEditorController {
 		try {
 			graph = database.getGraphById(id);
 		} catch (ConnectionFailedException | UnexpectedObjectException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		return graph;
 	}
@@ -148,7 +148,7 @@ public class GraphEditorController {
 		try {
 			duplicate = database.graphExists(graph);
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		if (duplicate) {
 			throw new InvalidGraphInputException("Given graph is a duplicate.");
@@ -168,12 +168,13 @@ public class GraphEditorController {
 		try {
 			denserGraph = denserGraphFinder.getNextDenserGraph();
 			database.addGraph(denserGraph);
-			log.addEvent(ADD, denserGraph.getId());
+			statusbar.continueCalculation();
+			statusbar.addEvent(ADD, denserGraph.getId());
 			this.statusbarUI.updateUI();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException |
 				NoDenserGraphException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 

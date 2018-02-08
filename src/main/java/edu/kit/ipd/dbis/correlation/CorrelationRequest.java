@@ -7,17 +7,12 @@ import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.*;
-
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -51,13 +46,12 @@ public class CorrelationRequest {
     /**
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
-     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws AccessDeniedForUserException thrown if there is no access to database
      * @throws DatabaseDoesNotExistException thrown if there is no database
      */
     public List<CorrelationOutput> applyCorrelation() throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException, ConnectionFailedException {
+            AccessDeniedForUserException, ConnectionFailedException {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(database));
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
@@ -100,7 +94,7 @@ public class CorrelationRequest {
         if (parameters.length == 4) {
             String propertyString = parameters[paramStart];
             checkCorrelationInputNull(propertyString);
-            Property property = CorrelationRequest.testProperty(propertyString);
+            String property = CorrelationRequest.testProperty(propertyString);
             paramStart++;
             correlation.setProperty(property);
         }
@@ -136,65 +130,21 @@ public class CorrelationRequest {
         throw new InvalidCorrelationInputException();
     }
 
-    private static Property testProperty(String input) throws InvalidCorrelationInputException {
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Property property;
-        switch (input) {
-			case "profile":
-				property = new Profile(graph);
-				return property;
-			case "averagedegree":
-				property = new AverageDegree(graph);
-				return property;
-			case "proportiondensity":
-				property = new ProportionDensity(graph);
-				return property;
-			case "structuredensity":
-				property = new StructureDensity(graph);
-				return property;
-			case "greatestDegree":
-				property = new GreatestDegree(graph);
-				return property;
-			case "kkgraphnumberofsubgraphs":
-				property = new KkGraphNumberOfSubgraphs(graph);
-				return property;
-			case "numberofcliques":
-				property = new NumberOfCliques(graph);
-				return property;
-			case "numberofedges":
-				property = new NumberOfEdges(graph);
-				return property;
-			case "numberoftotalcolorings":
-				property = new NumberOfTotalColorings(graph);
-				return property;
-			case "numberofvertexcolorings":
-				property = new NumberOfVertexColorings(graph);
-				return property;
-			case "numberofvertices":
-				property = new NumberOfVertices(graph);
-				return property;
-			case "smallestdegree":
-				property = new SmallestDegree(graph);
-				return property;
-            case "totalcoloringnumberofcolors":
-                property = new TotalColoringNumberOfColors(graph);
-                return property;
-            case "vertexcoloringnumberofcolors":
-                property = new VertexColoringNumberOfColors(graph);
-                return property;
-            case "largestsubgraphsize":
-                property = new LargestSubgraphSize(graph);
-                return property;
-            case "binomialdensity":
-                property = new BinomialDensity(graph);
-                return property;
-            case "largestcliquesize":
-                property = new LargestCliqueSize(graph);
-                return property;
-            case "disjointfromsubgraph":
-                property = new DisjointFromSubgraphs(graph);
-                return property;
-            default: throw new InvalidCorrelationInputException();
+    private static String testProperty(String input) throws InvalidCorrelationInputException {
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        Set<Property> propertySet = PropertyFactory.createAllProperties(graph);
+        String[] propertyStrings = new String[propertySet.size()];
+        int i = 0;
+        for (Property currentProperty: propertySet) {
+            propertyStrings[i] = currentProperty.getClass().getSimpleName();
+            i++;
         }
+        for (String currentString: propertyStrings) {
+            currentString = currentString.toLowerCase();
+            if (currentString.equals(input)) {
+                return input;
+            }
+        }
+        throw new InvalidCorrelationInputException();
     }
 }
