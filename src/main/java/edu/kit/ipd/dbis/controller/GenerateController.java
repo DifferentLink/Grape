@@ -4,7 +4,6 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
-import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
@@ -13,12 +12,9 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
+import java.util.*;
 
 /**
  * The type Generate controller.
@@ -84,12 +80,12 @@ public class GenerateController {
 	 * @param amount      the number of graphs
 	 * @throws InvalidGeneratorInputException the invalid generator input exception
 	 */
-	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
+	public void generateGraphsSequential(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InvalidGeneratorInputException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
-		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
+		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 		try {
 			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 			this.saveGraphs(graphs);
@@ -105,7 +101,44 @@ public class GenerateController {
 		}
 	}
 
-	/**
+	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
+			InvalidGeneratorInputException {
+		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
+			throw new InvalidGeneratorInputException();
+		}
+
+		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
+		try {
+			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			this.saveGraphs(graphs);
+
+			List<Thread> jobs = new LinkedList<>();
+			for (PropertyGraph<Integer, Integer> graph : graphs) {
+				jobs.add(new Thread(new Runnable() {
+					@Override
+					public void run() {
+						graph.calculateProperties();
+						System.out.println("calculate " + graph.toString());
+					}
+				}));
+			}
+
+			for (Thread job : jobs) {
+				job.start();
+			}
+
+			for (Thread job : jobs) {
+				job.join();
+				System.out.println("Finished calculations");
+			}
+			ResultSet resultSet = filter.getFilteredAndSortedGraphs();
+			tableModel.update(resultSet);
+			System.out.println("update table");
+		} catch (InterruptedException | SQLException e) {
+			e.printStackTrace();
+		}
+	}
+		/**
 	 * Generate empty graph.
 	 */
 	public void generateEmptyGraph() { // todo please implement me
@@ -161,8 +194,8 @@ public class GenerateController {
 	 *
 	 * @param graphs the set of PropertyGraph<V,E>
 	 */
-	private void saveGraphs(Set<PropertyGraph> graphs) {
-		for (PropertyGraph graph : graphs) {
+	private void saveGraphs(Set<PropertyGraph<Integer, Integer>> graphs) {
+		for (PropertyGraph<Integer, Integer> graph : graphs) {
 			try {
 				database.addGraph(graph);
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
