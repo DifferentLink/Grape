@@ -143,7 +143,7 @@ public class GenerateController {
 		try {
 			database.addGraph(graph);
 			calculation.run();
-			this.statusbarUI.updateUI();
+			this.statusbarUI.setRemainingCalculations(0);
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 			statusbar.addMessage(e.getMessage());
@@ -159,7 +159,7 @@ public class GenerateController {
 		try {
 			database.deleteGraph(id);
 			statusbar.addEvent(EventType.REMOVE, id);
-			this.statusbarUI.updateUI();
+			this.statusbarUI.setRemainingCalculations(0);
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -174,7 +174,7 @@ public class GenerateController {
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
-				this.statusbarUI.updateUI();
+				this.statusbarUI.setRemainingCalculations(0);
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
 			}

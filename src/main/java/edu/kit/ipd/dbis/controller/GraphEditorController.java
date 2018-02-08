@@ -42,8 +42,6 @@ public class GraphEditorController {
 		this.statusbarUI = statusbarUI;
 	}
 
-
-
 	private GraphEditorController() {
 		this.statusbar = StatusbarController.getInstance();
 		this.filter = FilterController.getInstance();
@@ -99,7 +97,7 @@ public class GraphEditorController {
 				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
 				statusbar.addEvent(REMOVE, oldID);
-				this.statusbarUI.updateUI();
+				this.statusbarUI.setRemainingCalculations(0);
 				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 				statusbar.addMessage(e.getMessage());
@@ -118,7 +116,7 @@ public class GraphEditorController {
 				database.addGraph(graph);
 				statusbar.continueCalculation();
 				statusbar.addEvent(ADD, graph.getId());
-				this.statusbarUI.updateUI();
+				this.statusbarUI.setRemainingCalculations(0);
 				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException | SQLException e) {
@@ -170,7 +168,7 @@ public class GraphEditorController {
 			database.addGraph(denserGraph);
 			statusbar.continueCalculation();
 			statusbar.addEvent(ADD, denserGraph.getId());
-			this.statusbarUI.updateUI();
+			this.statusbarUI.setRemainingCalculations(0);
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException |
 				NoDenserGraphException e) {
