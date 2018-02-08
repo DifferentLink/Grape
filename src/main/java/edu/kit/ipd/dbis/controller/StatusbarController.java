@@ -74,7 +74,7 @@ public class StatusbarController {
 		try {
 			log.undo();
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
+			this.addMessage(e.getMessage());
 		}
 	}
 
@@ -85,7 +85,7 @@ public class StatusbarController {
 		try {
 			log.redo();
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.emptySet()));
+			this.addMessage(e.getMessage());
 		}
 	}
 
@@ -141,13 +141,10 @@ public class StatusbarController {
 	/**
 	 *
 	 */
-	public void addMessage(EventType type, String message) {
+	public void addMessage(String message) {
 		Set<Integer> empty = new HashSet<Integer>();
 		Event event;
-		if (!type.equals(EventType.REMOVE)) {
-			return;
-		}
-		event = new Event(type, message, empty);
+		event = new Event(EventType.MESSAGE, message, empty);
 		log.addEvent(event);
 	}
 

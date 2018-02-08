@@ -24,6 +24,10 @@ public class StatusbarUI extends JPanel {
 	private final int statusbarHeight = 15;
 	private final StatusbarController statusbarController;
 	private boolean isCalculationRunning = true;
+	private JLabel statusText;
+	private String remainingCalculations = "";
+	private String selectedRow;
+	private String databaseInfo = "";
 
 	public StatusbarUI(StatusbarController statusbarController, ResourceBundle language, Theme theme) {
 		this.statusbarController = statusbarController;
@@ -33,7 +37,7 @@ public class StatusbarUI extends JPanel {
 		this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
 		this.add(Box.createHorizontalStrut(5));
 
-		JLabel statusText = new JLabel(language.getString("noDatabaseLoaded"));
+		statusText = new JLabel(language.getString("noDatabaseLoaded"));
 		this.add(statusText);
 
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
@@ -123,5 +127,23 @@ public class StatusbarUI extends JPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			logUI.drawLog(component);
 		}
+	}
+
+	public void changeSelectedRow(final int row) {
+		selectedRow = "Position " + (row + 1);
+		updateStatusbarText();
+	}
+
+	public void setRemainingCalculations(final int numberOfUncalculatedGraphs) {
+		remainingCalculations = numberOfUncalculatedGraphs + " remaining calculations";
+		updateStatusbarText();
+	}
+
+	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
+		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
+	}
+
+	private void updateStatusbarText() {
+		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo);
 	}
 }

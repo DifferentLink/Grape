@@ -27,7 +27,7 @@ public class GenerateController {
 
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
-	private StatusbarController log;
+	private StatusbarController statusbar;
 	private FilterController filter;
 	private CalculationController calculation;
 	private NonEditableTableModel tableModel;
@@ -36,9 +36,8 @@ public class GenerateController {
 	private static GenerateController generate;
 
 	private GenerateController() {
-		this.log = StatusbarController.getInstance();
+		this.statusbar = StatusbarController.getInstance();
 		this.generator = new BulkRandomConnectedGraphGenerator();
-		this.log = StatusbarController.getInstance();
 		this.calculation = CalculationController.getInstance();
 		this.filter = FilterController.getInstance();
 	}
@@ -99,7 +98,7 @@ public class GenerateController {
 		} catch (IllegalArgumentException e) {
 			throw new InvalidGeneratorInputException();
 		} catch (NotEnoughGraphsException e) {
-			log.addMessage(EventType.MESSAGE, e.getMessage());
+			statusbar.addMessage(e.getMessage());
 			this.saveGraphs(graphs);
 			Thread calculate = new Thread(CalculationController.getInstance());
 			SwingUtilities.invokeLater(calculate);
@@ -113,7 +112,7 @@ public class GenerateController {
 		try {
 			generateGraphs(0, 0, 0, 0, 1);
 		} catch (InvalidGeneratorInputException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -139,7 +138,7 @@ public class GenerateController {
 			calculation.run();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -151,8 +150,9 @@ public class GenerateController {
 	public void delGraph(int id) {
 		try {
 			database.deleteGraph(id);
+			statusbar.addEvent(EventType.REMOVE, id);
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -166,7 +166,7 @@ public class GenerateController {
 			try {
 				database.addGraph(graph);
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-				log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+				statusbar.addMessage(e.getMessage());
 			}
 		}
 	}
