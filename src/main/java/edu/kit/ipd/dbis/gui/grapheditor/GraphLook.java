@@ -5,7 +5,9 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * This class simply lists default render values for RenderableGraphs.
@@ -45,7 +47,7 @@ public class GraphLook {
 		final double angle = Math.toRadians(360d / (double) vertices.size());
 		int i = 0;
 
-		for (Vertex vertex : vertices) {
+		for (Vertex vertex : new ArrayList<>(new TreeSet<>(vertices))) {
 			vertex.setPosition(
 					(int) (radius * Math.cos(i * angle) + center.x),
 					(int) (radius * Math.sin(i * angle) + center.y));
