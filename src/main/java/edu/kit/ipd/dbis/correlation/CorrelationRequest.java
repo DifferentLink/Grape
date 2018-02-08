@@ -14,7 +14,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDe
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.ProportionDensity;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.StructureDensity;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer;
 
 
 import java.util.ArrayList;
@@ -65,9 +64,9 @@ public class CorrelationRequest {
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMinimum(database));
         } else if (correlation.getMaximum() && correlation.getProperty() != null) {
-            return CorrelationRequest.parseToList(correlation.useMaximum(correlation.getProperty(), database));
+            return CorrelationRequest.parseToList(correlation.useMaximum(null /**correlation.getProperty()**/, database));
         } else {
-            return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty(), database));
+            return CorrelationRequest.parseToList(correlation.useMinimum(null /**correlation.getProperty()**/, database));
         }
     }
 

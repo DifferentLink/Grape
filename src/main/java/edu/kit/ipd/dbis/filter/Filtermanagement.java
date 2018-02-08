@@ -86,6 +86,7 @@ public class Filtermanagement {
      * removes a filtersegment out of the list of class Filtermanagement
      * @param id unique identifier of the filtersegment which should be removed
      * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
      * @throws InsertionFailedException thrown if the database operation failed
      */
@@ -119,6 +120,7 @@ public class Filtermanagement {
      * used to filter graphs
      * @param id unique identifier of the filtersegment which should be enabled
      * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
      * @throws InsertionFailedException thrown if the database operation failed
      */
@@ -151,6 +153,7 @@ public class Filtermanagement {
      * used to filter graphs
      * @param id unique identifier of the filtersegment which should be enabled
      * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws ConnectionFailedException thrown if the tables in database are bad
      * @throws UnexpectedObjectException thrown if the database gets in conflict with unknown objects
      * @throws InsertionFailedException thrown if the database operation failed
      */
@@ -184,6 +187,7 @@ public class Filtermanagement {
      * method which offers the oppotunity to modify a specific filter
      * @param input code of the modified filter
      * @param id id of the filter to modify
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
@@ -224,6 +228,7 @@ public class Filtermanagement {
      * @param property property to sort after
      * @return returns all graphs sorted by a specific property
      * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
     public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), true);
@@ -234,6 +239,7 @@ public class Filtermanagement {
      * @param property property to sort after
      * @return returns all graphs sorted by a specific property
      * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
     public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), property.toString(), false);
@@ -243,6 +249,7 @@ public class Filtermanagement {
      * method which returns all graphs sorted by a specific property
      * @return returns all graphs sorted by a specific property
      * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
     public ResultSet getFilteredAndSortedGraphs() throws ConnectionFailedException {
         return database.getGraphs(this.parseFilterList(), "id", true);
@@ -256,6 +263,7 @@ public class Filtermanagement {
      * @param id unique identifier of the new filterobject
      * @param groupID unique identifier of the filtergroup on which the filter should be add to
      * @throws InvalidInputException this exception is thrown if the input string does not code a valid filter
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
@@ -272,6 +280,7 @@ public class Filtermanagement {
      * @param input string which might code a filter
      * @param id unique identifier of the new filterobject
      * @throws InvalidInputException this exception is thrown if the input string does not code a valid filter
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
@@ -312,11 +321,11 @@ public class Filtermanagement {
             Operator operator1 = Filtermanagement.testOperator(firstOperator);
 
             String firstValueString = parameters[2];
-            if (!StringUtils.isStrictlyNumeric(firstValueString) || firstValueString.length() == 0) {
+            if (!Filtermanagement.isIntegerOrDouble(firstValueString) || firstValueString.length() == 0) {
                 throw new InvalidInputException();
             }
             checkFilterInputNull(parameters[2]);
-            int firstValue = Integer.parseInt(firstValueString);
+            double firstValue = Filtermanagement.parseToIntegerOrDouble(firstValueString);
 
             String relationString = parameters[3];
             checkFilterInputNull(parameters[3]);
@@ -332,60 +341,35 @@ public class Filtermanagement {
             Operator operator2 = Filtermanagement.testOperator(operator2String);
 
             String secondValueString = parameters[6];
-            if (!StringUtils.isStrictlyNumeric(secondValueString) || secondValueString.length() == 0) {
+            if (!Filtermanagement.isIntegerOrDouble(secondValueString) || secondValueString.length() == 0) {
                 throw new InvalidInputException();
             }
-            int secondValue = Integer.parseInt(secondValueString);
+            double secondValue = Filtermanagement.parseToIntegerOrDouble(secondValueString);
 
             return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
-        } else if (parameters.length == 3) {
-            boolean isFloatB = isFloat(parameters[2]);
-            boolean isIntegerB = isInteger(parameters[2]);
-            if (isFloatB || isIntegerB) {
-                String relationString = parameters[1];
-                checkFilterInputNull(parameters[1]);
-                Relation relation = Filtermanagement.testRelation(relationString);
+        } else if (parameters.length == 3 && Filtermanagement.isIntegerOrDouble(parameters[2])) {
+            String relationString = parameters[1];
+            checkFilterInputNull(parameters[1]);
+            Relation relation = Filtermanagement.testRelation(relationString);
 
-                String valueString = parameters[2];
-                if (valueString.length() == 0) {
-                    throw new InvalidInputException();
-                }
-                checkFilterInputNull(parameters[2]);
-                if (isFloatB) {
-                    float num = Float.parseFloat(parameters[2]);
-
-                } else {
-                    int value = Integer.parseInt(valueString);
-                    return new BasicFilter(input, false, value, relation, property1, id);
-                }
-            } else {
-                return Filtermanagement.parseToFilter(parameters[0] + " + 0 " + parameters[1] + " "
-                        + parameters[2] + " + 0", id);
+            String valueString = parameters[2];
+            if (!Filtermanagement.isIntegerOrDouble(valueString) || valueString.length() == 0) {
+                throw new InvalidInputException();
             }
-        } else if (parameters.length == 5 && StringUtils.isStrictlyNumeric(parameters[2])) {
+            checkFilterInputNull(parameters[2]);
+            double value = Filtermanagement.parseToIntegerOrDouble(valueString);
+            return new BasicFilter(input, false, value, relation, property1, id);
+        } else if (parameters.length == 3) {
+            return Filtermanagement.parseToFilter(parameters[0] + " + 0 " + parameters[1] + " "
+                    + parameters[2] + " + 0", id);
+        } else if (parameters.length == 5 && Filtermanagement.isIntegerOrDouble(parameters[2])) {
             return Filtermanagement.parseToFilter(parameters[0] + " " + parameters[1] + " " + parameters[2]
                     + " " + parameters[3] + " " + parameters[4] + " + 0", id);
         } else {
             return Filtermanagement.parseToFilter(parameters[0] + " + 0 " + parameters[1] + " " + parameters[2]
                     + " " + parameters[3] + " " + parameters[4], id);
         }
-    }
-
-    private static int getFilterType(String cmd) {
-        if (cmd.matches("\\p{Alpha}+\\s.\\s\\d+")) {
-            return 1; //Basic Type
-        } else {
-            return 2; //Connected Type
-        }
-    }
-
-    private static boolean isInteger(String num) {
-        return StringUtils.isStrictlyNumeric(num);
-    }
-
-    private static boolean isFloat(String num) {
-        return num.matches("[\\d]+[.][\\d]+");
     }
 
     private static Operator testOperator(String input) throws  InvalidInputException {
@@ -435,6 +419,7 @@ public class Filtermanagement {
      * Filtersegment): void for every Filter element of the new database
      * @param database new database which should be used in future
      * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
     public void setDatabase(GraphDatabase database) throws ConnectionFailedException {
         availableFilterGroups.clear();
@@ -547,6 +532,23 @@ public class Filtermanagement {
     private static void checkFilterInputNull(String input) throws InvalidInputException {
         if (input == null) {
             throw new InvalidInputException();
+        }
+    }
+
+    private static boolean isIntegerOrDouble(String input) {
+        if (StringUtils.isStrictlyNumeric(input)) {
+            return true;
+        } else {
+            String[] parameters = input.split("\\.", 2);
+            return (StringUtils.isStrictlyNumeric(parameters[0]) && StringUtils.isStrictlyNumeric(parameters[1]));
+        }
+    }
+
+    private static double parseToIntegerOrDouble(String input) {
+        if (StringUtils.isStrictlyNumeric(input)) {
+            return (double) Integer.parseInt(input);
+        } else {
+            return Double.parseDouble(input);
         }
     }
 }
