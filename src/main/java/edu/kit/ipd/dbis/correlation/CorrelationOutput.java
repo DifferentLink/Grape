@@ -1,13 +1,11 @@
 package edu.kit.ipd.dbis.correlation;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-
 /**
  * class which allows the GUI to get a list of relevant correlations
  */
 public class CorrelationOutput implements Comparable<CorrelationOutput> {
-    private Property firstProperty;
-    private Property secondProperty;
+    private String firstProperty;
+    private String secondProperty;
     private double outputNumber;
 
     /**
@@ -16,7 +14,7 @@ public class CorrelationOutput implements Comparable<CorrelationOutput> {
      * @param secondProperty second property of a specific correlation
      * @param outputNumber double value which shows how strong a specific correlation is
      */
-    CorrelationOutput(Property firstProperty, Property secondProperty, double outputNumber) {
+    CorrelationOutput(String firstProperty, String secondProperty, double outputNumber) {
         this.firstProperty = firstProperty;
         this.secondProperty = secondProperty;
         this.outputNumber = outputNumber;
@@ -26,7 +24,7 @@ public class CorrelationOutput implements Comparable<CorrelationOutput> {
      * used to get the first property of a specific correlation
      * @return retuns the first property of a specific correlation
      */
-    public Property getFirstProperty() {
+    public String getFirstProperty() {
         return firstProperty;
     }
 
@@ -34,7 +32,7 @@ public class CorrelationOutput implements Comparable<CorrelationOutput> {
      * used to get the second property of a specific correlation
      * @return retuns the second property of a specific correlation
      */
-    public Property getSecondProperty() {
+    public String getSecondProperty() {
         return secondProperty;
     }
 
