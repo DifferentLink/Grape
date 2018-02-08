@@ -159,8 +159,8 @@ public interface DatabaseManager {
 	PropertyGraph<Integer, Integer> getUncalculatedGraph() throws ConnectionFailedException, UnexpectedObjectException;
 
 	/**
-	 *
-	 * @return
+	 * Determines if the current database contains any PropertyGraph-objects that are marked as uncalculated
+	 * @return true if there are uncalculated graphs
 	 * @throws ConnectionFailedException if a database connection could not be established
 	 */
 	boolean hasUncalculatedGraphs() throws ConnectionFailedException;
