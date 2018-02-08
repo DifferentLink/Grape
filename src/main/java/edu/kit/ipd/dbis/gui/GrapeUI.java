@@ -72,6 +72,12 @@ public class GrapeUI {
 		this.generateController = generateController;
 		this.graphEditorController = graphEditorController;
 
+		this.calculationController.setGrapeUI(this);
+		this.databaseController.setGrapeUI(this);
+		this.filterController.setGrapeUI(this);
+		this.generateController.setGrapeUI(this);
+		this.graphEditorController.setGrapeUI(this);
+
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(400, 400));
