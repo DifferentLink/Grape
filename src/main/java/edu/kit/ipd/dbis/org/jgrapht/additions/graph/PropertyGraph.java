@@ -90,6 +90,7 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 */
 	public void calculateProperties() {
 		for (Property p : this.properties.values()) {
+			System.out.println(p.getClass().getSimpleName());
 			p.calculate();
 		}
 	}
