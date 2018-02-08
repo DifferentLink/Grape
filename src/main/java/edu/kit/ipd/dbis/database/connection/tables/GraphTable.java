@@ -30,7 +30,7 @@ public class GraphTable extends Table {
 	 * @throws SQLException if the connection to the database fails
 	 * @throws ConnectionFailedException if a database connection could not be established
 	 * @throws AccessDeniedForUserException if the username or the password is invalid
-	 * @throws DatabaseDoesNotExistException if the database does not exist
+	 * @throws DatabaseDoesNotExistException if the MySQL-database does not exist
 	 */
 	public GraphTable(String url, String user, String password, String name)
 			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException,

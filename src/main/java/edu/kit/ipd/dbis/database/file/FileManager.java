@@ -35,19 +35,22 @@ public class FileManager implements Connector {
 
 	@Override
 	public GraphDatabase createGraphDatabase(String url, String user, String password, String name)
-			throws DatabaseDoesNotExistException, AccessDeniedForUserException,
-			ConnectionFailedException, SQLException {
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 
-		Connection connection = getConnection(url, user, password);
-		GraphTable graphTable = new GraphTable(url, user, password, name);
-		FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
-		GraphDatabase database = new GraphDatabase(graphTable, filterTable);
+		try {
+			Connection connection = getConnection(url, user, password);
+			GraphTable graphTable = new GraphTable(url, user, password, name);
+			FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
+			GraphDatabase database = new GraphDatabase(graphTable, filterTable);
 
-		if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
-			return database;
-		} else {
-			throw new ConnectionFailedException("Selected Table does not contain the required columns.");
+			if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
+				return database;
+			}
+		} catch (SQLException e) {
+			throw new ConnectionFailedException(e.getMessage());
 		}
+		throw new ConnectionFailedException("Selected Table does not contain the required columns.");
+
 	}
 
 	@Override
@@ -70,8 +73,8 @@ public class FileManager implements Connector {
 
 	@Override
 	public GraphDatabase loadGraphDatabase(String directory)
-			throws FileNotFoundException, FileContentNotAsExpectedException, SQLException,
-			FileContentCouldNotBeReadException, ConnectionFailedException {
+			throws FileNotFoundException, FileContentNotAsExpectedException, FileContentCouldNotBeReadException,
+			ConnectionFailedException {
 
 		FileReader file = new FileReader(directory);
 		BufferedReader reader = new BufferedReader(file);
@@ -80,33 +83,38 @@ public class FileManager implements Connector {
 			load = new LoadParser(reader.readLine());
 			file.close();
 			reader.close();
+			load.parse();
+			GraphDatabase database = load.getDatabase();
+			if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
+				database.setDirectory(directory);
+				return database;
+			}
 		} catch (IOException e) {
 			throw new FileContentCouldNotBeReadException(e.getMessage());
-		}
-
-		load.parse();
-		GraphDatabase database = load.getDatabase();
-		if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
-			database.setDirectory(directory);
-			return database;
+		} catch (SQLException e) {
+			throw new ConnectionFailedException(e.getMessage());
 		}
 		throw new ConnectionFailedException("Selected Table does not contain the required columns.");
 	}
 
 	@Override
 	public void deleteGraphDatabase(GraphDatabase database)
-			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-			SQLException {
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 
 		GraphTable graphs = database.getGraphTable();
 		FilterTable filters = database.getFilterTable();
 		String sql = "DROP TABLE " + graphs.getName();
-		this.getConnection(
-				filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
+		try {
+			this.getConnection(
+					filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
 
-		sql = "DROP TABLE " + filters.getName();
-		this.getConnection(
-				filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
+			sql = "DROP TABLE " + filters.getName();
+			this.getConnection(
+					filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
+		} catch (SQLException e) {
+			throw new ConnectionFailedException(e.getMessage());
+		}
+
 	}
 
 	/**
