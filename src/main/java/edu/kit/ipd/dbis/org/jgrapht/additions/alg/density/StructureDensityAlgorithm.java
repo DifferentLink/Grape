@@ -45,6 +45,9 @@ public class StructureDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
 		for (int i = 1; i <= k - 2; i++) {
 			denumerator += (i * (1.0 / (k - 1 - i)));
 		}
+		if (numerator == 0) {
+			return 0;
+		}
 		return numerator / denumerator;
 	}
 }
