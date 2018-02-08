@@ -7,7 +7,9 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.InvalidGraphInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.TotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
@@ -20,6 +22,7 @@ import java.util.ResourceBundle;
 public class GraphEditorUI extends JPanel {
 
 	private RenderableGraph graph = new RenderableGraph();
+	private PropertyGraph<Integer, Integer> propertyGraph;
 	private GraphEditorHistory history = new GraphEditorHistory();
 	private Editor graphEditor;
 	private JButton undo;
@@ -31,6 +34,24 @@ public class GraphEditorUI extends JPanel {
 	private JButton apply;
 	private JLabel graphInfo; // todo add to GUI
 	private JComboBox<String> coloringType;
+	private ColoringType currentColoringType;
+
+	private enum ColoringType {
+		VERTEX {
+			@Override
+			public String toString() {
+				return "Vertex Coloring";
+			}
+		},
+		TOTAL {
+			@Override
+			public String toString() {
+				return "Total Coloring";
+			}
+		};
+
+		public abstract String toString();
+	}
 
 	private Theme theme;
 	private int barHeight = 25;
@@ -72,11 +93,13 @@ public class GraphEditorUI extends JPanel {
 		switchColor.setMinimumSize(buttonSize);
 		switchColor.setPreferredSize(buttonSize);
 		switchColor.setMaximumSize(buttonSize);
-		String[] availableColorings = {"Total Coloring", "Vertex Coloring"}; // todo replace with language resource
 		coloringType = new JComboBox<>();
-		coloringType.addItem(availableColorings[0]);
-		coloringType.addItem(availableColorings[1]);
+		coloringType.addItem(ColoringType.VERTEX.toString());
+		coloringType.addItem(ColoringType.TOTAL.toString());
 		theme.style(coloringType);
+
+		coloringType.addItemListener(new SwitchColoringTypeAction());
+		currentColoringType = ColoringType.VERTEX;
 
 		topBarButtons.add(Box.createHorizontalStrut(buttonSeparation));
 		topBarButtons.add(undo);
@@ -122,10 +145,18 @@ public class GraphEditorUI extends JPanel {
 	}
 
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
-		this.graph = new RenderableGraph(
-				graph,
-				((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0)
-		);
+		propertyGraph = graph;
+		if (currentColoringType == ColoringType.VERTEX) {
+			this.graph = new RenderableGraph(
+					graph,
+					((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0)
+			);
+		} else {
+			this.graph = new RenderableGraph(
+					graph,
+					((List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>>) graph.getProperty(TotalColoring.class).getValue()).get(0)
+			);
+		}
 		history.clear();
 		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
 		graphEditor.repaint();
@@ -332,7 +363,7 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) { // todo implement methods to apply a coloring to the visible graph
-			graphEditorController.getAlternateTotalColoring(graph.getId()); // todo use correct coloring and check if graph hasn't been edited yet
+			//graphEditorController.getAlternateTotalColoring(graph.getId()); // todo use correct coloring and check if graph hasn't been edited yet
 		}
 	}
 
@@ -341,6 +372,24 @@ public class GraphEditorUI extends JPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			GraphLook.arrangeInCircle(graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
 			repaint();
+		}
+	}
+
+	private class SwitchColoringTypeAction implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent itemEvent) {
+			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+				switchColoringType();
+				displayGraph(propertyGraph);
+			}
+		}
+
+		private void switchColoringType() {
+			if (currentColoringType == ColoringType.VERTEX) {
+				currentColoringType = ColoringType.TOTAL;
+			} else {
+				currentColoringType = ColoringType.VERTEX;
+			}
 		}
 	}
 }
