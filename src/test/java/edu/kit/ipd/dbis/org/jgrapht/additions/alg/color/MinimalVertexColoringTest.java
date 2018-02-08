@@ -159,6 +159,30 @@ public class MinimalVertexColoringTest {
 	}
 
 	@Test
+	public void getColoring4() {
+		// 1;1;2;1;1;3;1;1;4;1;1;5;1;1;6;1;1;7
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+		graph.addVertex(4);
+		graph.addVertex(5);
+		graph.addVertex(6);
+		graph.addVertex(7);
+
+		graph.addEdge(1, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(1, 4);
+		graph.addEdge(1, 5);
+		graph.addEdge(1, 6);
+		graph.addEdge(1, 7);
+
+		MinimalVertexColoring<Integer, Integer> alg = new MinimalVertexColoring(graph);
+		Coloring coloring = alg.getColoring();
+		assertEquals(coloring.getNumberColors(), 2);
+	}
+
+	@Test
 	public void nearlyCompleteBipartiteGraphColoring() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
