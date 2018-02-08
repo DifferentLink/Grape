@@ -21,7 +21,7 @@ public class DatabaseFilterIntegrationTests {
 	private static GraphDatabase database;
 	private static Filtermanagement manager;
 
-	//@Ignore
+	@Ignore
 	@Before
 	public void delete() throws Exception {
 		String url = "jdbc:mysql://localhost:3306/library";
@@ -40,7 +40,7 @@ public class DatabaseFilterIntegrationTests {
 		manager.setDatabase(database);
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void addConnectedFilterToDatabase() throws Exception, InvalidInputException {
 		manager.addFilter("AverageDegree + 27 = AverageDegree / 66", 1);
@@ -48,7 +48,7 @@ public class DatabaseFilterIntegrationTests {
 				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 66"));
 	}
 
-	//@Ignore
+	@Ignore
 	@Test (expected = NullPointerException.class)
 	public void removeFilterfromDatabase() throws Exception, InvalidInputException {
 		manager.addFilter("AverageDegree = 10", 2);
@@ -58,7 +58,7 @@ public class DatabaseFilterIntegrationTests {
 
 	}
 
-	//@Ignore
+	@Ignore
 	@Test (expected = NullPointerException.class)
 	public void removeFiltergroupfromDatabase() throws Exception, InvalidInputException {
 		Filtergroup filtergroup = new Filtergroup("Beispielgruppe", true, 3);
@@ -70,7 +70,7 @@ public class DatabaseFilterIntegrationTests {
 
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void removeFilterFromFiltergroupInDatabase() throws Exception, InvalidInputException {
 		Filtergroup filtergroup = new Filtergroup("NeueGruppe", true, 5);
@@ -102,6 +102,51 @@ public class DatabaseFilterIntegrationTests {
 				assertEquals((f.getID() == 60), false);
 			}
 		}
+
+	}
+
+	@Ignore
+	@Test
+	public void testSetDatabaseMethod() throws  Exception, InvalidInputException {
+		Filtergroup filtergroup = new Filtergroup("DiesIstEineGruppe", true, 6);
+		manager.addFilterGroup(filtergroup);
+		assertEquals(database.getFilterById(6).getName().equals("DiesIstEineGruppe"),true);
+
+		manager.addFilterToGroup("TotalColoringNumberOfColors = 0", 31, 6);
+		assertEquals((database.getFilterById(6) instanceof Filtergroup), true);
+
+		if (database.getFilterById(6) instanceof Filtergroup) {
+			Filtergroup group = (Filtergroup) database.getFilterById(6);
+			List<Filter> filters = group.getAvailableFilter();
+			boolean found = false;
+			for (Filter f : filters) {
+				if (f.getID() == 31) {
+					found = true;
+					assertEquals(f.getName().equals("TotalColoringNumberOfColors = 0"), true);
+				}
+			}
+			assertEquals(found, true);
+		}
+
+		manager.removeFiltersegment(31);
+		assertEquals((database.getFilterById(6) instanceof Filtergroup), true);
+		if (database.getFilterById(6) instanceof Filtergroup) {
+			Filtergroup group = (Filtergroup) database.getFilterById(6);
+			List<Filter> filters = group.getAvailableFilter();
+			for (Filter f : filters) {
+				assertEquals((f.getID() == 31), false);
+			}
+		}
+
+		String url = "jdbc:mysql://localhost:3306/library";
+		String username = "user";
+		String password = "password";
+		GraphTable graphs2 = new GraphTable(url, username, password, "grape2Modified");
+		FilterTable filter2 = new FilterTable(url, username, password, "grape2filtersModified");
+		GraphDatabase database2 = new GraphDatabase(graphs2, filter2);
+		manager.setDatabase(database2);
+		assertEquals(manager.getDatabase().getGraphTable().getName()
+				+ manager.getDatabase().getFilterTable().getName(), "grape2Modifiedgrape2filtersModified");
 
 	}
 

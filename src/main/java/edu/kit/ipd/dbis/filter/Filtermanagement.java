@@ -34,7 +34,15 @@ public class Filtermanagement {
         availableFilter = new ArrayList<>();
     }
 
-    public void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
+	/**
+	 * getter-method for database
+	 * @return database
+	 */
+	public GraphDatabase getDatabase() {
+		return database;
+	}
+
+	public void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
             UnexpectedObjectException, InsertionFailedException {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
