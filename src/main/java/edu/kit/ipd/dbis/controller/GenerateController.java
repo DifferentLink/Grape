@@ -136,8 +136,16 @@ public class GenerateController {
 				}));
 			}
 
+			int runningJobs = 0;
+			final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
+
 			for (Thread job : jobs) {
 				job.start();
+				if (runningJobs < maxJobs) {
+					runningJobs++;
+				} else {
+					job.join();
+				}
 			}
 
 			for (Thread job : jobs) {
