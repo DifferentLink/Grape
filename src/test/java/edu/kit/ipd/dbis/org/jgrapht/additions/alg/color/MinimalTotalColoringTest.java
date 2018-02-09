@@ -60,6 +60,14 @@ public class MinimalTotalColoringTest {
 		assertEquals(5, coloring.getNumberColors());
 	}
 
+	@Test
+	public void cliqueOfFiveTest() {
+		PropertyGraph graph = createCompleteGraph(5);
+		MinimalTotalColoring<Integer, Integer> totalColoring = new MinimalTotalColoring<>(graph);
+		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
+		assertEquals(5, coloring.getNumberColors());
+	}
+
 	private PropertyGraph createCompleteGraph(int numberOfVertices) {
 		PropertyGraph graph = new PropertyGraph();
 		for (int i = 0; i < numberOfVertices; i++) {

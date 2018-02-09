@@ -22,6 +22,7 @@ public abstract class Theme {
 	public Color assertiveBackground;
 	public Color unassertiveBackground;
 	public Color tableSelectionColor;
+	public Color tableSelectionColorDark;
 	public Color buttonBackgorundColor;
 	public Color buttonHighlightColor;
 	public Color buttonDisabledColor;

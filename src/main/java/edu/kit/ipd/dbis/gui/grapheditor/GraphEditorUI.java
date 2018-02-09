@@ -9,11 +9,13 @@ import edu.kit.ipd.dbis.controller.InvalidGraphInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GraphEditorUI extends JPanel {
@@ -153,7 +155,7 @@ public class GraphEditorUI extends JPanel {
 			this.graph = new RenderableGraph(graph, currentTotalColoring);
 		}
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
@@ -161,7 +163,7 @@ public class GraphEditorUI extends JPanel {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
@@ -169,8 +171,7 @@ public class GraphEditorUI extends JPanel {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
 		history.clear();
-		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVerticesNotContainedInSubgraphs(),
-				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
@@ -269,12 +270,13 @@ public class GraphEditorUI extends JPanel {
 				kanvas.draw(vertexShape);
 			});
 
-/*			graph.getSubgraphs().forEach(subgraph -> {
-				Shape subgraphOutline = subgraph.outline();
-				kanvas.setPaint(theme.outlineColor);
-				kanvas.fill(subgraphOutline);
+			graph.getSubgraphs().forEach(subgraph -> {
+				Shape subgraphOutline = RenderableGraph.outline(subgraph);
+				float[] dash = new float[]{10.0f};
+				kanvas.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+				kanvas.setPaint(Color.darkGray);
 				kanvas.draw(subgraphOutline);
-			});*/
+			});
 		}
 	}
 
@@ -315,9 +317,8 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			propertyGraph = graph.asPropertyGraph();
-			// something
 			history.addToHistory(graph);
-			//displayGraph(propertyGraph);
+			setAndDisplayColoring(graphEditorController);
 		}
 	}
 
@@ -331,7 +332,7 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			PropertyGraph propertyGraph = graph.asPropertyGraph();
+			propertyGraph = graph.asPropertyGraph();
 			try {
 				if (graphEditorController.isValidGraph(propertyGraph)) {
 					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
@@ -382,8 +383,7 @@ public class GraphEditorUI extends JPanel {
 	private class CenterVerticesAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
-					new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+			arrangeGraph();
 			repaint();
 		}
 	}
@@ -397,16 +397,26 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void itemStateChanged(ItemEvent itemEvent) {
 			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-				if (currentColoringType == ColoringType.VERTEX) {
-					currentColoringType = ColoringType.TOTAL;
-					currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
-					displayGraph(propertyGraph, currentTotalColoring);
-				} else {
-					currentColoringType = ColoringType.VERTEX;
-					currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
-					displayGraph(propertyGraph, currentVertexColoring);
-				}
+				setAndDisplayColoring(graphEditorController);
 			}
 		}
+	}
+
+	protected void setAndDisplayColoring(GraphEditorController graphEditorController) {
+		if (currentColoringType == ColoringType.VERTEX) {
+			currentColoringType = ColoringType.TOTAL;
+			currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
+			displayGraph(propertyGraph, currentTotalColoring);
+		} else {
+			currentColoringType = ColoringType.VERTEX;
+			currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
+			displayGraph(propertyGraph, currentVertexColoring);
+		}
+	}
+
+	private void arrangeGraph() {
+		GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
+				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+		repaint();
 	}
 }

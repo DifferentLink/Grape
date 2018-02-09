@@ -4,7 +4,7 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
@@ -15,7 +15,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.TotalColo
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
@@ -29,9 +28,14 @@ public class GraphEditorController {
 	private GraphDatabase database;
 	private StatusbarController statusbar;
 	private FilterController filter;
-	private NonEditableTableModel tableModel;
 	private GraphEditorUI graphEditor;
+
+	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
@@ -66,10 +70,6 @@ public class GraphEditorController {
 		this.database = database;
 	}
 
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
-	}
-
 	public void setGraphEditor(GraphEditorUI graphEditor) {
 		this.graphEditor = graphEditor;
 	}
@@ -83,7 +83,7 @@ public class GraphEditorController {
 	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
 	public void addEditedGraph(PropertyGraph<Integer, Integer> newGraph, int oldID) {
-		Boolean isDuplicate = null;
+		boolean isDuplicate = false;
 		try {
 			isDuplicate = database.graphExists(newGraph);
 		} catch (ConnectionFailedException e) {
@@ -91,13 +91,13 @@ public class GraphEditorController {
 		}
 		if (!isDuplicate) {
 			try {
+				newGraph.calculateProperties();
 				database.addGraph(newGraph);
 				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
 				statusbar.addEvent(REMOVE, oldID);
-				this.statusbarUI.setRemainingCalculations(0);
-				this.tableModel.update(filter.getFilteredAndSortedGraphs());
-			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+				this.grapeUI.updateTable();
+			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
 		}
@@ -114,10 +114,9 @@ public class GraphEditorController {
 				database.addGraph(graph);
 				statusbar.continueCalculation();
 				statusbar.addEvent(ADD, graph.getId());
-				this.statusbarUI.setRemainingCalculations(0);
-				this.tableModel.update(filter.getFilteredAndSortedGraphs());
+				this.grapeUI.updateTable();
 			} catch (ConnectionFailedException
-					| InsertionFailedException | UnexpectedObjectException | SQLException e) {
+					| InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
 			}
 		}
@@ -140,7 +139,7 @@ public class GraphEditorController {
 	 * @return true if the given graph is valid.
 	 */
 	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
-		Boolean duplicate = true;
+		boolean duplicate = false;
 		try {
 			duplicate = database.graphExists(graph);
 		} catch (ConnectionFailedException e) {
@@ -165,10 +164,8 @@ public class GraphEditorController {
 			denserGraph = denserGraphFinder.getNextDenserGraph();
 			database.addGraph(denserGraph);
 			statusbar.continueCalculation();
-			statusbar.addEvent(ADD, denserGraph.getId());
-			this.statusbarUI.setRemainingCalculations(0);
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException |
+			this.grapeUI.updateTable();
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException |
 				NoDenserGraphException e) {
 			statusbar.addMessage(e.getMessage());
 		}

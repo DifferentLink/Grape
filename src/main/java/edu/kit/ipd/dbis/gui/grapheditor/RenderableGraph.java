@@ -386,34 +386,56 @@ public class RenderableGraph {
 		this.subgraphs = subgraphs;
 	}
 
-	public Point getUpperLeft() {
-		Vertex upperleftVertex = new Vertex(0, 0);
-		Vertex vertex;
-		for (Iterator<Vertex> iterator = vertices.iterator(); iterator.hasNext(); ) {
-			vertex = iterator.next();
-			if (vertex.x <= upperleftVertex.x && vertex.y >= upperleftVertex.y) {
-				upperleftVertex = vertex;
+	public static Point getLowerRight(Set<Vertex> vertices) {
+		Iterator<Vertex> iterator = vertices.iterator();
+		if (iterator.hasNext()) {
+			Vertex startVertex = iterator.next();
+			Vertex lowerrightVertex = new Vertex(startVertex.x, startVertex.y);
+			Vertex vertex;
+			while (iterator.hasNext()) {
+				vertex = iterator.next();
+				if (vertex.x >= lowerrightVertex.x) {
+					lowerrightVertex.x = vertex.x;
+				}
+				if (vertex.y >= lowerrightVertex.y) {
+					lowerrightVertex.y = vertex.y;
+				}
 			}
+			return new Point(lowerrightVertex.x, lowerrightVertex.y);
 		}
-		return new Point(upperleftVertex.x, upperleftVertex.y);
+		return new Point(0, 0);
 	}
 
-	public Point getLowerRight() {
-		Vertex upperleftVertex = new Vertex(0, 0);
-		Vertex vertex;
-		for (Iterator<Vertex> iterator = vertices.iterator(); iterator.hasNext(); ) {
-			vertex = iterator.next();
-			if (vertex.x >= upperleftVertex.x && vertex.y <= upperleftVertex.y) {
-				upperleftVertex = vertex;
+	public static Point getUpperLeft(Set<Vertex> vertices) {
+		Iterator<Vertex> iterator = vertices.iterator();
+		if (iterator.hasNext()) {
+			Vertex startVertex = iterator.next();
+			Vertex upperleftVertex = new Vertex(startVertex.x, startVertex.y);
+			Vertex vertex;
+			while (iterator.hasNext()) {
+				vertex = iterator.next();
+				if (vertex.x <= upperleftVertex.x) {
+					upperleftVertex.x = vertex.x;
+				}
+				if (vertex.y <= upperleftVertex.y) {
+					upperleftVertex.y = vertex.y;
+				}
 			}
+			return new Point(upperleftVertex.x, upperleftVertex.y);
 		}
-		return new Point(upperleftVertex.x, upperleftVertex.y);
+		return new Point(0, 0);
 	}
 
-	public Shape outline() {
-		final Point upperleft = getUpperLeft();
-		final Point lowerright = getLowerRight();
-		return new RoundRectangle2D.Double(upperleft.x, upperleft.y, lowerright.x, lowerright.y, 1 , 2);
+	public static Shape outline(Set<Vertex> vertices) {
+		final Point upperleft = getUpperLeft(vertices);
+		final Point lowerright = getLowerRight(vertices);
+		final float margin = 1.025f;
+		return new RoundRectangle2D.Double(
+				upperleft.x - GraphLook.vertexDiameter * margin,
+				upperleft.y - GraphLook.vertexDiameter * margin,
+				lowerright.x - upperleft.x + 2 * GraphLook.vertexDiameter * margin,
+				lowerright.y - upperleft.y + 2 * GraphLook.vertexDiameter * margin,
+				15 , 15);
 	}
 
 	public Set<Vertex> getUnpositionedVertices() {

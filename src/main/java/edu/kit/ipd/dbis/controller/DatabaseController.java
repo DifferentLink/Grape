@@ -1,20 +1,20 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.files.*;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.files.FileContentCouldNotBeReadException;
+import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedException;
+import edu.kit.ipd.dbis.database.exceptions.files.FileCouldNotBeSavedException;
+import edu.kit.ipd.dbis.database.exceptions.files.FileNameAlreadyTakenException;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
-import edu.kit.ipd.dbis.log.Event;
 
 import java.io.FileNotFoundException;
-import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
-
-import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 /**
  * The type Database controller.
@@ -28,10 +28,14 @@ public class DatabaseController {
 	private StatusbarController statusbar;
 	private CorrelationController correlation;
 
-	private NonEditableTableModel tableModel;
 	private Connector connector;
 	private GraphDatabase database;
+	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	/**
 	 * Instantiates a new Database controller.
@@ -47,20 +51,6 @@ public class DatabaseController {
 	}
 
 	/**
-	 * Sets table model.
-	 *
-	 * @param tableModel the table model
-	 */
-// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
-	}
-
-	public void setStatusbarUI(StatusbarUI statusbarUI) {
-		this.statusbarUI = statusbarUI;
-	}
-
-	/**
 	 * Triggers the database to open a new database table.
 	 *
 	 * @param url      the url
@@ -72,11 +62,10 @@ public class DatabaseController {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
-			//TODO: get right graphAmount
 			this.statusbarUI.setDatabaseInfo(name, 0);
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (SQLException | DatabaseDoesNotExistException
-				| ConnectionFailedException | AccessDeniedForUserException e) {
+			this.statusbarUI.setRemainingCalculations(0);
+			this.grapeUI.updateTable();
+		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -90,11 +79,9 @@ public class DatabaseController {
 		try {
 			database = connector.loadGraphDatabase(filepath);
 			this.updateDatabases();
-			//TODO: get right graphAmount
-			this.statusbarUI.setDatabaseInfo("", 0);
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | SQLException
-				| FileContentCouldNotBeReadException | ConnectionFailedException e) {
+			this.grapeUI.updateTable();
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | FileContentCouldNotBeReadException
+				| ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -110,11 +97,8 @@ public class DatabaseController {
 			mergeDatabase = connector.loadGraphDatabase(filepath);
 			database.merge(mergeDatabase);
 			this.updateDatabases();
-			//TODO: get right graphAmount
-			this.statusbarUI.setDatabaseInfo("", 0);
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | SQLException
-				| ConnectionFailedException | FileContentCouldNotBeReadException e) {
+			this.grapeUI.updateTable();
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -152,5 +136,9 @@ public class DatabaseController {
 		filter.setDatabase(database);
 		correlation.setDatabase(database);
 		statusbar.setDatabase(database);
+	}
+
+	public void setStatusbarUI(StatusbarUI statusbarUI) {
+		this.statusbarUI = statusbarUI;
 	}
 }

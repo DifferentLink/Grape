@@ -141,25 +141,25 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		return edgeToVertexGraph;
 	}
 
-	private boolean shareVertex(Integer v1, Integer v2, Graph<Integer, Integer> graph, Set<String> addedEdges) {
+	private boolean shareVertex(Integer edgeToVertex1, Integer edgeToVertex2, Graph<Integer, Integer> graph, Set<String> addedEdges) {
 		Set<String> v1TargetVertices = new HashSet<>();
-		for (Object e : graph.outgoingEdgesOf(v1)) {
+		for (Object e : graph.outgoingEdgesOf(edgeToVertex1)) {
 			if (!addedEdges.contains(e.toString())) {
-				if (!("" + e.toString().charAt(1)).equals(v1.toString())) {
-					v1TargetVertices.add("" + e.toString().charAt(1));
+				if (!(extractSourceVertex(e.toString())).equals(edgeToVertex1.toString())) {
+					v1TargetVertices.add(extractSourceVertex(e.toString()));
 				} else {
-					v1TargetVertices.add(("" + e.toString().charAt(5)));
+					v1TargetVertices.add(extractTargetVertex(e.toString()));
 				}
 			}
 		}
 
-		for (Object e : graph.outgoingEdgesOf(v2)) {
+		for (Object e : graph.outgoingEdgesOf(edgeToVertex2)) {
 			if (!addedEdges.contains(e.toString())) {
 				String curr;
-				if (!("" + e.toString().charAt(1)).equals(v2.toString())) {
-					curr = "" + e.toString().charAt(1);
+				if (!(extractSourceVertex(e.toString())).equals(edgeToVertex2.toString())) {
+					curr = extractSourceVertex(e.toString());
 				} else {
-					curr = "" + e.toString().charAt(5);
+					curr = extractTargetVertex(e.toString());
 				}
 				if (v1TargetVertices.contains(curr)) {
 					return true;
@@ -168,6 +168,20 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		}
 
 		return false;
+	}
+
+	private String extractSourceVertex(String edgeString) {
+		String[] vertices = edgeString.split(" : ");
+		String source = vertices[0];
+		source = source.split("\\(")[1];
+		return source;
+	}
+
+	private String extractTargetVertex(String edgeString) {
+		String[] vertices = edgeString.split(" : ");
+		String target = vertices[1];
+		target = target.split("\\)")[0];
+		return target;
 	}
 
 	private String edgeToString(Object o1, Object o2) {
