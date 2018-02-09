@@ -16,7 +16,7 @@ public class GrapeTheme extends Theme {
 		super.foregroundColor = Color.BLACK;
 		super.shadowColor = super.backgroundColor;
 		super.dividerSize = 2;
-		super.outlineColor = Color.BLACK;
+		super.outlineColor = Color.DARK_GRAY;
 		super.outlineThickness = 1;
 		super.assertiveBackground = new Color(0xC4C8F5);
 		super.unassertiveBackground = new Color(0xF4C9BA);
