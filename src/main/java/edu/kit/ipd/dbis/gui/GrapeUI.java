@@ -74,11 +74,6 @@ public class GrapeUI {
 			mainWindow.setIconImage(logo);
 		} catch (IOException e) {}
 
-
-		menuUI = new MenuUI(
-				generateController, databaseController, statusbarController, graphEditorController, language, theme);
-		mainWindow.setJMenuBar(menuUI);
-
 		filterUI = new FilterUI(filterController, language, theme);
 		correlationUI = new CorrelationUI(correlationController, language, theme);
 
@@ -112,6 +107,11 @@ public class GrapeUI {
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
+
+		menuUI = new MenuUI(
+				generateController, databaseController, statusbarController, graphEditorController, filterController, tableModel, language, theme);
+		mainWindow.setJMenuBar(menuUI);
+
 		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		calculationController.setTableModel(tableModel);
 		databaseController.setTableModel(tableModel);
