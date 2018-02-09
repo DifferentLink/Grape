@@ -218,19 +218,25 @@ public class GrapeUI {
 	}
 
 	public void updateTable() {
+		boolean isSorted = false;
 		for (Property property : (new PropertyGraph<>()).getProperties()) {
 			if ((property.getClass().getSimpleName().toLowerCase()).equals(lastSortedColumn)) {
 				try {
 					if (isSortedAscending) {
 						tableModel.update(filterController.getFilteredAndAscendingSortedGraphs(property));
+						isSorted = true;
 					} else {
 						tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
+						isSorted = true;
 					}
 				} catch (SQLException ignored) {}
 			}
 		}
-		try {
-			tableModel.update(filterController.getFilteredAndSortedGraphs());
-		} catch (SQLException ignored) {}
+		if (!isSorted) {
+			try {
+				tableModel.update(filterController.getFilteredAndSortedGraphs());
+			} catch (SQLException ignored) {}
+		}
+
 	}
 }
