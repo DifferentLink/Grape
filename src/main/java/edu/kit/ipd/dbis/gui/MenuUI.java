@@ -4,7 +4,10 @@
 
 package edu.kit.ipd.dbis.gui;
 
-import edu.kit.ipd.dbis.controller.*;
+import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.GraphEditorController;
+import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.popups.AboutUI;
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
@@ -29,8 +32,6 @@ public class MenuUI extends JMenuBar {
 	              DatabaseController databaseController,
 	              StatusbarController statusbarController,
 	              GraphEditorController graphEditorController,
-	              FilterController filterController,
-	              NonEditableTableModel tableModel,
 	              ResourceBundle language,
 	              Theme theme) {
 
@@ -69,16 +70,12 @@ public class MenuUI extends JMenuBar {
 		undo.addActionListener(new UndoAction());
 		JMenuItem redo = new JMenuItem(language.getString("redo"));
 		redo.addActionListener(new RedoAction());
-		JMenuItem updateTable = new JMenuItem("Update table");
-		updateTable.addActionListener(new UpdateTableAction(tableModel, filterController));
 		edit.add(generateGraphs);
 		edit.add(emptyGraph);
 		edit.add(readBFSCode);
 		edit.addSeparator();
 		edit.add(undo);
 		edit.add(redo);
-		edit.addSeparator();
-		edit.add(updateTable);
 		this.add(edit);
 
 		JMenu help = new JMenu(language.getString("help"));
@@ -355,26 +352,6 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			graphEditorController.emptyGraphToGraphEditor();
-		}
-	}
-
-	private class UpdateTableAction implements ActionListener {
-
-		private final NonEditableTableModel tableModel;
-		private final FilterController filterController;
-
-		public UpdateTableAction(NonEditableTableModel tableModel, FilterController filterController) {
-			this.tableModel = tableModel;
-			this.filterController = filterController;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent actionEvent) {
-			try {
-				tableModel.update(filterController.getFilteredAndSortedGraphs());
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 }

@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.log.Event;
@@ -28,8 +29,12 @@ public class GenerateController {
 	private StatusbarController statusbar;
 	private FilterController filter;
 	private CalculationController calculation;
-	private NonEditableTableModel tableModel;
+	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -65,16 +70,6 @@ public class GenerateController {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
-	}
-
-	/**
-	 * Sets table model.
-	 *
-	 * @param tableModel the table model
-	 */
-// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 
@@ -140,9 +135,8 @@ public class GenerateController {
 				System.out.println("Finished calculations");
 			}
 			ResultSet resultSet = filter.getFilteredAndSortedGraphs();
-			tableModel.update(resultSet);
 			System.out.println("update table");
-		} catch (InterruptedException | SQLException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -177,9 +171,8 @@ public class GenerateController {
 		try {
 			database.addGraph(graph);
 			calculation.run();
-			this.statusbarUI.setRemainingCalculations(0);
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+			this.grapeUI.updateTable();
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -193,7 +186,6 @@ public class GenerateController {
 		try {
 			database.deleteGraph(id);
 			statusbar.addEvent(EventType.REMOVE, id);
-			this.statusbarUI.setRemainingCalculations(0);
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
