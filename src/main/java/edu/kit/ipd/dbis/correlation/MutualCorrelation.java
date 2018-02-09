@@ -137,11 +137,11 @@ public class MutualCorrelation extends Correlation {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
-                firstProperty.getClass().getSimpleName());
+                firstProperty);
         double returnValue = 0;
         while (!firstPropertyValues.isEmpty()) {
             LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
-                    secondProperty.getClass().getSimpleName());
+                    secondProperty);
             double i = MutualCorrelation.getMinimum(firstPropertyValues);
             while (!secondPropertyValues.isEmpty()) {
                 double j = MutualCorrelation.getMinimum(secondPropertyValues);

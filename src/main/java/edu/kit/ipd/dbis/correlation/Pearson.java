@@ -136,9 +136,9 @@ public class Pearson extends Correlation {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
-                firstProperty.getClass().getSimpleName());
+                firstProperty);
         LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
-                secondProperty.getClass().getSimpleName());
+                secondProperty);
         double firstRandomMedium = Pearson.createRandomMedium(firstPropertyValues);
         double secondRandomMedium = Pearson.createRandomMedium(secondPropertyValues);
         double sum = 0;
