@@ -11,6 +11,9 @@ import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -65,15 +68,22 @@ public class CorrelationRequestUI extends JFrame {
 
 	private JTable populateTable() throws InvalidCorrelationInputException {
 		List<CorrelationOutput> columns = correlationController.addNewCorrelation(correlationRequest);
-		Object[][] data = new Object[columns.size()][3];
-		int i = 0;
-		for (Iterator<CorrelationOutput> iterator = columns.iterator(); iterator.hasNext(); i++) {
-			CorrelationOutput column = iterator.next();
-			data[i][0] = column.getFirstProperty();
-			data[i][1] = column.getSecondProperty();
-			data[i][2] = column.getOutputNumber();
+		int tableSize = columns.size() + 1;
+		String[][] data = new String[3][tableSize];
+
+		data[0][0] = "first property";
+		data[1][0] = "second property";
+		data[2][0] = "correlation value";
+		for (int i = 1; i < tableSize; i++) {
+			CorrelationOutput column = columns.get(i - 1);
+			data[0][i] = column.getFirstProperty();
+			data[1][i] = column.getSecondProperty();
+			data[2][i] = String.valueOf(column.getOutputNumber());
 		}
 
-		return new JTable(new NonEditableTableModel(null, data));
+		// return new JTable(new NonEditableTableModel(null, data));
+		JTable tab = new JTable(data, new String[]{"", "", ""});
+		tab.setDefaultEditor(Object.class, null);
+		return tab;
 	}
 }

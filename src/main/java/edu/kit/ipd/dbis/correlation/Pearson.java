@@ -6,6 +6,9 @@ import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
+
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,21 +20,8 @@ public class Pearson extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws ConnectionFailedException {
-        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> firstPropertySet = PropertyFactory.createAllProperties(graph);
-        String[] firstPropertyList = new String[firstPropertySet.size()];
-        int h = 0;
-        for (Property currentProperty: firstPropertySet) {
-            firstPropertyList[h] = currentProperty.getClass().getSimpleName();
-            h++;
-        }
-        Set<Property> secondPropertySet = PropertyFactory.createAllProperties(graph);
-        String[] secondPropertyList = new String[secondPropertySet.size()];
-        int j = 0;
-        for (Property currentProperty: secondPropertySet) {
-            secondPropertyList[j] = currentProperty.getClass().getSimpleName();
-            j++;
-        }
+        String[] firstPropertyList = Pearson.getValidProperties();
+        String[] secondPropertyList = Pearson.getValidProperties();
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (String property1: firstPropertyList) {
             for (String property2: secondPropertyList) {
@@ -51,14 +41,7 @@ public class Pearson extends Correlation {
     @Override
     public TreeSet<CorrelationOutput> useMaximum(String property2, GraphDatabase database) throws
             ConnectionFailedException {
-        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> firstPropertySet = PropertyFactory.createAllProperties(graph);
-        String[] firstPropertyList = new String[firstPropertySet.size()];
-        int h = 0;
-        for (Property currentProperty: firstPropertySet) {
-            firstPropertyList[h] = currentProperty.getClass().getSimpleName();
-            h++;
-        }
+        String[] firstPropertyList = Pearson.getValidProperties();
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (String property1: firstPropertyList) {
             CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
@@ -75,21 +58,8 @@ public class Pearson extends Correlation {
 
     @Override
     public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws ConnectionFailedException {
-        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> firstPropertySet = PropertyFactory.createAllProperties(graph);
-        String[] firstPropertyList = new String[firstPropertySet.size()];
-        int h = 0;
-        for (Property currentProperty: firstPropertySet) {
-            firstPropertyList[h] = currentProperty.getClass().getSimpleName();
-            h++;
-        }
-        Set<Property> secondPropertySet = PropertyFactory.createAllProperties(graph);
-        String[] secondPropertyList = new String[secondPropertySet.size()];
-        int j = 0;
-        for (Property currentProperty: secondPropertySet) {
-            secondPropertyList[j] = currentProperty.getClass().getSimpleName();
-            j++;
-        }
+        String[] firstPropertyList = Pearson.getValidProperties();
+        String[] secondPropertyList = Pearson.getValidProperties();
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (String property1: firstPropertyList) {
             for (String property2: secondPropertyList) {
@@ -109,14 +79,7 @@ public class Pearson extends Correlation {
     @Override
     public TreeSet<CorrelationOutput> useMinimum(String property2, GraphDatabase database) throws
             ConnectionFailedException {
-        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> firstPropertySet = PropertyFactory.createAllProperties(graph);
-        String[] firstPropertyList = new String[firstPropertySet.size()];
-        int h = 0;
-        for (Property currentProperty: firstPropertySet) {
-            firstPropertyList[h] = currentProperty.getClass().getSimpleName();
-            h++;
-        }
+        String[] firstPropertyList = Pearson.getValidProperties();
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (String property1: firstPropertyList) {
             CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
@@ -167,5 +130,26 @@ public class Pearson extends Correlation {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));
         }
         return Math.sqrt(sum / (inputList.size() - 1));
+    }
+
+    private static String[] getValidProperties() {
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        Set<Property> fullPropertySet = PropertyFactory.createAllProperties(graph);
+        System.out.println("Das PropertySet wurde angelegt");
+        Set<Property> propertySet = new HashSet<>();
+        for (Property current: fullPropertySet) {
+            if (!current.getClass().getSuperclass().equals(ComplexProperty.class)) {
+                propertySet.add(current);
+            }
+        }
+        System.out.println("Das Set konnte vereinfacht werden");
+        String[] resultPropertyList = new String[propertySet.size()];
+        int h = 0;
+        for (Property currentProperty: propertySet) {
+            resultPropertyList[h] = currentProperty.getClass().getSimpleName();
+            System.out.println("Alle Properties " + currentProperty.getClass().getSimpleName());
+            h++;
+        }
+        return resultPropertyList;
     }
 }
