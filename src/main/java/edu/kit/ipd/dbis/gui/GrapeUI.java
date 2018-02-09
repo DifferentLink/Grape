@@ -108,7 +108,7 @@ public class GrapeUI {
 
 		graphEditorDivider.setResizeWeight(.55f);
 
-		statusbarUI = new StatusbarUI(statusbarController, language, theme);
+		statusbarUI = new StatusbarUI(statusbarController, databaseController, language, theme);
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
