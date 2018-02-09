@@ -306,11 +306,10 @@ public class MenuUI extends JMenuBar {
 				System.out.println("Saved selection to a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
-					try {
-						databaseController.saveSelection(file.getPath(), new LinkedList<>());
-					} catch (Exception e) { // todo replace with correct exception as soon as available
-						e.printStackTrace();
-					}
+
+					//databaseController.saveSelection(file.getPath(), new LinkedList<>());
+
+
 				}
 			} else {
 				System.out.println("Saving selection as database failed"); // todo remove sout

@@ -18,9 +18,9 @@ import java.util.ResourceBundle;
 
 public class ConfigureDatabaseUI extends JFrame {
 
-	private final DatabaseController databaseController;
-	private final ResourceBundle language;
-	private final Theme theme;
+	protected final DatabaseController databaseController;
+	protected final ResourceBundle language;
+	protected final Theme theme;
 
 	JTextArea nameInput;
 	JTextArea urlInput;
