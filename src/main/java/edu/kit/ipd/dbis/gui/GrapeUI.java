@@ -130,7 +130,7 @@ public class GrapeUI {
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
-		tableUI = new JTable(tableModel);
+		tableUI = new AlternateTable(tableModel, theme);
 		tableUI.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
 		tableUI.getTableHeader().setReorderingAllowed(false);
