@@ -20,7 +20,8 @@ public class GrapeTheme extends Theme {
 		super.outlineThickness = 1;
 		super.assertiveBackground = new Color(0xC4C8F5);
 		super.unassertiveBackground = new Color(0xF4C9BA);
-		super.tableSelectionColor = Color.YELLOW;
+		super.tableSelectionColor = new Color(0xDCE5F5);
+		super.tableSelectionColorDark = new Color(0xDCDD6E5);
 		super.buttonTextColor = Color.BLACK;
 		super.buttonBackgorundColor = Color.WHITE;
 		super.buttonHighlightColor = Color.GREEN;
