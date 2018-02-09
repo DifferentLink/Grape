@@ -170,6 +170,23 @@ public class GraphEditorController {
 		}
 	}
 
+	public void addNextDenserToDatabase(final int id) {
+		try {
+			NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(database.getGraphById(id));
+
+			PropertyGraph<Integer, Integer> denserGraph;
+			try {
+				denserGraph = denserGraphFinder.getNextDenserGraph();
+				database.addGraph(denserGraph);
+				statusbar.continueCalculation();
+				this.grapeUI.updateTable();
+			} catch (NoDenserGraphException e) {
+				statusbar.addMessage(e.getMessage());
+			} catch (InsertionFailedException e) {}
+		} catch (ConnectionFailedException | UnexpectedObjectException ignored) {}
+
+	}
+
 	/**
 	 * Returns a vertex coloring for the input graph.
 	 *

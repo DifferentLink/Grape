@@ -4,12 +4,20 @@
 
 package edu.kit.ipd.dbis.gui.popups;
 
+import edu.kit.ipd.dbis.controller.GraphEditorController;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GraphOptions extends JPopupMenu {
-	public GraphOptions(final int id) {
+
+	private final int id;
+	private final GraphEditorController graphEditorController;
+
+	public GraphOptions(final int id, GraphEditorController graphEditorController) {
+		this.id = id;
+		this.graphEditorController = graphEditorController;
 		JMenuItem showProfile = new JMenuItem("Show Profile...");
 		showProfile.addActionListener(new ShowProfileAction());
 
@@ -27,14 +35,13 @@ public class GraphOptions extends JPopupMenu {
 	private class ShowProfileAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-
 		}
 	}
 
 	private class AddNextDenserAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-
+			graphEditorController.addNextDenserToDatabase(id);
 		}
 	}
 
