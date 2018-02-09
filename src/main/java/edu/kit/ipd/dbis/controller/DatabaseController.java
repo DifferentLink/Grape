@@ -135,11 +135,27 @@ public class DatabaseController {
 	/**
 	 * Triggers the database to save the current selected graphs in the table at the given path.
 	 *
+	 * @param url      the url
+	 * @param user     the user
+	 * @param password the password
+	 * @param name     the name
 	 * @param filepath the file path of the Database.
 	 * @param graphIDs the GraphIDs to save.
 	 */
-	public void saveSelection(String filepath, List<Integer> graphIDs) {
-
+	public void saveSelection(String url, String user, String password, String name, String filepath, List<Integer>
+			graphIDs) {
+		GraphDatabase selectionDatabase;
+		try {
+			selectionDatabase = connector.createGraphDatabase(url, user, password, name);
+			for (int id : graphIDs) {
+				selectionDatabase.addGraph(this.database.getGraphById(id));
+			}
+			connector.saveGraphDatabase(filepath, selectionDatabase);
+		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException
+				| InsertionFailedException | UnexpectedObjectException | FileCouldNotBeSavedException
+				| FileNameAlreadyTakenException e) {
+			statusbar.addMessage(e.getMessage());
+		}
 	}
 
 	/**
