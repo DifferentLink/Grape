@@ -31,9 +31,9 @@ public class StatusbarUI extends JPanel {
 	private GraphEditorController graphEditorController;
 	private boolean isCalculationRunning = true;
 	private JLabel statusText;
-	private String remainingCalculations = "";
-	private String selectedRow;
-	private String databaseInfo = "";
+	private String remainingCalculations = "-";
+	private String selectedRow = "Position -";
+	private String databaseInfo = "-";
 
 	public StatusbarUI(StatusbarController statusbarController, DatabaseController databaseController,ResourceBundle language, Theme theme) {
 		this.statusbarController = statusbarController;
