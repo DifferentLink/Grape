@@ -1,20 +1,21 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.files.FileContentCouldNotBeReadException;
-import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedException;
-import edu.kit.ipd.dbis.database.exceptions.files.FileCouldNotBeSavedException;
-import edu.kit.ipd.dbis.database.exceptions.files.FileNameAlreadyTakenException;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.files.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.gui.GrapeUI;
+import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
+import edu.kit.ipd.dbis.log.Event;
 
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
+
+import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 /**
  * The type Database controller.
@@ -31,7 +32,6 @@ public class DatabaseController {
 	private Connector connector;
 	private GraphDatabase database;
 	private GrapeUI grapeUI;
-	private StatusbarUI statusbarUI;
 
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
@@ -50,10 +50,6 @@ public class DatabaseController {
 		this.connector = new FileManager();
 	}
 
-	public void setStatusbarUI(StatusbarUI statusbarUI) {
-		this.statusbarUI = statusbarUI;
-	}
-
 	/**
 	 * Triggers the database to open a new database table.
 	 *
@@ -67,7 +63,8 @@ public class DatabaseController {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
 			this.grapeUI.updateTable();
-		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
+		} catch (SQLException | DatabaseDoesNotExistException
+				| ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -82,8 +79,9 @@ public class DatabaseController {
 			database = connector.loadGraphDatabase(filepath);
 			this.updateDatabases();
 			this.grapeUI.updateTable();
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | FileContentCouldNotBeReadException
-				| ConnectionFailedException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
+				| SQLException | FileContentCouldNotBeReadException
+				| ConnectionFailedException | DatabaseDoesNotExistException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -100,7 +98,8 @@ public class DatabaseController {
 			database.merge(mergeDatabase);
 			this.updateDatabases();
 			this.grapeUI.updateTable();
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
+				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}

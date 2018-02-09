@@ -1,13 +1,14 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
-import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
+import edu.kit.ipd.dbis.gui.grapheditor.RenderableGraph;
+import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
@@ -29,11 +30,17 @@ public class GraphEditorController {
 
 	private GraphDatabase database;
 	private StatusbarController statusbar;
+	private FilterController filter;
 	private GraphEditorUI graphEditor;
-	private StatusbarUI statusbarUI;
 
-	private static GraphEditorController editor;
 	private GrapeUI grapeUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
+
+	//TODO: Singleton pattern
+	private static GraphEditorController editor;
 
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
@@ -41,6 +48,7 @@ public class GraphEditorController {
 
 	private GraphEditorController() {
 		this.statusbar = StatusbarController.getInstance();
+		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -64,8 +72,8 @@ public class GraphEditorController {
 		this.database = database;
 	}
 
-	public void setGrapeUI(GrapeUI grapeUI) {
-		this.grapeUI = grapeUI;
+	public void setGraphEditor(GraphEditorUI graphEditor) {
+		this.graphEditor = graphEditor;
 	}
 
 	public void setGraphEditor(GraphEditorUI graphEditor) {
@@ -93,7 +101,7 @@ public class GraphEditorController {
 				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
 				statusbar.addEvent(REMOVE, oldID);
-				this.statusbarUI.setRemainingCalculations(0);
+				this.grapeUI.updateTable();
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
@@ -111,8 +119,7 @@ public class GraphEditorController {
 				database.addGraph(graph);
 				statusbar.continueCalculation();
 				statusbar.addEvent(ADD, graph.getId());
-				this.statusbarUI.setRemainingCalculations(0);
-				grapeUI.updateTable();
+				this.grapeUI.updateTable();
 			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
@@ -162,9 +169,7 @@ public class GraphEditorController {
 			denserGraph = denserGraphFinder.getNextDenserGraph();
 			database.addGraph(denserGraph);
 			statusbar.continueCalculation();
-			statusbar.addEvent(ADD, denserGraph.getId());
-			this.statusbarUI.setRemainingCalculations(0);
-			grapeUI.updateTable();
+			this.grapeUI.updateTable();
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException |
 				NoDenserGraphException e) {
 			statusbar.addMessage(e.getMessage());

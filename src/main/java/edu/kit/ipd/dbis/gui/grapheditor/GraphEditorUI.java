@@ -9,11 +9,13 @@ import edu.kit.ipd.dbis.controller.InvalidGraphInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GraphEditorUI extends JPanel {
@@ -144,14 +146,10 @@ public class GraphEditorUI extends JPanel {
 	}
 
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
-		propertyGraph = graph;
-		if (currentColoringType == ColoringType.VERTEX) {
-			currentVertexColoring = GraphEditorController.getVertexColoring(graph);
-			this.graph = new RenderableGraph(graph, currentVertexColoring);
-		} else {
-			currentTotalColoring = GraphEditorController.getTotalColoring(graph);
-			this.graph = new RenderableGraph(graph, currentTotalColoring);
-		}
+		this.graph = new RenderableGraph(
+				graph,
+				((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0)
+		);
 		history.clear();
 		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
 		graphEditor.repaint();
@@ -315,9 +313,8 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			propertyGraph = graph.asPropertyGraph();
-			// something
 			history.addToHistory(graph);
-			//displayGraph(propertyGraph);
+			setAndDisplayColoring(graphEditorController);
 		}
 	}
 
@@ -397,16 +394,20 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void itemStateChanged(ItemEvent itemEvent) {
 			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-				if (currentColoringType == ColoringType.VERTEX) {
-					currentColoringType = ColoringType.TOTAL;
-					currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
-					displayGraph(propertyGraph, currentTotalColoring);
-				} else {
-					currentColoringType = ColoringType.VERTEX;
-					currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
-					displayGraph(propertyGraph, currentVertexColoring);
-				}
+				setAndDisplayColoring(graphEditorController);
 			}
+		}
+	}
+
+	protected void setAndDisplayColoring(GraphEditorController graphEditorController) {
+		if (currentColoringType == ColoringType.VERTEX) {
+			currentColoringType = ColoringType.TOTAL;
+			currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
+			displayGraph(propertyGraph, currentTotalColoring);
+		} else {
+			currentColoringType = ColoringType.VERTEX;
+			currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
+			displayGraph(propertyGraph, currentVertexColoring);
 		}
 	}
 }

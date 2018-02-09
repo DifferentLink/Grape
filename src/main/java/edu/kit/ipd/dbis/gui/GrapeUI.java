@@ -85,7 +85,6 @@ public class GrapeUI {
 			mainWindow.setIconImage(logo);
 		} catch (IOException e) {}
 
-
 		menuUI = new MenuUI(
 				generateController, databaseController, statusbarController, graphEditorController, this, language, theme);
 		mainWindow.setJMenuBar(menuUI);
