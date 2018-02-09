@@ -10,7 +10,6 @@ import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.popups.GraphOptions;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.imageio.ImageIO;
@@ -180,7 +179,7 @@ public class GrapeUI {
 		public void keyTyped(KeyEvent keyEvent) {
 			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
 				try {
-					generateController.delGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
+					generateController.deleteGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
 					tableModel.update(filterController.getFilteredAndSortedGraphs());
 				} catch (IndexOutOfBoundsException | SQLException ignored) {}
 			}
@@ -299,7 +298,7 @@ public class GrapeUI {
 				if (!tableUI.isRowSelected(row)) {
 					tableUI.changeSelection(row, 0, false, false);
 				}
-				(new GraphOptions(graphID, graphEditorController, language, theme)).show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+				(new GraphOptions(graphID, graphEditorController, generateController, language, theme)).show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
 			}
 		}
 	}

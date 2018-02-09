@@ -4,6 +4,7 @@
 
 package edu.kit.ipd.dbis.gui.popups;
 
+import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
@@ -16,12 +17,14 @@ public class GraphOptions extends JPopupMenu {
 
 	private final int id;
 	private final GraphEditorController graphEditorController;
+	private final GenerateController generateController;
 	private final ResourceBundle language;
 	private final Theme theme;
 
-	public GraphOptions(final int id, GraphEditorController graphEditorController, ResourceBundle language, Theme theme) {
+	public GraphOptions(final int id, GraphEditorController graphEditorController, GenerateController generateController, ResourceBundle language, Theme theme) {
 		this.id = id;
 		this.graphEditorController = graphEditorController;
+		this.generateController = generateController;
 		this.language = language;
 		this.theme = theme;
 		JMenuItem showProfile = new JMenuItem("Show Profile...");
@@ -56,7 +59,7 @@ public class GraphOptions extends JPopupMenu {
 	private class DeleteAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-
+			generateController.deleteGraph(id);
 		}
 	}
 }
