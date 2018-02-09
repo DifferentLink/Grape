@@ -28,10 +28,10 @@ public abstract class Table {
 	 * @param user username of the MySQL-Database user.
 	 * @param password password of the user.
 	 * @param name name of the MySQL-Table which is represented by a subclass of Table.
-	 * @throws SQLException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
+	 * @throws ConnectionFailedException if a database connection could not be established
+	 * @throws AccessDeniedForUserException if the username or the password is invalid
+	 * @throws DatabaseDoesNotExistException if the database does not exist
 	 */
 	public Table(String url, String user, String password, String name)
 			throws SQLException, DatabaseDoesNotExistException, AccessDeniedForUserException,
@@ -78,10 +78,7 @@ public abstract class Table {
 
 	/**
 	 * Creates the MySQL-Table that should be represented by this Class
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	protected abstract void createTable() throws SQLException;
 
@@ -89,19 +86,16 @@ public abstract class Table {
 	 * decides if a object is a Filtersegment or a PropertyGraph
 	 * @param object the given object
 	 * @return a Filtersegment or a PropertyGraph
-	 * @throws UnexpectedObjectException
+	 * @throws UnexpectedObjectException if the object from the database is not as expected
 	 */
 	protected abstract Serializable getInstanceOf(Object object) throws UnexpectedObjectException;
 
 	/**
 	 * Inserts the given object into the MySQL-Table.
 	 * @param object Java object that should be inserted into the represented MySQL-Table.
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
-	 * @throws IOException
-	 * @throws UnexpectedObjectException
+	 * @throws SQLException if the connection to the database fails
+	 * @throws IOException if the serialization of the given object fails
+	 * @throws UnexpectedObjectException if the given object is not as expected
 	 */
 	public abstract void insert(Serializable object) throws SQLException, IOException, UnexpectedObjectException;
 
@@ -109,13 +103,10 @@ public abstract class Table {
 	 * returns the Object identified by the given id.
 	 * @param id identifies the object
 	 * @return every object in the represented MySQL-Table
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 * @throws UnexpectedObjectException
+	 * @throws SQLException if the connection to the database fails
+	 * @throws IOException if the serialization of the object fails
+	 * @throws ClassNotFoundException if the serialization of the object fails
+	 * @throws UnexpectedObjectException if the given object is not as expected
 	 */
 	public abstract Serializable getContent(int id)
 			throws SQLException, IOException, ClassNotFoundException, UnexpectedObjectException;
@@ -123,9 +114,9 @@ public abstract class Table {
 	/**
 	 * Creates and returns a Connection-Objcect.
 	 * @return the Connection to the MySQL-Database.
-	 * @throws ConnectionFailedException
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
+	 * @throws ConnectionFailedException if a database connection could not be established
+	 * @throws AccessDeniedForUserException if the username or the password is invalid
+	 * @throws DatabaseDoesNotExistException if the database does not exist
 	 */
 	protected Connection getConnection()
 			throws ConnectionFailedException, AccessDeniedForUserException, DatabaseDoesNotExistException {
@@ -150,10 +141,7 @@ public abstract class Table {
 	/**
 	 * Functionality will be described in the subclasses.
 	 * @param id identifies a row in the represented MySQL-Table.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public void switchState(int id) throws SQLException {
 
@@ -170,10 +158,7 @@ public abstract class Table {
 	/**
 	 * Deletes the identified row from the represented MySQL-Table.
 	 * @param id identifies a row in the represented MySQL-Table.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public void delete(int id) throws SQLException {
 
@@ -184,10 +169,7 @@ public abstract class Table {
 	/**
 	 *
 	 * @return all columns of the MySQL-Table represented by this object
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public LinkedList<String> getColumns() throws SQLException {
 
@@ -203,10 +185,7 @@ public abstract class Table {
 	/**
 	 * Returns every column that shall be displayed on the gui-table
 	 * @return the column names
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	protected String getPropertyColumns() throws SQLException {
 
@@ -225,12 +204,8 @@ public abstract class Table {
 	}
 
 	/**
-	 *
 	 * @return Value of the next free id.
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	protected int getId() throws SQLException {
 		LinkedList<Integer> ids = this.getIds();
@@ -241,12 +216,8 @@ public abstract class Table {
 	}
 
 	/**
-	 *
 	 * @return all ids in the represented MySQL-Table
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	protected LinkedList<Integer> getIds() throws SQLException {
 
@@ -263,7 +234,7 @@ public abstract class Table {
 	 * converts a object into a byte-array
 	 * @param object the object that should be converted
 	 * @return the byte-array
-	 * @throws IOException
+	 * @throws IOException if the serialization of the object fails
 	 */
 	protected byte[] objectToByteArray(Serializable object) throws IOException {
 		ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
@@ -280,8 +251,8 @@ public abstract class Table {
 	 * converts a byte-array into a object
 	 * @param bytes the byte-array that should be converted
 	 * @return the object
-	 * @throws IOException
-	 * @throws ClassNotFoundException
+	 * @throws IOException if the serialization of the object fails
+	 * @throws ClassNotFoundException if the serialization of the object fails
 	 */
 	protected Object byteArrayToObject(byte[] bytes) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream byteInput = new ByteArrayInputStream(bytes);
