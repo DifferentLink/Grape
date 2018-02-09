@@ -22,7 +22,6 @@ public class FilterController {
 
 	private Filtermanagement filter;
 	private StatusbarController statusbar;
-
 	private GrapeUI grapeUI;
 
 	public void setGrapeUI(GrapeUI grapeUI) {

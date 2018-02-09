@@ -5,7 +5,10 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * This class simply lists default render values for RenderableGraphs.
@@ -37,7 +40,7 @@ public class GraphLook {
 		return colors;
 	}
 
-	public static void arrangeInCircle(Set<Vertex> vertices, Point upperLeft, Point lowerRight) { // todo implement dummy method
+	public static void arrangeInCircle(Set<Vertex> vertices, Point upperLeft, Point lowerRight) {
 
 		final Point center =
 				new Point(Math.abs(upperLeft.x - lowerRight.x) / 2, Math.abs(upperLeft.y - lowerRight.y) / 2);
@@ -45,11 +48,37 @@ public class GraphLook {
 		final double angle = Math.toRadians(360d / (double) vertices.size());
 		int i = 0;
 
-		for (Vertex vertex : vertices) {
+		for (Vertex vertex : new ArrayList<>(new TreeSet<>(vertices))) {
 			vertex.setPosition(
 					(int) (radius * Math.cos(i * angle) + center.x),
 					(int) (radius * Math.sin(i * angle) + center.y));
 			i++;
+		}
+	}
+
+	public static void arrangeInGrid(Set<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
+	                                 Point upperLeft, Point lowerRight) {
+
+		final int numberGridcells = subgraphs.size() + 1;
+		final int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
+		final int xStepsize = (lowerRight.x - upperLeft.x) / xCells;
+		final int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
+		final int yStepsize = (lowerRight.y - upperLeft.y) / yCells;
+		Iterator<Set<Vertex>> iterator = subgraphs.iterator();
+
+		for (int y = 0; y < yCells; y++) {
+			for (int x = 0; x < xCells; x++) {
+				if (iterator.hasNext()) {
+					arrangeInCircle(iterator.next(),
+							new Point(x * xStepsize, y * yStepsize),
+							new Point(x * xStepsize + xStepsize, y * yStepsize + yStepsize));
+				} else {
+					arrangeInCircle(otherVertices,
+							new Point(x * xStepsize, y * yStepsize),
+							new Point(x * xStepsize + xStepsize, y * yStepsize + yStepsize));
+					return;
+				}
+			}
 		}
 	}
 }

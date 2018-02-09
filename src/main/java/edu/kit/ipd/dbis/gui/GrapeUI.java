@@ -91,7 +91,6 @@ public class GrapeUI {
 			mainWindow.setIconImage(logo);
 		} catch (IOException e) {}
 
-
 		menuUI = new MenuUI(
 				generateController, databaseController, statusbarController, graphEditorController, language, theme);
 		mainWindow.setJMenuBar(menuUI);
@@ -125,7 +124,7 @@ public class GrapeUI {
 
 		graphEditorDivider.setResizeWeight(.55f);
 
-		statusbarUI = new StatusbarUI(statusbarController, language, theme);
+		statusbarUI = new StatusbarUI(statusbarController, databaseController, language, theme);
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);

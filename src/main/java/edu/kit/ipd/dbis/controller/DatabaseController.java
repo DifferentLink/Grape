@@ -7,6 +7,7 @@ import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.log.Event;
 
 import java.io.FileNotFoundException;

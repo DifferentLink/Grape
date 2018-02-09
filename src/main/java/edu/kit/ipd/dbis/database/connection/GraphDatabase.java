@@ -223,8 +223,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public ResultSet getGraphs(String[][] filters, String column, boolean ascending)
-			throws ConnectionFailedException {
+	public ResultSet getGraphs(String[][] filters, String column, boolean ascending) throws ConnectionFailedException {
 		try {
 			return this.graphTable.getContent(filters, column, ascending);
 		} catch (SQLSyntaxErrorException e) {
