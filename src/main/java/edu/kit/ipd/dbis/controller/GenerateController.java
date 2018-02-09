@@ -122,6 +122,15 @@ public class GenerateController {
 					@Override
 					public void run() {
 						graph.calculateProperties();
+						try {
+							database.replaceGraph(graph.getId(), graph);
+						} catch (ConnectionFailedException e) {
+							e.printStackTrace();
+						} catch (InsertionFailedException e) {
+							e.printStackTrace();
+						} catch (UnexpectedObjectException e) {
+							e.printStackTrace();
+						}
 						System.out.println("Finished graph: " + graph.toString());
 					}
 				}));
