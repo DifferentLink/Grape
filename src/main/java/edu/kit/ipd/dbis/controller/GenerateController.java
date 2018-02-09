@@ -2,11 +2,11 @@ package edu.kit.ipd.dbis.controller;
 
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
-import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
@@ -15,9 +15,10 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The type Generate controller.
@@ -121,7 +122,16 @@ public class GenerateController {
 					@Override
 					public void run() {
 						graph.calculateProperties();
-						System.out.println("calculate " + graph.toString());
+						try {
+							database.replaceGraph(graph.getId(), graph);
+						} catch (ConnectionFailedException e) {
+							e.printStackTrace();
+						} catch (InsertionFailedException e) {
+							e.printStackTrace();
+						} catch (UnexpectedObjectException e) {
+							e.printStackTrace();
+						}
+						System.out.println("Finished graph: " + graph.toString());
 					}
 				}));
 			}
@@ -132,13 +142,11 @@ public class GenerateController {
 
 			for (Thread job : jobs) {
 				job.join();
-				System.out.println("Finished calculations");
 			}
-			ResultSet resultSet = filter.getFilteredAndSortedGraphs();
-			System.out.println("update table");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		grapeUI.updateTable();
 	}
 		/**
 	 * Generate empty graph.
