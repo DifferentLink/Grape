@@ -17,7 +17,7 @@ public class RenderableGraph {
 	private Set<Vertex> vertices;
 	private Set<Edge> edges;
 	private int id;
-	private Set<RenderableGraph> subgraphs;
+	private Set<Set<Vertex>> subgraphs;
 
 	public RenderableGraph() {
 		vertices = new HashSet<>();
@@ -28,10 +28,11 @@ public class RenderableGraph {
 	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id) {
 		this.vertices = vertices;
 		this.edges = edges;
+		this.subgraphs = new HashSet<>();
 		this.id = id;
 	}
 
-	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id, Set<RenderableGraph> subgraphs) {
+	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id, Set<Set<Vertex>> subgraphs) {
 		this.vertices = vertices;
 		this.edges = edges;
 		this.id = id;
@@ -41,6 +42,7 @@ public class RenderableGraph {
 	public RenderableGraph(PropertyGraph propertyGraph) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
+		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
@@ -77,8 +79,8 @@ public class RenderableGraph {
 		}
 	}
 
-	public PropertyGraph asPropertyGraph() {
-		PropertyGraph graph = new PropertyGraph();
+	public PropertyGraph<Integer, Integer> asPropertyGraph() {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		Map<Vertex, Integer> vertexIntegerMap = new HashMap<>();
 		int vertexName = 0;
 
@@ -98,7 +100,8 @@ public class RenderableGraph {
 					vertexIntegerMap.get(edge.getEnd())))
 					&& !graph.containsEdge(graph.getEdgeFactory().createEdge(
 					vertexIntegerMap.get(edge.getEnd()),
-					vertexIntegerMap.get(edge.getStart())))) {
+					vertexIntegerMap.get(edge.getStart())))
+					&& !edge.getStart().equals(edge.getEnd())) {
 				graph.addEdge(
 						vertexIntegerMap.get(edge.getStart()),
 						vertexIntegerMap.get(edge.getEnd())
@@ -111,6 +114,7 @@ public class RenderableGraph {
 	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
+		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
@@ -168,6 +172,7 @@ public class RenderableGraph {
 	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
+		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
@@ -373,11 +378,11 @@ public class RenderableGraph {
 		this.id = id;
 	}
 
-	public Set<RenderableGraph> getSubgraphs() {
+	public Set<Set<Vertex>> getSubgraphs() {
 		return subgraphs;
 	}
 
-	public void setSubgraphs(Set<RenderableGraph> subgraphs) {
+	public void setSubgraphs(Set<Set<Vertex>> subgraphs) {
 		this.subgraphs = subgraphs;
 	}
 
@@ -411,10 +416,36 @@ public class RenderableGraph {
 		return new RoundRectangle2D.Double(upperleft.x, upperleft.y, lowerright.x, lowerright.y, 1 , 2);
 	}
 
+	public Set<Vertex> getUnpositionedVertices() {
+		Set<Vertex> unpositionedVertices = new HashSet<>();
+		vertices.forEach(vertex -> {
+			if (vertex.x == 0 && vertex.y == 0) {
+				unpositionedVertices.add(vertex);
+			}
+		});
+		return unpositionedVertices;
+	}
+
+	public Set<Vertex> getVerticesNotContainedInSubgraphs() {
+		Set<Vertex> notContainedVertices = new HashSet<>();
+		for (Vertex vertex : vertices) {
+			boolean contained = false;
+			for (Set<Vertex> subgraph : subgraphs) {
+				if (subgraph.contains(vertex)) {
+					contained = true;
+				}
+			}
+			if (!contained) {
+				notContainedVertices.add(vertex);
+			}
+		}
+		return notContainedVertices;
+	}
+
 	public RenderableGraph deepCopy() {
 		Set<Vertex> newVertices = (this.vertices == null) ? new HashSet<>() : new HashSet<>(vertices);
 		Set<Edge> newEdges = (this.edges == null) ? new HashSet<>() : new HashSet<>(edges);
-		Set<RenderableGraph> newSubgraphs = (this.subgraphs == null) ? new HashSet<>() : new HashSet<>(subgraphs);
+		Set<Set<Vertex>> newSubgraphs = (this.subgraphs == null) ? new HashSet<>() : new HashSet<>(subgraphs);
 		return new RenderableGraph(newVertices, newEdges, id, newSubgraphs);
 	}
 }

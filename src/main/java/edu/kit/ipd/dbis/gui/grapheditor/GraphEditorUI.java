@@ -7,19 +7,20 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.InvalidGraphInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class GraphEditorUI extends JPanel {
 
 	private RenderableGraph graph = new RenderableGraph();
+	private PropertyGraph<Integer, Integer> propertyGraph;
+
 	private GraphEditorHistory history = new GraphEditorHistory();
 	private Editor graphEditor;
 	private JButton undo;
@@ -32,13 +33,33 @@ public class GraphEditorUI extends JPanel {
 	private JLabel graphInfo; // todo add to GUI
 	private JComboBox<String> coloringType;
 
+	private static ColoringType currentColoringType;
+	VertexColoringAlgorithm.Coloring<Integer> currentVertexColoring;
+	TotalColoringAlgorithm.TotalColoring<Integer, Integer> currentTotalColoring;
+
+	private enum ColoringType {
+		VERTEX {
+			@Override
+			public String toString() {
+				return "Vertex Coloring";
+			}
+		},
+		TOTAL {
+			@Override
+			public String toString() {
+				return "Total Coloring";
+			}
+		};
+		public abstract String toString();
+	}
+
 	private Theme theme;
 	private int barHeight = 25;
 	private Dimension buttonSize = new Dimension(barHeight - 2, barHeight - 2);
 	private int buttonSeparation = 2;
 
 	public GraphEditorUI(GraphEditorController graphEditorController, ResourceBundle language, Theme theme) {
-
+		currentColoringType = ColoringType.VERTEX;
 		this.theme = theme;
 		this.setLayout(new BorderLayout());
 
@@ -72,11 +93,12 @@ public class GraphEditorUI extends JPanel {
 		switchColor.setMinimumSize(buttonSize);
 		switchColor.setPreferredSize(buttonSize);
 		switchColor.setMaximumSize(buttonSize);
-		String[] availableColorings = {"Total Coloring", "Vertex Coloring"}; // todo replace with language resource
+
 		coloringType = new JComboBox<>();
-		coloringType.addItem(availableColorings[0]);
-		coloringType.addItem(availableColorings[1]);
+		coloringType.addItem(ColoringType.VERTEX.toString());
+		coloringType.addItem(ColoringType.TOTAL.toString());
 		theme.style(coloringType);
+		coloringType.addItemListener(new SwitchColoringTypeAction(graphEditorController));
 
 		topBarButtons.add(Box.createHorizontalStrut(buttonSeparation));
 		topBarButtons.add(undo);
@@ -122,12 +144,33 @@ public class GraphEditorUI extends JPanel {
 	}
 
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
-		this.graph = new RenderableGraph(
-				graph,
-				((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0)
-		);
+		propertyGraph = graph;
+		if (currentColoringType == ColoringType.VERTEX) {
+			currentVertexColoring = GraphEditorController.getVertexColoring(graph);
+			this.graph = new RenderableGraph(graph, currentVertexColoring);
+		} else {
+			currentTotalColoring = GraphEditorController.getTotalColoring(graph);
+			this.graph = new RenderableGraph(graph, currentTotalColoring);
+		}
 		history.clear();
 		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		graphEditor.repaint();
+	}
+
+	public void displayGraph(PropertyGraph<Integer, Integer> graph, VertexColoringAlgorithm.Coloring<Integer> coloring) {
+		propertyGraph = graph;
+		this.graph = new RenderableGraph(graph, coloring);
+		history.clear();
+		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		graphEditor.repaint();
+	}
+
+	public void displayGraph(PropertyGraph<Integer, Integer> graph, TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
+		propertyGraph = graph;
+		this.graph = new RenderableGraph(graph, coloring);
+		history.clear();
+		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVerticesNotContainedInSubgraphs(),
+				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
 		graphEditor.repaint();
 	}
 
@@ -139,7 +182,6 @@ public class GraphEditorUI extends JPanel {
 	}
 
 	private class Editor extends JComponent {
-
 		private Point mStart;
 		private Point mTarget;
 		private int currentMouseButtonKey = MouseEvent.BUTTON1;
@@ -272,14 +314,10 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-
-			if (coloringType.getSelectedItem().toString().equals("Total Coloring")) { // todo make this work with different languages
-				graphEditorController.getTotalColoring(graph.asPropertyGraph()); // todo this simply returns a coloring. Use this color in the RenderableGraph
-				history.addToHistory(graph);
-			} else if (coloringType.getSelectedItem().toString().equals("Vertex Coloring")) { // todo make this work with different languages
-				graphEditorController.getVertexColoring(graph.asPropertyGraph()); // todo this simply returns a coloring. Use this color in the RenderableGraph
-				history.addToHistory(graph);
-			}
+			propertyGraph = graph.asPropertyGraph();
+			// something
+			history.addToHistory(graph);
+			//displayGraph(propertyGraph);
 		}
 	}
 
@@ -323,7 +361,6 @@ public class GraphEditorUI extends JPanel {
 	}
 
 	private class SwitchColorAction implements ActionListener {
-
 		private final GraphEditorController graphEditorController;
 
 		private SwitchColorAction(GraphEditorController graphEditorController) {
@@ -331,16 +368,45 @@ public class GraphEditorUI extends JPanel {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent actionEvent) { // todo implement methods to apply a coloring to the visible graph
-			graphEditorController.getAlternateTotalColoring(graph.getId()); // todo use correct coloring and check if graph hasn't been edited yet
+		public void actionPerformed(ActionEvent actionEvent) {
+			if (currentColoringType == ColoringType.VERTEX) {
+				currentVertexColoring = graphEditorController.getNextVertexColoring(propertyGraph, currentVertexColoring);
+				displayGraph(propertyGraph, currentVertexColoring);
+			} else {
+				currentTotalColoring = graphEditorController.getNextTotalColoring(propertyGraph, currentTotalColoring);
+				displayGraph(propertyGraph, currentTotalColoring);
+			}
 		}
 	}
 
 	private class CenterVerticesAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			GraphLook.arrangeInCircle(graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+			GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
+					new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
 			repaint();
+		}
+	}
+
+	private class SwitchColoringTypeAction implements ItemListener {
+		private final GraphEditorController graphEditorController;
+
+		private SwitchColoringTypeAction(GraphEditorController graphEditorController) {
+			this.graphEditorController = graphEditorController;
+		}
+		@Override
+		public void itemStateChanged(ItemEvent itemEvent) {
+			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+				if (currentColoringType == ColoringType.VERTEX) {
+					currentColoringType = ColoringType.TOTAL;
+					currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
+					displayGraph(propertyGraph, currentTotalColoring);
+				} else {
+					currentColoringType = ColoringType.VERTEX;
+					currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
+					displayGraph(propertyGraph, currentVertexColoring);
+				}
+			}
 		}
 	}
 }

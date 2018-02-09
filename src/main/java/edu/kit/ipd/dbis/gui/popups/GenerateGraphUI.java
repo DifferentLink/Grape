@@ -27,11 +27,11 @@ public class GenerateGraphUI extends JFrame {
 	private final JTextField numGraphsInput;
 	private final JButton generateGraphsButton;
 
-	private int minVertices = 5;
-	private int maxVertices = 10;
-	private int minEdges = 4;
-	private int maxEdges = 15;
-	private int amount = 10;
+	private int minVertices = 2;
+	private int maxVertices = 5;
+	private int minEdges = 1;
+	private int maxEdges = 7;
+	private int amount = 4;
 
 	public GenerateGraphUI(GenerateController generateController, ResourceBundle language, Theme theme) {
 

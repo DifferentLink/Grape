@@ -167,5 +167,9 @@ public class StatusbarController {
 		}
 		calculation.continueCalculation();
 	}
+
+	public int getNumberUncalculatedGraphs() {
+		return 0;
+	}
 }
 
