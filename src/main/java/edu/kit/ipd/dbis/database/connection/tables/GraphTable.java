@@ -172,35 +172,14 @@ public class GraphTable extends Table {
 	public LinkedList<Double> getValues(String[][] filters, String column) throws SQLException {
 
 		String sql = this.getValuesQuery(filters, column);
-		System.out.println(sql);
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		LinkedList<Double> values = new LinkedList<>();
 		while (result.next()) {
-
-
 			try {
-				double value = result.getDouble(column);
-				values.add(value);
+				values.add(result.getDouble(column));
 			} catch (SQLException e) {
 
 			}
-
-
-			/*
-			try {
-				System.out.println(result.getObject(column).getClass().getSimpleName());
-				if (result.getObject(column).getClass().getSimpleName().equals("Integer")) {
-					int element = (int) result.getObject(column);
-					double value = (double) element;
-					values.add(value);
-					System.out.println("Das hat geklappt");
-				} else {
-					double value = (double) result.getObject(column);
-					values.add(value);
-				}
-			} catch (SQLException e) {
-
-			}*/
 		}
 		return values;
 	}

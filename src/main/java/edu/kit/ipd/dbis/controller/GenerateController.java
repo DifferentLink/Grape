@@ -2,10 +2,11 @@ package edu.kit.ipd.dbis.controller;
 
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
-import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
@@ -14,12 +15,10 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.swing.*;
-import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
-
-import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 /**
  * The type Generate controller.
@@ -31,8 +30,12 @@ public class GenerateController {
 	private StatusbarController statusbar;
 	private FilterController filter;
 	private CalculationController calculation;
-	private NonEditableTableModel tableModel;
+	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -70,16 +73,6 @@ public class GenerateController {
 		this.database = database;
 	}
 
-	/**
-	 * Sets table model.
-	 *
-	 * @param tableModel the table model
-	 */
-// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
-	}
-
 
 	/**
 	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
@@ -91,12 +84,12 @@ public class GenerateController {
 	 * @param amount      the number of graphs
 	 * @throws InvalidGeneratorInputException the invalid generator input exception
 	 */
-	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
+	public void generateGraphsSequential(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InvalidGeneratorInputException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
-		Set<PropertyGraph> graphs = new HashSet<PropertyGraph>();
+		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 		try {
 			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 			this.saveGraphs(graphs);
@@ -112,7 +105,50 @@ public class GenerateController {
 		}
 	}
 
-	/**
+	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
+			InvalidGeneratorInputException {
+		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
+			throw new InvalidGeneratorInputException();
+		}
+
+		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
+		try {
+			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			this.saveGraphs(graphs);
+
+			List<Thread> jobs = new LinkedList<>();
+			for (PropertyGraph<Integer, Integer> graph : graphs) {
+				jobs.add(new Thread(new Runnable() {
+					@Override
+					public void run() {
+						graph.calculateProperties();
+						try {
+							database.replaceGraph(graph.getId(), graph);
+						} catch (ConnectionFailedException e) {
+							e.printStackTrace();
+						} catch (InsertionFailedException e) {
+							e.printStackTrace();
+						} catch (UnexpectedObjectException e) {
+							e.printStackTrace();
+						}
+						System.out.println("Finished graph: " + graph.toString());
+					}
+				}));
+			}
+
+			for (Thread job : jobs) {
+				job.start();
+			}
+
+			for (Thread job : jobs) {
+				job.join();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		grapeUI.updateTable();
+	}
+		/**
 	 * Generate empty graph.
 	 */
 	public void generateEmptyGraph() { // todo please implement me
@@ -143,9 +179,8 @@ public class GenerateController {
 		try {
 			database.addGraph(graph);
 			calculation.run();
-			this.statusbarUI.setRemainingCalculations(0);
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+			this.grapeUI.updateTable();
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -159,7 +194,6 @@ public class GenerateController {
 		try {
 			database.deleteGraph(id);
 			statusbar.addEvent(EventType.REMOVE, id);
-			this.statusbarUI.setRemainingCalculations(0);
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -170,8 +204,8 @@ public class GenerateController {
 	 *
 	 * @param graphs the set of PropertyGraph<V,E>
 	 */
-	private void saveGraphs(Set<PropertyGraph> graphs) {
-		for (PropertyGraph graph : graphs) {
+	private void saveGraphs(Set<PropertyGraph<Integer, Integer>> graphs) {
+		for (PropertyGraph<Integer, Integer> graph : graphs) {
 			try {
 				database.addGraph(graph);
 				this.statusbarUI.setRemainingCalculations(0);

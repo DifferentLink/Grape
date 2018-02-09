@@ -4,6 +4,7 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -21,7 +22,11 @@ public class FilterController {
 
 	private Filtermanagement filter;
 	private StatusbarController statusbar;
-	private NonEditableTableModel tableModel;
+	private GrapeUI grapeUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	//TODO: Singleton pattern
 	private static FilterController filterController;
@@ -41,11 +46,6 @@ public class FilterController {
 			filterController = new FilterController();
 		}
 		return filterController;
-	}
-
-	// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 	/**
@@ -71,10 +71,9 @@ public class FilterController {
 	public void updateFilter(String filterInput, int id) throws InvalidInputException {
 		try {
 			filter.updateFilter(filterInput, id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (ConnectionFailedException
-				| InsertionFailedException | UnexpectedObjectException
-				| SQLException e) {
+				| InsertionFailedException | UnexpectedObjectException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -105,8 +104,8 @@ public class FilterController {
 	public void updateFilterGroup(String filterInput, int id) throws InvalidInputException {
 		try {
 			filter.updateFiltergroup(filterInput, id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+			this.grapeUI.updateTable();
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -119,9 +118,8 @@ public class FilterController {
 	public void removeFiltersegment(int id) {
 		try {
 			filter.removeFiltersegment(id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException
-				| SQLException e) {
+			this.grapeUI.updateTable();
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -134,10 +132,9 @@ public class FilterController {
 	public void activate(int id) {
 		try {
 			filter.activate(id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (UnexpectedObjectException
-				| InsertionFailedException | ConnectionFailedException
-				| SQLException e) {
+				| InsertionFailedException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -150,10 +147,9 @@ public class FilterController {
 	public void deactivate(int id) {
 		try {
 			filter.deactivate(id);
-			tableModel.update(this.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (UnexpectedObjectException
-				| InsertionFailedException | ConnectionFailedException
-				| SQLException e) {
+				| InsertionFailedException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}

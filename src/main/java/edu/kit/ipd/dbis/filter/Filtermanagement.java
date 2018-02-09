@@ -239,7 +239,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
     public ResultSet getFilteredAndAscendingSortedGraphs(Property property) throws ConnectionFailedException {
-        return database.getGraphs(this.parseFilterList(), property.toString(), true);
+        return database.getGraphs(this.parseFilterList(), property.getClass().getSimpleName(), true);
     }
 
     /**
@@ -250,7 +250,7 @@ public class Filtermanagement {
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      */
     public ResultSet getFilteredAndDescendingSortedGraphs(Property property) throws ConnectionFailedException {
-        return database.getGraphs(this.parseFilterList(), property.toString(), false);
+        return database.getGraphs(this.parseFilterList(), property.getClass().getSimpleName(), false);
     }
 
     /**
