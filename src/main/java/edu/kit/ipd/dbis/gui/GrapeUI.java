@@ -221,11 +221,10 @@ public class GrapeUI {
 				try {
 					if (isSortedAscending) {
 						tableModel.update(filterController.getFilteredAndAscendingSortedGraphs(property));
-						isSorted = true;
 					} else {
 						tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
-						isSorted = true;
 					}
+					isSorted = true;
 				} catch (SQLException ignored) {}
 			}
 		}
