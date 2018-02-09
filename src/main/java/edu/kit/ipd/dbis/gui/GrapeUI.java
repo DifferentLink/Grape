@@ -157,7 +157,6 @@ public class GrapeUI {
 		verticalDivider.setResizeWeight(verticalSplitRatio);
 
 		mainWindow.add(verticalDivider);
-
 		mainWindow.setVisible(true);
 	}
 
@@ -180,30 +179,24 @@ public class GrapeUI {
 			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
 				try {
 					generateController.delGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
-					tableModel.update(filterController.getFilteredAndSortedGraphs());
-				} catch (IndexOutOfBoundsException | SQLException ignored) {}
+					updateTable();
+				} catch (IndexOutOfBoundsException ignored) {}
 			}
 		}
 
 		@Override
-		public void keyPressed(KeyEvent keyEvent) {
-		}
+		public void keyPressed(KeyEvent keyEvent) {}
 
 		@Override
-		public void keyReleased(KeyEvent keyEvent) {
-		}
+		public void keyReleased(KeyEvent keyEvent) {}
 	}
 
 	private class TableHeaderAction implements MouseListener {
 		@Override
-		public void mouseClicked(MouseEvent mouseEvent) {
-
-		}
+		public void mouseClicked(MouseEvent mouseEvent) {}
 
 		@Override
-		public void mousePressed(MouseEvent mouseEvent) {
-
-		}
+		public void mousePressed(MouseEvent mouseEvent) {}
 
 		@Override
 		public void mouseReleased(MouseEvent mouseEvent) {
@@ -219,14 +212,10 @@ public class GrapeUI {
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent mouseEvent) {
-
-		}
+		public void mouseEntered(MouseEvent mouseEvent) {}
 
 		@Override
-		public void mouseExited(MouseEvent mouseEvent) {
-
-		}
+		public void mouseExited(MouseEvent mouseEvent) {}
 	}
 
 	public void updateTable() {
