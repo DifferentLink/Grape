@@ -332,7 +332,7 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			PropertyGraph propertyGraph = graph.asPropertyGraph();
+			propertyGraph = graph.asPropertyGraph();
 			try {
 				if (graphEditorController.isValidGraph(propertyGraph)) {
 					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
