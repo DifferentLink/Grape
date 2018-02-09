@@ -7,17 +7,12 @@ package edu.kit.ipd.dbis.gui.popups;
 import edu.kit.ipd.dbis.controller.CorrelationController;
 import edu.kit.ipd.dbis.correlation.CorrelationOutput;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -53,6 +48,7 @@ public class CorrelationRequestUI extends JFrame {
 		// this.pack();
 		this.setPreferredSize(new Dimension(400, 300));
 		//this.setResizable(false);
+		this.setLocationRelativeTo(null);
 	}
 
 	private class CloseAction implements ActionListener {
