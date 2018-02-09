@@ -7,12 +7,17 @@ package edu.kit.ipd.dbis.gui.popups;
 import edu.kit.ipd.dbis.controller.CorrelationController;
 import edu.kit.ipd.dbis.correlation.CorrelationOutput;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
+import edu.kit.ipd.dbis.gui.AlternateTable;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -20,10 +25,12 @@ public class CorrelationRequestUI extends JFrame {
 
 	private final CorrelationController correlationController;
 	private final String correlationRequest;
+	private final Theme theme;
 
 	public CorrelationRequestUI(CorrelationController correlationController, String correlationRequest, ResourceBundle language, Theme theme) throws InvalidCorrelationInputException {
 		this.correlationController = correlationController;
 		this.correlationRequest = correlationRequest;
+		this.theme = theme;
 
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
@@ -45,7 +52,7 @@ public class CorrelationRequestUI extends JFrame {
 
 		container.add(buttonAlignment);
 		this.add(container);
-		// this.pack();
+		this.pack();
 		this.setPreferredSize(new Dimension(400, 300));
 		//this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -84,10 +91,17 @@ public class CorrelationRequestUI extends JFrame {
 			columnsHeader[i] = "";
 		}
 
-		JTable table = new JTable(data, columnsHeader);
+		AffineTransform affinetransform = new AffineTransform();
+		FontRenderContext fontRenderer = new FontRenderContext(affinetransform,true,true);
+		Font font = theme.defaultFont;
+
+		JTable table = new AlternateTable(new DefaultTableModel(data, columnsHeader), theme);
 
 		for (int i = 0; i < tableSize; i++) {
-			table.getColumnModel().getColumn(i).sizeWidthToFit();
+			String text = (String) table.getValueAt(0, i);
+			final int optimalWidth =
+					(int) (font.getStringBounds("  " + text + "  ", fontRenderer).getWidth());
+			table.getColumnModel().getColumn(i).setMinWidth(optimalWidth);
 		}
 
 		return table;
