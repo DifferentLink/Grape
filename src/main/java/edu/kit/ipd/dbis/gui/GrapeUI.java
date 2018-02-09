@@ -157,10 +157,8 @@ public class GrapeUI {
 	private class TableSelectionChangeAction implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
-			tableModel.fireTableDataChanged();
-			tableModel.fireTableStructureChanged();
 			try {
-				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
+				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 1);
 				PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
 				graphEditorUI.displayGraph(graph);
 				statusbarUI.changeSelectedRow(tableUI.getSelectedRow());
@@ -233,7 +231,5 @@ public class GrapeUI {
 		try {
 			tableModel.update(filterController.getFilteredAndSortedGraphs());
 		} catch (SQLException ignored) {}
-		mainWindow.revalidate();
-		mainWindow.repaint();
 	}
 }
