@@ -13,6 +13,8 @@ public abstract class Parser {
 
 	/**
 	 * creates a GraphDatabase-Object or the content of the text file that should be created by the FileManager
+	 * @throws FileContentNotAsExpectedException if no GraphDatabase-object could not be created
+	 *                                           using the content of the given file
 	 */
 	public abstract void parse() throws FileContentNotAsExpectedException;
 

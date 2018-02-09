@@ -24,10 +24,10 @@ public class FilterTable extends Table {
 	 * @param user username of the MySQL-Database user.
 	 * @param password password of the user.
 	 * @param name name of the MySQL-Table which is represented by a subclass of Table.
-	 * @throws SQLException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
+	 * @throws SQLException if the connection to the database fails
+	 * @throws ConnectionFailedException if a database connection could not be established
+	 * @throws AccessDeniedForUserException if the username or the password is invalid
+	 * @throws DatabaseDoesNotExistException if the database does not exist
 	 */
 	public FilterTable(String url, String user, String password, String name)
 			throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
@@ -83,10 +83,7 @@ public class FilterTable extends Table {
 
 	/**
 	 * @return every FilterSegment-Object in the represented MySQL-Table.
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the database fails
 	 */
 	public LinkedList<Filtersegment> getContent() throws SQLException {
 

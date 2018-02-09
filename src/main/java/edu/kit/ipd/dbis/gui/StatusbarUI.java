@@ -4,6 +4,9 @@
 
 package edu.kit.ipd.dbis.gui;
 
+import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Event;
@@ -23,17 +26,27 @@ public class StatusbarUI extends JPanel {
 
 	private final int statusbarHeight = 15;
 	private final StatusbarController statusbarController;
+	private DatabaseController databaseController;
+	private GenerateController generateController;
+	private GraphEditorController graphEditorController;
 	private boolean isCalculationRunning = true;
+	private JLabel statusText;
+	private String remainingCalculations = "-";
+	private String selectedRow = "Position -";
+	private String databaseInfo = "-";
 
-	public StatusbarUI(StatusbarController statusbarController, ResourceBundle language, Theme theme) {
+	public StatusbarUI(StatusbarController statusbarController, DatabaseController databaseController,ResourceBundle language, Theme theme) {
 		this.statusbarController = statusbarController;
+		this.databaseController = databaseController;
+		this.generateController = GenerateController.getInstance();
+		this.graphEditorController = GraphEditorController.getInstance();
 
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.add(Box.createHorizontalStrut(2));
 		this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
 		this.add(Box.createHorizontalStrut(5));
 
-		JLabel statusText = new JLabel(language.getString("noDatabaseLoaded"));
+		statusText = new JLabel(language.getString("noDatabaseLoaded"));
 		this.add(statusText);
 
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
@@ -50,9 +63,12 @@ public class StatusbarUI extends JPanel {
 		log.setSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
 		log.setBorder(BorderFactory.createEmptyBorder());
 
+		this.generateController.setStatusbarUI(this);
+		this.graphEditorController.setStatusbarUI(this);
+		this.databaseController.setStatusbarUI(this);
+
 		this.add(Box.createHorizontalGlue());
 		this.add(log);
-
 	}
 
 	private JButton makePauseButton(Dimension size, Theme theme) {
@@ -123,5 +139,24 @@ public class StatusbarUI extends JPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			logUI.drawLog(component);
 		}
+	}
+
+	public void changeSelectedRow(final int row) {
+		selectedRow = "Position " + (row + 1);
+		updateStatusbarText();
+	}
+
+	public void setRemainingCalculations(final int numberOfUncalculatedGraphs) {
+		remainingCalculations = numberOfUncalculatedGraphs + " remaining calculations";
+		updateStatusbarText();
+	}
+
+	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
+		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
+		updateStatusbarText();
+	}
+
+	private void updateStatusbarText() {
+		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo);
 	}
 }

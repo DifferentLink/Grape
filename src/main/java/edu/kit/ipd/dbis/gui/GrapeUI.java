@@ -108,7 +108,7 @@ public class GrapeUI {
 
 		graphEditorDivider.setResizeWeight(.55f);
 
-		statusbarUI = new StatusbarUI(statusbarController, language, theme);
+		statusbarUI = new StatusbarUI(statusbarController, databaseController, language, theme);
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
@@ -153,8 +153,9 @@ public class GrapeUI {
 			tableModel.fireTableStructureChanged();
 			try {
 				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
-			PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
-			graphEditorUI.displayGraph(graph);
+				PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
+				graphEditorUI.displayGraph(graph);
+				statusbarUI.changeSelectedRow(tableUI.getSelectedRow());
 			} catch (IndexOutOfBoundsException ignored) {}
 		}
 	}
