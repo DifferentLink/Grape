@@ -34,7 +34,15 @@ public class Filtermanagement {
         availableFilter = new ArrayList<>();
     }
 
-    private void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
+	/**
+	 * getter-method for database
+	 * @return database
+	 */
+	public GraphDatabase getDatabase() {
+		return database;
+	}
+
+	public void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
             UnexpectedObjectException, InsertionFailedException {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
@@ -285,7 +293,7 @@ public class Filtermanagement {
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
      */
-    private void addFilter(String input, int id) throws InvalidInputException,
+    public void addFilter(String input, int id) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         this.addFilter(Filtermanagement.parseToFilter(input, id));
     }
@@ -321,11 +329,11 @@ public class Filtermanagement {
             Operator operator1 = Filtermanagement.testOperator(firstOperator);
 
             String firstValueString = parameters[2];
-            if (!StringUtils.isStrictlyNumeric(firstValueString) || firstValueString.length() == 0) {
+            if (!Filtermanagement.isIntegerOrDouble(firstValueString) || firstValueString.length() == 0) {
                 throw new InvalidInputException();
             }
             checkFilterInputNull(parameters[2]);
-            int firstValue = Integer.parseInt(firstValueString);
+            double firstValue = Filtermanagement.parseToIntegerOrDouble(firstValueString);
 
             String relationString = parameters[3];
             checkFilterInputNull(parameters[3]);
@@ -341,29 +349,29 @@ public class Filtermanagement {
             Operator operator2 = Filtermanagement.testOperator(operator2String);
 
             String secondValueString = parameters[6];
-            if (!StringUtils.isStrictlyNumeric(secondValueString) || secondValueString.length() == 0) {
+            if (!Filtermanagement.isIntegerOrDouble(secondValueString) || secondValueString.length() == 0) {
                 throw new InvalidInputException();
             }
-            int secondValue = Integer.parseInt(secondValueString);
+            double secondValue = Filtermanagement.parseToIntegerOrDouble(secondValueString);
 
             return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
-        } else if (parameters.length == 3 && StringUtils.isStrictlyNumeric(parameters[2])) {
+        } else if (parameters.length == 3 && Filtermanagement.isIntegerOrDouble(parameters[2])) {
             String relationString = parameters[1];
             checkFilterInputNull(parameters[1]);
             Relation relation = Filtermanagement.testRelation(relationString);
 
             String valueString = parameters[2];
-            if (!StringUtils.isStrictlyNumeric(valueString) || valueString.length() == 0) {
+            if (!Filtermanagement.isIntegerOrDouble(valueString) || valueString.length() == 0) {
                 throw new InvalidInputException();
             }
             checkFilterInputNull(parameters[2]);
-            int value = Integer.parseInt(valueString);
+            double value = Filtermanagement.parseToIntegerOrDouble(valueString);
             return new BasicFilter(input, false, value, relation, property1, id);
         } else if (parameters.length == 3) {
             return Filtermanagement.parseToFilter(parameters[0] + " + 0 " + parameters[1] + " "
                     + parameters[2] + " + 0", id);
-        } else if (parameters.length == 5 && StringUtils.isStrictlyNumeric(parameters[2])) {
+        } else if (parameters.length == 5 && Filtermanagement.isIntegerOrDouble(parameters[2])) {
             return Filtermanagement.parseToFilter(parameters[0] + " " + parameters[1] + " " + parameters[2]
                     + " " + parameters[3] + " " + parameters[4] + " + 0", id);
         } else {
@@ -532,6 +540,23 @@ public class Filtermanagement {
     private static void checkFilterInputNull(String input) throws InvalidInputException {
         if (input == null) {
             throw new InvalidInputException();
+        }
+    }
+
+    private static boolean isIntegerOrDouble(String input) {
+        if (StringUtils.isStrictlyNumeric(input)) {
+            return true;
+        } else {
+            String[] parameters = input.split("\\.", 2);
+            return (StringUtils.isStrictlyNumeric(parameters[0]) && StringUtils.isStrictlyNumeric(parameters[1]));
+        }
+    }
+
+    private static double parseToIntegerOrDouble(String input) {
+        if (StringUtils.isStrictlyNumeric(input)) {
+            return (double) Integer.parseInt(input);
+        } else {
+            return Double.parseDouble(input);
         }
     }
 }

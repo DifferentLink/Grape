@@ -8,10 +8,13 @@ import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.InvalidGraphInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
+import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GraphEditorUI extends JPanel {
@@ -119,7 +122,10 @@ public class GraphEditorUI extends JPanel {
 	}
 
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
-		this.graph = new RenderableGraph(graph);
+		this.graph = new RenderableGraph(
+				graph,
+				((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0)
+		);
 		history.clear();
 		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVerticesNotContainedInSubgraphs(),
 				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));

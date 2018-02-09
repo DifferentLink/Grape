@@ -20,14 +20,14 @@ import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 public class FilterController {
 
 	private Filtermanagement filter;
-	private StatusbarController log;
+	private StatusbarController statusbar;
 	private NonEditableTableModel tableModel;
 
 	//TODO: Singleton pattern
 	private static FilterController filterController;
 
 	private FilterController() {
-		this.log = StatusbarController.getInstance();
+		this.statusbar = StatusbarController.getInstance();
 		this.filter = new Filtermanagement();
 	}
 
@@ -57,7 +57,7 @@ public class FilterController {
 		try {
 			filter.setDatabase(database);
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -75,7 +75,7 @@ public class FilterController {
 		} catch (ConnectionFailedException
 				| InsertionFailedException | UnexpectedObjectException
 				| SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -91,7 +91,7 @@ public class FilterController {
 		try {
 			filter.addFilterToGroup(filterInput, filterId, groupId);
 		} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -107,7 +107,7 @@ public class FilterController {
 			filter.updateFiltergroup(filterInput, id);
 			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -122,7 +122,7 @@ public class FilterController {
 			tableModel.update(this.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException
 				| SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -138,7 +138,7 @@ public class FilterController {
 		} catch (UnexpectedObjectException
 				| InsertionFailedException | ConnectionFailedException
 				| SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -154,7 +154,7 @@ public class FilterController {
 		} catch (UnexpectedObjectException
 				| InsertionFailedException | ConnectionFailedException
 				| SQLException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 	}
 
@@ -167,7 +167,7 @@ public class FilterController {
 		try {
 			return filter.getFilteredAndSortedGraphs();
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		return null;
 	}
@@ -183,7 +183,7 @@ public class FilterController {
 		try {
 			return filter.getFilteredAndAscendingSortedGraphs(property);
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		return null;
 	}
@@ -198,7 +198,7 @@ public class FilterController {
 		try {
 			return filter.getFilteredAndDescendingSortedGraphs(property);
 		} catch (ConnectionFailedException e) {
-			log.addEvent(new Event(MESSAGE, e.getMessage(), Collections.EMPTY_SET));
+			statusbar.addMessage(e.getMessage());
 		}
 		return null;
 	}

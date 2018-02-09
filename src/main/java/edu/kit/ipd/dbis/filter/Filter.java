@@ -7,17 +7,17 @@ public abstract class Filter extends Filtersegment {
 
     String property1;
     Operator operator1;
-    int value1;
+    double value1;
     Relation relation;
     String property2;
     Operator operator2;
-    int value2;
+    double value2;
 
     /**
      * getter of attribute value2
      * @return value of attribute value2
      */
-    public int getValue2() {
+    public double getValue2() {
         return value2;
     }
 
@@ -49,7 +49,7 @@ public abstract class Filter extends Filtersegment {
      * getter of attribute value1
      * @return integer value of attribute value1
      */
-    public int getValue1() {
+    public double getValue1() {
         return value1;
     }
 
