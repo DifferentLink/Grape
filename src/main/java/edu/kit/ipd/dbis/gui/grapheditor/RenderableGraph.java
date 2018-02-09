@@ -28,6 +28,7 @@ public class RenderableGraph {
 	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id) {
 		this.vertices = vertices;
 		this.edges = edges;
+		this.subgraphs = new HashSet<>();
 		this.id = id;
 	}
 
@@ -41,6 +42,7 @@ public class RenderableGraph {
 	public RenderableGraph(PropertyGraph propertyGraph) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
+		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
@@ -111,6 +113,7 @@ public class RenderableGraph {
 	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
+		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
@@ -168,6 +171,7 @@ public class RenderableGraph {
 	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
+		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
