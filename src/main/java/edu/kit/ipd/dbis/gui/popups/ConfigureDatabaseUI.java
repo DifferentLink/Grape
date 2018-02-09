@@ -14,13 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 public class ConfigureDatabaseUI extends JFrame {
 
-	protected final DatabaseController databaseController;
-	protected final ResourceBundle language;
-	protected final Theme theme;
+	private final DatabaseController databaseController;
+	private final ResourceBundle language;
+	private final Theme theme;
 
 	JTextArea nameInput;
 	JTextArea urlInput;

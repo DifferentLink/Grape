@@ -8,10 +8,7 @@ import edu.kit.ipd.dbis.controller.DatabaseController;
 import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
-import edu.kit.ipd.dbis.gui.popups.AboutUI;
-import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
-import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
-import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
+import edu.kit.ipd.dbis.gui.popups.*;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Log;
 
@@ -20,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MenuUI extends JMenuBar {
@@ -306,10 +304,8 @@ public class MenuUI extends JMenuBar {
 				System.out.println("Saved selection to a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
-
-					//databaseController.saveSelection(file.getPath(), new LinkedList<>());
-
-
+					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController, language, theme, file.getPath(), new LinkedList<Integer>());
+					configureDatabaseOfSelectionUI.setVisible(true);
 				}
 			} else {
 				System.out.println("Saving selection as database failed"); // todo remove sout
