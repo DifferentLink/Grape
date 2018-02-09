@@ -146,10 +146,14 @@ public class GraphEditorUI extends JPanel {
 	}
 
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
-		this.graph = new RenderableGraph(
-				graph,
-				((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0)
-		);
+		propertyGraph = graph;
+		if (currentColoringType == ColoringType.VERTEX) {
+			currentVertexColoring = GraphEditorController.getVertexColoring(graph);
+			this.graph = new RenderableGraph(graph, currentVertexColoring);
+		} else {
+			currentTotalColoring = GraphEditorController.getTotalColoring(graph);
+			this.graph = new RenderableGraph(graph, currentTotalColoring);
+		}
 		history.clear();
 		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
 		graphEditor.repaint();

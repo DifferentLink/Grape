@@ -2,13 +2,12 @@ package edu.kit.ipd.dbis.controller;
 
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-
-import java.sql.SQLException;
 
 /**
  * The type Calculation controller.
