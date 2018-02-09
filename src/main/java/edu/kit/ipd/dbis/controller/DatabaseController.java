@@ -93,9 +93,8 @@ public class DatabaseController {
 			//TODO: get right graphAmount
 			this.statusbarUI.setDatabaseInfo("", 0);
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | FileContentCouldNotBeReadException
-				| ConnectionFailedException | DatabaseDoesNotExistException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | SQLException
+				| FileContentCouldNotBeReadException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -114,8 +113,8 @@ public class DatabaseController {
 			//TODO: get right graphAmount
 			this.statusbarUI.setDatabaseInfo("", 0);
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | SQLException
+				| ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
