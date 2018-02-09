@@ -127,7 +127,7 @@ public class GrapeUI {
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		tableUI = new JTable(tableModel);
-		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableUI.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
 		tableUI.addKeyListener(new DeleteGraphAction());
 		JScrollPane scrollPane = new JScrollPane(tableUI);
@@ -158,7 +158,8 @@ public class GrapeUI {
 		@Override
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
 			try {
-				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 1);
+				final int selectedRow = tableUI.getSelectedRow();
+				int id = (Integer) tableUI.getValueAt(selectedRow, 0);
 				PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
 				graphEditorUI.displayGraph(graph);
 				statusbarUI.changeSelectedRow(tableUI.getSelectedRow());
