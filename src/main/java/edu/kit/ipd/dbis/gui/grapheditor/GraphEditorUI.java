@@ -155,7 +155,11 @@ public class GraphEditorUI extends JPanel {
 			this.graph = new RenderableGraph(graph, currentTotalColoring);
 		}
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		GraphLook.arrangeInGrid(
+				this.graph.getSubgraphs(),
+				this.graph.getVerticesNotContainedInSubgraphs(),
+				new Point(0, 0),
+				new Point(getWidth(), getHeight() - 2 * barHeight));
 		graphEditor.repaint();
 	}
 
@@ -163,7 +167,11 @@ public class GraphEditorUI extends JPanel {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		GraphLook.arrangeInGrid(
+				this.graph.getSubgraphs(),
+				this.graph.getVerticesNotContainedInSubgraphs(),
+				new Point(0, 0),
+				new Point(getWidth(), getHeight() - 2 * barHeight));
 		graphEditor.repaint();
 	}
 
@@ -171,8 +179,11 @@ public class GraphEditorUI extends JPanel {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
 		history.clear();
-		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVerticesNotContainedInSubgraphs(),
-				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+		GraphLook.arrangeInGrid(
+				this.graph.getSubgraphs(),
+				this.graph.getVerticesNotContainedInSubgraphs(),
+				new Point(0, 0),
+				new Point(getWidth(), getHeight() - 2 * barHeight));
 		graphEditor.repaint();
 	}
 

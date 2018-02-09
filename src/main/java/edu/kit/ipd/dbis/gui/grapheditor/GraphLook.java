@@ -40,7 +40,7 @@ public class GraphLook {
 		return colors;
 	}
 
-	public static void arrangeInCircle(Set<Vertex> vertices, Point upperLeft, Point lowerRight) {
+	private static void arrangeInCircle(Set<Vertex> vertices, Point upperLeft, Point lowerRight) {
 
 		final Point center =
 				new Point(Math.abs(upperLeft.x - lowerRight.x) / 2, Math.abs(upperLeft.y - lowerRight.y) / 2);
