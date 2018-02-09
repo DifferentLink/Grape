@@ -83,9 +83,8 @@ public class DatabaseController {
 			database = connector.loadGraphDatabase(filepath);
 			this.updateDatabases();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | FileContentCouldNotBeReadException
-				| ConnectionFailedException | DatabaseDoesNotExistException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | SQLException
+				| FileContentCouldNotBeReadException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -102,8 +101,8 @@ public class DatabaseController {
 			database.merge(mergeDatabase);
 			this.updateDatabases();
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | SQLException
+				| ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}

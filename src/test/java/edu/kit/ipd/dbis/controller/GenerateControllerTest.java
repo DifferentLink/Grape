@@ -89,7 +89,7 @@ public class GenerateControllerTest {
 		try {
 			database = new FileManager().createGraphDatabase("", "", "", "");
 		} catch (DatabaseDoesNotExistException | ConnectionFailedException |
-				AccessDeniedForUserException | SQLException e) {
+				AccessDeniedForUserException e) {
 			e.printStackTrace();
 		}
 		g.setDatabase(database);
