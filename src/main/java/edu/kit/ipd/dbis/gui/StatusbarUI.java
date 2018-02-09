@@ -43,7 +43,7 @@ public class StatusbarUI extends JPanel {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.add(Box.createHorizontalStrut(2));
-		this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
+		//this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
 		this.add(Box.createHorizontalStrut(5));
 
 		statusText = new JLabel(language.getString("noDatabaseLoaded"));
