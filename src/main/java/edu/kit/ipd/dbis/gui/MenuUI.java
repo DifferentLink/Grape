@@ -304,6 +304,8 @@ public class MenuUI extends JMenuBar {
 				System.out.println("Saved selection to a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
+
+					//TODO: Insert right graphIDs!!
 					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController, language, theme, file.getPath(), new LinkedList<Integer>());
 					configureDatabaseOfSelectionUI.setVisible(true);
 				}
