@@ -36,8 +36,7 @@ public class CorrelationUI extends JPanel {
 
 		JPanel inputContainer = new JPanel(new BorderLayout());
 		inputContainer.add(Box.createHorizontalStrut(8), BorderLayout.WEST);
-		correlationInput = new JTextField("Correlation request...");
-		correlationInput.setColumns(10000);
+		correlationInput = new JTextField("Max Pearson 3");
 		correlationInput.setBackground(theme.backgroundColor);
 		JButton go = new JButton("Go..."); // todo replaces with text from language resource
 		go.addActionListener(new CorrelationRequestAction(controller, correlationInput, language, theme));
