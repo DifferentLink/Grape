@@ -48,6 +48,7 @@ public class GrapeUI {
 	private String programName = "Grape";
 	private JFrame mainWindow;
 
+	private ResourceBundle language;
 	private Theme theme;
 
 	private String lastSortedColumn = "";
@@ -72,6 +73,7 @@ public class GrapeUI {
 		this.generateController = generateController;
 		this.graphEditorController = graphEditorController;
 		this.statusbarController = statusbarController;
+		this.language = language;
 		this.theme = theme;
 
 		this.calculationController.setGrapeUI(this);
@@ -297,7 +299,7 @@ public class GrapeUI {
 				if (!tableUI.isRowSelected(row)) {
 					tableUI.changeSelection(row, 0, false, false);
 				}
-				(new GraphOptions(graphID)).show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+				(new GraphOptions(graphID, graphEditorController, language, theme)).show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
 			}
 		}
 	}
