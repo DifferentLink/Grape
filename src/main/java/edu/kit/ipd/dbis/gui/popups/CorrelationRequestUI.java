@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -49,8 +50,9 @@ public class CorrelationRequestUI extends JFrame {
 
 		container.add(buttonAlignment);
 		this.add(container);
-		this.pack();
-		this.setResizable(false);
+		// this.pack();
+		this.setPreferredSize(new Dimension(400, 300));
+		//this.setResizable(false);
 	}
 
 	private class CloseAction implements ActionListener {
@@ -85,6 +87,13 @@ public class CorrelationRequestUI extends JFrame {
 		for (int i = 0; i < tableSize; i++) {
 			columnsHeader[i] = "";
 		}
-		return new JTable(data, columnsHeader);
+
+		JTable table = new JTable(data, columnsHeader);
+
+		for (int i = 0; i < tableSize; i++) {
+			table.getColumnModel().getColumn(i).sizeWidthToFit();
+		}
+
+		return table;
 	}
 }
