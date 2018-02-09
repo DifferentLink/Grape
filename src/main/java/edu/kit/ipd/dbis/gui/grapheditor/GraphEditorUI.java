@@ -399,15 +399,11 @@ public class GraphEditorUI extends JPanel {
 			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
 				if (currentColoringType == ColoringType.VERTEX) {
 					currentColoringType = ColoringType.TOTAL;
-					if (currentTotalColoring == null) {
-						currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
-					}
+					currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
 					displayGraph(propertyGraph, currentTotalColoring);
 				} else {
 					currentColoringType = ColoringType.VERTEX;
-					if (currentTotalColoring == null) {
-						currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
-					}
+					currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
 					displayGraph(propertyGraph, currentVertexColoring);
 				}
 			}
