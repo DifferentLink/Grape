@@ -18,9 +18,6 @@ import java.util.List;
 
 public class DatabaseFilterIntegrationTests {
 
-	private static GraphDatabase database;
-	private static Filtermanagement manager;
-
 	@Ignore
 	@Before
 	public void delete() throws Exception {
@@ -29,20 +26,23 @@ public class DatabaseFilterIntegrationTests {
 		String password = "password";
 		GraphTable graphs = new GraphTable(url, username, password, "grape2");
 		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-		database = new GraphDatabase(graphs, filter);
+		GraphDatabase database = new GraphDatabase(graphs, filter);
 		FileManager files = new FileManager();
 		files.deleteGraphDatabase(database);
 
-		manager = new Filtermanagement();
-		graphs = new GraphTable(url, username, password, "grape2");
-		filter = new FilterTable(url, username, password, "grape2filters");
-		database = new GraphDatabase(graphs, filter);
-		manager.setDatabase(database);
 	}
 
 	@Ignore
 	@Test
 	public void addConnectedFilterToDatabase() throws Exception, InvalidInputException {
+		String url = "jdbc:mysql://localhost:3306/library";
+		String username = "user";
+		String password = "password";
+		Filtermanagement manager = new Filtermanagement();
+		GraphTable graphs = new GraphTable(url, username, password, "grape2");
+		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
+		GraphDatabase database = new GraphDatabase(graphs, filter);
+		manager.setDatabase(database);
 		manager.addFilter("AverageDegree + 27 = AverageDegree / 66", 1);
 		assertEquals(true,
 				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 66"));
@@ -51,6 +51,15 @@ public class DatabaseFilterIntegrationTests {
 	@Ignore
 	@Test (expected = NullPointerException.class)
 	public void removeFilterfromDatabase() throws Exception, InvalidInputException {
+		String url = "jdbc:mysql://localhost:3306/library";
+		String username = "user";
+		String password = "password";
+		Filtermanagement manager = new Filtermanagement();
+		GraphTable graphs = new GraphTable(url, username, password, "grape2");
+		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
+		GraphDatabase database = new GraphDatabase(graphs, filter);
+		manager.setDatabase(database);
+
 		manager.addFilter("AverageDegree = 10", 2);
 		System.out.println(database.getFilterById(2).getName().equals("AverageDegree = 10"));
 		manager.removeFiltersegment(2);
@@ -61,6 +70,15 @@ public class DatabaseFilterIntegrationTests {
 	@Ignore
 	@Test (expected = NullPointerException.class)
 	public void removeFiltergroupfromDatabase() throws Exception, InvalidInputException {
+		String url = "jdbc:mysql://localhost:3306/library";
+		String username = "user";
+		String password = "password";
+		Filtermanagement manager = new Filtermanagement();
+		GraphTable graphs = new GraphTable(url, username, password, "grape2");
+		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
+		GraphDatabase database = new GraphDatabase(graphs, filter);
+		manager.setDatabase(database);
+
 		Filtergroup filtergroup = new Filtergroup("Beispielgruppe", true, 3);
 		manager.addFilterGroup(filtergroup);
 		assertEquals(database.getFilterById(3).getName().equals("Beispielgruppe"), true);
@@ -73,6 +91,15 @@ public class DatabaseFilterIntegrationTests {
 	@Ignore
 	@Test
 	public void removeFilterFromFiltergroupInDatabase() throws Exception, InvalidInputException {
+		String url = "jdbc:mysql://localhost:3306/library";
+		String username = "user";
+		String password = "password";
+		Filtermanagement manager = new Filtermanagement();
+		GraphTable graphs = new GraphTable(url, username, password, "grape2");
+		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
+		GraphDatabase database = new GraphDatabase(graphs, filter);
+		manager.setDatabase(database);
+
 		Filtergroup filtergroup = new Filtergroup("NeueGruppe", true, 5);
 		manager.addFilterGroup(filtergroup);
 		assertEquals(database.getFilterById(5).getName().equals("NeueGruppe"), true);
@@ -108,6 +135,15 @@ public class DatabaseFilterIntegrationTests {
 	@Ignore
 	@Test
 	public void testSetDatabaseMethod() throws  Exception, InvalidInputException {
+		String url = "jdbc:mysql://localhost:3306/library";
+		String username = "user";
+		String password = "password";
+		Filtermanagement manager = new Filtermanagement();
+		GraphTable graphs = new GraphTable(url, username, password, "grape2");
+		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
+		GraphDatabase database = new GraphDatabase(graphs, filter);
+		manager.setDatabase(database);
+
 		Filtergroup filtergroup = new Filtergroup("DiesIstEineGruppe", true, 6);
 		manager.addFilterGroup(filtergroup);
 		assertEquals(database.getFilterById(6).getName().equals("DiesIstEineGruppe"),true);
@@ -138,9 +174,6 @@ public class DatabaseFilterIntegrationTests {
 			}
 		}
 
-		String url = "jdbc:mysql://localhost:3306/library";
-		String username = "user";
-		String password = "password";
 		GraphTable graphs2 = new GraphTable(url, username, password, "grape2Modified");
 		FilterTable filter2 = new FilterTable(url, username, password, "grape2filtersModified");
 		GraphDatabase database2 = new GraphDatabase(graphs2, filter2);
