@@ -82,8 +82,8 @@ public class CorrelationRequestUI extends JFrame {
 		}
 
 		// return new JTable(new NonEditableTableModel(null, data));
-		JTable tab = new JTable(data, new String[]{"", "", ""});
-		tab.setDefaultEditor(Object.class, null);
-		return tab;
+		JTable table = new JTable(data, new String[tableSize]);
+		table.setDefaultEditor(Object.class, null);
+		return table;
 	}
 }
