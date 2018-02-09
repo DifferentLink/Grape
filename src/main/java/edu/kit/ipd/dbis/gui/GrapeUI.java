@@ -38,8 +38,9 @@ public class GrapeUI {
 	private final FilterController filterController;
 	private final GenerateController generateController;
 	private final GraphEditorController graphEditorController;
-	private final NonEditableTableModel tableModel;
+	private final StatusbarController statusbarController;
 
+	private final NonEditableTableModel tableModel;
 	private GraphEditorUI graphEditorUI;
 	private MenuUI menuUI;
 	private FilterUI filterUI;
@@ -71,12 +72,14 @@ public class GrapeUI {
 		this.filterController = filterController;
 		this.generateController = generateController;
 		this.graphEditorController = graphEditorController;
+		this.statusbarController = statusbarController;
 
 		this.calculationController.setGrapeUI(this);
 		this.databaseController.setGrapeUI(this);
 		this.filterController.setGrapeUI(this);
 		this.generateController.setGrapeUI(this);
 		this.graphEditorController.setGrapeUI(this);
+		this.statusbarController.setGrapeUI(this);
 
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -4,6 +4,7 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.log.History;
@@ -23,6 +24,10 @@ public class StatusbarController {
 
 	private Log log;
 	private CalculationController calculation;
+
+	private GrapeUI grapeUI;
+
+
 
 	//TODO: Singleton pattern
 	private static StatusbarController statusbar;
@@ -49,6 +54,10 @@ public class StatusbarController {
 
 	private void setCalculation() {
 		this.calculation = CalculationController.getInstance();
+	}
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
 	}
 
 	/**
