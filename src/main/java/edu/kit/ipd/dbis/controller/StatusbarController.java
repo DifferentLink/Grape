@@ -27,8 +27,6 @@ public class StatusbarController {
 
 	private GrapeUI grapeUI;
 
-
-
 	//TODO: Singleton pattern
 	private static StatusbarController statusbar;
 
@@ -82,6 +80,7 @@ public class StatusbarController {
 	public void undo() {
 		try {
 			log.undo();
+			grapeUI.updateTable();
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			this.addMessage(e.getMessage());
 		}
@@ -93,6 +92,7 @@ public class StatusbarController {
 	public void redo() {
 		try {
 			log.redo();
+			grapeUI.updateTable();
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			this.addMessage(e.getMessage());
 		}
