@@ -7,6 +7,7 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
+import org.jgrapht.alg.util.IntegerVertexFactory;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
@@ -82,14 +83,13 @@ public class RenderableGraph {
 	public PropertyGraph<Integer, Integer> asPropertyGraph() {
 		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		Map<Vertex, Integer> vertexIntegerMap = new HashMap<>();
-		int vertexName = 0;
+		IntegerVertexFactory vertexFactory = new IntegerVertexFactory();
 
-		// iterate over vertices and assign
-		// integer value to each one
-		for (Vertex vertex : this.vertices) {
-			vertexIntegerMap.put(vertex, vertexName);
-			graph.addVertex(vertexName);
-			vertexName++;
+		// iterate over vertices
+		for (Vertex vertex : new TreeSet<>(this.vertices)) {
+			Integer newVertex = vertexFactory.createVertex();
+			vertexIntegerMap.put(vertex, newVertex);
+			graph.addVertex(newVertex);
 		}
 
 		// iterate over edges

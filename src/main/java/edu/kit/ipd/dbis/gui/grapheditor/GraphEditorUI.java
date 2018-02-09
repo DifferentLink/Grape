@@ -9,13 +9,11 @@ import edu.kit.ipd.dbis.controller.InvalidGraphInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class GraphEditorUI extends JPanel {
@@ -329,7 +327,7 @@ public class GraphEditorUI extends JPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			propertyGraph = graph.asPropertyGraph();
 			history.addToHistory(graph);
-			setAndDisplayColoring(graphEditorController);
+			displayColoring(graphEditorController);
 		}
 	}
 
@@ -409,20 +407,23 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void itemStateChanged(ItemEvent itemEvent) {
 			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-				setAndDisplayColoring(graphEditorController);
+				if (currentColoringType == ColoringType.VERTEX) {
+					currentColoringType = ColoringType.TOTAL;
+				} else {
+					currentColoringType = ColoringType.VERTEX;
+				}
+				displayColoring(graphEditorController);
 			}
 		}
 	}
 
-	protected void setAndDisplayColoring(GraphEditorController graphEditorController) {
+	protected void displayColoring(GraphEditorController graphEditorController) {
 		if (currentColoringType == ColoringType.VERTEX) {
-			currentColoringType = ColoringType.TOTAL;
-			currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
-			displayGraph(propertyGraph, currentTotalColoring);
-		} else {
-			currentColoringType = ColoringType.VERTEX;
 			currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
 			displayGraph(propertyGraph, currentVertexColoring);
+		} else {
+			currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
+			displayGraph(propertyGraph, currentTotalColoring);
 		}
 	}
 }

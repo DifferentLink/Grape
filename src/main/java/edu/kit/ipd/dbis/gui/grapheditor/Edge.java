@@ -7,12 +7,14 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import java.awt.*;
 import java.awt.geom.Line2D;
 
-public class Edge {
+public class Edge implements Comparable {
 	private Vertex start;
 	private Vertex end;
 
 	private Color color = GraphLook.edgeColor;
 	private int thickness = GraphLook.edgeThickness;
+
+	private static int id = 0;
 
 	public Edge(Vertex start, Vertex end) {
 		this.start = start;
@@ -70,5 +72,14 @@ public class Edge {
 
 	public void setThickness(int thickness) {
 		this.thickness = thickness;
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return Integer.compare(this.getId(), ((Edge) o).getId());
 	}
 }
