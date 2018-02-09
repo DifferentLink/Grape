@@ -61,7 +61,7 @@ public class DatabaseFilterIntegrationTests {
 		manager.setDatabase(database);
 
 		manager.addFilter("AverageDegree = 10", 2);
-		System.out.println(database.getFilterById(2).getName().equals("AverageDegree = 10"));
+		assertEquals(database.getFilterById(2).getName().equals("AverageDegree = 10"), true);
 		manager.removeFiltersegment(2);
 		database.getFilterById(2).getName();
 
