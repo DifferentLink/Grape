@@ -270,12 +270,13 @@ public class GraphEditorUI extends JPanel {
 				kanvas.draw(vertexShape);
 			});
 
-/*			graph.getSubgraphs().forEach(subgraph -> {
-				Shape subgraphOutline = subgraph.outline();
-				kanvas.setPaint(theme.outlineColor);
-				kanvas.fill(subgraphOutline);
+			graph.getSubgraphs().forEach(subgraph -> {
+				Shape subgraphOutline = RenderableGraph.outline(subgraph);
+				float[] dash = new float[]{10.0f};
+				kanvas.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+				kanvas.setPaint(Color.darkGray);
 				kanvas.draw(subgraphOutline);
-			});*/
+			});
 		}
 	}
 
