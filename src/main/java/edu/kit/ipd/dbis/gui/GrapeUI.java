@@ -126,7 +126,6 @@ public class GrapeUI {
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
-		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		tableUI = new JTable(tableModel);
 		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
@@ -234,5 +233,7 @@ public class GrapeUI {
 		try {
 			tableModel.update(filterController.getFilteredAndSortedGraphs());
 		} catch (SQLException ignored) {}
+		mainWindow.revalidate();
+		mainWindow.repaint();
 	}
 }
