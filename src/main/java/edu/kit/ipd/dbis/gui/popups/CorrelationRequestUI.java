@@ -69,8 +69,8 @@ public class CorrelationRequestUI extends JFrame {
 		int i = 0;
 		for (Iterator<CorrelationOutput> iterator = columns.iterator(); iterator.hasNext(); i++) {
 			CorrelationOutput column = iterator.next();
-			data[i][0] = column.getFirstProperty().getClass().getSimpleName();
-			data[i][1] = column.getSecondProperty().getClass().getSimpleName();
+			data[i][0] = column.getFirstProperty();
+			data[i][1] = column.getSecondProperty();
 			data[i][2] = column.getOutputNumber();
 		}
 
