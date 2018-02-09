@@ -15,6 +15,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -251,15 +252,21 @@ public class GrapeUI {
 		AffineTransform affinetransform = new AffineTransform();
 		FontRenderContext fontRenderer = new FontRenderContext(affinetransform,true,true);
 		Font font = theme.defaultFont;
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
 		for (int i = 0; i < tableUI.getColumnModel().getColumnCount(); i++) {
+			final TableColumn column = tableUI.getColumnModel().getColumn(i);
 			if (columnWidths[i] > 0) {
-				tableUI.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
+				column.setPreferredWidth(columnWidths[i]);
 			} else {
 				final int optimalWidth =
 						(int) (font.getStringBounds("  " + tableUI.getColumnName(i) + "  ", fontRenderer).getWidth());
-				tableUI.getColumnModel().getColumn(i).setPreferredWidth(optimalWidth);
+				column.setPreferredWidth(optimalWidth);
 				columnWidths[i] = optimalWidth;
+			}
+			if (i != 1) {
+				column.setCellRenderer(centerRenderer);
 			}
 		}
 	}
