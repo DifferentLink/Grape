@@ -62,6 +62,8 @@ public class DatabaseController {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
+			this.statusbarUI.setDatabaseInfo(name, 0);
+			this.statusbarUI.setRemainingCalculations(0);
 			this.grapeUI.updateTable();
 		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());

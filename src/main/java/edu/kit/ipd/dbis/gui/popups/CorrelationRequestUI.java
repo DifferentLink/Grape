@@ -47,6 +47,7 @@ public class CorrelationRequestUI extends JFrame {
 		container.add(buttonAlignment);
 		this.add(container);
 		this.pack();
+		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 	}
 
