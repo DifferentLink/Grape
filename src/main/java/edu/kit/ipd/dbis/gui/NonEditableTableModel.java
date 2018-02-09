@@ -15,7 +15,7 @@ public class NonEditableTableModel extends DefaultTableModel {
 		super(data, columnNames);
 	}
 
-	public void update(ResultSet resultSet) throws SQLException {
+	void update(ResultSet resultSet) throws SQLException {
 		this.setColumnCount(0);
 		this.setRowCount(0);
 
