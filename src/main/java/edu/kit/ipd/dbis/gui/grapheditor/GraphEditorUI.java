@@ -127,7 +127,8 @@ public class GraphEditorUI extends JPanel {
 				((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0)
 		);
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVerticesNotContainedInSubgraphs(),
+				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
 		graphEditor.repaint();
 	}
 
@@ -339,7 +340,8 @@ public class GraphEditorUI extends JPanel {
 	private class CenterVerticesAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			GraphLook.arrangeInCircle(graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+			GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
+					new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
 			repaint();
 		}
 	}
