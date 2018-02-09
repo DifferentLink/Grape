@@ -176,8 +176,7 @@ public class GraphTable extends Table {
 		LinkedList<Double> values = new LinkedList<>();
 		while (result.next()) {
 			try {
-				double value = (double) result.getObject(column);
-				values.add(value);
+				values.add(result.getDouble(column));
 			} catch (SQLException e) {
 
 			}
