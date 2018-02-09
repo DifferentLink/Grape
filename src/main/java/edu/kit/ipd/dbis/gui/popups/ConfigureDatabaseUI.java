@@ -74,6 +74,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		container.add(buttonContainer);
 		this.add(container);
 		this.setMinimumSize(new Dimension(300, 200));
+		this.setLocationRelativeTo(null);
 	}
 
 	private class ConfigureDatabaseAction implements ActionListener {

@@ -88,6 +88,7 @@ public class GenerateGraphUI extends JFrame {
 
 		content.add(generate);
 		this.add(content);
+		this.setLocationRelativeTo(null);
 	}
 
 	@SuppressWarnings("Duplicates")
