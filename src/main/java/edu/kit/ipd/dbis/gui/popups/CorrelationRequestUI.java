@@ -71,9 +71,9 @@ public class CorrelationRequestUI extends JFrame {
 		int tableSize = columns.size() + 1;
 		String[][] data = new String[3][tableSize];
 
-		data[0][0] = "first property";
-		data[1][0] = "second property";
-		data[2][0] = "correlation value";
+		data[0][0] = "First Property";
+		data[1][0] = "Second Property";
+		data[2][0] = "Correlation";
 		for (int i = 1; i < tableSize; i++) {
 			CorrelationOutput column = columns.get(i - 1);
 			data[0][i] = column.getFirstProperty();
@@ -81,9 +81,10 @@ public class CorrelationRequestUI extends JFrame {
 			data[2][i] = String.valueOf(column.getOutputNumber());
 		}
 
-		// return new JTable(new NonEditableTableModel(null, data));
-		JTable table = new JTable(data, new String[tableSize]);
-		table.setDefaultEditor(Object.class, null);
-		return table;
+		String[] columnsHeader = new String[tableSize];
+		for (int i = 0; i < tableSize; i++) {
+			columnsHeader[i] = "";
+		}
+		return new JTable(data, columnsHeader);
 	}
 }
