@@ -5,11 +5,9 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.*;
-import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import edu.kit.ipd.dbis.log.Log;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
@@ -17,7 +15,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -25,9 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 public class GrapeUI {
@@ -93,7 +87,7 @@ public class GrapeUI {
 
 
 		menuUI = new MenuUI(
-				generateController, databaseController, statusbarController, graphEditorController, language, theme);
+				generateController, databaseController, statusbarController, graphEditorController, this, language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
 		filterUI = new FilterUI(filterController, language, theme);
@@ -125,7 +119,7 @@ public class GrapeUI {
 
 		graphEditorDivider.setResizeWeight(.55f);
 
-		statusbarUI = new StatusbarUI(statusbarController, language, theme);
+		statusbarUI = new StatusbarUI(statusbarController, databaseController, language, theme);
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);

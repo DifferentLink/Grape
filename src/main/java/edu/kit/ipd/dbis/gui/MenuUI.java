@@ -4,10 +4,7 @@
 
 package edu.kit.ipd.dbis.gui;
 
-import edu.kit.ipd.dbis.controller.DatabaseController;
-import edu.kit.ipd.dbis.controller.GenerateController;
-import edu.kit.ipd.dbis.controller.GraphEditorController;
-import edu.kit.ipd.dbis.controller.StatusbarController;
+import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.gui.popups.AboutUI;
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
@@ -19,6 +16,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -31,6 +29,7 @@ public class MenuUI extends JMenuBar {
 	              DatabaseController databaseController,
 	              StatusbarController statusbarController,
 	              GraphEditorController graphEditorController,
+	              GrapeUI grapeUI,
 	              ResourceBundle language,
 	              Theme theme) {
 
@@ -69,12 +68,16 @@ public class MenuUI extends JMenuBar {
 		undo.addActionListener(new UndoAction());
 		JMenuItem redo = new JMenuItem(language.getString("redo"));
 		redo.addActionListener(new RedoAction());
+		JMenuItem updateTable = new JMenuItem("Update table");
+		updateTable.addActionListener(new UpdateTableAction(grapeUI));
 		edit.add(generateGraphs);
 		edit.add(emptyGraph);
 		edit.add(readBFSCode);
 		edit.addSeparator();
 		edit.add(undo);
 		edit.add(redo);
+		edit.addSeparator();
+		edit.add(updateTable);
 		this.add(edit);
 
 		JMenu help = new JMenu(language.getString("help"));
@@ -351,6 +354,20 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			graphEditorController.emptyGraphToGraphEditor();
+		}
+	}
+
+	private class UpdateTableAction implements ActionListener {
+
+		private final GrapeUI grapeUI;
+
+		public UpdateTableAction(GrapeUI grapeUI) {
+			this.grapeUI = grapeUI;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			grapeUI.updateTable();
 		}
 	}
 }

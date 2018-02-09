@@ -35,19 +35,22 @@ public class FileManager implements Connector {
 
 	@Override
 	public GraphDatabase createGraphDatabase(String url, String user, String password, String name)
-			throws DatabaseDoesNotExistException, AccessDeniedForUserException,
-			ConnectionFailedException, SQLException {
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 
-		Connection connection = getConnection(url, user, password);
-		GraphTable graphTable = new GraphTable(url, user, password, name);
-		FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
-		GraphDatabase database = new GraphDatabase(graphTable, filterTable);
+		try {
+			Connection connection = getConnection(url, user, password);
+			GraphTable graphTable = new GraphTable(url, user, password, name);
+			FilterTable filterTable = new FilterTable(url, user, password, getValidFilterTableName(connection, name));
+			GraphDatabase database = new GraphDatabase(graphTable, filterTable);
 
-		if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
-			return database;
-		} else {
-			throw new ConnectionFailedException("Selected Table does not contain the required columns.");
+			if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
+				return database;
+			}
+		} catch (SQLException e) {
+			throw new ConnectionFailedException(e.getMessage());
 		}
+		throw new ConnectionFailedException("Selected Table does not contain the required columns.");
+
 	}
 
 	@Override
@@ -70,8 +73,8 @@ public class FileManager implements Connector {
 
 	@Override
 	public GraphDatabase loadGraphDatabase(String directory)
-			throws FileNotFoundException, FileContentNotAsExpectedException, SQLException,
-			FileContentCouldNotBeReadException, ConnectionFailedException {
+			throws FileNotFoundException, FileContentNotAsExpectedException, FileContentCouldNotBeReadException,
+			ConnectionFailedException {
 
 		FileReader file = new FileReader(directory);
 		BufferedReader reader = new BufferedReader(file);
@@ -80,33 +83,38 @@ public class FileManager implements Connector {
 			load = new LoadParser(reader.readLine());
 			file.close();
 			reader.close();
+			load.parse();
+			GraphDatabase database = load.getDatabase();
+			if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
+				database.setDirectory(directory);
+				return database;
+			}
 		} catch (IOException e) {
 			throw new FileContentCouldNotBeReadException(e.getMessage());
-		}
-
-		load.parse();
-		GraphDatabase database = load.getDatabase();
-		if (this.validGraphTable(database.getGraphTable()) && this.validFilterTable(database.getFilterTable())) {
-			database.setDirectory(directory);
-			return database;
+		} catch (SQLException e) {
+			throw new ConnectionFailedException(e.getMessage());
 		}
 		throw new ConnectionFailedException("Selected Table does not contain the required columns.");
 	}
 
 	@Override
 	public void deleteGraphDatabase(GraphDatabase database)
-			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-			SQLException {
+			throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 
 		GraphTable graphs = database.getGraphTable();
 		FilterTable filters = database.getFilterTable();
 		String sql = "DROP TABLE " + graphs.getName();
-		this.getConnection(
-				filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
+		try {
+			this.getConnection(
+					filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
 
-		sql = "DROP TABLE " + filters.getName();
-		this.getConnection(
-				filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
+			sql = "DROP TABLE " + filters.getName();
+			this.getConnection(
+					filters.getUrl(), filters.getUser(), filters.getPassword()).prepareStatement(sql).executeUpdate();
+		} catch (SQLException e) {
+			throw new ConnectionFailedException(e.getMessage());
+		}
+
 	}
 
 	/**
@@ -114,7 +122,7 @@ public class FileManager implements Connector {
 	 * @param connection the Connection to a MySQL-Database.
 	 * @param name name of a MySQL-Table.
 	 * @return true if there already is a MySQL-Table with the given name
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the MySQL-database fails
 	 */
 	private boolean tableExists(Connection connection, String name) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
@@ -133,9 +141,9 @@ public class FileManager implements Connector {
 	 * @param user username of the MySQL-Database user.
 	 * @param password password of the user.
 	 * @return the Connection to the MySQL-Database.
-	 * @throws AccessDeniedForUserException
-	 * @throws DatabaseDoesNotExistException
-	 * @throws ConnectionFailedException
+	 * @throws ConnectionFailedException if a database connection could not be established
+	 * @throws AccessDeniedForUserException if the username or the password is invalid
+	 * @throws DatabaseDoesNotExistException if the database does not exist
 	 */
 	private Connection getConnection(String url, String user, String password)
 			throws AccessDeniedForUserException, DatabaseDoesNotExistException, ConnectionFailedException {
@@ -158,7 +166,7 @@ public class FileManager implements Connector {
 	 * Returns a name for a MySQL-Table that does not already exist.
 	 * @param name name of the GraphTable-Object.
 	 * @return a Valid name that can be used to create a FilterTable-Object.
-	 * @throws SQLException
+	 * @throws SQLException if the connection to the MySQL-database fails
 	 */
 	private String getValidFilterTableName(Connection connection, String name) throws SQLException {
 		String filterTable = name + "Filters";
@@ -176,10 +184,7 @@ public class FileManager implements Connector {
 	 * Determines whether the given FilterTable-Object has the required columns
 	 * @param filterTable the FilterTable-Object
 	 * @return true if filterTable is valid
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
-	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException if the connection to the MySQL-database fails
 	 */
 	private boolean validFilterTable(FilterTable filterTable) throws SQLException {
 
@@ -198,10 +203,7 @@ public class FileManager implements Connector {
 	 * Determines whether the given GraphTable-Object has the required columns
 	 * @param graphTable the GraphTable-Object
 	 * @return true if filterTable is valid
-	 * @throws SQLException
-	 * @throws AccessDeniedForUserException
-	 * @throws ConnectionFailedException
-	 * @throws DatabaseDoesNotExistException
+	 * @throws SQLException if the connection to the MySQL-database fails
 	 */
 	private boolean validGraphTable(GraphTable graphTable) throws SQLException {
 

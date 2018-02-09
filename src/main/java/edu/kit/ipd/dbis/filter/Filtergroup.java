@@ -11,6 +11,14 @@ public class Filtergroup extends Filtersegment {
     List<Filter> availableFilter;
 
     /**
+     * getter-method for availableFilter
+     * @return availableFilter
+     */
+    public List<Filter> getAvailableFilter() {
+        return availableFilter;
+    }
+
+    /**
      * Constructor of class Filtergroup
      * @param name name of the filtergroup (name of filtergroup should be equal to user
      * input)
@@ -18,7 +26,7 @@ public class Filtergroup extends Filtersegment {
      * graphs
      * @param id unique identifier the filtergroup should have
      */
-    Filtergroup(String name, boolean isActivated, int id) {
+    public Filtergroup(String name, boolean isActivated, int id) {
         this.name = name;
         this.isActivated = isActivated;
         this.id = id;

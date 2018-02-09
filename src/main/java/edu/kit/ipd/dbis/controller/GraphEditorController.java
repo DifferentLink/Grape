@@ -1,26 +1,25 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
-import edu.kit.ipd.dbis.gui.grapheditor.RenderableGraph;
-import edu.kit.ipd.dbis.log.Event;
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalTotalColoring;
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.color.MinimalVertexColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.TotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.sql.SQLException;
-import java.util.Collections;
+import java.util.List;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
-import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 import static edu.kit.ipd.dbis.log.EventType.REMOVE;
 
 /**
@@ -30,21 +29,18 @@ public class GraphEditorController {
 
 	private GraphDatabase database;
 	private StatusbarController statusbar;
-	private FilterController filter;
 	private GraphEditorUI graphEditor;
+	private StatusbarUI statusbarUI;
 
+	private static GraphEditorController editor;
 	private GrapeUI grapeUI;
 
-	public void setGrapeUI(GrapeUI grapeUI) {
-		this.grapeUI = grapeUI;
+	public void setStatusbarUI(StatusbarUI statusbarUI) {
+		this.statusbarUI = statusbarUI;
 	}
-
-	//TODO: Singleton pattern
-	private static GraphEditorController editor;
 
 	private GraphEditorController() {
 		this.statusbar = StatusbarController.getInstance();
-		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -66,6 +62,10 @@ public class GraphEditorController {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
+	}
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
 	}
 
 	public void setGraphEditor(GraphEditorUI graphEditor) {
@@ -93,7 +93,7 @@ public class GraphEditorController {
 				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
 				statusbar.addEvent(REMOVE, oldID);
-				this.grapeUI.updateTable();
+				this.statusbarUI.setRemainingCalculations(0);
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
@@ -111,7 +111,8 @@ public class GraphEditorController {
 				database.addGraph(graph);
 				statusbar.continueCalculation();
 				statusbar.addEvent(ADD, graph.getId());
-				this.grapeUI.updateTable();
+				this.statusbarUI.setRemainingCalculations(0);
+				grapeUI.updateTable();
 			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
@@ -161,7 +162,9 @@ public class GraphEditorController {
 			denserGraph = denserGraphFinder.getNextDenserGraph();
 			database.addGraph(denserGraph);
 			statusbar.continueCalculation();
-			this.grapeUI.updateTable();
+			statusbar.addEvent(ADD, denserGraph.getId());
+			this.statusbarUI.setRemainingCalculations(0);
+			grapeUI.updateTable();
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException |
 				NoDenserGraphException e) {
 			statusbar.addMessage(e.getMessage());
@@ -169,47 +172,61 @@ public class GraphEditorController {
 	}
 
 	/**
-	 * calculates a valid colorization for a specific graph.
+	 * Returns a vertex coloring for the input graph.
 	 *
-	 * @param graph the PropertyGraph<V,E> to calculate.
+	 * @param graph input graph
 	 * @return the graphcolorization.
 	 */
-	public VertexColoringAlgorithm.Coloring getVertexColoring(PropertyGraph<Integer, Integer> graph) {
-		MinimalVertexColoring coloring = new MinimalVertexColoring(graph);
-		return coloring.getColoring();
+	public static VertexColoringAlgorithm.Coloring<Integer> getVertexColoring(PropertyGraph<Integer, Integer> graph) {
+		return ((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0);
 	}
 
 	/**
-	 * calculates a valid colorization for a specific graph
+	 * Returns a total coloring for the input graph.
 	 *
-	 * @param graph the PropertyGraph<V,E> to calculate.
-	 * @return the graphcolorization.
+	 * @param graph input graph
+	 * @return the graph coloring.
 	 */
-	public TotalColoringAlgorithm.TotalColoring getTotalColoring(PropertyGraph<Integer, Integer> graph) {
-		MinimalTotalColoring coloring = new MinimalTotalColoring(graph);
-		return coloring.getColoring();
+	public static TotalColoringAlgorithm.TotalColoring<Integer, Integer> getTotalColoring(PropertyGraph<Integer, Integer> graph) {
+		return ((List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>>) graph.getProperty(TotalColoring.class).getValue()).get(0);
 	}
 
 	/**
-	 * calculates a cloring which is not equivalent to current coloring
+	 * Returns a coloring which is not equivalent to current coloring.
 	 *
-	 * @param id the PropertyGraph<V,E> to calculate.
-	 * @return the net valid alternative Coloring.
-	 * @throws //NoEqivalentColoringException thrown if there is no equivalent colorization for a specific graph
+	 * @param graph input graph
+	 * @return alternative coloring
 	 */
-	public VertexColoring getAlternateVertexColoring(int id) {
-		return null;
+	public VertexColoringAlgorithm.Coloring<Integer> getNextVertexColoring(
+			PropertyGraph<Integer, Integer> graph,
+			VertexColoringAlgorithm.Coloring<Integer> currentColoring) {
+		List<VertexColoringAlgorithm.Coloring<Integer>> colorings =
+				(List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue();
+		int index = colorings.indexOf(currentColoring);
+		if (index + 1 == colorings.size()) {
+			return colorings.get(0);
+		} else {
+			return colorings.get(index + 1);
+		}
 	}
 
 	/**
-	 * calculates a cloring which is not equivalent to current coloring
+	 * Returns a total coloring which is not equivalent to current coloring.
 	 *
-	 * @param id the PropertyGraph<V,E> to calculate.
-	 * @return the next valid alternative Coloring.
-	 * @throws //NoEquivalentColoringException thrown if there is no equivalent colorization for a specific graph
+	 * @param graph input graph
+	 * @return alternative coloring
 	 */
-	public TotalColoringAlgorithm.TotalColoring getAlternateTotalColoring(int id) {
-		return null;
+	public TotalColoringAlgorithm.TotalColoring<Integer, Integer> getNextTotalColoring(
+			PropertyGraph<Integer, Integer> graph,
+			TotalColoringAlgorithm.TotalColoring<Integer, Integer> currentColoring) {
+		List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>> colorings =
+				(List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>>) graph.getProperty(TotalColoring.class).getValue();
+		int index = colorings.indexOf(currentColoring);
+		if (index + 1 == colorings.size()) {
+			return colorings.get(0);
+		} else {
+			return colorings.get(index + 1);
+		}
 	}
 
 	public void emptyGraphToGraphEditor() {
