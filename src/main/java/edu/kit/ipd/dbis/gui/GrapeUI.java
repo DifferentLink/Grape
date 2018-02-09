@@ -7,6 +7,7 @@ package edu.kit.ipd.dbis.gui;
 import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
+import edu.kit.ipd.dbis.gui.popups.GraphOptions;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
@@ -18,10 +19,7 @@ import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
@@ -137,6 +135,7 @@ public class GrapeUI {
 		tableUI.addKeyListener(new DeleteGraphAction());
 		JScrollPane scrollPane = new JScrollPane(tableUI,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		tableUI.addMouseListener(new RightClickAction());
 		tableUI.setFillsViewportHeight(true);
 		tableUI.setBackground(theme.backgroundColor);
 		tableUI.getTableHeader().addMouseListener(new TableHeaderAction());
@@ -267,6 +266,38 @@ public class GrapeUI {
 			}
 			if (i != 1) {
 				column.setCellRenderer(centerRenderer);
+			}
+		}
+	}
+
+	private class RightClickAction extends MouseAdapter {
+		@Override
+		public void mouseClicked(MouseEvent mouseEvent) {}
+
+		@Override
+		public void mousePressed(MouseEvent mouseEvent) {
+			openPopup(mouseEvent);
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent mouseEvent) {
+			openPopup(mouseEvent);
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent mouseEvent) {}
+
+		@Override
+		public void mouseExited(MouseEvent mouseEvent) {}
+
+		private void openPopup(MouseEvent mouseEvent) {
+			if (mouseEvent.isPopupTrigger()) {
+				int row = tableUI.rowAtPoint(mouseEvent.getPoint());
+				final int graphID = (int) tableUI.getValueAt(row, 0);
+				if (!tableUI.isRowSelected(row)) {
+					tableUI.changeSelection(row, 0, false, false);
+				}
+				(new GraphOptions(graphID)).show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
 			}
 		}
 	}
