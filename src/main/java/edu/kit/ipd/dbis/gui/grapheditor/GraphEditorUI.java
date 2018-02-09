@@ -315,9 +315,8 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			propertyGraph = graph.asPropertyGraph();
-			// something
 			history.addToHistory(graph);
-			//displayGraph(propertyGraph);
+			setAndDisplayColoring(graphEditorController);
 		}
 	}
 
@@ -397,16 +396,20 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void itemStateChanged(ItemEvent itemEvent) {
 			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-				if (currentColoringType == ColoringType.VERTEX) {
-					currentColoringType = ColoringType.TOTAL;
-					currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
-					displayGraph(propertyGraph, currentTotalColoring);
-				} else {
-					currentColoringType = ColoringType.VERTEX;
-					currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
-					displayGraph(propertyGraph, currentVertexColoring);
-				}
+				setAndDisplayColoring(graphEditorController);
 			}
+		}
+	}
+
+	protected void setAndDisplayColoring(GraphEditorController graphEditorController) {
+		if (currentColoringType == ColoringType.VERTEX) {
+			currentColoringType = ColoringType.TOTAL;
+			currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
+			displayGraph(propertyGraph, currentTotalColoring);
+		} else {
+			currentColoringType = ColoringType.VERTEX;
+			currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
+			displayGraph(propertyGraph, currentVertexColoring);
 		}
 	}
 }
