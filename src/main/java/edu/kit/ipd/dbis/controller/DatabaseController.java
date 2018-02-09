@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.database.exceptions.files.*;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 
@@ -27,9 +28,13 @@ public class DatabaseController {
 	private StatusbarController statusbar;
 	private CorrelationController correlation;
 
-	private NonEditableTableModel tableModel;
 	private Connector connector;
 	private GraphDatabase database;
+	private GrapeUI grapeUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	/**
 	 * Instantiates a new Database controller.
@@ -45,16 +50,6 @@ public class DatabaseController {
 	}
 
 	/**
-	 * Sets table model.
-	 *
-	 * @param tableModel the table model
-	 */
-// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
-	}
-
-	/**
 	 * Triggers the database to open a new database table.
 	 *
 	 * @param url      the url
@@ -66,7 +61,7 @@ public class DatabaseController {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (SQLException | DatabaseDoesNotExistException
 				| ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());
@@ -82,7 +77,7 @@ public class DatabaseController {
 		try {
 			database = connector.loadGraphDatabase(filepath);
 			this.updateDatabases();
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | FileContentCouldNotBeReadException
 				| ConnectionFailedException | DatabaseDoesNotExistException e) {
@@ -101,7 +96,7 @@ public class DatabaseController {
 			mergeDatabase = connector.loadGraphDatabase(filepath);
 			database.merge(mergeDatabase);
 			this.updateDatabases();
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
+			this.grapeUI.updateTable();
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
 				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());

@@ -72,6 +72,12 @@ public class GrapeUI {
 		this.generateController = generateController;
 		this.graphEditorController = graphEditorController;
 
+		this.calculationController.setGrapeUI(this);
+		this.databaseController.setGrapeUI(this);
+		this.filterController.setGrapeUI(this);
+		this.generateController.setGrapeUI(this);
+		this.graphEditorController.setGrapeUI(this);
+
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(400, 400));
@@ -121,11 +127,6 @@ public class GrapeUI {
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
 		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
-		calculationController.setTableModel(tableModel);
-		databaseController.setTableModel(tableModel);
-		filterController.setTableModel(tableModel);
-		graphEditorController.setTableModel(tableModel);
-		generateController.setTableModel(tableModel);
 		tableUI = new JTable(tableModel);
 		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());

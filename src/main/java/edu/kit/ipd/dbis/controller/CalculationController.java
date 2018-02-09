@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -18,7 +19,12 @@ public class CalculationController implements Runnable {
 	private StatusbarController statusbar;
 	private GraphDatabase database;
 	private FilterController filter;
-	private NonEditableTableModel tableModel;
+
+	private GrapeUI grapeUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	//TODO: Singleton pattern
 	private static CalculationController calculation;
@@ -50,11 +56,6 @@ public class CalculationController implements Runnable {
 		this.database = database;
 	}
 
-	// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
-	}
-
 	/**
 	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
 	 * of the database and induces their saving in the database.
@@ -67,9 +68,9 @@ public class CalculationController implements Runnable {
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
 					statusbar.addEvent(EventType.ADD, graph.getId());
-					tableModel.update(filter.getFilteredAndSortedGraphs());
+					grapeUI.updateTable();
 				}
-			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException | SQLException e) {
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
 			}
 			// start recursion

@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
@@ -30,7 +31,12 @@ public class GenerateController {
 	private StatusbarController statusbar;
 	private FilterController filter;
 	private CalculationController calculation;
-	private NonEditableTableModel tableModel;
+
+	private GrapeUI grapeUI;
+
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
 	//TODO: Singleton pattern
 	private static GenerateController generate;
@@ -61,16 +67,6 @@ public class GenerateController {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
-	}
-
-	/**
-	 * Sets table model.
-	 *
-	 * @param tableModel the table model
-	 */
-// TODO: Instance of TableModel
-	public void setTableModel(NonEditableTableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 
@@ -136,8 +132,8 @@ public class GenerateController {
 		try {
 			database.addGraph(graph);
 			calculation.run();
-			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
+			this.grapeUI.updateTable();
+		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
