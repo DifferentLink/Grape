@@ -34,7 +34,7 @@ public class GraphLook {
 		final float step = 1 / (float) numColors;
 
 		for (int color = 0; color < numColors; color++) {
-			colors[color] = Color.getHSBColor(step * color, 1f, 1f);
+			colors[color] = Color.getHSBColor(step * color, .75f, .8f);
 		}
 
 		return colors;
