@@ -70,16 +70,12 @@ public class MenuUI extends JMenuBar {
 		undo.addActionListener(new UndoAction());
 		JMenuItem redo = new JMenuItem(language.getString("redo"));
 		redo.addActionListener(new RedoAction());
-		JMenuItem updateTable = new JMenuItem("Update table");
-		updateTable.addActionListener(new UpdateTableAction(tableModel, filterController));
 		edit.add(generateGraphs);
 		edit.add(emptyGraph);
 		edit.add(readBFSCode);
 		edit.addSeparator();
 		edit.add(undo);
 		edit.add(redo);
-		edit.addSeparator();
-		edit.add(updateTable);
 		this.add(edit);
 
 		JMenu help = new JMenu(language.getString("help"));

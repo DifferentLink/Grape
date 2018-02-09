@@ -86,7 +86,7 @@ public class GrapeUI {
 		} catch (IOException e) {}
 
 		menuUI = new MenuUI(
-				generateController, databaseController, statusbarController, graphEditorController, this, language, theme);
+				generateController, databaseController, statusbarController, graphEditorController, language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
 		filterUI = new FilterUI(filterController, language, theme);

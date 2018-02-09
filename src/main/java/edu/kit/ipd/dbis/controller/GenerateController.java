@@ -30,6 +30,7 @@ public class GenerateController {
 	private FilterController filter;
 	private CalculationController calculation;
 	private GrapeUI grapeUI;
+	private StatusbarUI statusbarUI;
 
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
@@ -134,9 +135,8 @@ public class GenerateController {
 				System.out.println("Finished calculations");
 			}
 			ResultSet resultSet = filter.getFilteredAndSortedGraphs();
-			tableModel.update(resultSet);
 			System.out.println("update table");
-		} catch (InterruptedException | SQLException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

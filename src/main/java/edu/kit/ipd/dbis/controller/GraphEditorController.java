@@ -4,6 +4,7 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.grapheditor.RenderableGraph;
 import edu.kit.ipd.dbis.log.Event;
@@ -34,6 +35,7 @@ public class GraphEditorController {
 	private GraphEditorUI graphEditor;
 
 	private GrapeUI grapeUI;
+	private StatusbarUI statusbarUI;
 
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
@@ -70,10 +72,6 @@ public class GraphEditorController {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
-	}
-
-	public void setGraphEditor(GraphEditorUI graphEditor) {
-		this.graphEditor = graphEditor;
 	}
 
 	public void setGraphEditor(GraphEditorUI graphEditor) {
