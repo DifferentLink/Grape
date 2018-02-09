@@ -6,6 +6,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.log.Event;
 
 import java.io.FileNotFoundException;
@@ -30,6 +31,7 @@ public class DatabaseController {
 	private NonEditableTableModel tableModel;
 	private Connector connector;
 	private GraphDatabase database;
+	private StatusbarUI statusbarUI;
 
 	/**
 	 * Instantiates a new Database controller.
@@ -54,6 +56,10 @@ public class DatabaseController {
 		this.tableModel = tableModel;
 	}
 
+	public void setStatusbarUI(StatusbarUI statusbarUI) {
+		this.statusbarUI = statusbarUI;
+	}
+
 	/**
 	 * Triggers the database to open a new database table.
 	 *
@@ -66,6 +72,8 @@ public class DatabaseController {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
+			//TODO: get right graphAmount
+			this.statusbarUI.setDatabaseInfo(name, 0);
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (SQLException | DatabaseDoesNotExistException
 				| ConnectionFailedException | AccessDeniedForUserException e) {
@@ -82,10 +90,11 @@ public class DatabaseController {
 		try {
 			database = connector.loadGraphDatabase(filepath);
 			this.updateDatabases();
+			//TODO: get right graphAmount
+			this.statusbarUI.setDatabaseInfo("", 0);
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | FileContentCouldNotBeReadException
-				| ConnectionFailedException | DatabaseDoesNotExistException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | SQLException
+				| FileContentCouldNotBeReadException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -101,9 +110,11 @@ public class DatabaseController {
 			mergeDatabase = connector.loadGraphDatabase(filepath);
 			database.merge(mergeDatabase);
 			this.updateDatabases();
+			//TODO: get right graphAmount
+			this.statusbarUI.setDatabaseInfo("", 0);
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
-		} catch (FileNotFoundException | FileContentNotAsExpectedException | AccessDeniedForUserException
-				| SQLException | DatabaseDoesNotExistException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
+		} catch (FileNotFoundException | FileContentNotAsExpectedException | SQLException
+				| ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}

@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.NonEditableTableModel;
+import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.grapheditor.RenderableGraph;
 import edu.kit.ipd.dbis.log.Event;
@@ -32,9 +33,14 @@ public class GraphEditorController {
 	private FilterController filter;
 	private NonEditableTableModel tableModel;
 	private GraphEditorUI graphEditor;
+	private StatusbarUI statusbarUI;
 
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
+
+	public void setStatusbarUI(StatusbarUI statusbarUI) {
+		this.statusbarUI = statusbarUI;
+	}
 
 	private GraphEditorController() {
 		this.statusbar = StatusbarController.getInstance();
@@ -91,6 +97,7 @@ public class GraphEditorController {
 				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
 				statusbar.addEvent(REMOVE, oldID);
+				this.statusbarUI.setRemainingCalculations(0);
 				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException e) {
 				statusbar.addMessage(e.getMessage());
@@ -109,6 +116,7 @@ public class GraphEditorController {
 				database.addGraph(graph);
 				statusbar.continueCalculation();
 				statusbar.addEvent(ADD, graph.getId());
+				this.statusbarUI.setRemainingCalculations(0);
 				this.tableModel.update(filter.getFilteredAndSortedGraphs());
 			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException | SQLException e) {
@@ -159,6 +167,8 @@ public class GraphEditorController {
 			denserGraph = denserGraphFinder.getNextDenserGraph();
 			database.addGraph(denserGraph);
 			statusbar.continueCalculation();
+			statusbar.addEvent(ADD, denserGraph.getId());
+			this.statusbarUI.setRemainingCalculations(0);
 			this.tableModel.update(filter.getFilteredAndSortedGraphs());
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException | SQLException |
 				NoDenserGraphException e) {
