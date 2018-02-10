@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import java.awt.*;
@@ -40,6 +36,12 @@ public class GraphLook {
 		return colors;
 	}
 
+	/**
+	 * Arrange the given vertices in a circle in the area defined by two points.
+	 * @param vertices the vertices to arrange
+	 * @param upperLeft the upper left corner of the area
+	 * @param lowerRight the lower right corner of the area
+	 */
 	public static void arrangeInCircle(Set<Vertex> vertices, Point upperLeft, Point lowerRight) {
 
 		final Point center =
@@ -55,7 +57,16 @@ public class GraphLook {
 			i++;
 		}
 	}
-
+	/**
+	 * This method splits a the area defined by the upper left and lower right corner into a grid
+	 * with at most n + 1 many cells, where n is the number of subgraphs given. It arranges the subgraphs
+	 * in a circle, each in it's own cell in the grid. The vertices not contained in any subgraph are also
+	 * placed in a circle in the last cell in the grid.
+	 * @param subgraphs the subgraphs to position separately
+	 * @param otherVertices the vertices not contained in any subgraph
+	 * @param upperLeft the upper left corner of the area which is split into a grid
+	 * @param lowerRight the lower right corner of the area which is split into a grid
+	 */
 	public static void arrangeInGrid(Set<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
 	                                 Point upperLeft, Point lowerRight) {
 

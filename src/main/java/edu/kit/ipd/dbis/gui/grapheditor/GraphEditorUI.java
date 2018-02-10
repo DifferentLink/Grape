@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import edu.kit.ipd.dbis.controller.GraphEditorController;
@@ -18,6 +14,9 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * The graph editor in the GUI
+ */
 public class GraphEditorUI extends JPanel {
 
 	private RenderableGraph graph = new RenderableGraph();
@@ -60,6 +59,12 @@ public class GraphEditorUI extends JPanel {
 	private Dimension buttonSize = new Dimension(barHeight - 2, barHeight - 2);
 	private int buttonSeparation = 2;
 
+	/**
+	 * Creates a graph editor to add to the GUI
+	 * @param graphEditorController the responsible controller
+	 * @param language the language used
+	 * @param theme the theme used to style the GUI
+	 */
 	public GraphEditorUI(GraphEditorController graphEditorController, ResourceBundle language, Theme theme) {
 		currentColoringType = ColoringType.VERTEX;
 		this.theme = theme;
@@ -145,6 +150,10 @@ public class GraphEditorUI extends JPanel {
 		this.add(bottomBarButtons, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Displays the given graph in the editor using the selected coloring type
+	 * @param graph the graph to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
 		propertyGraph = graph;
 		if (currentColoringType == ColoringType.VERTEX) {
@@ -159,6 +168,11 @@ public class GraphEditorUI extends JPanel {
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Displays the given graph in the editor with colored vertices
+	 * @param graph the graph to display
+	 * @param coloring the vertex coloring to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
@@ -167,6 +181,11 @@ public class GraphEditorUI extends JPanel {
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Displays the given graph in the editor with colored vertices and edges
+	 * @param graph the graph to display
+	 * @param coloring the vertex coloring to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
@@ -175,6 +194,9 @@ public class GraphEditorUI extends JPanel {
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Shows an empty graph in the editor
+	 */
 	public void showEmptyGraph() {
 		this.graph = new RenderableGraph();
 		this.history = new GraphEditorHistory();
@@ -402,7 +424,7 @@ public class GraphEditorUI extends JPanel {
 		}
 	}
 
-	protected void setAndDisplayColoring(GraphEditorController graphEditorController) {
+	private void setAndDisplayColoring(GraphEditorController graphEditorController) {
 		if (currentColoringType == ColoringType.VERTEX) {
 			currentColoringType = ColoringType.TOTAL;
 			currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
