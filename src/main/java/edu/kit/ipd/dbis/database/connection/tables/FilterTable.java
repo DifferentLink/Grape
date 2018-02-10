@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class represents a MySQL-Table where FilterSegment-Objects will be stored.
@@ -85,11 +86,11 @@ public class FilterTable extends Table {
 	 * @return every FilterSegment-Object in the represented MySQL-Table.
 	 * @throws SQLException if the connection to the database fails
 	 */
-	public LinkedList<Filtersegment> getContent() throws SQLException {
+	public List<Filtersegment> getContent() throws SQLException {
 
 		String sql = "SELECT filter FROM " + this.name;
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
-		LinkedList<Filtersegment> filters = new LinkedList<>();
+		List<Filtersegment> filters = new LinkedList<>();
 
 		while (result.next()) {
 			try {

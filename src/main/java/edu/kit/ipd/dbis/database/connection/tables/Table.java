@@ -171,7 +171,7 @@ public abstract class Table {
 	 * @return all columns of the MySQL-Table represented by this object
 	 * @throws SQLException if the connection to the database fails
 	 */
-	public LinkedList<String> getColumns() throws SQLException {
+	public List<String> getColumns() throws SQLException {
 
 		String sql = "SHOW COLUMNS FROM " + this.name;
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
@@ -189,7 +189,7 @@ public abstract class Table {
 	 */
 	protected String getPropertyColumns() throws SQLException {
 
-		LinkedList<String> list = this.getColumns();
+		List<String> list = this.getColumns();
 		list.remove("graph");
 		list.remove("state");
 		list.remove("iscalculated");
@@ -208,7 +208,7 @@ public abstract class Table {
 	 * @throws SQLException if the connection to the database fails
 	 */
 	protected int getId() throws SQLException {
-		LinkedList<Integer> ids = this.getIds();
+		List<Integer> ids = this.getIds();
 		for (int i = 0; i < ids.size(); i++) {
 			if (!ids.contains(i)) return i;
 		}
@@ -219,7 +219,7 @@ public abstract class Table {
 	 * @return all ids in the represented MySQL-Table
 	 * @throws SQLException if the connection to the database fails
 	 */
-	protected LinkedList<Integer> getIds() throws SQLException {
+	protected List<Integer> getIds() throws SQLException {
 
 		String sql = "SELECT id FROM " + this.name;
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();

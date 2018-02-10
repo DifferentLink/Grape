@@ -6,6 +6,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.sql.ResultSet;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -121,7 +122,7 @@ public interface DatabaseManager {
 	 * @return all FilterSegment-Objects in the current MySQL-Database.
 	 * @throws ConnectionFailedException if a database connection could not be established
 	 */
-	LinkedList<Filtersegment> getFilters() throws ConnectionFailedException;
+	List<Filtersegment> getFilters() throws ConnectionFailedException;
 
 	/**
 	 * Identifies a FilterSegment-Object and returns it.
@@ -172,7 +173,7 @@ public interface DatabaseManager {
 	 * @return the value of every given column
 	 * @throws ConnectionFailedException if a database connection could not be established
 	 */
-	LinkedList<Double> getValues(String[][] filters, String column) throws ConnectionFailedException;
+	List<Double> getValues(String[][] filters, String column) throws ConnectionFailedException;
 
 }
 

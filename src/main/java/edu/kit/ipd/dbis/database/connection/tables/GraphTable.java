@@ -174,11 +174,11 @@ public class GraphTable extends Table {
 	 * @return the value of every given column
 	 * @throws SQLException if the connection to the database fails
 	 */
-	public LinkedList<Double> getValues(String[][] filters, String column) throws SQLException {
+	public List<Double> getValues(String[][] filters, String column) throws SQLException {
 
 		String sql = this.getValuesQuery(filters, column);
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
-		LinkedList<Double> values = new LinkedList<>();
+		List<Double> values = new LinkedList<>();
 		while (result.next()) {
 			try {
 				double value = (double) result.getObject(column);
@@ -209,7 +209,7 @@ public class GraphTable extends Table {
 	 */
 	public void merge(GraphTable table) throws SQLException {
 
-		LinkedList<Integer> ids = table.getIds();
+		List<Integer> ids = table.getIds();
 		for (int i : ids) {
 			try {
 				if (!this.graphExists(table.getContent(i))) {
