@@ -17,7 +17,6 @@ public class CalculationController implements Runnable {
 	private Boolean isCalculating;
 	private StatusbarController statusbar;
 	private GraphDatabase database;
-	private FilterController filter;
 
 	private GrapeUI grapeUI;
 
@@ -25,12 +24,10 @@ public class CalculationController implements Runnable {
 		this.grapeUI = grapeUI;
 	}
 
-	//TODO: Singleton pattern
 	private static CalculationController calculation;
 
 	private CalculationController() {
 		this.statusbar = StatusbarController.getInstance();
-		this.filter = FilterController.getInstance();
 		this.isCalculating = true;
 	}
 
