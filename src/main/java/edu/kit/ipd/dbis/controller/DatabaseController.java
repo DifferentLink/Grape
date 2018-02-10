@@ -5,9 +5,7 @@ import edu.kit.ipd.dbis.database.exceptions.files.FileContentCouldNotBeReadExcep
 import edu.kit.ipd.dbis.database.exceptions.files.FileContentNotAsExpectedException;
 import edu.kit.ipd.dbis.database.exceptions.files.FileCouldNotBeSavedException;
 import edu.kit.ipd.dbis.database.exceptions.files.FileNameAlreadyTakenException;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.gui.GrapeUI;
