@@ -3,25 +3,17 @@ package edu.kit.ipd.dbis.gui.popups;
 import edu.kit.ipd.dbis.controller.DatabaseController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * A window to configure the database
- */
-public class ConfigureDatabaseUI extends JFrame {
+public class ConfigureDatabaseOfSelectionUI extends JFrame {
 
+	private String filePath;
+	private List<Integer> graphs;
 	private final DatabaseController databaseController;
 	private final ResourceBundle language;
 	private final Theme theme;
@@ -31,12 +23,9 @@ public class ConfigureDatabaseUI extends JFrame {
 	JTextArea userInput;
 	JTextArea passwordInput;
 
-	/**
-	 * @param databaseController the responsible controller
-	 * @param language the language to use
-	 * @param theme the theme to style the window
-	 */
-	public ConfigureDatabaseUI(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+	public ConfigureDatabaseOfSelectionUI(DatabaseController databaseController, ResourceBundle language, Theme theme, String filePath, List<Integer> graphs) {
+		this.filePath = filePath;
+		this.graphs = graphs;
 
 		super.setTitle("Configure Database"); // todo use language resource
 		this.databaseController = databaseController;
@@ -69,7 +58,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		JPanel buttonContainer = new JPanel();
 		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
 		JButton configureButton = new JButton("Configure"); // todo use language resource
-		configureButton.addActionListener(new ConfigureDatabaseAction(this));
+		configureButton.addActionListener(new ConfigureDatabaseOfSelectionUI.ConfigureDatabaseOfSelectionAction(this));
 		theme.style(configureButton);
 		configureButton.setMaximumSize(new Dimension(50, 30));
 		buttonContainer.add(Box.createHorizontalGlue());
@@ -83,22 +72,21 @@ public class ConfigureDatabaseUI extends JFrame {
 		container.add(buttonContainer);
 		this.add(container);
 		this.setMinimumSize(new Dimension(300, 200));
-		this.setLocationRelativeTo(null);
 	}
 
-	private class ConfigureDatabaseAction implements ActionListener {
+	private class ConfigureDatabaseOfSelectionAction implements ActionListener {
 
-		private final JFrame configureDatabaseUI;
+		private final JFrame configureDatabaseOfSelectionUI;
 
-		ConfigureDatabaseAction(JFrame configureDatabaseUI) {
-			this.configureDatabaseUI = configureDatabaseUI;
+		public ConfigureDatabaseOfSelectionAction(JFrame configureDatabaseOfSelectionUI) {
+			this.configureDatabaseOfSelectionUI = configureDatabaseOfSelectionUI;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			databaseController.newDatabase(urlInput.getText(), userInput.getText(),
-					passwordInput.getText(), nameInput.getText());
-			configureDatabaseUI.dispose();
+			databaseController.saveSelection(urlInput.getText(), userInput.getText(),
+					passwordInput.getText(), nameInput.getText(), filePath, graphs);
+			configureDatabaseOfSelectionUI.dispose();
 		}
 	}
 }

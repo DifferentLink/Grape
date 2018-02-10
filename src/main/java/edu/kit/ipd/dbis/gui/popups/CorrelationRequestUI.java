@@ -1,7 +1,3 @@
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.CorrelationController;
@@ -9,11 +5,13 @@ import edu.kit.ipd.dbis.correlation.CorrelationOutput;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.gui.AlternateTable;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.FontRenderContext;
@@ -21,13 +19,25 @@ import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * A window that displays the result of a correlation request
+ */
 public class CorrelationRequestUI extends JFrame {
 
 	private final CorrelationController correlationController;
 	private final String correlationRequest;
 	private final Theme theme;
 
-	public CorrelationRequestUI(CorrelationController correlationController, String correlationRequest, ResourceBundle language, Theme theme) throws InvalidCorrelationInputException {
+	/**
+	 * @param correlationController the responsible controller
+	 * @param correlationRequest the correlation request as a string
+	 * @param language the language to use
+	 * @param theme the theme to style the window
+	 * @throws InvalidCorrelationInputException if the correlation request is invalid
+	 */
+	public CorrelationRequestUI(CorrelationController correlationController,
+	                            String correlationRequest,
+	                            ResourceBundle language, Theme theme) throws InvalidCorrelationInputException {
 		this.correlationController = correlationController;
 		this.correlationRequest = correlationRequest;
 		this.theme = theme;
@@ -61,7 +71,7 @@ public class CorrelationRequestUI extends JFrame {
 	private class CloseAction implements ActionListener {
 		private final CorrelationRequestUI correlationRequestUI;
 
-		public CloseAction(CorrelationRequestUI correlationRequestUI) {
+		CloseAction(CorrelationRequestUI correlationRequestUI) {
 			this.correlationRequestUI = correlationRequestUI;
 		}
 

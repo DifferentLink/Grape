@@ -13,8 +13,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +32,9 @@ public class GenerateController {
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
 
+	/**
+	 * @param grapeUI the GUI to manage
+	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
 	}
@@ -112,8 +114,11 @@ public class GenerateController {
 		}
 
 		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
-		try {
-			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			try {
+				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			} catch (NotEnoughGraphsException e){
+				statusbar.addMessage(e.getMessage());
+			}
 			this.saveGraphs(graphs);
 
 			List<Thread> jobs = new LinkedList<>();
@@ -124,20 +129,24 @@ public class GenerateController {
 						graph.calculateProperties();
 						try {
 							database.replaceGraph(graph.getId(), graph);
-						} catch (ConnectionFailedException e) {
-							e.printStackTrace();
-						} catch (InsertionFailedException e) {
-							e.printStackTrace();
-						} catch (UnexpectedObjectException e) {
-							e.printStackTrace();
+							statusbar.addEvent(EventType.ADD, graph.getId());
+						} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+							statusbar.addMessage(e.getMessage());
 						}
-						System.out.println("Finished graph: " + graph.toString());
+						System.out.println("Finished graph " + graph.getId() + ": " + graph.toString());
 					}
 				}));
 			}
+			int runningJobs = 0;
+			final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
 
 			for (Thread job : jobs) {
 				job.start();
+				if (runningJobs < maxJobs) {
+					runningJobs++;
+				} else {
+					job.join();
+				}
 			}
 
 			for (Thread job : jobs) {
