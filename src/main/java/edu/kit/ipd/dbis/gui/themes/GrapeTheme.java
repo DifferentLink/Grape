@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.gui.themes;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 
 /**
  * A possible theme to use for Grape's GUI

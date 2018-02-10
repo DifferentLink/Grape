@@ -1,11 +1,12 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.themes;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Font;
 
 /**
  * Defines the properties a theme has to have
