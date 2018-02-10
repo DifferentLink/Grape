@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
@@ -9,25 +5,38 @@ import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.popups.AboutUI;
-import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
+import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import edu.kit.ipd.dbis.log.Log;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+/**
+ * Grape's menu
+ */
 public class MenuUI extends JMenuBar {
 
 	private final StatusbarController statusbarController;
 	private final Theme theme;
 
+	/**
+	 * @param generateController the controller responsible for generating graphs
+	 * @param databaseController the controller responsible for database management
+	 * @param statusbarController the controller responsible for updating the statusbar
+	 * @param graphEditorController the controller responsible for the graph editor
+	 * @param language the language used
+	 * @param theme the theme to style the menu
+	 */
 	public MenuUI(GenerateController generateController,
 	              DatabaseController databaseController,
 	              StatusbarController statusbarController,
@@ -98,7 +107,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public NewDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		NewDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -117,7 +126,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public GenerateGraphAction(GenerateController generateController, ResourceBundle language, Theme theme) {
+		GenerateGraphAction(GenerateController generateController, ResourceBundle language, Theme theme) {
 			this.generateController = generateController;
 			this.language = language;
 			this.theme = theme;
@@ -136,7 +145,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public ReadBFSCodeAction(GenerateController generateController, ResourceBundle language, Theme theme) {
+		ReadBFSCodeAction(GenerateController generateController, ResourceBundle language, Theme theme) {
 			this.generateController = generateController;
 			this.language = language;
 			this.theme = theme;
@@ -155,7 +164,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public OpenDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		OpenDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -189,7 +198,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public ImportDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		ImportDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -223,7 +232,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public SaveAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		SaveAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -291,7 +300,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public SaveSelectionAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		SaveSelectionAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -345,7 +354,7 @@ public class MenuUI extends JMenuBar {
 	private class CreateEmptyGraphAction implements ActionListener {
 		private final GraphEditorController graphEditorController;
 
-		public CreateEmptyGraphAction(GraphEditorController graphEditorController) {
+		CreateEmptyGraphAction(GraphEditorController graphEditorController) {
 			this.graphEditorController = graphEditorController;
 		}
 
