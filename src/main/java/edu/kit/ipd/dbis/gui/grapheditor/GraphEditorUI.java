@@ -40,6 +40,7 @@ public class GraphEditorUI extends JPanel {
 
 	private RenderableGraph graph = new RenderableGraph();
 	private PropertyGraph<Integer, Integer> propertyGraph;
+	private VertexFactory factory = new VertexFactory();
 
 	private GraphEditorHistory history = new GraphEditorHistory();
 	private Editor graphEditor;
@@ -249,19 +250,19 @@ public class GraphEditorUI extends JPanel {
 						if (vertex != null) {
 							Vertex start = graph.getVertexAt(mStart);
 							if (start == null) {
-								start = new Vertex(mStart);
+								start = factory.createVertex(mStart);
 							}
 
 							Vertex target = graph.getVertexAt(mTarget);
 							if (target == null) {
-								target = new Vertex(mTarget);
+								target = factory.createVertex(mTarget);
 							}
 							graph = graph.deepCopy();
 							graph.add(new Edge(start, target));
 							history.addToHistory(graph);
 						} else {
 							graph = graph.deepCopy();
-							graph.add(new Vertex(mTarget));
+							graph.add(factory.createVertex(mTarget));
 							history.addToHistory(graph);
 						}
 					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Released right mouse button
@@ -379,8 +380,6 @@ public class GraphEditorUI extends JPanel {
 					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
 					graph = new RenderableGraph();
 					history = new GraphEditorHistory();
-				} else {
-					System.out.println("Invalid graph");
 				}
 			} catch (InvalidGraphInputException e) {
 				e.printStackTrace();

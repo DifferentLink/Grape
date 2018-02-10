@@ -23,6 +23,7 @@ public class RenderableGraph {
 
 	/**
 	 * Creates an empty graph
+	 *
 	 */
 	public RenderableGraph() {
 		vertices = new HashSet<>();
@@ -32,6 +33,7 @@ public class RenderableGraph {
 
 	/**
 	 * Creates a graph with the given edges and vertices and assigns an ID.
+	 *
 	 * @param vertices the graph's vertices
 	 * @param edges the graph's edges
 	 * @param id the graph's ID
@@ -45,6 +47,7 @@ public class RenderableGraph {
 
 	/**
 	 * Creates a graph with the given subgraphs, edges and vertices and assigns an ID.
+	 *
 	 * @param vertices the graph's vertices
 	 * @param edges the graph's edges
 	 * @param id the graph's ID
@@ -58,7 +61,8 @@ public class RenderableGraph {
 	}
 
 	/**
-	 * Takes a PropertyGraph as an input and parses it into a RenderableGraph
+	 * Takes a PropertyGraph as an input and parses it into a RenderableGraph.
+	 *
 	 * @param propertyGraph the input graph
 	 */
 	public RenderableGraph(PropertyGraph propertyGraph) {
@@ -66,6 +70,8 @@ public class RenderableGraph {
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
+
+		VertexFactory factory = new VertexFactory();
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
 		Set addedEdges = new HashSet();
@@ -75,7 +81,7 @@ public class RenderableGraph {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
 			}
@@ -86,7 +92,7 @@ public class RenderableGraph {
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
@@ -102,7 +108,8 @@ public class RenderableGraph {
 	}
 
 	/**
-	 * Converts a RenderableGraph to a PropertyGraph
+	 * Converts a RenderableGraph to a PropertyGraph.
+	 *
 	 * @return the PropertyGraph
 	 */
 	public PropertyGraph<Integer, Integer> asPropertyGraph() {
@@ -137,7 +144,7 @@ public class RenderableGraph {
 	}
 
 	/**
-	 * Converts a RenderableGraph to a PropertyGraph with colored vertices.
+	 * Converts a PropertyGraph to a RenderableGraph with colored vertices.
 	 *
 	 * @param propertyGraph the input graph
 	 * @param coloring the abstract vertex coloring
@@ -149,6 +156,8 @@ public class RenderableGraph {
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
+
+		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> colorsToColorObjectMap = new HashMap<>();
@@ -174,7 +183,7 @@ public class RenderableGraph {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				vertex1.setFillColor(colorsToColorObjectMap.get(colors.get(v)));
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
@@ -186,7 +195,7 @@ public class RenderableGraph {
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
 					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
@@ -203,7 +212,7 @@ public class RenderableGraph {
 	}
 
 	/**
-	 * Converts a RenderableGraph to a PropertyGraph with colored vertices and edges.
+	 * Converts a PropertyGraph to a RenderableGraph with colored vertices and edges.
 	 *
 	 * @param propertyGraph the input graph
 	 * @param coloring the abstract vertex coloring
@@ -215,6 +224,8 @@ public class RenderableGraph {
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
+
+		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> vertexColorsToColorMap = new HashMap<>();
@@ -258,7 +269,7 @@ public class RenderableGraph {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				vertex1.setFillColor(vertexColorsToColorMap.get(vertexColors.get(v)));
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
@@ -270,7 +281,7 @@ public class RenderableGraph {
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
 					vertex2.setFillColor(vertexColorsToColorMap.get(vertexColors.get(edgeTarget)));
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
