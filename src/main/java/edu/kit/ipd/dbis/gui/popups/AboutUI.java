@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -11,7 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * A window to display grape's about text
+ */
 public class AboutUI extends JFrame {
+
+	/**
+	 * @param theme the theme used to style the popup
+	 */
 	public AboutUI(Theme theme) {
 		this.setBackground(theme.backgroundColor);
 		try {

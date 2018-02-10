@@ -1,7 +1,3 @@
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
@@ -16,6 +12,9 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * A window to configure the database
+ */
 public class ConfigureDatabaseUI extends JFrame {
 
 	private final DatabaseController databaseController;
@@ -27,6 +26,11 @@ public class ConfigureDatabaseUI extends JFrame {
 	JTextArea userInput;
 	JTextArea passwordInput;
 
+	/**
+	 * @param databaseController the responsible controller
+	 * @param language the language to use
+	 * @param theme the theme to style the window
+	 */
 	public ConfigureDatabaseUI(DatabaseController databaseController, ResourceBundle language, Theme theme) { // todo [Design Deviation] new menu entry
 
 		super.setTitle("Configure Database"); // todo use language resource

@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.GenerateController;
@@ -16,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
+/**
+ * A window to generate graphs
+ */
 public class GenerateGraphUI extends JFrame {
 
 	private final GenerateController generateController;
@@ -33,6 +32,11 @@ public class GenerateGraphUI extends JFrame {
 	private int maxEdges = 7;
 	private int amount = 4;
 
+	/**
+	 * @param generateController the controller responsible for generate the graphs
+	 * @param language the language to use
+	 * @param theme the theme to style the window
+	 */
 	public GenerateGraphUI(GenerateController generateController, ResourceBundle language, Theme theme) {
 
 		super(language.getString("generateGraphs"));

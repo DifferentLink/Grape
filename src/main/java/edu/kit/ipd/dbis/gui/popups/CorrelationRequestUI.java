@@ -1,7 +1,3 @@
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.CorrelationController;
@@ -17,11 +13,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * A window that displays the result of a correlation request
+ */
 public class CorrelationRequestUI extends JFrame {
 
 	private final CorrelationController correlationController;
 	private final String correlationRequest;
 
+	/**
+	 * @param correlationController the responsible controller
+	 * @param correlationRequest the correlation request as a string
+	 * @param language the language to use
+	 * @param theme the theme to style the window
+	 * @throws InvalidCorrelationInputException
+	 */
 	public CorrelationRequestUI(CorrelationController correlationController, String correlationRequest, ResourceBundle language, Theme theme) throws InvalidCorrelationInputException {
 		this.correlationController = correlationController;
 		this.correlationRequest = correlationRequest;

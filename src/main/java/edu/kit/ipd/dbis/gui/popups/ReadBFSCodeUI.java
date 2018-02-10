@@ -13,10 +13,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
+/**
+ * A window to read a BFS-Code
+ */
 public class ReadBFSCodeUI extends JFrame{
 
 	private JTextField bfsCodeInput;
 
+	/**
+	 * @param generateController the controller responsible for parsing the BFS-Code
+	 * @param language the language to use
+	 * @param theme the theme to style the window with
+	 */
 	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) { // todo use basic regex matching for BFS-Code
 		super("Read BFS-Code"); // todo use language resource
 		this.setSize(350, 200);
