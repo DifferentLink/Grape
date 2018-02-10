@@ -1,7 +1,9 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.KkGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 
@@ -161,11 +163,18 @@ public class RenderableGraph {
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
 
+
+
 		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> colorsToColorObjectMap = new HashMap<>();
 		Map<V, Integer> colors = coloring.getColors();
+
+
+		KkGraphAlgorithm.KkGraph kkGraph = (KkGraphAlgorithm.KkGraph) propertyGraph.getProperty(KkGraph.class).getValue();
+		Map<V, Integer> subgraphs = kkGraph.getKkGraph();
+		System.out.println(subgraphs);
 
 		// associate integer value of colorings
 		// with Color object
@@ -182,6 +191,11 @@ public class RenderableGraph {
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
 		Set<Object> addedEdges = new HashSet<>();
 
+		List<Set<V>> propertyKkSubgraphs = kkGraph.getSubgraphs();
+
+		Map<Vertex, Integer> kksubgraphs = new HashMap<>();
+
+		List<Set<Vertex>> renderableKksubgraph = new ArrayList<>();
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
@@ -189,6 +203,9 @@ public class RenderableGraph {
 			if (!objectVertexMap.containsKey(v)) {
 				Vertex vertex1 = factory.createVertex();
 				vertex1.setFillColor(colorsToColorObjectMap.get(colors.get(v)));
+
+				kksubgraphs.put(vertex1, subgraphs.get(v));
+
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
 			}
@@ -210,6 +227,8 @@ public class RenderableGraph {
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
 					Vertex vertex2 = factory.createVertex();
+					kksubgraphs.put(vertex2, subgraphs.get(edgeTarget));
+
 					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
@@ -219,6 +238,20 @@ public class RenderableGraph {
 				this.edges.add(sourceTargetEdge);
 			}
 		}
+		Map<Integer, Set<Vertex>> groups = new HashMap<>();
+		kksubgraphs.forEach((v, subgraph) -> {
+			Set<Vertex> g = groups.get(subgraph);
+			if (g == null) {
+				g = new HashSet<>();
+				groups.put(subgraph, g);
+			}
+			g.add(v);
+		});
+		Set<Set<Vertex>> classes = new HashSet<>(kkGraph.getNumberOfSubgraphs());
+		for (Set<Vertex> c : groups.values()) {
+			classes.add(c);
+		}
+		this.subgraphs = classes;
 	}
 
 	/**
