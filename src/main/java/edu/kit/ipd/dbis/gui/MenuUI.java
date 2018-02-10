@@ -6,19 +6,17 @@ import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.popups.AboutUI;
 import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
+import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseOfSelectionUI;
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -28,6 +26,7 @@ public class MenuUI extends JMenuBar {
 
 	private final StatusbarController statusbarController;
 	private final Theme theme;
+	private final JTable tableUI;
 
 	/**
 	 * @param generateController the controller responsible for generating graphs
@@ -37,13 +36,14 @@ public class MenuUI extends JMenuBar {
 	 * @param language the language used
 	 * @param theme the theme to style the menu
 	 */
-	public MenuUI(GenerateController generateController,
-	              DatabaseController databaseController,
-	              StatusbarController statusbarController,
-	              GraphEditorController graphEditorController,
-	              ResourceBundle language,
-	              Theme theme) {
+	public MenuUI (JTable tableUI, GenerateController generateController,
+				   DatabaseController databaseController,
+				   StatusbarController statusbarController,
+				   GraphEditorController graphEditorController,
+				   ResourceBundle language,
+				   Theme theme) {
 
+		this.tableUI = tableUI;
 		this.statusbarController = statusbarController;
 		this.theme = theme;
 
@@ -294,7 +294,7 @@ public class MenuUI extends JMenuBar {
 		}
 	}
 
-	private class SaveSelectionAction implements ActionListener { // todo controller.saveSelection(graphs)
+	private class SaveSelectionAction implements ActionListener {
 
 		private final DatabaseController databaseController;
 		private final ResourceBundle language;
@@ -316,11 +316,20 @@ public class MenuUI extends JMenuBar {
 				System.out.println("Saved selection to a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
-					try {
-						databaseController.saveSelection(file.getPath(), new LinkedList<>());
-					} catch (Exception e) { // todo replace with correct exception as soon as available
-						e.printStackTrace();
+					//Inserting selected graphIds
+					LinkedList<Integer> graphs = new LinkedList<>();
+					int[] selectedRows = tableUI.getSelectedRows();
+					if (selectedRows.length == 1) {
+						graphs.add((Integer) tableUI.getValueAt(selectedRows[0], 0));
 					}
+					else {
+						for (int row : selectedRows) {
+							graphs.add((Integer) tableUI.getValueAt(selectedRows[row], 0));
+						}
+					}
+					//Open Database configuration window
+					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController, language, theme, file.getPath(), graphs);
+					configureDatabaseOfSelectionUI.setVisible(true);
 				}
 			} else {
 				System.out.println("Saving selection as database failed"); // todo remove sout
