@@ -9,7 +9,6 @@ import java.awt.geom.Ellipse2D;
  * A vertex that can be rendered in the graph editor.
  */
 public class Vertex implements Comparable {
-	static int idCount = 0;
 	private int id;
 
 	public int x;
@@ -25,8 +24,7 @@ public class Vertex implements Comparable {
 	 * @param y the vertex' y coordinate
 	 */
 	public Vertex(int x, int y) {
-		this.id = idCount;
-		idCount++;
+		this.id = 0;
 		this.x = x;
 		this.y = y;
 	}
@@ -38,8 +36,7 @@ public class Vertex implements Comparable {
 	 * @param fillColor the vertex' fill color
 	 */
 	public Vertex(int x, int y, Color fillColor) {
-		this.id = idCount;
-		idCount++;
+		this.id = 0;
 		this.x = x;
 		this.y = y;
 		this.fillColor = fillColor;
@@ -50,8 +47,7 @@ public class Vertex implements Comparable {
 	 * @param point the vertex' location
 	 */
 	public Vertex(Point point) {
-		this.id = idCount;
-		idCount++;
+		this.id = 0;
 		this.x = point.x;
 		this.y = point.y;
 	}
@@ -155,6 +151,10 @@ public class Vertex implements Comparable {
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	/**

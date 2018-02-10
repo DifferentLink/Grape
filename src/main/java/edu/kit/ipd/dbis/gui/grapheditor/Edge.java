@@ -117,4 +117,10 @@ public class Edge {
 	public void setThickness(int thickness) {
 		this.thickness = thickness;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		return this.getStart() == ((Edge) o).getStart()
+				&& this.getEnd() == ((Edge) o).getEnd();
+	}
 }

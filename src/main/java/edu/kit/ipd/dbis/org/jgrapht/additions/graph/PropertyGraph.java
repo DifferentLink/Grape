@@ -100,12 +100,9 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 * @param graph the input graph
 	 * @return if this graph is equal to the input graph
 	 */
-	public boolean equals(PropertyGraph graph) {
-		VF2GraphIsomorphismInspector<Integer, DefaultEdge> iI =
-				new VF2GraphIsomorphismInspector<Integer, DefaultEdge>(graph, this);
-		return iI.isomorphismExists(
-
-		);
+	public boolean equals(PropertyGraph<V, E> graph) {
+		VF2GraphIsomorphismInspector<V, E> iI = new VF2GraphIsomorphismInspector<>(graph, this);
+		return iI.isomorphismExists();
 	}
 
 	/**

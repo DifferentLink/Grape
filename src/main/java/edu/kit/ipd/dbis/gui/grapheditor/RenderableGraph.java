@@ -3,16 +3,13 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
+import org.jgrapht.alg.util.IntegerVertexFactory;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The graph representation used in the graph editor.
@@ -26,6 +23,7 @@ public class RenderableGraph {
 
 	/**
 	 * Creates an empty graph
+	 *
 	 */
 	public RenderableGraph() {
 		vertices = new HashSet<>();
@@ -35,6 +33,7 @@ public class RenderableGraph {
 
 	/**
 	 * Creates a graph with the given edges and vertices and assigns an ID.
+	 *
 	 * @param vertices the graph's vertices
 	 * @param edges the graph's edges
 	 * @param id the graph's ID
@@ -48,6 +47,7 @@ public class RenderableGraph {
 
 	/**
 	 * Creates a graph with the given subgraphs, edges and vertices and assigns an ID.
+	 *
 	 * @param vertices the graph's vertices
 	 * @param edges the graph's edges
 	 * @param id the graph's ID
@@ -61,64 +61,71 @@ public class RenderableGraph {
 	}
 
 	/**
-	 * Takes a PropertyGraph as an input and parses it into a RenderableGraph
+	 * Takes a PropertyGraph as an input and parses it into a RenderableGraph.
+	 *
 	 * @param propertyGraph the input graph
 	 */
-	public RenderableGraph(PropertyGraph propertyGraph) {
+	public RenderableGraph(PropertyGraph<Integer, Integer> propertyGraph) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-
+		VertexFactory factory = new VertexFactory();
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
 			}
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
-				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
-					addedEdges.add(e);
-					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
-				}
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				this.edges.add(sourceTargetEdge);
 			}
 		}
 	}
 
 	/**
-	 * Converts a RenderableGraph to a PropertyGraph
+	 * Converts a RenderableGraph to a PropertyGraph.
+	 *
 	 * @return the PropertyGraph
 	 */
 	public PropertyGraph<Integer, Integer> asPropertyGraph() {
 		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		Map<Vertex, Integer> vertexIntegerMap = new HashMap<>();
-		int vertexName = 0;
+		IntegerVertexFactory vertexFactory = new IntegerVertexFactory();
 
-		// iterate over vertices and assign
-		// integer value to each one
-		for (Vertex vertex : this.vertices) {
-			vertexIntegerMap.put(vertex, vertexName);
-			graph.addVertex(vertexName);
-			vertexName++;
+		// iterate over vertices
+		for (Vertex vertex : new TreeSet<>(this.vertices)) {
+			Integer newVertex = vertexFactory.createVertex();
+			vertexIntegerMap.put(vertex, newVertex);
+			graph.addVertex(newVertex);
 		}
 
 		// iterate over edges
@@ -141,7 +148,8 @@ public class RenderableGraph {
 	}
 
 	/**
-	 * Converts a RenderableGraph to a PropertyGraph with colored vertices
+	 * Converts a PropertyGraph to a RenderableGraph with colored vertices.
+	 *
 	 * @param propertyGraph the input graph
 	 * @param coloring the abstract vertex coloring
 	 * @param <V> the type representing vertices
@@ -152,6 +160,8 @@ public class RenderableGraph {
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
+
+		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> colorsToColorObjectMap = new HashMap<>();
@@ -170,14 +180,14 @@ public class RenderableGraph {
 		}
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				vertex1.setFillColor(colorsToColorObjectMap.get(colors.get(v)));
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
@@ -185,28 +195,35 @@ public class RenderableGraph {
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
 					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
-				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
-					addedEdges.add(e);
-					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
-				}
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				this.edges.add(sourceTargetEdge);
 			}
 		}
 	}
 
 	/**
-	 * Converts a RenderableGraph to a PropertyGraph with colored vertices and edges
+	 * Converts a PropertyGraph to a RenderableGraph with colored vertices and edges.
+	 *
 	 * @param propertyGraph the input graph
 	 * @param coloring the abstract vertex coloring
 	 * @param <V> the type representing vertices
@@ -217,6 +234,8 @@ public class RenderableGraph {
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
+
+		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> vertexColorsToColorMap = new HashMap<>();
@@ -253,14 +272,14 @@ public class RenderableGraph {
 		}
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				vertex1.setFillColor(vertexColorsToColorMap.get(vertexColors.get(v)));
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
@@ -268,24 +287,29 @@ public class RenderableGraph {
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
 					vertex2.setFillColor(vertexColorsToColorMap.get(vertexColors.get(edgeTarget)));
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
-				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
-					addedEdges.add(e);
-					Edge edge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
-					edge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
-					this.edges.add(edge);
-				}
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				sourceTargetEdge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
+				this.edges.add(sourceTargetEdge);
 			}
 		}
 	}
