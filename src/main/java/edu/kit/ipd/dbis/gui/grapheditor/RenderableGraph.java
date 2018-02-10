@@ -65,7 +65,7 @@ public class RenderableGraph {
 	 *
 	 * @param propertyGraph the input graph
 	 */
-	public RenderableGraph(PropertyGraph propertyGraph) {
+	public RenderableGraph(PropertyGraph<Integer, Integer> propertyGraph) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
@@ -201,11 +201,13 @@ public class RenderableGraph {
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				Edge targetSourceEdge = new Edge(objectVertexMap.get(edgeTarget), objectVertexMap.get(v));
+
 				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
+				if (!this.edges.contains(sourceTargetEdge) && !this.edges.contains(targetSourceEdge)) {
 					addedEdges.add(e);
-					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
+					this.edges.add(sourceTargetEdge);
 				}
 			}
 		}
@@ -287,13 +289,14 @@ public class RenderableGraph {
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				Edge targetSourceEdge = new Edge(objectVertexMap.get(edgeTarget), objectVertexMap.get(v));
+
 				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
+				if (!this.edges.contains(sourceTargetEdge) && !this.edges.contains(targetSourceEdge)) {
 					addedEdges.add(e);
-					Edge edge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
-					edge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
-					this.edges.add(edge);
+					sourceTargetEdge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
+					this.edges.add(sourceTargetEdge);
 				}
 			}
 		}
