@@ -20,6 +20,7 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class creates GraphDatabase-Objects and saves them by creating text files.
@@ -188,7 +189,7 @@ public class FileManager implements Connector {
 	 */
 	private boolean validFilterTable(FilterTable filterTable) throws SQLException {
 
-		LinkedList<String> columns = filterTable.getColumns();
+		List<String> columns = filterTable.getColumns();
 		HashSet<String> names = new HashSet<>();
 		names.add("id");
 		names.add("state");
@@ -207,7 +208,7 @@ public class FileManager implements Connector {
 	 */
 	private boolean validGraphTable(GraphTable graphTable) throws SQLException {
 
-		LinkedList<String> columns = graphTable.getColumns();
+		List<String> columns = graphTable.getColumns();
 		HashSet<String> names = new HashSet<>();
 		names.add("id");
 		names.add("graph");

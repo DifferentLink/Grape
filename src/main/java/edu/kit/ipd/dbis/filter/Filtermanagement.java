@@ -433,7 +433,7 @@ public class Filtermanagement {
         availableFilterGroups.clear();
         availableFilter.clear();
         this.database = database;
-        LinkedList<Filtersegment> activatedFilter = database.getFilters();
+        List<Filtersegment> activatedFilter = database.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
                 if (element.getClass() == Filtergroup.class) {
