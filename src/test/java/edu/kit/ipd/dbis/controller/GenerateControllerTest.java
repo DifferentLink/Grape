@@ -94,11 +94,7 @@ public class GenerateControllerTest {
 		}
 		g.setDatabase(database);
 		String bfsCode = "[1,2,0,0,0,-1,3]";
-		try {
-			g.generateBFSGraph(bfsCode);
-		} catch (InvalidBfsCodeInputException e) {
-			e.printStackTrace();
-		}
+		g.generateBFSGraph(bfsCode);
 		LinkedList<PropertyGraph<Integer, Integer>> graphs = null;
 		assert (graphs.isEmpty());
 	}
