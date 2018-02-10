@@ -108,7 +108,7 @@ public class GenerateController {
 	}
 
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InvalidGeneratorInputException {
+			InvalidGeneratorInputException, InterruptedException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
@@ -145,16 +145,16 @@ public class GenerateController {
 				if (runningJobs < maxJobs) {
 					runningJobs++;
 				} else {
-					job.join();
+					try {
+						job.join();
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
-
 			for (Thread job : jobs) {
 				job.join();
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		grapeUI.updateTable();
 	}
 		/**
@@ -162,7 +162,11 @@ public class GenerateController {
 	 */
 	public void generateEmptyGraph() { // todo please implement me
 		try {
-			generateGraphs(0, 0, 0, 0, 1);
+			try {
+				generateGraphs(0, 0, 0, 0, 1);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 		} catch (InvalidGeneratorInputException e) {
 			statusbar.addMessage(e.getMessage());
 		}
