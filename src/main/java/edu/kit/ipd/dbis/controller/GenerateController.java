@@ -1,6 +1,8 @@
 package edu.kit.ipd.dbis.controller;
 
 
+import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
+import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;

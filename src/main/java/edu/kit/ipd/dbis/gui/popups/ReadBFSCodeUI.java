@@ -5,7 +5,7 @@
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.GenerateController;
-import edu.kit.ipd.dbis.controller.InvalidBfsCodeInputException;
+import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.BorderFactory;
