@@ -4,10 +4,16 @@ import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;

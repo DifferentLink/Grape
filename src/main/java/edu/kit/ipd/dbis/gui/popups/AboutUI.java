@@ -3,8 +3,11 @@ package edu.kit.ipd.dbis.gui.popups;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
 import java.io.IOException;
 
 /**

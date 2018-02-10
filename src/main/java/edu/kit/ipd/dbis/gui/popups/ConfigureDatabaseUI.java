@@ -1,15 +1,20 @@
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
