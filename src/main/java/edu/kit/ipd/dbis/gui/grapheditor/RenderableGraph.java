@@ -174,7 +174,7 @@ public class RenderableGraph {
 
 		KkGraphAlgorithm.KkGraph kkGraph = (KkGraphAlgorithm.KkGraph) propertyGraph.getProperty(KkGraph.class).getValue();
 		Map<V, Integer> subgraphs = kkGraph.getKkGraph();
-		System.out.println(subgraphs);
+
 
 		// associate integer value of colorings
 		// with Color object
@@ -191,11 +191,8 @@ public class RenderableGraph {
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
 		Set<Object> addedEdges = new HashSet<>();
 
-		List<Set<V>> propertyKkSubgraphs = kkGraph.getSubgraphs();
-
 		Map<Vertex, Integer> kksubgraphs = new HashMap<>();
 
-		List<Set<Vertex>> renderableKksubgraph = new ArrayList<>();
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
@@ -227,6 +224,7 @@ public class RenderableGraph {
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
 					Vertex vertex2 = factory.createVertex();
+
 					kksubgraphs.put(vertex2, subgraphs.get(edgeTarget));
 
 					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
@@ -238,6 +236,8 @@ public class RenderableGraph {
 				this.edges.add(sourceTargetEdge);
 			}
 		}
+
+
 		Map<Integer, Set<Vertex>> groups = new HashMap<>();
 		kksubgraphs.forEach((v, subgraph) -> {
 			Set<Vertex> g = groups.get(subgraph);
@@ -252,6 +252,7 @@ public class RenderableGraph {
 			classes.add(c);
 		}
 		this.subgraphs = classes;
+
 	}
 
 	/**
