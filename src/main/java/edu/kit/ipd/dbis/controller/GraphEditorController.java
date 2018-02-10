@@ -23,7 +23,7 @@ import static edu.kit.ipd.dbis.log.EventType.REMOVE;
 /**
  * The type Graph editor controller.
  */
-public class GraphEditorController {
+public final class GraphEditorController {
 
 	private GraphDatabase database;
 	private StatusbarController statusbar;
@@ -33,6 +33,9 @@ public class GraphEditorController {
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
 
+	/**
+	 * @param grapeUI the GUI the graph editor is part of
+	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
 	}

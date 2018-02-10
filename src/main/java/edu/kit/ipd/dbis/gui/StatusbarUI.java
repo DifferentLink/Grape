@@ -44,7 +44,9 @@ public class StatusbarUI extends JPanel {
 	 * @param language the language used
 	 * @param theme the theme used to style the statusbar
 	 */
-	public StatusbarUI(StatusbarController statusbarController, DatabaseController databaseController,ResourceBundle language, Theme theme) {
+	public StatusbarUI(StatusbarController statusbarController,
+	                   DatabaseController databaseController,
+	                   ResourceBundle language, Theme theme) {
 		this.statusbarController = statusbarController;
 		this.databaseController = databaseController;
 		this.generateController = GenerateController.getInstance();
@@ -101,7 +103,7 @@ public class StatusbarUI extends JPanel {
 		return pauseButton;
 	}
 
-	private class PauseRunAction implements ActionListener {
+	private final class PauseRunAction implements ActionListener {
 
 		private final JButton button;
 
@@ -139,7 +141,7 @@ public class StatusbarUI extends JPanel {
 		private final LogUI logUI;
 		private Component component;
 
-		public ShowLogAction(LogUI logUI, Component component) {
+		ShowLogAction(LogUI logUI, Component component) {
 			this.logUI = logUI;
 			this.component = component;
 		}

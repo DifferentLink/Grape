@@ -30,9 +30,9 @@ public class CorrelationUI extends JPanel {
 
 	/**
 	 * Constructs the correlation panel
-	 * @param controller
-	 * @param language
-	 * @param theme
+	 * @param controller the controller responsible for the correlation request
+	 * @param language the language used
+	 * @param theme theme theme used to style to correlation window
 	 */
 	public CorrelationUI(CorrelationController controller, ResourceBundle language, Theme theme) {
 		this.controller = controller;
@@ -73,8 +73,8 @@ public class CorrelationUI extends JPanel {
 		ResourceBundle language;
 		Theme theme;
 
-		public CorrelationRequestAction(CorrelationController controller, JTextField correlationInput,
-		                                ResourceBundle language, Theme theme) {
+		CorrelationRequestAction(CorrelationController controller, JTextField correlationInput,
+		                         ResourceBundle language, Theme theme) {
 			this.controller = controller;
 			this.correlationInput = correlationInput;
 			this.language = language;

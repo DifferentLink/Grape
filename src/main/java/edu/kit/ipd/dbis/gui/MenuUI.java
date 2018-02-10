@@ -107,7 +107,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public NewDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		NewDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -126,7 +126,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public GenerateGraphAction(GenerateController generateController, ResourceBundle language, Theme theme) {
+		GenerateGraphAction(GenerateController generateController, ResourceBundle language, Theme theme) {
 			this.generateController = generateController;
 			this.language = language;
 			this.theme = theme;
@@ -145,7 +145,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public ReadBFSCodeAction(GenerateController generateController, ResourceBundle language, Theme theme) {
+		ReadBFSCodeAction(GenerateController generateController, ResourceBundle language, Theme theme) {
 			this.generateController = generateController;
 			this.language = language;
 			this.theme = theme;
@@ -164,7 +164,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public OpenDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		OpenDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -198,7 +198,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public ImportDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		ImportDatabaseAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -232,7 +232,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public SaveAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		SaveAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -300,7 +300,7 @@ public class MenuUI extends JMenuBar {
 		private final ResourceBundle language;
 		private final Theme theme;
 
-		public SaveSelectionAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+		SaveSelectionAction(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 			this.databaseController = databaseController;
 			this.language = language;
 			this.theme = theme;
@@ -354,7 +354,7 @@ public class MenuUI extends JMenuBar {
 	private class CreateEmptyGraphAction implements ActionListener {
 		private final GraphEditorController graphEditorController;
 
-		public CreateEmptyGraphAction(GraphEditorController graphEditorController) {
+		CreateEmptyGraphAction(GraphEditorController graphEditorController) {
 			this.graphEditorController = graphEditorController;
 		}
 

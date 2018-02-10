@@ -43,7 +43,7 @@ public class LogUI extends JFrame {
 
 	/**
 	 * Render's GUI elements from the history into a log
-	 * @param component
+	 * @param component the component used to position the log
 	 */
 	public void drawLog(Component component) {
 		this.dispose();
@@ -73,6 +73,7 @@ public class LogUI extends JFrame {
 			case MESSAGE : return renderMESSAGE(event);
 			case REMOVE : return renderREMOVE(event);
 			case ADD : return renderADD(event);
+			default : break;
 		}
 		return null;
 	}
@@ -112,7 +113,7 @@ public class LogUI extends JFrame {
 	private class HasFocusListener implements FocusListener {
 		private final LogUI logUI;
 
-		public HasFocusListener(LogUI logUI) {
+		HasFocusListener(LogUI logUI) {
 			this.logUI = logUI;
 		}
 

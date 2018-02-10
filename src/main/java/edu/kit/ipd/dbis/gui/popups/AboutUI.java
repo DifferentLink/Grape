@@ -22,7 +22,7 @@ public class AboutUI extends JFrame {
 		this.setBackground(theme.backgroundColor);
 		try {
 			this.setIconImage(ImageIO.read(getClass().getResource("/icons/GrapeLogo.png")));
-		} catch (IOException ignored) {}
+		} catch (IOException ignored) { }
 		JPanel container = new JPanel(new BorderLayout());
 		container.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		JLabel aboutText = new JLabel("About text");

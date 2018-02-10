@@ -145,10 +145,10 @@ public class GraphEditorUI extends JPanel {
 		center = new JButton("Center"); // todo replace with language resource
 		theme.style(center);
 		center.addActionListener(new CenterVerticesAction());
-		preview = new JButton("Preview");// todo replace with language resource
+		preview = new JButton("Preview"); // todo replace with language resource
 		preview.addActionListener(new PreviewAction(graphEditorController));
 		theme.style(preview);
-		apply = new JButton("Apply");// todo replace with language resource
+		apply = new JButton("Apply"); // todo replace with language resource
 		apply.addActionListener(new ApplyAction(graphEditorController));
 
 		theme.style(apply);

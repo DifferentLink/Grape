@@ -7,7 +7,10 @@ import java.awt.Font;
  * A possible theme to use for Grape's GUI
  */
 public class GrapeTheme extends Theme {
-	public GrapeTheme() { // todo choose proper colors for GUI
+	/**
+	 * Defines colors, font's and dimensions for the GUI
+	 */
+	public GrapeTheme() {
 		super.fontColor = Color.BLACK;
 		super.defaultFontSize = 14;
 		super.defaultFont = new Font("Open Sans", Font.PLAIN, defaultFontSize);

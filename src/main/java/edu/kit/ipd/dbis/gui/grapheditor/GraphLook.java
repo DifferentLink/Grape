@@ -11,13 +11,15 @@ import java.util.TreeSet;
  * This class simply lists default render values for RenderableGraphs.
  */
 public class GraphLook {
-	public static final int vertexDiameter = 25;
-	public static final Color vertexFillColor = Color.WHITE;
-	public static final int vertexOutLineThickness = 1;
-	public static final Color vertexOutlineColor = Color.BLACK;
+	public static final int VERTEX_DIAMETER = 25;
+	public static final Color VERTEX_FILL_COLOR = Color.WHITE;
+	public static final int VERTEX_OUT_LINE_THICKNESS = 1;
+	public static final Color VERTEX_OUTLINE_COLOR = Color.BLACK;
 
-	public static final int edgeThickness = 2;
-	public static final Color edgeColor = Color.BLACK;
+	public static final int EDGE_THICKNESS = 2;
+	public static final Color EDGE_COLOR = Color.BLACK;
+
+	private GraphLook() { }
 
 	/**
 	 * This method takes n input colors and spreads these on the colorwheel

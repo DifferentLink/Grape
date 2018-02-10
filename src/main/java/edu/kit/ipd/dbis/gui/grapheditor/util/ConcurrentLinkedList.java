@@ -131,7 +131,7 @@ public class ConcurrentLinkedList<T> {
 		return new ConcurrentIterator<>(this);
 	}
 
-	private class ConcurrentIterator<E> implements Iterator<E> {
+	private final class ConcurrentIterator<E> implements Iterator<E> {
 
 		private ConcurrentNode<E> pointer;
 

@@ -50,7 +50,7 @@ public class UIFilterManager {
 
 	/**
 	 * Adds a new FilterGroup to the known Filters.
-	 * @param name
+	 * @param name the name of the FilterGroup
 	 */
 	public void addNewFilterGroup(String name) {
 		FilterGroup newGroup = new FilterGroup(getUniqueID(), name);
@@ -85,7 +85,9 @@ public class UIFilterManager {
 	public void remove(int id) {
 		simpleFilter.removeIf(simpleFilter -> simpleFilter.getID() == id);
 		filterGroups.removeIf(filterGroup -> filterGroup.getID() == id);
-		filterGroups.forEach(filterGroup -> filterGroup.getSimpleFilter().removeIf(simpleFilter1 -> simpleFilter1.getID() == id));
+		filterGroups.forEach(filterGroup -> {
+			filterGroup.getSimpleFilter().removeIf(simpleFilter1 -> simpleFilter1.getID() == id);
+		});
 	}
 
 	/**
@@ -143,7 +145,7 @@ public class UIFilterManager {
 			if (targetFilterGroup != null) {
 				SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), filterInfo[1]);
 				addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
-			} else if (!filterInfo[0].equals("")){
+			} else if (!filterInfo[0].equals("")) {
 				addNewFilterGroup(filterInfo[0]);
 			}
 		}
@@ -167,7 +169,7 @@ public class UIFilterManager {
 				}
 				stringToFilters(stringBuilder.toString());
 			}
-		} catch (IOException e) {}  // todo handle possible exception
+		} catch (IOException e) { }  // todo handle possible exception
 	}
 
 	private FilterGroup getFilterGroupByName(String name) {

@@ -242,7 +242,7 @@ public class FilterUI extends JPanel {
 		return filterGroupUI;
 	}
 
-	private class NewFilterAction implements ActionListener {
+	private final class NewFilterAction implements ActionListener {
 
 		private final FilterController filterController;
 
@@ -274,7 +274,7 @@ public class FilterUI extends JPanel {
 		private final Filter filter;
 		private final JCheckBox checkBox;
 
-		public ToggleFilterAction(Filter filter, JCheckBox checkBox) {
+		ToggleFilterAction(Filter filter, JCheckBox checkBox) {
 			this.filter = filter;
 			this.checkBox = checkBox;
 		}
@@ -293,7 +293,7 @@ public class FilterUI extends JPanel {
 	private class RemoveFilterAction implements ActionListener {
 		private int id;
 
-		public RemoveFilterAction(int id) {
+		RemoveFilterAction(int id) {
 			this.id = id;
 		}
 
@@ -307,12 +307,12 @@ public class FilterUI extends JPanel {
 		}
 	}
 
-	private class SimpleFilterInputChange implements DocumentListener { // todo distinguish between simplefilters and groups
+	private class SimpleFilterInputChange implements DocumentListener {
 
 		private final SimpleFilter filter;
 		private final JTextArea textArea;
 
-		public SimpleFilterInputChange(SimpleFilter simpleFilter, JTextArea textArea) {
+		SimpleFilterInputChange(SimpleFilter simpleFilter, JTextArea textArea) {
 			this.filter = simpleFilter;
 			this.textArea = textArea;
 		}
@@ -347,7 +347,7 @@ public class FilterUI extends JPanel {
 		private final FilterGroup filterGroup;
 		private final JTextArea textArea;
 
-		public FilterGroupInputChange(FilterGroup filterGroup, JTextArea textArea) {
+		FilterGroupInputChange(FilterGroup filterGroup, JTextArea textArea) {
 			this.filterGroup = filterGroup;
 			this.textArea = textArea;
 		}
@@ -381,10 +381,11 @@ public class FilterUI extends JPanel {
 
 	private class ManageFilterAction implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent actionEvent) {
+		public void actionPerformed(ActionEvent actionEvent) { // todo use lanague resource
 			switch ((String) Objects.requireNonNull(filterDropdown.getSelectedItem())) {
-				case "Save selected filter..." : uiFilterManager.exportVisibleFilters(); break; // todo make compatible with different languages (use language resource)
-				case "Load filter..." : uiFilterManager.importFilters(); break; // todo make compatible with different languages (use language resource)
+				case "Save selected filter..." : uiFilterManager.exportVisibleFilters(); break;
+				case "Load filter..." : uiFilterManager.importFilters(); break;
+				default : break;
 			}
 		}
 	}
@@ -393,7 +394,7 @@ public class FilterUI extends JPanel {
 
 		private final FilterGroup filterGroup;
 
-		public SimpleFilterToGroupAction(FilterGroup filterGroup) {
+		SimpleFilterToGroupAction(FilterGroup filterGroup) {
 			this.filterGroup = filterGroup;
 		}
 

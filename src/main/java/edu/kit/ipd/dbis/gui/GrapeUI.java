@@ -119,7 +119,7 @@ public class GrapeUI {
 		try {
 			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
 			mainWindow.setIconImage(logo);
-		} catch (IOException e) {}
+		} catch (IOException e) { }
 
 		menuUI = new MenuUI(
 				generateController, databaseController, statusbarController, graphEditorController, language, theme);
@@ -197,7 +197,7 @@ public class GrapeUI {
 				PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
 				graphEditorUI.displayGraph(graph);
 				statusbarUI.changeSelectedRow(tableUI.getSelectedRow());
-			} catch (IndexOutOfBoundsException ignored) {}
+			} catch (IndexOutOfBoundsException ignored) { }
 		}
 	}
 
@@ -208,23 +208,23 @@ public class GrapeUI {
 				try {
 					generateController.delGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
 					updateTable();
-				} catch (IndexOutOfBoundsException ignored) {}
+				} catch (IndexOutOfBoundsException ignored) { }
 			}
 		}
 
 		@Override
-		public void keyPressed(KeyEvent keyEvent) {}
+		public void keyPressed(KeyEvent keyEvent) { }
 
 		@Override
-		public void keyReleased(KeyEvent keyEvent) {}
+		public void keyReleased(KeyEvent keyEvent) { }
 	}
 
 	private class TableHeaderAction implements MouseListener {
 		@Override
-		public void mouseClicked(MouseEvent mouseEvent) {}
+		public void mouseClicked(MouseEvent mouseEvent) { }
 
 		@Override
-		public void mousePressed(MouseEvent mouseEvent) {}
+		public void mousePressed(MouseEvent mouseEvent) { }
 
 		@Override
 		public void mouseReleased(MouseEvent mouseEvent) {
@@ -240,10 +240,10 @@ public class GrapeUI {
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent mouseEvent) {}
+		public void mouseEntered(MouseEvent mouseEvent) { }
 
 		@Override
-		public void mouseExited(MouseEvent mouseEvent) {}
+		public void mouseExited(MouseEvent mouseEvent) { }
 	}
 
 	/**
@@ -261,17 +261,17 @@ public class GrapeUI {
 						tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
 					}
 					isSorted = true;
-				} catch (SQLException ignored) {}
+				} catch (SQLException ignored) { }
 			}
 		}
 		if (!isSorted) {
 			try {
 				tableModel.update(filterController.getFilteredAndSortedGraphs());
-			} catch (SQLException ignored) {}
+			} catch (SQLException ignored) { }
 		}
 
 		AffineTransform affinetransform = new AffineTransform();
-		FontRenderContext fontRenderer = new FontRenderContext(affinetransform,true,true);
+		FontRenderContext fontRenderer = new FontRenderContext(affinetransform, true, true);
 		Font font = theme.defaultFont;
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);

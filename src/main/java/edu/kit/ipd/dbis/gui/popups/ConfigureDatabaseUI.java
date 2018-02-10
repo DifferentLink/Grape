@@ -36,7 +36,7 @@ public class ConfigureDatabaseUI extends JFrame {
 	 * @param language the language to use
 	 * @param theme the theme to style the window
 	 */
-	public ConfigureDatabaseUI(DatabaseController databaseController, ResourceBundle language, Theme theme) { // todo [Design Deviation] new menu entry
+	public ConfigureDatabaseUI(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 
 		super.setTitle("Configure Database"); // todo use language resource
 		this.databaseController = databaseController;
@@ -90,7 +90,7 @@ public class ConfigureDatabaseUI extends JFrame {
 
 		private final JFrame configureDatabaseUI;
 
-		public ConfigureDatabaseAction(JFrame configureDatabaseUI) {
+		ConfigureDatabaseAction(JFrame configureDatabaseUI) {
 			this.configureDatabaseUI = configureDatabaseUI;
 		}
 

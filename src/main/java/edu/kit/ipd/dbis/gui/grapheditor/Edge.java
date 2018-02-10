@@ -11,8 +11,8 @@ public class Edge {
 	private Vertex start;
 	private Vertex end;
 
-	private Color color = GraphLook.edgeColor;
-	private int thickness = GraphLook.edgeThickness;
+	private Color color = GraphLook.EDGE_COLOR;
+	private int thickness = GraphLook.EDGE_THICKNESS;
 
 	/**
 	 * @param start the start vertex of the edge

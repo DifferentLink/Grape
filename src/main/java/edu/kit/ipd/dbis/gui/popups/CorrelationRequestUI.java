@@ -32,9 +32,11 @@ public class CorrelationRequestUI extends JFrame {
 	 * @param correlationRequest the correlation request as a string
 	 * @param language the language to use
 	 * @param theme the theme to style the window
-	 * @throws InvalidCorrelationInputException
+	 * @throws InvalidCorrelationInputException if the correlation request is invalid
 	 */
-	public CorrelationRequestUI(CorrelationController correlationController, String correlationRequest, ResourceBundle language, Theme theme) throws InvalidCorrelationInputException {
+	public CorrelationRequestUI(CorrelationController correlationController,
+	                            String correlationRequest,
+	                            ResourceBundle language, Theme theme) throws InvalidCorrelationInputException {
 		this.correlationController = correlationController;
 		this.correlationRequest = correlationRequest;
 
@@ -66,7 +68,7 @@ public class CorrelationRequestUI extends JFrame {
 	private class CloseAction implements ActionListener {
 		private final CorrelationRequestUI correlationRequestUI;
 
-		public CloseAction(CorrelationRequestUI correlationRequestUI) {
+		CloseAction(CorrelationRequestUI correlationRequestUI) {
 			this.correlationRequestUI = correlationRequestUI;
 		}
 

@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 /**
  * A window to read a BFS-Code
  */
-public class ReadBFSCodeUI extends JFrame{
+public class ReadBFSCodeUI extends JFrame {
 
 	private JTextField bfsCodeInput;
 
@@ -30,7 +30,7 @@ public class ReadBFSCodeUI extends JFrame{
 	 * @param language the language to use
 	 * @param theme the theme to style the window with
 	 */
-	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) { // todo use basic regex matching for BFS-Code
+	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) {
 		super("Read BFS-Code"); // todo use language resource
 		this.setSize(350, 200);
 		this.setResizable(false);
@@ -58,7 +58,7 @@ public class ReadBFSCodeUI extends JFrame{
 		private final GenerateController generateController;
 		private final ReadBFSCodeUI readBFSCodeUI;
 
-		public ReadBFSCodeAction(GenerateController generateController, ReadBFSCodeUI readBFSCodeUI) {
+		ReadBFSCodeAction(GenerateController generateController, ReadBFSCodeUI readBFSCodeUI) {
 			this.generateController = generateController;
 			this.readBFSCodeUI = readBFSCodeUI;
 		}

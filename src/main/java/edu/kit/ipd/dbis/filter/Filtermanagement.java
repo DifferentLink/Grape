@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * class which communicates with other packages of Grpape
+ * class which communicates with other packages of Grape
  */
 public class Filtermanagement {
 

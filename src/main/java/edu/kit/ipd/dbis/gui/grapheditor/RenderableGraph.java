@@ -106,7 +106,7 @@ public class RenderableGraph {
 
 	/**
 	 * Converts a RenderableGraph to a PropertyGraph
-	 * @return
+	 * @return the PropertyGraph
 	 */
 	public PropertyGraph<Integer, Integer> asPropertyGraph() {
 		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
@@ -406,7 +406,7 @@ public class RenderableGraph {
 		int maxDegree = 0;
 		for (final Vertex vertex : vertices) {
 			final int vertexDegree = getDegree(vertex);
-			maxDegree = (vertexDegree > maxDegree)? vertexDegree : maxDegree;
+			maxDegree = (vertexDegree > maxDegree) ? vertexDegree : maxDegree;
 		}
 		return maxDegree;
 	}
@@ -542,11 +542,11 @@ public class RenderableGraph {
 		final Point lowerright = getLowerRight(vertices);
 		final float margin = 1.025f;
 		return new RoundRectangle2D.Double(
-				upperleft.x - GraphLook.vertexDiameter * margin,
-				upperleft.y - GraphLook.vertexDiameter * margin,
-				lowerright.x - upperleft.x + 2 * GraphLook.vertexDiameter * margin,
-				lowerright.y - upperleft.y + 2 * GraphLook.vertexDiameter * margin,
-				15 , 15);
+				upperleft.x - GraphLook.VERTEX_DIAMETER * margin,
+				upperleft.y - GraphLook.VERTEX_DIAMETER * margin,
+				lowerright.x - upperleft.x + 2 * GraphLook.VERTEX_DIAMETER * margin,
+				lowerright.y - upperleft.y + 2 * GraphLook.VERTEX_DIAMETER * margin,
+				15, 15);
 	}
 
 	/**

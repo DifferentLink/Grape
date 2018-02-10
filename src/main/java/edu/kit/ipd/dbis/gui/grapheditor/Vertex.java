@@ -14,10 +14,10 @@ public class Vertex implements Comparable {
 
 	public int x;
 	public int y;
-	private float diameter = GraphLook.vertexDiameter;
-	private Color fillColor = GraphLook.vertexFillColor;
-	private Color outlineColor = GraphLook.vertexOutlineColor;
-	private float outlineThickness = GraphLook.vertexOutLineThickness;
+	private float diameter = GraphLook.VERTEX_DIAMETER;
+	private Color fillColor = GraphLook.VERTEX_FILL_COLOR;
+	private Color outlineColor = GraphLook.VERTEX_OUTLINE_COLOR;
+	private float outlineThickness = GraphLook.VERTEX_OUT_LINE_THICKNESS;
 
 	/**
 	 * A new vertex at position (x, y)
@@ -74,7 +74,7 @@ public class Vertex implements Comparable {
 		int deltaX = x - this.x;
 		int deltaY = y - this.y;
 
-		return Math.sqrt(deltaX*deltaX + deltaY*deltaY) <= diameter/2;
+		return Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= diameter / 2;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class Vertex implements Comparable {
 	 * @return the drawn vertex
 	 */
 	public Shape draw() {
-		return new Ellipse2D.Double(x - diameter /2, y - diameter /2, diameter, diameter);
+		return new Ellipse2D.Double(x - diameter / 2, y - diameter / 2, diameter, diameter);
 	}
 
 	/**

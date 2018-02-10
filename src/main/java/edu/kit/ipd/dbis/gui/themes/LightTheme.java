@@ -8,6 +8,9 @@ import java.awt.Font;
  */
 public class LightTheme extends Theme {
 
+	/**
+	 * Defines colors, font's and dimensions for the GUI
+	 */
 	public LightTheme() { // todo choose proper colors for GUI
 		super.fontColor = Color.BLACK;
 		super.defaultFontSize = 12;
