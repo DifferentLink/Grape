@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.filter;
 
 import edu.kit.ipd.dbis.controller.FilterController;
@@ -17,6 +13,9 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/**
+ * The filter panel visible in the GUI.
+ */
 public class FilterUI extends JPanel {
 	private final FilterController filterController;
 	private UIFilterManager uiFilterManager;
@@ -27,6 +26,12 @@ public class FilterUI extends JPanel {
 
 	private final int simpleFilterUIHeight = 22;
 
+	/**
+	 * Constructs the filter panel.
+	 * @param filterController the responsible controller
+	 * @param language the language used
+	 * @param theme the theme used to style the GUI
+	 */
 	public FilterUI(FilterController filterController, ResourceBundle language, Theme theme) {
 
 		this.filterController = filterController;
@@ -99,7 +104,7 @@ public class FilterUI extends JPanel {
 	}
 
 	/**
-	 * Updates the GUIWindow element.
+	 * Uses current state of FilterGroups and SimpleFilters to create the GUI elements in the filter panel.
 	 */
 	public void update() {
 
