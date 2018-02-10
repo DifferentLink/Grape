@@ -4,11 +4,12 @@ import edu.kit.ipd.dbis.controller.DatabaseController;
 import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
-import edu.kit.ipd.dbis.gui.popups.*;
+import edu.kit.ipd.dbis.gui.popups.AboutUI;
+import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
+import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseOfSelectionUI;
+import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
+import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-
-import javax.swing.*;
-import javax.swing.plaf.TableUI;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;

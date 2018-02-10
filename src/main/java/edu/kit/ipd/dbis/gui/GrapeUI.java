@@ -121,9 +121,6 @@ public class GrapeUI {
 			mainWindow.setIconImage(logo);
 		} catch (IOException e) { }
 
-
-
-
 		filterUI = new FilterUI(filterController, language, theme);
 		correlationUI = new CorrelationUI(correlationController, language, theme);
 
