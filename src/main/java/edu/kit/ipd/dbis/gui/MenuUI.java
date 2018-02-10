@@ -10,11 +10,8 @@ import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseOfSelectionUI;
 import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -40,11 +37,11 @@ public class MenuUI extends JMenuBar {
 	 * @param theme the theme to style the menu
 	 */
 	public MenuUI (JTable tableUI, GenerateController generateController,
-	              DatabaseController databaseController,
-	              StatusbarController statusbarController,
-	              GraphEditorController graphEditorController,
-	              ResourceBundle language,
-	              Theme theme) {
+				   DatabaseController databaseController,
+				   StatusbarController statusbarController,
+				   GraphEditorController graphEditorController,
+				   ResourceBundle language,
+				   Theme theme) {
 
 		this.tableUI = tableUI;
 		this.statusbarController = statusbarController;
