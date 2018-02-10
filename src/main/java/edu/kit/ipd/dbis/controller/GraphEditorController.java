@@ -168,8 +168,8 @@ public final class GraphEditorController {
 			database.addGraph(denserGraph);
 			statusbar.continueCalculation();
 			this.grapeUI.updateTable();
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException |
-				NoDenserGraphException e) {
+		} catch (NoDenserGraphException| UnexpectedObjectException | InsertionFailedException |
+				ConnectionFailedException  e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
