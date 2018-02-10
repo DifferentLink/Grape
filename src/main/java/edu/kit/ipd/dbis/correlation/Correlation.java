@@ -5,7 +5,13 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -117,5 +123,79 @@ abstract class Correlation {
      */
     boolean getMaximum() {
         return maximum;
+    }
+
+    /**
+     * method to get all properties which inherit an integer or double
+     * @return string array which inherits all integer or double properties
+     */
+    protected static String[] getValidProperties() {
+        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+        Set<Property> fullPropertySet = PropertyFactory.createAllProperties(graph);
+        Set<Property> propertySet = new HashSet<>();
+        for (Property current: fullPropertySet) {
+            if (!current.getClass().getSuperclass().equals(ComplexProperty.class)) {
+                propertySet.add(current);
+            }
+        }
+        String[] resultPropertyList = new String[propertySet.size()];
+        int h = 0;
+        for (Property currentProperty: propertySet) {
+            resultPropertyList[h] = currentProperty.getClass().getSimpleName();
+            h++;
+        }
+        return resultPropertyList;
+    }
+
+    /**
+     * used to take only the last elements of a specific list
+     * @param resultSet list which inherits too much elements
+     * @param attributeCounter size of new list
+     * @return short list which inherits only the last elements of the input list
+     */
+    protected static TreeSet<CorrelationOutput> cutListMaximum(TreeSet<CorrelationOutput> resultSet,
+                                                               int attributeCounter) {
+        TreeSet<CorrelationOutput> outputSet = new TreeSet<>();
+        CorrelationOutput[] outputArray = new CorrelationOutput[resultSet.size()];
+        int z = 0;
+        for (CorrelationOutput current: resultSet) {
+            outputArray[z] = current;
+            z++;
+        }
+        for (int k = 0; k < attributeCounter; k++) {
+            outputSet.add(outputArray[outputArray.length - 1 - k]);
+            System.out.println("######");
+            System.out.println(outputArray[outputArray.length - 1 - k].getFirstProperty() + " "
+                    + outputArray[outputArray.length - 1 - k].getSecondProperty() + " "
+                    + outputArray[outputArray.length - 1 - k].getOutputNumber());
+        }
+        return outputSet;
+    }
+
+    /**
+     * used to take only the first elements of a specific list
+     * @param resultSet list which inherits too much elements
+     * @param attributeCounter size of new list
+     * @return short list which inherits only the first elements of the input list
+     */
+    protected static TreeSet<CorrelationOutput> cutListMinimum(TreeSet<CorrelationOutput> resultSet, int attributeCounter) {
+        TreeSet<CorrelationOutput> outputSet = new TreeSet<>();
+        CorrelationOutput[] outputArray = new CorrelationOutput[resultSet.size()];
+        for (CorrelationOutput string: resultSet) {
+            System.out.println(string.getFirstProperty() + " " + string.getSecondProperty() + " " + string.getOutputNumber());
+        }
+        int z = 0;
+        for (CorrelationOutput current: resultSet) {
+            outputArray[z] = current;
+            z++;
+        }
+        for (int k = 0; k < attributeCounter; k++) {
+            outputSet.add(outputArray[k]);
+            System.out.println("######");
+            System.out.println(outputArray[k].getFirstProperty() + " "
+                    + outputArray[k].getSecondProperty() + " "
+                    + outputArray[k].getOutputNumber());
+        }
+        return outputSet;
     }
 }

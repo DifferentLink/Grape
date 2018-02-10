@@ -3,11 +3,6 @@ package edu.kit.ipd.dbis.correlation;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
-
 import java.util.*;
 
 /**
@@ -38,7 +33,7 @@ public class Pearson extends Correlation {
         String[] firstPropertyList = Pearson.getValidProperties();
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (String property1: firstPropertyList) {
-            if (!property1.equals(property2)) {
+            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         Pearson.calculateCorrelation(property1, property2, database));
                 resultSet.add(outputObject);
@@ -68,9 +63,11 @@ public class Pearson extends Correlation {
         String[] firstPropertyList = Pearson.getValidProperties();
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
         for (String property1: firstPropertyList) {
-            CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                    Pearson.calculateCorrelation(property1, property2, database));
-            resultSet.add(outputObject);
+            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
+                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
+                        Pearson.calculateCorrelation(property1, property2, database));
+                resultSet.add(outputObject);
+            }
         }
         return Pearson.cutListMinimum(resultSet, this.getAttributeCounter());
     }
@@ -111,62 +108,5 @@ public class Pearson extends Correlation {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));
         }
         return Math.sqrt(sum / (inputList.size() - 1));
-    }
-
-    private static String[] getValidProperties() {
-        PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> fullPropertySet = PropertyFactory.createAllProperties(graph);
-        Set<Property> propertySet = new HashSet<>();
-        for (Property current: fullPropertySet) {
-            if (!current.getClass().getSuperclass().equals(ComplexProperty.class)) {
-                propertySet.add(current);
-            }
-        }
-        String[] resultPropertyList = new String[propertySet.size()];
-        int h = 0;
-        for (Property currentProperty: propertySet) {
-            resultPropertyList[h] = currentProperty.getClass().getSimpleName();
-            h++;
-        }
-        return resultPropertyList;
-    }
-
-    private static TreeSet<CorrelationOutput> cutListMaximum(TreeSet<CorrelationOutput> resultSet, int attributeCounter) {
-        TreeSet<CorrelationOutput> outputSet = new TreeSet<>();
-        CorrelationOutput[] outputArray = new CorrelationOutput[resultSet.size()];
-        int z = 0;
-        for (CorrelationOutput current: resultSet) {
-            outputArray[z] = current;
-            z++;
-        }
-        for (int k = 0; k < attributeCounter; k++) {
-            outputSet.add(outputArray[outputArray.length - 1 - k]);
-            System.out.println("######");
-            System.out.println(outputArray[outputArray.length - 1 - k].getFirstProperty() + " "
-                    + outputArray[outputArray.length - 1 - k].getSecondProperty() + " "
-                    + outputArray[outputArray.length - 1 - k].getOutputNumber());
-        }
-        return outputSet;
-    }
-
-    private static TreeSet<CorrelationOutput> cutListMinimum(TreeSet<CorrelationOutput> resultSet, int attributeCounter) {
-        TreeSet<CorrelationOutput> outputSet = new TreeSet<>();
-        CorrelationOutput[] outputArray = new CorrelationOutput[resultSet.size()];
-        for (CorrelationOutput string: resultSet) {
-            System.out.println(string.getFirstProperty() + " " + string.getSecondProperty() + " " + string.getOutputNumber());
-        }
-        int z = 0;
-        for (CorrelationOutput current: resultSet) {
-            outputArray[z] = current;
-            z++;
-        }
-        for (int k = 0; k < attributeCounter; k++) {
-            outputSet.add(outputArray[k]);
-            System.out.println("######");
-            System.out.println(outputArray[k].getFirstProperty() + " "
-                    + outputArray[k].getSecondProperty() + " "
-                    + outputArray[k].getOutputNumber());
-        }
-        return outputSet;
     }
 }
