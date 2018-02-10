@@ -1,22 +1,25 @@
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+/**
+ * A window to configure the database
+ */
 public class ConfigureDatabaseUI extends JFrame {
 
 	private final DatabaseController databaseController;
@@ -28,7 +31,12 @@ public class ConfigureDatabaseUI extends JFrame {
 	JTextArea userInput;
 	JTextArea passwordInput;
 
-	public ConfigureDatabaseUI(DatabaseController databaseController, ResourceBundle language, Theme theme) { // todo [Design Deviation] new menu entry
+	/**
+	 * @param databaseController the responsible controller
+	 * @param language the language to use
+	 * @param theme the theme to style the window
+	 */
+	public ConfigureDatabaseUI(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 
 		super.setTitle("Configure Database"); // todo use language resource
 		this.databaseController = databaseController;
@@ -75,13 +83,14 @@ public class ConfigureDatabaseUI extends JFrame {
 		container.add(buttonContainer);
 		this.add(container);
 		this.setMinimumSize(new Dimension(300, 200));
+		this.setLocationRelativeTo(null);
 	}
 
 	private class ConfigureDatabaseAction implements ActionListener {
 
 		private final JFrame configureDatabaseUI;
 
-		public ConfigureDatabaseAction(JFrame configureDatabaseUI) {
+		ConfigureDatabaseAction(JFrame configureDatabaseUI) {
 			this.configureDatabaseUI = configureDatabaseUI;
 		}
 

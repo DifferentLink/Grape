@@ -1,13 +1,16 @@
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui.themes;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 
+/**
+ * A possible theme to use for Grape's GUI
+ */
 public class GrapeTheme extends Theme {
-	public GrapeTheme() { // todo choose proper colors for GUI
+	/**
+	 * Defines colors, font's and dimensions for the GUI
+	 */
+	public GrapeTheme() {
 		super.fontColor = Color.BLACK;
 		super.defaultFontSize = 14;
 		super.defaultFont = new Font("Open Sans", Font.PLAIN, defaultFontSize);
@@ -16,11 +19,12 @@ public class GrapeTheme extends Theme {
 		super.foregroundColor = Color.BLACK;
 		super.shadowColor = super.backgroundColor;
 		super.dividerSize = 2;
-		super.outlineColor = Color.BLACK;
+		super.outlineColor = Color.DARK_GRAY;
 		super.outlineThickness = 1;
 		super.assertiveBackground = new Color(0xC4C8F5);
 		super.unassertiveBackground = new Color(0xF4C9BA);
-		super.tableSelectionColor = Color.YELLOW;
+		super.tableSelectionColor = new Color(0xDCE5F5);
+		super.tableSelectionColorDark = new Color(0xDCDD6E5);
 		super.buttonTextColor = Color.BLACK;
 		super.buttonBackgorundColor = Color.WHITE;
 		super.buttonHighlightColor = Color.GREEN;

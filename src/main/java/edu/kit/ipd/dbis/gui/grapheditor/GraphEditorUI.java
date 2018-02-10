@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import edu.kit.ipd.dbis.controller.GraphEditorController;
@@ -11,15 +7,40 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgori
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ResourceBundle;
 
+/**
+ * The graph editor in the GUI
+ */
 public class GraphEditorUI extends JPanel {
 
 	private RenderableGraph graph = new RenderableGraph();
 	private PropertyGraph<Integer, Integer> propertyGraph;
+	private VertexFactory factory = new VertexFactory();
 
 	private GraphEditorHistory history = new GraphEditorHistory();
 	private Editor graphEditor;
@@ -58,6 +79,12 @@ public class GraphEditorUI extends JPanel {
 	private Dimension buttonSize = new Dimension(barHeight - 2, barHeight - 2);
 	private int buttonSeparation = 2;
 
+	/**
+	 * Creates a graph editor to add to the GUI
+	 * @param graphEditorController the responsible controller
+	 * @param language the language used
+	 * @param theme the theme used to style the GUI
+	 */
 	public GraphEditorUI(GraphEditorController graphEditorController, ResourceBundle language, Theme theme) {
 		currentColoringType = ColoringType.VERTEX;
 		this.theme = theme;
@@ -119,10 +146,10 @@ public class GraphEditorUI extends JPanel {
 		center = new JButton("Center"); // todo replace with language resource
 		theme.style(center);
 		center.addActionListener(new CenterVerticesAction());
-		preview = new JButton("Preview");// todo replace with language resource
+		preview = new JButton("Preview"); // todo replace with language resource
 		preview.addActionListener(new PreviewAction(graphEditorController));
 		theme.style(preview);
-		apply = new JButton("Apply");// todo replace with language resource
+		apply = new JButton("Apply"); // todo replace with language resource
 		apply.addActionListener(new ApplyAction(graphEditorController));
 
 		theme.style(apply);
@@ -143,6 +170,10 @@ public class GraphEditorUI extends JPanel {
 		this.add(bottomBarButtons, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Displays the given graph in the editor using the selected coloring type
+	 * @param graph the graph to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
 		propertyGraph = graph;
 		if (currentColoringType == ColoringType.VERTEX) {
@@ -153,27 +184,39 @@ public class GraphEditorUI extends JPanel {
 			this.graph = new RenderableGraph(graph, currentTotalColoring);
 		}
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Displays the given graph in the editor with colored vertices
+	 * @param graph the graph to display
+	 * @param coloring the vertex coloring to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Displays the given graph in the editor with colored vertices and edges
+	 * @param graph the graph to display
+	 * @param coloring the vertex coloring to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
 		history.clear();
-		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVerticesNotContainedInSubgraphs(),
-				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Shows an empty graph in the editor
+	 */
 	public void showEmptyGraph() {
 		this.graph = new RenderableGraph();
 		this.history = new GraphEditorHistory();
@@ -207,19 +250,19 @@ public class GraphEditorUI extends JPanel {
 						if (vertex != null) {
 							Vertex start = graph.getVertexAt(mStart);
 							if (start == null) {
-								start = new Vertex(mStart);
+								start = factory.createVertex(mStart);
 							}
 
 							Vertex target = graph.getVertexAt(mTarget);
 							if (target == null) {
-								target = new Vertex(mTarget);
+								target = factory.createVertex(mTarget);
 							}
 							graph = graph.deepCopy();
 							graph.add(new Edge(start, target));
 							history.addToHistory(graph);
 						} else {
 							graph = graph.deepCopy();
-							graph.add(new Vertex(mTarget));
+							graph.add(factory.createVertex(mTarget));
 							history.addToHistory(graph);
 						}
 					} else if (mouseEvent.getButton() == MouseEvent.BUTTON3) { // Released right mouse button
@@ -269,12 +312,13 @@ public class GraphEditorUI extends JPanel {
 				kanvas.draw(vertexShape);
 			});
 
-/*			graph.getSubgraphs().forEach(subgraph -> {
-				Shape subgraphOutline = subgraph.outline();
-				kanvas.setPaint(theme.outlineColor);
-				kanvas.fill(subgraphOutline);
+			graph.getSubgraphs().forEach(subgraph -> {
+				Shape subgraphOutline = RenderableGraph.outline(subgraph);
+				float[] dash = new float[]{10.0f};
+				kanvas.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+				kanvas.setPaint(Color.darkGray);
 				kanvas.draw(subgraphOutline);
-			});*/
+			});
 		}
 	}
 
@@ -315,9 +359,8 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			propertyGraph = graph.asPropertyGraph();
-			// something
 			history.addToHistory(graph);
-			//displayGraph(propertyGraph);
+			displayColoring(graphEditorController);
 		}
 	}
 
@@ -331,14 +374,12 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			PropertyGraph propertyGraph = graph.asPropertyGraph();
+			propertyGraph = graph.asPropertyGraph();
 			try {
 				if (graphEditorController.isValidGraph(propertyGraph)) {
 					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
 					graph = new RenderableGraph();
 					history = new GraphEditorHistory();
-				} else {
-					System.out.println("Invalid graph");
 				}
 			} catch (InvalidGraphInputException e) {
 				e.printStackTrace();
@@ -382,8 +423,7 @@ public class GraphEditorUI extends JPanel {
 	private class CenterVerticesAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
-					new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+			arrangeGraph();
 			repaint();
 		}
 	}
@@ -399,14 +439,27 @@ public class GraphEditorUI extends JPanel {
 			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
 				if (currentColoringType == ColoringType.VERTEX) {
 					currentColoringType = ColoringType.TOTAL;
-					currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
-					displayGraph(propertyGraph, currentTotalColoring);
 				} else {
 					currentColoringType = ColoringType.VERTEX;
-					currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
-					displayGraph(propertyGraph, currentVertexColoring);
 				}
+				displayColoring(graphEditorController);
 			}
 		}
+	}
+
+	protected void displayColoring(GraphEditorController graphEditorController) {
+		if (currentColoringType == ColoringType.VERTEX) {
+			currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
+			displayGraph(propertyGraph, currentVertexColoring);
+		} else {
+			currentTotalColoring = graphEditorController.getTotalColoring(propertyGraph);
+			displayGraph(propertyGraph, currentTotalColoring);
+		}
+	}
+
+	private void arrangeGraph() {
+		GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
+				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+		repaint();
 	}
 }

@@ -2,18 +2,16 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
+import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.log.History;
 import edu.kit.ipd.dbis.log.Log;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 /**
  * The type Statusbar controller.
@@ -23,6 +21,8 @@ public class StatusbarController {
 
 	private Log log;
 	private CalculationController calculation;
+
+	private GrapeUI grapeUI;
 
 	//TODO: Singleton pattern
 	private static StatusbarController statusbar;
@@ -51,6 +51,10 @@ public class StatusbarController {
 		this.calculation = CalculationController.getInstance();
 	}
 
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
+
 	/**
 	 * Gets as string.
 	 *
@@ -73,6 +77,7 @@ public class StatusbarController {
 	public void undo() {
 		try {
 			log.undo();
+			grapeUI.updateTable();
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			this.addMessage(e.getMessage());
 		}
@@ -84,6 +89,7 @@ public class StatusbarController {
 	public void redo() {
 		try {
 			log.redo();
+			grapeUI.updateTable();
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
 			this.addMessage(e.getMessage());
 		}

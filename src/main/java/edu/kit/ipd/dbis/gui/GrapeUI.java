@@ -1,30 +1,49 @@
-/**
-  Created by Robin Link
-*/
-
 package edu.kit.ipd.dbis.gui;
 
-import edu.kit.ipd.dbis.controller.*;
-import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
+import edu.kit.ipd.dbis.controller.CalculationController;
+import edu.kit.ipd.dbis.controller.CorrelationController;
+import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.controller.FilterController;
+import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.GraphEditorController;
+import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import edu.kit.ipd.dbis.log.Log;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+/**
+ * Grape's main window
+ */
 public class GrapeUI {
 
 	private final CalculationController calculationController;
@@ -33,8 +52,9 @@ public class GrapeUI {
 	private final FilterController filterController;
 	private final GenerateController generateController;
 	private final GraphEditorController graphEditorController;
-	private final NonEditableTableModel tableModel;
+	private final StatusbarController statusbarController;
 
+	private final NonEditableTableModel tableModel;
 	private GraphEditorUI graphEditorUI;
 	private MenuUI menuUI;
 	private FilterUI filterUI;
@@ -46,8 +66,26 @@ public class GrapeUI {
 	private String programName = "Grape";
 	private JFrame mainWindow;
 
+	private Theme theme;
+
+	private String lastSortedColumn = "";
+	private boolean isSortedAscending = true;
+	private int[] columnWidths = new int[(new PropertyGraph<>()).getProperties().size()];
+
 	private float verticalSplitRatio = .1f;
 
+	/**
+	 * Constructs Grape's main window
+	 * @param calculationController the controller responsible for calculations
+	 * @param correlationController the controller responsible for correlation requests
+	 * @param databaseController the controller responsible for the database management
+	 * @param filterController the controller responsible for filtering the database
+	 * @param generateController the controller responsible for generating random graphs
+	 * @param graphEditorController the controller responsible for the graph editor
+	 * @param statusbarController the controller responsible for updating the statusbar and the log
+	 * @param language the language to use
+	 * @param theme the theme to style the GUI
+	 */
 	public GrapeUI(CalculationController calculationController,
 	               CorrelationController correlationController,
 	               DatabaseController databaseController,
@@ -63,6 +101,15 @@ public class GrapeUI {
 		this.filterController = filterController;
 		this.generateController = generateController;
 		this.graphEditorController = graphEditorController;
+		this.statusbarController = statusbarController;
+		this.theme = theme;
+
+		this.calculationController.setGrapeUI(this);
+		this.databaseController.setGrapeUI(this);
+		this.filterController.setGrapeUI(this);
+		this.generateController.setGrapeUI(this);
+		this.graphEditorController.setGrapeUI(this);
+		this.statusbarController.setGrapeUI(this);
 
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,7 +119,7 @@ public class GrapeUI {
 		try {
 			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
 			mainWindow.setIconImage(logo);
-		} catch (IOException e) {}
+		} catch (IOException e) { }
 
 
 
@@ -110,21 +157,17 @@ public class GrapeUI {
 		JPanel rightUI = new JPanel(new BorderLayout());
 		rightUI.setBackground(theme.backgroundColor);
 		tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
-		NonEditableTableModel tableModel = new NonEditableTableModel(new String[0], new Object[0][0]);
-		calculationController.setTableModel(tableModel);
-		databaseController.setTableModel(tableModel);
-		filterController.setTableModel(tableModel);
-		graphEditorController.setTableModel(tableModel);
-		generateController.setTableModel(tableModel);
-
-		tableUI = new JTable(tableModel);
-		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableUI = new AlternateTable(tableModel, theme);
+		tableUI.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
+		tableUI.getTableHeader().setReorderingAllowed(false);
 		tableUI.addKeyListener(new DeleteGraphAction());
-		JScrollPane scrollPane = new JScrollPane(tableUI);
+		JScrollPane scrollPane = new JScrollPane(tableUI,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		tableUI.setFillsViewportHeight(true);
 		tableUI.setBackground(theme.backgroundColor);
-		tableUI.setAutoCreateRowSorter(true); // todo use own row-sorter if necessary
+		tableUI.getTableHeader().addMouseListener(new TableHeaderAction());
+		tableUI.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableUI.setSelectionBackground(theme.lightNeutralColor);
 		tableUI.setSelectionForeground(theme.foregroundColor);
 		rightUI.add(scrollPane, BorderLayout.CENTER);
@@ -144,21 +187,19 @@ public class GrapeUI {
 		verticalDivider.setResizeWeight(verticalSplitRatio);
 
 		mainWindow.add(verticalDivider);
-
 		mainWindow.setVisible(true);
 	}
 
 	private class TableSelectionChangeAction implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent listSelectionEvent) {
-			tableModel.fireTableDataChanged();
-			tableModel.fireTableStructureChanged();
 			try {
-				int id = (Integer) tableUI.getValueAt(tableUI.getSelectedRow(), 0);
+				final int selectedRow = tableUI.getSelectedRow();
+				int id = (Integer) tableUI.getValueAt(selectedRow, 0);
 				PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
 				graphEditorUI.displayGraph(graph);
 				statusbarUI.changeSelectedRow(tableUI.getSelectedRow());
-			} catch (IndexOutOfBoundsException ignored) {}
+			} catch (IndexOutOfBoundsException ignored) { }
 		}
 	}
 
@@ -168,17 +209,88 @@ public class GrapeUI {
 			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
 				try {
 					generateController.delGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
-					tableModel.update(filterController.getFilteredAndSortedGraphs());
-				} catch (IndexOutOfBoundsException | SQLException ignored) {}
+					updateTable();
+				} catch (IndexOutOfBoundsException ignored) { }
 			}
 		}
 
 		@Override
-		public void keyPressed(KeyEvent keyEvent) {
+		public void keyPressed(KeyEvent keyEvent) { }
+
+		@Override
+		public void keyReleased(KeyEvent keyEvent) { }
+	}
+
+	private class TableHeaderAction implements MouseListener {
+		@Override
+		public void mouseClicked(MouseEvent mouseEvent) { }
+
+		@Override
+		public void mousePressed(MouseEvent mouseEvent) { }
+
+		@Override
+		public void mouseReleased(MouseEvent mouseEvent) {
+			final int column = tableUI.columnAtPoint(mouseEvent.getPoint());
+			if (columnWidths[column] == tableUI.getColumnModel().getColumn(column).getWidth()) {
+				final String columnName = tableUI.getColumnName(tableUI.columnAtPoint(mouseEvent.getPoint()));
+				isSortedAscending = !columnName.equals(lastSortedColumn) || !isSortedAscending;
+				lastSortedColumn = columnName;
+				updateTable();
+			} else {
+				columnWidths[column] = tableUI.getColumnModel().getColumn(column).getWidth();
+			}
 		}
 
 		@Override
-		public void keyReleased(KeyEvent keyEvent) {
+		public void mouseEntered(MouseEvent mouseEvent) { }
+
+		@Override
+		public void mouseExited(MouseEvent mouseEvent) { }
+	}
+
+	/**
+	 * Updates the table by calling the respective controller method to sort by a property and filter
+	 * by the currently active filters.
+	 */
+	public void updateTable() {
+		boolean isSorted = false;
+		for (Property property : (new PropertyGraph<>()).getProperties()) {
+			if ((property.getClass().getSimpleName().toLowerCase()).equals(lastSortedColumn)) {
+				try {
+					if (isSortedAscending) {
+						tableModel.update(filterController.getFilteredAndAscendingSortedGraphs(property));
+					} else {
+						tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
+					}
+					isSorted = true;
+				} catch (SQLException ignored) { }
+			}
+		}
+		if (!isSorted) {
+			try {
+				tableModel.update(filterController.getFilteredAndSortedGraphs());
+			} catch (SQLException ignored) { }
+		}
+
+		AffineTransform affinetransform = new AffineTransform();
+		FontRenderContext fontRenderer = new FontRenderContext(affinetransform, true, true);
+		Font font = theme.defaultFont;
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		for (int i = 0; i < tableUI.getColumnModel().getColumnCount(); i++) {
+			final TableColumn column = tableUI.getColumnModel().getColumn(i);
+			if (columnWidths[i] > 0) {
+				column.setPreferredWidth(columnWidths[i]);
+			} else {
+				final int optimalWidth =
+						(int) (font.getStringBounds("  " + tableUI.getColumnName(i) + "  ", fontRenderer).getWidth());
+				column.setPreferredWidth(optimalWidth);
+				columnWidths[i] = optimalWidth;
+			}
+			if (i != 1) {
+				column.setCellRenderer(centerRenderer);
+			}
 		}
 	}
 }

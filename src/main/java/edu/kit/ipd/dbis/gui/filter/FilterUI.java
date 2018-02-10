@@ -1,22 +1,34 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.filter;
 
 import edu.kit.ipd.dbis.controller.FilterController;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/**
+ * The filter panel visible in the GUI.
+ */
 public class FilterUI extends JPanel {
 	private final FilterController filterController;
 	private UIFilterManager uiFilterManager;
@@ -27,6 +39,12 @@ public class FilterUI extends JPanel {
 
 	private final int simpleFilterUIHeight = 22;
 
+	/**
+	 * Constructs the filter panel.
+	 * @param filterController the responsible controller
+	 * @param language the language used
+	 * @param theme the theme used to style the GUI
+	 */
 	public FilterUI(FilterController filterController, ResourceBundle language, Theme theme) {
 
 		this.filterController = filterController;
@@ -99,7 +117,7 @@ public class FilterUI extends JPanel {
 	}
 
 	/**
-	 * Updates the GUIWindow element.
+	 * Uses current state of FilterGroups and SimpleFilters to create the GUI elements in the filter panel.
 	 */
 	public void update() {
 
@@ -224,7 +242,7 @@ public class FilterUI extends JPanel {
 		return filterGroupUI;
 	}
 
-	private class NewFilterAction implements ActionListener {
+	private final class NewFilterAction implements ActionListener {
 
 		private final FilterController filterController;
 
@@ -256,7 +274,7 @@ public class FilterUI extends JPanel {
 		private final Filter filter;
 		private final JCheckBox checkBox;
 
-		public ToggleFilterAction(Filter filter, JCheckBox checkBox) {
+		ToggleFilterAction(Filter filter, JCheckBox checkBox) {
 			this.filter = filter;
 			this.checkBox = checkBox;
 		}
@@ -275,7 +293,7 @@ public class FilterUI extends JPanel {
 	private class RemoveFilterAction implements ActionListener {
 		private int id;
 
-		public RemoveFilterAction(int id) {
+		RemoveFilterAction(int id) {
 			this.id = id;
 		}
 
@@ -289,12 +307,12 @@ public class FilterUI extends JPanel {
 		}
 	}
 
-	private class SimpleFilterInputChange implements DocumentListener { // todo distinguish between simplefilters and groups
+	private class SimpleFilterInputChange implements DocumentListener {
 
 		private final SimpleFilter filter;
 		private final JTextArea textArea;
 
-		public SimpleFilterInputChange(SimpleFilter simpleFilter, JTextArea textArea) {
+		SimpleFilterInputChange(SimpleFilter simpleFilter, JTextArea textArea) {
 			this.filter = simpleFilter;
 			this.textArea = textArea;
 		}
@@ -329,7 +347,7 @@ public class FilterUI extends JPanel {
 		private final FilterGroup filterGroup;
 		private final JTextArea textArea;
 
-		public FilterGroupInputChange(FilterGroup filterGroup, JTextArea textArea) {
+		FilterGroupInputChange(FilterGroup filterGroup, JTextArea textArea) {
 			this.filterGroup = filterGroup;
 			this.textArea = textArea;
 		}
@@ -363,10 +381,11 @@ public class FilterUI extends JPanel {
 
 	private class ManageFilterAction implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent actionEvent) {
+		public void actionPerformed(ActionEvent actionEvent) { // todo use lanague resource
 			switch ((String) Objects.requireNonNull(filterDropdown.getSelectedItem())) {
-				case "Save selected filter..." : uiFilterManager.exportVisibleFilters(); break; // todo make compatible with different languages (use language resource)
-				case "Load filter..." : uiFilterManager.importFilters(); break; // todo make compatible with different languages (use language resource)
+				case "Save selected filter..." : uiFilterManager.exportVisibleFilters(); break;
+				case "Load filter..." : uiFilterManager.importFilters(); break;
+				default : break;
 			}
 		}
 	}
@@ -375,7 +394,7 @@ public class FilterUI extends JPanel {
 
 		private final FilterGroup filterGroup;
 
-		public SimpleFilterToGroupAction(FilterGroup filterGroup) {
+		SimpleFilterToGroupAction(FilterGroup filterGroup) {
 			this.filterGroup = filterGroup;
 		}
 

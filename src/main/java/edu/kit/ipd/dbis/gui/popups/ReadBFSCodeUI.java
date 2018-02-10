@@ -8,16 +8,29 @@ import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.InvalidBfsCodeInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
-public class ReadBFSCodeUI extends JFrame{
+/**
+ * A window to read a BFS-Code
+ */
+public class ReadBFSCodeUI extends JFrame {
 
 	private JTextField bfsCodeInput;
 
-	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) { // todo use basic regex matching for BFS-Code
+	/**
+	 * @param generateController the controller responsible for parsing the BFS-Code
+	 * @param language the language to use
+	 * @param theme the theme to style the window with
+	 */
+	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) {
 		super("Read BFS-Code"); // todo use language resource
 		this.setSize(350, 200);
 		this.setResizable(false);
@@ -36,8 +49,8 @@ public class ReadBFSCodeUI extends JFrame{
 		readGraph.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		readGraph.setBackground(theme.assertiveBackground);
 		content.add(readGraph);
-
 		this.add(content);
+		this.setLocationRelativeTo(null);
 	}
 
 	private class ReadBFSCodeAction implements ActionListener {
@@ -45,7 +58,7 @@ public class ReadBFSCodeUI extends JFrame{
 		private final GenerateController generateController;
 		private final ReadBFSCodeUI readBFSCodeUI;
 
-		public ReadBFSCodeAction(GenerateController generateController, ReadBFSCodeUI readBFSCodeUI) {
+		ReadBFSCodeAction(GenerateController generateController, ReadBFSCodeUI readBFSCodeUI) {
 			this.generateController = generateController;
 			this.readBFSCodeUI = readBFSCodeUI;
 		}
