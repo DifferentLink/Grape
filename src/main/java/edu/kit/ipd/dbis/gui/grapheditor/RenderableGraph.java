@@ -9,11 +9,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The graph representation used in the graph editor.
@@ -141,7 +137,8 @@ public class RenderableGraph {
 	}
 
 	/**
-	 * Converts a RenderableGraph to a PropertyGraph with colored vertices
+	 * Converts a RenderableGraph to a PropertyGraph with colored vertices.
+	 *
 	 * @param propertyGraph the input graph
 	 * @param coloring the abstract vertex coloring
 	 * @param <V> the type representing vertices
@@ -206,7 +203,8 @@ public class RenderableGraph {
 	}
 
 	/**
-	 * Converts a RenderableGraph to a PropertyGraph with colored vertices and edges
+	 * Converts a RenderableGraph to a PropertyGraph with colored vertices and edges.
+	 *
 	 * @param propertyGraph the input graph
 	 * @param coloring the abstract vertex coloring
 	 * @param <V> the type representing vertices

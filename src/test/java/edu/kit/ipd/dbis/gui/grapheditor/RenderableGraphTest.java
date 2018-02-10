@@ -104,5 +104,8 @@ public class RenderableGraphTest {
 		renderableGraph = new RenderableGraph(graph2, coloring);
 		graph2 = renderableGraph.asPropertyGraph();
 		assertEquals(true, graph.equals(graph2));
+		renderableGraph = new RenderableGraph(graph2, coloring);
+		graph2 = renderableGraph.asPropertyGraph();
+		assertEquals(true, graph.equals(graph2));
 	}
 }
