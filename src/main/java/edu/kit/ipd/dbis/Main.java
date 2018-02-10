@@ -1,11 +1,16 @@
 package edu.kit.ipd.dbis;
 
-import edu.kit.ipd.dbis.controller.*;
+import edu.kit.ipd.dbis.controller.CalculationController;
+import edu.kit.ipd.dbis.controller.CorrelationController;
+import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.controller.FilterController;
+import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.GraphEditorController;
+import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.themes.GrapeTheme;
-import edu.kit.ipd.dbis.log.Log;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

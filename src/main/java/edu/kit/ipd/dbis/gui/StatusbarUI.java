@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
@@ -9,19 +5,26 @@ import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import edu.kit.ipd.dbis.log.Event;
-import edu.kit.ipd.dbis.log.EventType;
-import edu.kit.ipd.dbis.log.History;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.ResourceBundle;
 
+/**
+ * The statusbar at the bottom of Grape's GUI
+ */
 public class StatusbarUI extends JPanel {
 
 	private final int statusbarHeight = 15;
@@ -35,7 +38,15 @@ public class StatusbarUI extends JPanel {
 	private String selectedRow = "Position -";
 	private String databaseInfo = "-";
 
-	public StatusbarUI(StatusbarController statusbarController, DatabaseController databaseController,ResourceBundle language, Theme theme) {
+	/**
+	 * @param statusbarController the controller responsible for the statusbar
+	 * @param databaseController the controller responsible for database management
+	 * @param language the language used
+	 * @param theme the theme used to style the statusbar
+	 */
+	public StatusbarUI(StatusbarController statusbarController,
+	                   DatabaseController databaseController,
+	                   ResourceBundle language, Theme theme) {
 		this.statusbarController = statusbarController;
 		this.databaseController = databaseController;
 		this.generateController = GenerateController.getInstance();
@@ -92,7 +103,7 @@ public class StatusbarUI extends JPanel {
 		return pauseButton;
 	}
 
-	private class PauseRunAction implements ActionListener {
+	private final class PauseRunAction implements ActionListener {
 
 		private final JButton button;
 
@@ -130,7 +141,7 @@ public class StatusbarUI extends JPanel {
 		private final LogUI logUI;
 		private Component component;
 
-		public ShowLogAction(LogUI logUI, Component component) {
+		ShowLogAction(LogUI logUI, Component component) {
 			this.logUI = logUI;
 			this.component = component;
 		}
@@ -141,16 +152,26 @@ public class StatusbarUI extends JPanel {
 		}
 	}
 
+	/**
+	 * @param row the number of the row to display as the currently displayed row
+	 */
 	public void changeSelectedRow(final int row) {
 		selectedRow = "Position " + (row + 1);
 		updateStatusbarText();
 	}
 
+	/**
+	 * @param numberOfUncalculatedGraphs the number of uncalculated graphs
+	 */
 	public void setRemainingCalculations(final int numberOfUncalculatedGraphs) {
 		remainingCalculations = numberOfUncalculatedGraphs + " remaining calculations";
 		updateStatusbarText();
 	}
 
+	/**
+	 * @param databaseName the name of the database to display
+	 * @param numberOfGraphs the total number of graphs in the database
+	 */
 	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
 		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
 		updateStatusbarText();

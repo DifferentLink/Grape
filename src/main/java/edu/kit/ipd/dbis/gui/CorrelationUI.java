@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.CorrelationController;
@@ -9,17 +5,35 @@ import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.gui.popups.CorrelationRequestUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
+/**
+ * The correlation panel in Grape's GUI
+ */
 public class CorrelationUI extends JPanel {
 
 	private final CorrelationController controller;
 	private JTextField correlationInput;
 
+	/**
+	 * Constructs the correlation panel
+	 * @param controller the controller responsible for the correlation request
+	 * @param language the language used
+	 * @param theme theme theme used to style to correlation window
+	 */
 	public CorrelationUI(CorrelationController controller, ResourceBundle language, Theme theme) {
 		this.controller = controller;
 
@@ -59,8 +73,8 @@ public class CorrelationUI extends JPanel {
 		ResourceBundle language;
 		Theme theme;
 
-		public CorrelationRequestAction(CorrelationController controller, JTextField correlationInput,
-		                                ResourceBundle language, Theme theme) {
+		CorrelationRequestAction(CorrelationController controller, JTextField correlationInput,
+		                         ResourceBundle language, Theme theme) {
 			this.controller = controller;
 			this.correlationInput = correlationInput;
 			this.language = language;
@@ -79,5 +93,4 @@ public class CorrelationUI extends JPanel {
 			}
 		}
 	}
-
 }
