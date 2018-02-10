@@ -7,6 +7,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -135,9 +136,9 @@ public class Pearson extends Correlation {
                                                GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
-        LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
+        List<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
                 firstProperty.getClass().getSimpleName());
-        LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
+        List<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
                 secondProperty.getClass().getSimpleName());
         double firstRandomMedium = Pearson.createRandomMedium(firstPropertyValues);
         double secondRandomMedium = Pearson.createRandomMedium(secondPropertyValues);
@@ -153,7 +154,7 @@ public class Pearson extends Correlation {
             * Pearson.getSampleVariationskoeffizient(secondPropertyValues, secondRandomMedium)));
     }
 
-    private static double createRandomMedium(LinkedList<Double> inputList) {
+    private static double createRandomMedium(List<Double> inputList) {
         double sum = 0;
         for (double currentValue: inputList) {
             sum = (sum + currentValue);
@@ -161,7 +162,7 @@ public class Pearson extends Correlation {
         return (sum / inputList.size());
     }
 
-    private static double getSampleVariationskoeffizient(LinkedList<Double> inputList, double randomMedium) {
+    private static double getSampleVariationskoeffizient(List<Double> inputList, double randomMedium) {
         double sum = 0;
         for (double currentValue: inputList) {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));

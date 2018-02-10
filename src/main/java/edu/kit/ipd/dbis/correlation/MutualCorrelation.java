@@ -8,6 +8,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -136,11 +137,11 @@ public class MutualCorrelation extends Correlation {
                                                GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
-        LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
+        List<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
                 firstProperty.getClass().getSimpleName());
         double returnValue = 0;
         while (!firstPropertyValues.isEmpty()) {
-            LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
+            List<Double> secondPropertyValues = database.getValues(manager.parseFilterList(),
                     secondProperty.getClass().getSimpleName());
             double i = MutualCorrelation.getMinimum(firstPropertyValues);
             while (!secondPropertyValues.isEmpty()) {
@@ -156,7 +157,7 @@ public class MutualCorrelation extends Correlation {
         return returnValue;
     }
 
-    private static double calculatePXY(LinkedList<Double> inputList1, double value1, LinkedList<Double> inputList2,
+    private static double calculatePXY(List<Double> inputList1, double value1, List<Double> inputList2,
                                 double value2) {
         double counter = 0.0;
         try {
@@ -171,7 +172,7 @@ public class MutualCorrelation extends Correlation {
         return (counter / inputList1.size());
     }
 
-    private static double calculatePX(LinkedList<Double> inputList, double value) {
+    private static double calculatePX(List<Double> inputList, double value) {
         double counter = 0.0;
         for (double currentElement: inputList) {
             if (currentElement == value) {
@@ -181,7 +182,7 @@ public class MutualCorrelation extends Correlation {
         return (counter / inputList.size());
     }
 
-    private static double getMinimum(LinkedList<Double> inputList) {
+    private static double getMinimum(List<Double> inputList) {
         double minimum = Integer.MAX_VALUE;
         for (double currentElement: inputList) {
             if (currentElement < minimum) {

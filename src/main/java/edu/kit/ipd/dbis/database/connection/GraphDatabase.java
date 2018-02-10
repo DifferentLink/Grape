@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class represents a Graphdatabase that contains graphs and filters.
@@ -201,7 +201,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<Filtersegment> getFilters() throws ConnectionFailedException {
+	public List<Filtersegment> getFilters() throws ConnectionFailedException {
 		try {
 			return this.filterTable.getContent();
 		} catch (SQLSyntaxErrorException e) {
@@ -275,7 +275,7 @@ public class GraphDatabase implements DatabaseManager {
 	}
 
 	@Override
-	public LinkedList<Double> getValues(String[][] filters, String column) throws ConnectionFailedException {
+	public List<Double> getValues(String[][] filters, String column) throws ConnectionFailedException {
 		try {
 			return this.graphTable.getValues(filters, column);
 		} catch (SQLSyntaxErrorException e) {
