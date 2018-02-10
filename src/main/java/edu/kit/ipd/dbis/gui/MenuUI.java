@@ -307,11 +307,14 @@ public class MenuUI extends JMenuBar {
 				System.out.println("Saved selection to a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
-
-					//TODO: Insert right graphIDs!!
-
-
-					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController, language, theme, file.getPath(), new LinkedList<Integer>());
+					//Inserting selected graphIds
+					LinkedList<Integer> graphs = new LinkedList<>();
+					int[] selectedRows = tableUI.getSelectedRows();
+					for (int row : selectedRows) {
+						graphs.add((Integer) tableUI.getValueAt(selectedRows[row - 1], 0));
+					}
+					//Open Database configuration window
+					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController, language, theme, file.getPath(), graphs);
 					configureDatabaseOfSelectionUI.setVisible(true);
 				}
 			} else {
