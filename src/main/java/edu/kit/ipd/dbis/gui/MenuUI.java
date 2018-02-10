@@ -5,17 +5,19 @@ import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.popups.AboutUI;
-import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
+import edu.kit.ipd.dbis.gui.popups.GenerateGraphUI;
 import edu.kit.ipd.dbis.gui.popups.ReadBFSCodeUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import edu.kit.ipd.dbis.log.Log;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 

@@ -5,8 +5,16 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.History;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Iterator;

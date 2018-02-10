@@ -2,10 +2,10 @@ package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.*;
+import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import java.awt.*;
+import java.awt.Component;
 
 /**
  * A JTable with rows that alternate in color

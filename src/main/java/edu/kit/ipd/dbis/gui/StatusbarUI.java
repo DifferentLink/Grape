@@ -5,17 +5,21 @@ import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
-import edu.kit.ipd.dbis.log.Event;
-import edu.kit.ipd.dbis.log.EventType;
-import edu.kit.ipd.dbis.log.History;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.ResourceBundle;
 
 /**

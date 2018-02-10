@@ -1,23 +1,36 @@
-/**
-  Created by Robin Link
-*/
-
 package edu.kit.ipd.dbis.gui;
 
-import edu.kit.ipd.dbis.controller.*;
+import edu.kit.ipd.dbis.controller.CalculationController;
+import edu.kit.ipd.dbis.controller.CorrelationController;
+import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.controller.FilterController;
+import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.GraphEditorController;
+import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
