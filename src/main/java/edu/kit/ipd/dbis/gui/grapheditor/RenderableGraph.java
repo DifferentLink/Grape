@@ -70,11 +70,9 @@ public class RenderableGraph {
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-
 		VertexFactory factory = new VertexFactory();
-
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
@@ -88,7 +86,17 @@ public class RenderableGraph {
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
@@ -97,12 +105,8 @@ public class RenderableGraph {
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
-				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
-					addedEdges.add(e);
-					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
-				}
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				this.edges.add(sourceTargetEdge);
 			}
 		}
 	}
@@ -176,7 +180,7 @@ public class RenderableGraph {
 		}
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
@@ -191,7 +195,17 @@ public class RenderableGraph {
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
@@ -202,13 +216,7 @@ public class RenderableGraph {
 				}
 
 				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
-				Edge targetSourceEdge = new Edge(objectVertexMap.get(edgeTarget), objectVertexMap.get(v));
-
-				// check if edge was already added
-				if (!this.edges.contains(sourceTargetEdge) && !this.edges.contains(targetSourceEdge)) {
-					addedEdges.add(e);
-					this.edges.add(sourceTargetEdge);
-				}
+				this.edges.add(sourceTargetEdge);
 			}
 		}
 	}
@@ -264,7 +272,7 @@ public class RenderableGraph {
 		}
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
@@ -279,7 +287,17 @@ public class RenderableGraph {
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
@@ -290,14 +308,8 @@ public class RenderableGraph {
 				}
 
 				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
-				Edge targetSourceEdge = new Edge(objectVertexMap.get(edgeTarget), objectVertexMap.get(v));
-
-				// check if edge was already added
-				if (!this.edges.contains(sourceTargetEdge) && !this.edges.contains(targetSourceEdge)) {
-					addedEdges.add(e);
-					sourceTargetEdge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
-					this.edges.add(sourceTargetEdge);
-				}
+				sourceTargetEdge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
+				this.edges.add(sourceTargetEdge);
 			}
 		}
 	}

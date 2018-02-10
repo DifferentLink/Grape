@@ -7,14 +7,12 @@ import java.awt.geom.Line2D;
 /**
  * An edge that can be rendered in the graph editor
  */
-public class Edge implements Comparable {
+public class Edge {
 	private Vertex start;
 	private Vertex end;
 
 	private Color color = GraphLook.EDGE_COLOR;
 	private int thickness = GraphLook.EDGE_THICKNESS;
-
-	private static int id = 0;
 
 	/**
 	 * @param start the start vertex of the edge
@@ -120,12 +118,9 @@ public class Edge implements Comparable {
 		this.thickness = thickness;
 	}
 
-	public int getId() {
-		return this.id;
-	}
-
 	@Override
-	public int compareTo(Object o) {
-		return Integer.compare(this.getId(), ((Edge) o).getId());
+	public boolean equals(Object o) {
+		return this.getStart() == ((Edge) o).getStart()
+				&& this.getEnd() == ((Edge) o).getEnd();
 	}
 }
