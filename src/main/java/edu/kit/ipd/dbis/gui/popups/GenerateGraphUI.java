@@ -1,7 +1,7 @@
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.GenerateController;
-import edu.kit.ipd.dbis.controller.InvalidGeneratorInputException;
+import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.swing.BorderFactory;

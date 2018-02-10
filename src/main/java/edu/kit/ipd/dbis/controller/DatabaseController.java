@@ -31,9 +31,6 @@ public class DatabaseController {
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
 
-	public void setGrapeUI(GrapeUI grapeUI) {
-		this.grapeUI = grapeUI;
-	}
 
 	/**
 	 * Instantiates a new Database controller.
@@ -46,6 +43,15 @@ public class DatabaseController {
 		this.statusbar = StatusbarController.getInstance();
 		this.correlation = CorrelationController.getInstance();
 		this.connector = new FileManager();
+	}
+
+	/**
+	 * Sets grape ui.
+	 *
+	 * @param grapeUI the grape ui
+	 */
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
 	}
 
 	/**
@@ -90,7 +96,7 @@ public class DatabaseController {
 	 * @param filepath the file path of the Database.
 	 */
 	public void mergeDatabase(String filepath) {
-		GraphDatabase mergeDatabase = null;
+		GraphDatabase mergeDatabase;
 		try {
 			mergeDatabase = connector.loadGraphDatabase(filepath);
 			database.merge(mergeDatabase);
@@ -152,6 +158,11 @@ public class DatabaseController {
 		statusbar.setDatabase(database);
 	}
 
+	/**
+	 * Sets statusbar ui.
+	 *
+	 * @param statusbarUI the statusbar ui
+	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}

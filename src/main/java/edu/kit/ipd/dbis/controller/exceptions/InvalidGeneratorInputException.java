@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.controller;
+package edu.kit.ipd.dbis.controller.exceptions;
 
 /**
  * The type Invalid generator input exception.
