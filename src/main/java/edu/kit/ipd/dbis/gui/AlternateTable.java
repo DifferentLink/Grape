@@ -1,7 +1,11 @@
+
+/**
+ * Created by robinlink
+ */
+
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.themes.Theme;
-
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;

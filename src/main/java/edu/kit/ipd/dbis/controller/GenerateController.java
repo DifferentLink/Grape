@@ -13,7 +13,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-
 import javax.swing.SwingUtilities;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -109,13 +108,12 @@ public class GenerateController {
 	}
 
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InvalidGeneratorInputException {
+			InvalidGeneratorInputException, InterruptedException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
 
 		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
-		try {
 			try {
 				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 			} catch (NotEnoughGraphsException e){
@@ -139,7 +137,6 @@ public class GenerateController {
 					}
 				}));
 			}
-
 			int runningJobs = 0;
 			final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
 
@@ -148,16 +145,16 @@ public class GenerateController {
 				if (runningJobs < maxJobs) {
 					runningJobs++;
 				} else {
-					job.join();
+					try {
+						job.join();
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
-
 			for (Thread job : jobs) {
 				job.join();
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		grapeUI.updateTable();
 	}
 		/**
@@ -165,7 +162,11 @@ public class GenerateController {
 	 */
 	public void generateEmptyGraph() { // todo please implement me
 		try {
-			generateGraphs(0, 0, 0, 0, 1);
+			try {
+				generateGraphs(0, 0, 0, 0, 1);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 		} catch (InvalidGeneratorInputException e) {
 			statusbar.addMessage(e.getMessage());
 		}

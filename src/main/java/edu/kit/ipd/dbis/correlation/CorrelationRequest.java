@@ -76,6 +76,8 @@ public class CorrelationRequest {
     private static Correlation parseCorrelationToString(String correlationInput) throws
             InvalidCorrelationInputException {
 
+        String[] potentialPropertyArray = correlationInput.split(" ", 4);
+        String potentialProperty = potentialPropertyArray[2];
         String inputCopy = correlationInput.toLowerCase();
         String[] parameters = inputCopy.split(" ", 4);
         if (parameters.length < 3) {
@@ -94,9 +96,9 @@ public class CorrelationRequest {
         if (parameters.length == 4) {
             String propertyString = parameters[paramStart];
             checkCorrelationInputNull(propertyString);
-            String property = CorrelationRequest.testProperty(propertyString);
+            CorrelationRequest.testProperty(propertyString);
             paramStart++;
-            correlation.setProperty(property);
+            correlation.setProperty(potentialProperty);
         }
 
         String propertyCounterString = parameters[paramStart];
@@ -130,7 +132,7 @@ public class CorrelationRequest {
         throw new InvalidCorrelationInputException();
     }
 
-    private static String testProperty(String input) throws InvalidCorrelationInputException {
+    private static void testProperty(String input) throws InvalidCorrelationInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Set<Property> propertySet = PropertyFactory.createAllProperties(graph);
         String[] propertyStrings = new String[propertySet.size()];
@@ -142,7 +144,7 @@ public class CorrelationRequest {
         for (String currentString: propertyStrings) {
             currentString = currentString.toLowerCase();
             if (currentString.equals(input)) {
-                return input;
+                return;
             }
         }
         throw new InvalidCorrelationInputException();
