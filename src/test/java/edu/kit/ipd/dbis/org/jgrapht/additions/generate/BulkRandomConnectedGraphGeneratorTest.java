@@ -1,11 +1,8 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.generate;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.MinimalBfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
-import org.jgrapht.graph.DefaultEdge;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

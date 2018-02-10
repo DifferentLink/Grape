@@ -55,7 +55,7 @@ public class MinimalProfileAlgorithmTest {
 	@Test
 	public void profileTest() {
 		PropertyGraph graph = generateSimpleTestGraph1();
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		int[][] result = alg.getProfile(graph).getMatrix();
 
 		int[][] profile = {{1,1,2,1,1,3,-1,2,3,1,1,4,1,1,5,-1,4,5,1,1,6,1,2,7,-1,4,7,-1,6,7},
@@ -74,7 +74,7 @@ public class MinimalProfileAlgorithmTest {
 	public void profileCompareTest() {
 		PropertyGraph graph1 = generateSimpleTestGraph1();
 		PropertyGraph graph2 = generateSimpleTestGraph2();
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 
 		int[][] result2 = alg.getProfile(graph2).getMatrix();
 		int[][] result1 = alg.getProfile(graph1).getMatrix();
@@ -89,7 +89,7 @@ public class MinimalProfileAlgorithmTest {
 	@Test
 	public void profBoehmGraph1() {
 		PropertyGraph graph = generateSimpleTestGraph1();
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 1");
@@ -126,7 +126,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("e", "g");
 		graph.addEdge("f", "h");
 		graph.addEdge("g", "h");
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 2");
@@ -163,7 +163,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("f", "g");
 		graph.addEdge("f", "h");
 		graph.addEdge("g", "h");
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 4");
@@ -200,7 +200,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("e", "h");
 		graph.addEdge("f", "h");
 		graph.addEdge("g", "h");
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 4");
@@ -236,7 +236,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("e", "h");
 		graph.addEdge("f", "h");
 		graph.addEdge("g", "h");
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 5");
@@ -273,7 +273,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("e", "h");
 		graph.addEdge("f", "g");
 		graph.addEdge("g", "h");
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 6");
@@ -310,7 +310,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("e", "g");
 		graph.addEdge("f", "g");
 		graph.addEdge("g", "h");
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 7");
@@ -346,7 +346,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("e", "f");
 		graph.addEdge("f", "g");
 		graph.addEdge("g", "h");
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 8");
@@ -382,7 +382,7 @@ public class MinimalProfileAlgorithmTest {
 		graph.addEdge("e", "g");
 		graph.addEdge("f", "g");
 		graph.addEdge("g", "h");
-		MinimalProfileAlgorithm<String, DefaultEdge> alg = new MinimalProfileAlgorithm<>();
+		MinimalProfileAlgorithm<String> alg = new MinimalProfileAlgorithm<>();
 		ProfileDensityAlgorithm.Profile p = alg.getProfile(graph);
 		int[][] result = p.getMatrix();
 		System.out.println("Graph 9");

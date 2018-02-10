@@ -173,7 +173,6 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 				}
 				array[0] = tmp;
 
-				// TODO sometimes this creates duplicates.
 				// add initial array to the results.
 				int[] arrayCopy2 = new int[array.length];
 				System.arraycopy(array, 0, arrayCopy2, 0, array.length);
