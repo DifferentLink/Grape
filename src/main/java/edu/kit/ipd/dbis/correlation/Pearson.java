@@ -82,16 +82,32 @@ public class Pearson extends Correlation {
                 secondProperty);
         double firstRandomMedium = Pearson.createRandomMedium(firstPropertyValues);
         double secondRandomMedium = Pearson.createRandomMedium(secondPropertyValues);
+
         double sum = 0;
-        for (double currentFirstPropertyValue: firstPropertyValues) {
-            for (double currentSecondPropertyValue: secondPropertyValues) {
-                sum = sum + ((currentFirstPropertyValue - firstRandomMedium)
-                        * (currentSecondPropertyValue - secondRandomMedium));
-            }
+        Double[] firstPropertyArrayValues = new Double[firstPropertyValues.size()];
+        int a = 0;
+        for (double current: firstPropertyValues) {
+            firstPropertyArrayValues[a] = current;
+            a++;
         }
+        Double[] secondPropertyArrayValues = new Double[firstPropertyValues.size()];
+        a = 0;
+        for (double current: firstPropertyValues) {
+            secondPropertyArrayValues[a] = current;
+            a++;
+        }
+        for (int b = 0; b < firstPropertyArrayValues.length; b++) {
+            sum = sum + ((firstPropertyArrayValues[b] - firstRandomMedium)
+                    * (secondPropertyArrayValues[b] - secondRandomMedium));
+        }
+
         double result = (sum / (firstPropertyValues.size() - 1));
-        return (result / (Pearson.getSampleVariationskoeffizient(firstPropertyValues, firstRandomMedium)
-            * Pearson.getSampleVariationskoeffizient(secondPropertyValues, secondRandomMedium)));
+        double coefficient = result / (Pearson.getSampleVariationskoeffizient(firstPropertyValues, firstRandomMedium)
+                * Pearson.getSampleVariationskoeffizient(secondPropertyValues, secondRandomMedium));
+        if (!(coefficient > -1 && coefficient < 1)) {
+            return 0;
+        }
+        return coefficient;
     }
 
     private static double createRandomMedium(LinkedList<Double> inputList) {
