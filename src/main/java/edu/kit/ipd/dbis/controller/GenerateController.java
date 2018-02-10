@@ -1,7 +1,6 @@
 package edu.kit.ipd.dbis.controller;
 
 
-import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
 import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
@@ -15,6 +14,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
 import javax.swing.SwingUtilities;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -29,26 +29,16 @@ public class GenerateController {
 	private GraphDatabase database;
 	private BulkGraphGenerator generator;
 	private StatusbarController statusbar;
-	private FilterController filter;
 	private CalculationController calculation;
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
 
-	/**
-	 * @param grapeUI the GUI to manage
-	 */
-	public void setGrapeUI(GrapeUI grapeUI) {
-		this.grapeUI = grapeUI;
-	}
-
-	//TODO: Singleton pattern
 	private static GenerateController generate;
 
 	private GenerateController() {
 		this.statusbar = StatusbarController.getInstance();
 		this.generator = new BulkRandomConnectedGraphGenerator();
 		this.calculation = CalculationController.getInstance();
-		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -63,7 +53,20 @@ public class GenerateController {
 		return generate;
 	}
 
+	/**
+	 * Sets grape ui.
+	 *
+	 * @param grapeUI the grape ui
+	 */
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
+	}
 
+	/**
+	 * Sets statusbar ui.
+	 *
+	 * @param statusbarUI the statusbar ui
+	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}
@@ -109,6 +112,17 @@ public class GenerateController {
 		}
 	}
 
+	/**
+	 * Generate graphs.
+	 *
+	 * @param minVertices the min vertices
+	 * @param maxVertices the max vertices
+	 * @param minEdges    the min edges
+	 * @param maxEdges    the max edges
+	 * @param amount      the amount
+	 * @throws InvalidGeneratorInputException the invalid generator input exception
+	 * @throws InterruptedException           the interrupted exception
+	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InvalidGeneratorInputException, InterruptedException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
@@ -116,72 +130,57 @@ public class GenerateController {
 		}
 
 		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
-			try {
-				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-			} catch (NotEnoughGraphsException e){
-				statusbar.addMessage(e.getMessage());
-			}
-			this.saveGraphs(graphs);
-
-			List<Thread> jobs = new LinkedList<>();
-			for (PropertyGraph<Integer, Integer> graph : graphs) {
-				jobs.add(new Thread(new Runnable() {
-					@Override
-					public void run() {
-						graph.calculateProperties();
-						try {
-							database.replaceGraph(graph.getId(), graph);
-							statusbar.addEvent(EventType.ADD, graph.getId());
-						} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-							statusbar.addMessage(e.getMessage());
-						}
-						System.out.println("Finished graph " + graph.getId() + ": " + graph.toString());
-					}
-				}));
-			}
-			int runningJobs = 0;
-			final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
-
-			for (Thread job : jobs) {
-				job.start();
-				if (runningJobs < maxJobs) {
-					runningJobs++;
-				} else {
-					try {
-						job.join();
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-			for (Thread job : jobs) {
-				job.join();
-			}
-		grapeUI.updateTable();
-	}
-		/**
-	 * Generate empty graph.
-	 */
-	public void generateEmptyGraph() { // todo please implement me
 		try {
-			try {
-				generateGraphs(0, 0, 0, 0, 1);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-		} catch (InvalidGeneratorInputException e) {
+			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+		} catch (NotEnoughGraphsException e) {
 			statusbar.addMessage(e.getMessage());
 		}
+		this.saveGraphs(graphs);
+
+		List<Thread> jobs = new LinkedList<>();
+		for (PropertyGraph<Integer, Integer> graph : graphs) {
+			jobs.add(new Thread(new Runnable() {
+				@Override
+				public void run() {
+					graph.calculateProperties();
+					try {
+						database.replaceGraph(graph.getId(), graph);
+						statusbar.addEvent(EventType.ADD, graph.getId());
+					} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+						statusbar.addMessage(e.getMessage());
+					}
+					System.out.println("Finished graph " + graph.getId() + ": " + graph.toString());
+				}
+			}));
+		}
+		int runningJobs = 0;
+		final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
+
+		for (Thread job : jobs) {
+			job.start();
+			if (runningJobs < maxJobs) {
+				runningJobs++;
+			} else {
+				try {
+					job.join();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		for (Thread job : jobs) {
+			job.join();
+		}
+		grapeUI.updateTable();
 	}
 
 	/**
 	 * Creates a graph with the BFS Code and saves it in the Database.
 	 *
 	 * @param bfsCode the BFS Code of the graph to save.
-	 * @throws InvalidBfsCodeInputException the invalid bfs code input exception
+	 *                //@throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
-
-	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException { //TODO: check for valid BFS input
+	public void generateBFSGraph(String bfsCode) {
 		// Parsing String into int[]
 		String[] splitCode = bfsCode.split(",");
 		int[] code = new int[splitCode.length];
@@ -238,8 +237,8 @@ public class GenerateController {
 	 */
 	public Boolean isValidBFS(String bfsCode) {
 		String[] splitCode = bfsCode.split(",");
-		for (int i = 0; i < splitCode.length; i++) {
-			if (!isNumeric(splitCode[i])) {
+		for (String aSplitCode : splitCode) {
+			if (!isNumeric(aSplitCode)) {
 				return false;
 			}
 		}
@@ -247,11 +246,7 @@ public class GenerateController {
 	}
 
 	private Boolean isValidGeneratorInput(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
-		if (minVertices >= 0 && minEdges >= 0 && maxEdges >= 0 && maxVertices >= 0 && amount >= 1) {
-			return true;
-		} else {
-			return false;
-		}
+		return minVertices >= 0 && minEdges >= 0 && maxEdges >= 0 && maxVertices >= 0 && amount >= 1;
 	}
 
 	private Boolean isNumeric(String text) {

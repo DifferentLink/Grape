@@ -35,6 +35,8 @@ public final class GraphEditorController {
 	private StatusbarUI statusbarUI;
 
 	/**
+	 * Sets grape ui.
+	 *
 	 * @param grapeUI the GUI the graph editor is part of
 	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
@@ -44,6 +46,11 @@ public final class GraphEditorController {
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
+	/**
+	 * Sets statusbar ui.
+	 *
+	 * @param statusbarUI the statusbar ui
+	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}
@@ -74,6 +81,11 @@ public final class GraphEditorController {
 		this.database = database;
 	}
 
+	/**
+	 * Sets graph editor.
+	 *
+	 * @param graphEditor the graph editor
+	 */
 	public void setGraphEditor(GraphEditorUI graphEditor) {
 		this.graphEditor = graphEditor;
 	}
@@ -111,6 +123,7 @@ public final class GraphEditorController {
 	 * Add new graph.
 	 *
 	 * @param graph the graph
+	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
 	public void addNewGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException { // todo only duplicate check??
 		if (isValidGraph(graph)) {
@@ -126,6 +139,12 @@ public final class GraphEditorController {
 		}
 	}
 
+	/**
+	 * Gets graph by id.
+	 *
+	 * @param id the id
+	 * @return the graph by id
+	 */
 	public PropertyGraph<Integer, Integer> getGraphById(int id) {
 		PropertyGraph<Integer, Integer> graph = null;
 		try {
@@ -141,6 +160,7 @@ public final class GraphEditorController {
 	 *
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
+	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
 	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
 		boolean duplicate = false;
@@ -198,7 +218,8 @@ public final class GraphEditorController {
 	/**
 	 * Returns a coloring which is not equivalent to current coloring.
 	 *
-	 * @param graph input graph
+	 * @param graph           input graph
+	 * @param currentColoring the current coloring
 	 * @return alternative coloring
 	 */
 	public VertexColoringAlgorithm.Coloring<Integer> getNextVertexColoring(
@@ -217,7 +238,8 @@ public final class GraphEditorController {
 	/**
 	 * Returns a total coloring which is not equivalent to current coloring.
 	 *
-	 * @param graph input graph
+	 * @param graph           input graph
+	 * @param currentColoring the current coloring
 	 * @return alternative coloring
 	 */
 	public TotalColoringAlgorithm.TotalColoring<Integer, Integer> getNextTotalColoring(
@@ -233,6 +255,9 @@ public final class GraphEditorController {
 		}
 	}
 
+	/**
+	 * Empty graph to graph editor.
+	 */
 	public void emptyGraphToGraphEditor() {
 		graphEditor.showEmptyGraph();
 	}

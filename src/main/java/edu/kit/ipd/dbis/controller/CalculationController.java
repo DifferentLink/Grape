@@ -20,6 +20,11 @@ public class CalculationController implements Runnable {
 
 	private GrapeUI grapeUI;
 
+	/**
+	 * Sets grape ui.
+	 *
+	 * @param grapeUI the grape ui
+	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
 	}

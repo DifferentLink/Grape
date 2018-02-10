@@ -16,15 +16,12 @@ import java.util.Set;
 /**
  * The type Statusbar controller.
  */
-//TODO:
 public class StatusbarController {
 
 	private Log log;
 	private CalculationController calculation;
-
 	private GrapeUI grapeUI;
 
-	//TODO: Singleton pattern
 	private static StatusbarController statusbar;
 
 	private StatusbarController() {
@@ -43,16 +40,26 @@ public class StatusbarController {
 		return statusbar;
 	}
 
+	/**
+	 * Sets database.
+	 *
+	 * @param database the database
+	 */
 	public void setDatabase(GraphDatabase database) {
 		log.setDatabase(database);
 	}
 
-	private void setCalculation() {
-		this.calculation = CalculationController.getInstance();
-	}
-
+	/**
+	 * Sets grape ui.
+	 *
+	 * @param grapeUI the grape ui
+	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
+	}
+
+	private void setCalculation() {
+		this.calculation = CalculationController.getInstance();
 	}
 
 	/**
@@ -129,7 +136,7 @@ public class StatusbarController {
 	 * @param id   the id of the graph
 	 */
 	public void addEvent(EventType type, int id) {
-		Set<Integer> changedGraph = new HashSet<Integer>();
+		Set<Integer> changedGraph = new HashSet<>();
 		changedGraph.add(id);
 		Event event;
 		String message;
@@ -141,17 +148,19 @@ public class StatusbarController {
 			return;
 		}
 		event = new Event(type, message, changedGraph);
-		log.addEvent(event);
+		this.addEvent(event);
 	}
 
 	/**
+	 * Add message.
 	 *
+	 * @param message the message
 	 */
 	public void addMessage(String message) {
-		Set<Integer> empty = new HashSet<Integer>();
+		Set<Integer> empty = new HashSet<>();
 		Event event;
 		event = new Event(EventType.MESSAGE, message, empty);
-		log.addEvent(event);
+		this.addEvent(event);
 	}
 
 	/**
@@ -174,6 +183,11 @@ public class StatusbarController {
 		calculation.continueCalculation();
 	}
 
+	/**
+	 * Gets number uncalculated graphs.
+	 *
+	 * @return the number uncalculated graphs
+	 */
 	public int getNumberUncalculatedGraphs() {
 		return 0;
 	}

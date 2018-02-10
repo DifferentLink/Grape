@@ -5,15 +5,9 @@ import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
-import edu.kit.ipd.dbis.gui.NonEditableTableModel;
-import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collections;
-
-import static edu.kit.ipd.dbis.log.EventType.MESSAGE;
 
 /**
  * The type Filter controller.
@@ -24,11 +18,6 @@ public class FilterController {
 	private StatusbarController statusbar;
 	private GrapeUI grapeUI;
 
-	public void setGrapeUI(GrapeUI grapeUI) {
-		this.grapeUI = grapeUI;
-	}
-
-	//TODO: Singleton pattern
 	private static FilterController filterController;
 
 	private FilterController() {
@@ -46,6 +35,15 @@ public class FilterController {
 			filterController = new FilterController();
 		}
 		return filterController;
+	}
+
+	/**
+	 * Sets grape ui.
+	 *
+	 * @param grapeUI the grape ui
+	 */
+	public void setGrapeUI(GrapeUI grapeUI) {
+		this.grapeUI = grapeUI;
 	}
 
 	/**
@@ -99,9 +97,8 @@ public class FilterController {
 	 *
 	 * @param filterInput the filter input
 	 * @param id          the id
-	 * @throws InvalidInputException the invalid input exception
 	 */
-	public void updateFilterGroup(String filterInput, int id) throws InvalidInputException {
+	public void updateFilterGroup(String filterInput, int id) {
 		try {
 			filter.updateFiltergroup(filterInput, id);
 			this.grapeUI.updateTable();
