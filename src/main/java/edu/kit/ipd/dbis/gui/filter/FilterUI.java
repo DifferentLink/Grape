@@ -201,12 +201,9 @@ public class FilterUI extends JPanel {
 		JTextArea filterInput = new JTextArea(filterGroup.getText());
 		filterInput.getDocument().addDocumentListener(new FilterGroupInputChange(filterGroup, filterInput));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
-		try {
-			filterController.updateFilterGroup(filterGroup.getText(), filterGroup.getID());
-			filterInput.setBackground(Color.WHITE);
-		} catch (InvalidInputException e) {
-			filterInput.setBackground(theme.lightNeutralColor);
-		}
+		filterController.updateFilterGroup(filterGroup.getText(), filterGroup.getID());
+		filterInput.setBackground(Color.WHITE);
+		filterInput.setBackground(theme.lightNeutralColor);
 		filterGroupHeaderUI.add(filterInput);
 		filterGroupHeaderUI.add(Box.createHorizontalStrut(2));
 
@@ -369,12 +366,10 @@ public class FilterUI extends JPanel {
 
 		private void update() {
 			filterGroup.setText(textArea.getText());
-			try {
-				filterController.updateFilterGroup(textArea.getText(), filterGroup.getID());
-				textArea.setBackground(Color.WHITE);
-			} catch (InvalidInputException e) {
-				textArea.setBackground(theme.lightNeutralColor);
-			}
+			filterController.updateFilterGroup(textArea.getText(), filterGroup.getID());
+			textArea.setBackground(Color.WHITE);
+			textArea.setBackground(theme.lightNeutralColor);
+
 		}
 
 	}
