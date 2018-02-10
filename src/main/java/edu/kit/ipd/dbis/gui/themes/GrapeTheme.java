@@ -1,11 +1,10 @@
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui.themes;
 
 import java.awt.*;
 
+/**
+ * A possible theme to use for Grape's GUI
+ */
 public class GrapeTheme extends Theme {
 	public GrapeTheme() { // todo choose proper colors for GUI
 		super.fontColor = Color.BLACK;

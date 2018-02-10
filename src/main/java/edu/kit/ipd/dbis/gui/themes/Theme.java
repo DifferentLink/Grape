@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Defines Grape's theme
+ * Defines the properties a theme has to have
  */
 public abstract class Theme {
 	public Color fontColor;
@@ -33,24 +33,36 @@ public abstract class Theme {
 	public Color neutralColor;
 	public Color lightNeutralColor;
 
+	/**
+	 * @param panel the panel to style
+	 */
 	public void style(JPanel panel) {
 		panel.setBackground(backgroundColor);
 		panel.setForeground(foregroundColor);
 		panel.setBorder(BorderFactory.createLineBorder(outlineColor, outlineThickness));
 	}
 
+	/**
+	 * @param button the button to style
+	 */
 	public void style(JButton button) {
 		button.setBackground(buttonBackgorundColor);
 		button.setForeground(buttonTextColor);
 		button.setBorder(BorderFactory.createLineBorder(outlineColor, outlineThickness));
 	}
 
+	/**
+	 * @param comboBox the combobox to stlye
+	 */
 	public void style(JComboBox comboBox) {
 		comboBox.setBackground(backgroundColor);
 		comboBox.setForeground(foregroundColor);
 		comboBox.setBorder(BorderFactory.createLineBorder(outlineColor, outlineThickness));
 	}
 
+	/**
+	 * @param label the label to style
+	 */
 	public void style(JLabel label) {
 		label.setBackground(backgroundColor);
 		label.setForeground(foregroundColor);
