@@ -175,7 +175,9 @@ public class GenerateGraphUI extends JFrame {
 				generateController.generateGraphs(
 						minVertices, maxVertices, minEdges, maxEdges, amount);
 				generateGraphUI.dispose();
-			} catch (InvalidGeneratorInputException e) { }
+			} catch (InvalidGeneratorInputException | InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
