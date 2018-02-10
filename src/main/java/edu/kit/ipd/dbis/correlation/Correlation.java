@@ -164,10 +164,6 @@ abstract class Correlation {
         }
         for (int k = 0; k < attributeCounter; k++) {
             outputSet.add(outputArray[outputArray.length - 1 - k]);
-            System.out.println("######");
-            System.out.println(outputArray[outputArray.length - 1 - k].getFirstProperty() + " "
-                    + outputArray[outputArray.length - 1 - k].getSecondProperty() + " "
-                    + outputArray[outputArray.length - 1 - k].getOutputNumber());
         }
         return outputSet;
     }
