@@ -131,14 +131,11 @@ public class GenerateController {
 						graph.calculateProperties();
 						try {
 							database.replaceGraph(graph.getId(), graph);
-						} catch (ConnectionFailedException e) {
-							e.printStackTrace();
-						} catch (InsertionFailedException e) {
-							e.printStackTrace();
-						} catch (UnexpectedObjectException e) {
-							e.printStackTrace();
+							statusbar.addEvent(EventType.ADD, graph.getId());
+						} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+							statusbar.addMessage(e.getMessage());
 						}
-						System.out.println("Finished graph: " + graph.toString());
+						System.out.println("Finished graph " + graph.getId() + ": " + graph.toString());
 					}
 				}));
 			}
