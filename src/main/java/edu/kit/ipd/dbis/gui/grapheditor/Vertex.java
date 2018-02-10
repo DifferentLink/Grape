@@ -1,6 +1,8 @@
 package edu.kit.ipd.dbis.gui.grapheditor;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
 /**

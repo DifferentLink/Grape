@@ -4,9 +4,15 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgori
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The graph representation used in the graph editor.

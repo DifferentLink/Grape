@@ -5,13 +5,32 @@ import edu.kit.ipd.dbis.controller.InvalidGraphInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ResourceBundle;
 
 /**
