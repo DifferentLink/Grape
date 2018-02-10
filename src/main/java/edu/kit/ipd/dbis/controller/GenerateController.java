@@ -116,7 +116,11 @@ public class GenerateController {
 
 		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 		try {
-			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			try {
+				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			} catch (NotEnoughGraphsException e){
+				statusbar.addMessage(e.getMessage());
+			}
 			this.saveGraphs(graphs);
 
 			List<Thread> jobs = new LinkedList<>();
