@@ -321,8 +321,13 @@ public class MenuUI extends JMenuBar {
 					//Inserting selected graphIds
 					LinkedList<Integer> graphs = new LinkedList<>();
 					int[] selectedRows = tableUI.getSelectedRows();
-					for (int row : selectedRows) {
-						graphs.add((Integer) tableUI.getValueAt(selectedRows[row - 1], 0));
+					if (selectedRows.length == 1) {
+						graphs.add((Integer) tableUI.getValueAt(selectedRows[0], 0));
+					}
+					else {
+						for (int row : selectedRows) {
+							graphs.add((Integer) tableUI.getValueAt(selectedRows[row], 0));
+						}
 					}
 					//Open Database configuration window
 					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController, language, theme, file.getPath(), graphs);
