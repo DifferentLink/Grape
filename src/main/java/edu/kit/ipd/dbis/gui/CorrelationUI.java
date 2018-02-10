@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.CorrelationController;
@@ -15,11 +11,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
+/**
+ * The correlation panel in Grape's GUI
+ */
 public class CorrelationUI extends JPanel {
 
 	private final CorrelationController controller;
 	private JTextField correlationInput;
 
+	/**
+	 * Constructs the correlation panel
+	 * @param controller
+	 * @param language
+	 * @param theme
+	 */
 	public CorrelationUI(CorrelationController controller, ResourceBundle language, Theme theme) {
 		this.controller = controller;
 
@@ -79,5 +84,4 @@ public class CorrelationUI extends JPanel {
 			}
 		}
 	}
-
 }

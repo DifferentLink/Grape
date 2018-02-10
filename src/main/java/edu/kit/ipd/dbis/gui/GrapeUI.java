@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Grape's main window
+ */
 public class GrapeUI {
 
 	private final CalculationController calculationController;
@@ -58,6 +61,18 @@ public class GrapeUI {
 
 	private float verticalSplitRatio = .1f;
 
+	/**
+	 * Constructs Grape's main window
+	 * @param calculationController the controller responsible for calculations
+	 * @param correlationController the controller responsible for correlation requests
+	 * @param databaseController the controller responsible for the database management
+	 * @param filterController the controller responsible for filtering the database
+	 * @param generateController the controller responsible for generating random graphs
+	 * @param graphEditorController the controller responsible for the graph editor
+	 * @param statusbarController the controller responsible for updating the statusbar and the log
+	 * @param language the language to use
+	 * @param theme the theme to style the GUI
+	 */
 	public GrapeUI(CalculationController calculationController,
 	               CorrelationController correlationController,
 	               DatabaseController databaseController,
@@ -218,6 +233,10 @@ public class GrapeUI {
 		public void mouseExited(MouseEvent mouseEvent) {}
 	}
 
+	/**
+	 * Updates the table by calling the respective controller method to sort by a property and filter
+	 * by the currently active filters.
+	 */
 	public void updateTable() {
 		boolean isSorted = false;
 		for (Property property : (new PropertyGraph<>()).getProperties()) {

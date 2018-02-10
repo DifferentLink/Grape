@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.StatusbarController;
@@ -16,11 +12,19 @@ import java.awt.event.FocusListener;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
+/**
+ * The log window which becomes visible with a click on the log button
+ */
 public class LogUI extends JFrame {
 	private final History history;
 	private ResourceBundle language;
 	private Theme theme;
 
+	/**
+	 * @param statusbarController the responsible controller
+	 * @param language the language to use
+	 * @param theme the theme to style the log
+	 */
 	public LogUI(StatusbarController statusbarController, ResourceBundle language, Theme theme) {
 		this.history = statusbarController.getHistory();
 		this.language = language;
@@ -29,6 +33,10 @@ public class LogUI extends JFrame {
 		this.setResizable(false);
 	}
 
+	/**
+	 * Render's GUI elements from the history into a log
+	 * @param component
+	 */
 	public void drawLog(Component component) {
 		this.dispose();
 		this.addFocusListener(new HasFocusListener(this));
@@ -47,6 +55,11 @@ public class LogUI extends JFrame {
 		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
 	}
 
+	/**
+	 * Takes an event as the input and calls the respective method to make a JPanel out of it
+	 * @param event
+	 * @return
+	 */
 	private JPanel renderEvent(Event event) {
 		switch (event.getType()) {
 			case MESSAGE : return renderMESSAGE(event);

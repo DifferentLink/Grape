@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
@@ -23,11 +19,22 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+/**
+ * Grape's menu
+ */
 public class MenuUI extends JMenuBar {
 
 	private final StatusbarController statusbarController;
 	private final Theme theme;
 
+	/**
+	 * @param generateController the controller responsible for generating graphs
+	 * @param databaseController the controller responsible for database management
+	 * @param statusbarController the controller responsible for updating the statusbar
+	 * @param graphEditorController the controller responsible for the graph editor
+	 * @param language the language used
+	 * @param theme the theme to style the menu
+	 */
 	public MenuUI(GenerateController generateController,
 	              DatabaseController databaseController,
 	              StatusbarController statusbarController,
