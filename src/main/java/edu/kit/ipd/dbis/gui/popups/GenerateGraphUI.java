@@ -1,21 +1,26 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
+/**
+ * A window to generate graphs
+ */
 public class GenerateGraphUI extends JFrame {
 
 	private final GenerateController generateController;
@@ -33,6 +38,11 @@ public class GenerateGraphUI extends JFrame {
 	private int maxEdges = 7;
 	private int amount = 4;
 
+	/**
+	 * @param generateController the controller responsible for generate the graphs
+	 * @param language the language to use
+	 * @param theme the theme to style the window
+	 */
 	public GenerateGraphUI(GenerateController generateController, ResourceBundle language, Theme theme) {
 
 		super(language.getString("generateGraphs"));
@@ -96,7 +106,7 @@ public class GenerateGraphUI extends JFrame {
 		if (numVerticesInput.getText().matches("\\d+")) {
 			minVertices = Integer.parseInt(numVerticesInput.getText());
 			maxVertices = minVertices;
-		} else if (numVerticesInput.getText().matches("\\d+-\\d+")){
+		} else if (numVerticesInput.getText().matches("\\d+-\\d+")) {
 			minVertices = Integer.parseInt(numVerticesInput.getText().split("-")[0]);
 			maxVertices = Integer.parseInt(numVerticesInput.getText().split("-")[1]);
 		}
@@ -117,10 +127,10 @@ public class GenerateGraphUI extends JFrame {
 	}
 
 	private void update() {
-		final boolean verticesMatch = numVerticesInput.getText().matches("\\d+") ||
-				numVerticesInput.getText().matches("\\d+-\\d+");
-		final boolean edgesMatch = numEdgesInput.getText().matches("\\d+") ||
-				numEdgesInput.getText().matches("\\d+-\\d+");
+		final boolean verticesMatch = numVerticesInput.getText().matches("\\d+")
+				|| numVerticesInput.getText().matches("\\d+-\\d+");
+		final boolean edgesMatch = numEdgesInput.getText().matches("\\d+")
+				|| numEdgesInput.getText().matches("\\d+-\\d+");
 		final boolean amountMatch = numGraphsInput.getText().matches("\\d+");
 
 		if (verticesMatch) {
@@ -154,7 +164,7 @@ public class GenerateGraphUI extends JFrame {
 		private final GenerateController generateController;
 		private final GenerateGraphUI generateGraphUI;
 
-		public GenerateGraphsAction(GenerateController generateController, GenerateGraphUI generateGraphUI) {
+		GenerateGraphsAction(GenerateController generateController, GenerateGraphUI generateGraphUI) {
 			this.generateController = generateController;
 			this.generateGraphUI = generateGraphUI;
 		}
@@ -165,7 +175,7 @@ public class GenerateGraphUI extends JFrame {
 				generateController.generateGraphs(
 						minVertices, maxVertices, minEdges, maxEdges, amount);
 				generateGraphUI.dispose();
-			} catch (InvalidGeneratorInputException e) {}
+			} catch (InvalidGeneratorInputException e) { }
 		}
 	}
 

@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.grapheditor;
 
 import edu.kit.ipd.dbis.controller.GraphEditorController;
@@ -11,11 +7,35 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgori
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ResourceBundle;
 
+/**
+ * The graph editor in the GUI
+ */
 public class GraphEditorUI extends JPanel {
 
 	private RenderableGraph graph = new RenderableGraph();
@@ -58,6 +78,12 @@ public class GraphEditorUI extends JPanel {
 	private Dimension buttonSize = new Dimension(barHeight - 2, barHeight - 2);
 	private int buttonSeparation = 2;
 
+	/**
+	 * Creates a graph editor to add to the GUI
+	 * @param graphEditorController the responsible controller
+	 * @param language the language used
+	 * @param theme the theme used to style the GUI
+	 */
 	public GraphEditorUI(GraphEditorController graphEditorController, ResourceBundle language, Theme theme) {
 		currentColoringType = ColoringType.VERTEX;
 		this.theme = theme;
@@ -119,10 +145,10 @@ public class GraphEditorUI extends JPanel {
 		center = new JButton("Center"); // todo replace with language resource
 		theme.style(center);
 		center.addActionListener(new CenterVerticesAction());
-		preview = new JButton("Preview");// todo replace with language resource
+		preview = new JButton("Preview"); // todo replace with language resource
 		preview.addActionListener(new PreviewAction(graphEditorController));
 		theme.style(preview);
-		apply = new JButton("Apply");// todo replace with language resource
+		apply = new JButton("Apply"); // todo replace with language resource
 		apply.addActionListener(new ApplyAction(graphEditorController));
 
 		theme.style(apply);
@@ -143,6 +169,10 @@ public class GraphEditorUI extends JPanel {
 		this.add(bottomBarButtons, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Displays the given graph in the editor using the selected coloring type
+	 * @param graph the graph to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
 		propertyGraph = graph;
 		if (currentColoringType == ColoringType.VERTEX) {
@@ -157,6 +187,11 @@ public class GraphEditorUI extends JPanel {
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Displays the given graph in the editor with colored vertices
+	 * @param graph the graph to display
+	 * @param coloring the vertex coloring to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
@@ -165,6 +200,11 @@ public class GraphEditorUI extends JPanel {
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Displays the given graph in the editor with colored vertices and edges
+	 * @param graph the graph to display
+	 * @param coloring the vertex coloring to display
+	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
@@ -173,6 +213,9 @@ public class GraphEditorUI extends JPanel {
 		graphEditor.repaint();
 	}
 
+	/**
+	 * Shows an empty graph in the editor
+	 */
 	public void showEmptyGraph() {
 		this.graph = new RenderableGraph();
 		this.history = new GraphEditorHistory();
@@ -330,7 +373,7 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			PropertyGraph propertyGraph = graph.asPropertyGraph();
+			propertyGraph = graph.asPropertyGraph();
 			try {
 				if (graphEditorController.isValidGraph(propertyGraph)) {
 					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
