@@ -75,9 +75,7 @@ public class GrapeUI {
 		} catch (IOException e) {}
 
 
-		menuUI = new MenuUI(
-				generateController, databaseController, statusbarController, graphEditorController, language, theme);
-		mainWindow.setJMenuBar(menuUI);
+
 
 		filterUI = new FilterUI(filterController, language, theme);
 		correlationUI = new CorrelationUI(correlationController, language, theme);
@@ -118,6 +116,7 @@ public class GrapeUI {
 		filterController.setTableModel(tableModel);
 		graphEditorController.setTableModel(tableModel);
 		generateController.setTableModel(tableModel);
+
 		tableUI = new JTable(tableModel);
 		tableUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableUI.getSelectionModel().addListSelectionListener(new TableSelectionChangeAction());
@@ -131,6 +130,9 @@ public class GrapeUI {
 		rightUI.add(scrollPane, BorderLayout.CENTER);
 		rightUI.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
 		rightUI.add(statusbarUI, BorderLayout.SOUTH);
+
+		menuUI = new MenuUI(tableUI, generateController, databaseController, statusbarController, graphEditorController, language, theme);
+		mainWindow.setJMenuBar(menuUI);
 
 		JSplitPane verticalDivider;
 		verticalDivider = new JSplitPane(

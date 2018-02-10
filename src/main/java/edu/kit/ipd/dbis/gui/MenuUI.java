@@ -13,6 +13,7 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Log;
 
 import javax.swing.*;
+import javax.swing.plaf.TableUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -24,14 +25,16 @@ public class MenuUI extends JMenuBar {
 
 	private final StatusbarController statusbarController;
 	private final Theme theme;
+	private final JTable tableUI;
 
-	public MenuUI(GenerateController generateController,
+	public MenuUI(JTable tableUI, GenerateController generateController,
 	              DatabaseController databaseController,
 	              StatusbarController statusbarController,
 	              GraphEditorController graphEditorController,
 	              ResourceBundle language,
 	              Theme theme) {
 
+		this.tableUI = tableUI;
 		this.statusbarController = statusbarController;
 		this.theme = theme;
 
@@ -282,7 +285,7 @@ public class MenuUI extends JMenuBar {
 		}
 	}
 
-	private class SaveSelectionAction implements ActionListener { // todo controller.saveSelection(graphs)
+	private class SaveSelectionAction implements ActionListener {
 
 		private final DatabaseController databaseController;
 		private final ResourceBundle language;
@@ -306,6 +309,8 @@ public class MenuUI extends JMenuBar {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
 
 					//TODO: Insert right graphIDs!!
+
+
 					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController, language, theme, file.getPath(), new LinkedList<Integer>());
 					configureDatabaseOfSelectionUI.setVisible(true);
 				}
