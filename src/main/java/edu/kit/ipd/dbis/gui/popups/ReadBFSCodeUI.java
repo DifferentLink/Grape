@@ -36,8 +36,8 @@ public class ReadBFSCodeUI extends JFrame{
 		readGraph.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		readGraph.setBackground(theme.assertiveBackground);
 		content.add(readGraph);
-
 		this.add(content);
+		this.setLocationRelativeTo(null);
 	}
 
 	private class ReadBFSCodeAction implements ActionListener {

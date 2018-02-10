@@ -83,7 +83,7 @@ public class GraphEditorController {
 	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
 	public void addEditedGraph(PropertyGraph<Integer, Integer> newGraph, int oldID) {
-		Boolean isDuplicate = null;
+		boolean isDuplicate = false;
 		try {
 			isDuplicate = database.graphExists(newGraph);
 		} catch (ConnectionFailedException e) {
@@ -91,6 +91,7 @@ public class GraphEditorController {
 		}
 		if (!isDuplicate) {
 			try {
+				newGraph.calculateProperties();
 				database.addGraph(newGraph);
 				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
@@ -138,7 +139,7 @@ public class GraphEditorController {
 	 * @return true if the given graph is valid.
 	 */
 	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
-		Boolean duplicate = true;
+		boolean duplicate = false;
 		try {
 			duplicate = database.graphExists(graph);
 		} catch (ConnectionFailedException e) {

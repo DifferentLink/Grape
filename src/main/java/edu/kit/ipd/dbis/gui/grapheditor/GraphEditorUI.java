@@ -155,7 +155,7 @@ public class GraphEditorUI extends JPanel {
 			this.graph = new RenderableGraph(graph, currentTotalColoring);
 		}
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
@@ -163,7 +163,7 @@ public class GraphEditorUI extends JPanel {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
 		history.clear();
-		GraphLook.arrangeInCircle(this.graph.getVertices(), new Point(0, 0), new Point(getWidth(), getHeight()));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
@@ -171,8 +171,7 @@ public class GraphEditorUI extends JPanel {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring);
 		history.clear();
-		GraphLook.arrangeInGrid(this.graph.getSubgraphs(), this.graph.getVerticesNotContainedInSubgraphs(),
-				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+		arrangeGraph();
 		graphEditor.repaint();
 	}
 
@@ -271,12 +270,13 @@ public class GraphEditorUI extends JPanel {
 				kanvas.draw(vertexShape);
 			});
 
-/*			graph.getSubgraphs().forEach(subgraph -> {
-				Shape subgraphOutline = subgraph.outline();
-				kanvas.setPaint(theme.outlineColor);
-				kanvas.fill(subgraphOutline);
+			graph.getSubgraphs().forEach(subgraph -> {
+				Shape subgraphOutline = RenderableGraph.outline(subgraph);
+				float[] dash = new float[]{10.0f};
+				kanvas.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+				kanvas.setPaint(Color.darkGray);
 				kanvas.draw(subgraphOutline);
-			});*/
+			});
 		}
 	}
 
@@ -332,7 +332,7 @@ public class GraphEditorUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			PropertyGraph propertyGraph = graph.asPropertyGraph();
+			propertyGraph = graph.asPropertyGraph();
 			try {
 				if (graphEditorController.isValidGraph(propertyGraph)) {
 					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
@@ -383,8 +383,7 @@ public class GraphEditorUI extends JPanel {
 	private class CenterVerticesAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
-					new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+			arrangeGraph();
 			repaint();
 		}
 	}
@@ -413,5 +412,11 @@ public class GraphEditorUI extends JPanel {
 			currentVertexColoring = graphEditorController.getVertexColoring(propertyGraph);
 			displayGraph(propertyGraph, currentVertexColoring);
 		}
+	}
+
+	private void arrangeGraph() {
+		GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
+				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+		repaint();
 	}
 }

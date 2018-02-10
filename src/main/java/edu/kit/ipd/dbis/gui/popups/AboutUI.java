@@ -23,5 +23,6 @@ public class AboutUI extends JFrame {
 		container.add(aboutText, BorderLayout.CENTER);
 		this.add(container);
 		this.pack();
+		this.setLocationRelativeTo(null);
 	}
 }
