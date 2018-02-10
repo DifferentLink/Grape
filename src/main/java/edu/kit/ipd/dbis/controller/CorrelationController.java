@@ -59,16 +59,8 @@ public class CorrelationController {
 		List<CorrelationOutput> output = null;
 		CorrelationRequest request = new CorrelationRequest(input, this.database);
 		try {
-			System.out.println("Ich war da");
 			output = request.applyCorrelation();
-			System.out.println("Auweia! Eine NullPointerException :(");
-			for (CorrelationOutput current: output) {
-				System.out.println("Hallo! Ich bin die Korrelation " + current.getFirstProperty() + " "
-				+ current.getSecondProperty() + " " + current.getOutputNumber());
-			}
 		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
-			System.out.println("Ein Fehler ist aufgetreten");
-			e.printStackTrace();
 			statusbar.addMessage(e.getMessage());
 		}
 		return output;
