@@ -458,7 +458,7 @@ public class GraphEditorUI extends JPanel {
 
 	private void arrangeGraph() {
 		GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
-				new Point(0, 0), new Point(getWidth(), getHeight() - 2 * barHeight));
+				new Point(0, 0), new Point(graphEditor.getWidth(), graphEditor.getHeight()));
 		repaint();
 	}
 }
