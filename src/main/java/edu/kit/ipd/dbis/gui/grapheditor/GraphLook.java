@@ -48,16 +48,20 @@ public class GraphLook {
 	public static void arrangeInCircle(Set<Vertex> vertices, Point upperLeft, Point lowerRight) {
 
 		final Point center =
-				new Point(Math.abs(upperLeft.x - lowerRight.x) / 2, Math.abs(upperLeft.y - lowerRight.y) / 2);
-		final double radius = Math.min(center.x, center.y) * .75;
+				new Point((lowerRight.x - upperLeft.x) / 2 + upperLeft.x, (lowerRight.y - upperLeft.y) / 2 + upperLeft.y);
+		final double radius = ((Math.min(center.x - upperLeft.x, center.y - lowerRight.y)) / 2 * .75);
 		final double angle = Math.toRadians(360d / (double) vertices.size());
 		int i = 0;
 
-		for (Vertex vertex : new ArrayList<>(new TreeSet<>(vertices))) {
-			vertex.setPosition(
-					(int) (radius * Math.cos(i * angle) + center.x),
-					(int) (radius * Math.sin(i * angle) + center.y));
-			i++;
+		if (vertices.size() == 1) {
+			vertices.iterator().next().setPosition(center.x, center.y);
+		} else {
+			for (Vertex vertex : new ArrayList<>(new TreeSet<>(vertices))) {
+				vertex.setPosition(
+						(int) (radius * Math.cos(i * angle) + center.x),
+						(int) (radius * Math.sin(i * angle) + center.y));
+				i++;
+			}
 		}
 	}
 	/**
@@ -73,23 +77,33 @@ public class GraphLook {
 	public static void arrangeInGrid(Set<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
 	                                 Point upperLeft, Point lowerRight) {
 
-		final int numberGridcells = subgraphs.size() + 1;
+		int numberGridcells;
+		final int cellMargin = 5;
+		if (subgraphs.size() > 0) {
+			numberGridcells = subgraphs.size();
+		} else {
+			numberGridcells = 1;
+		}
+		if (subgraphs.size() % 2 == 1) {
+			numberGridcells = subgraphs.size() + 1;
+		}
+
 		final int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
 		final int xStepsize = (lowerRight.x - upperLeft.x) / xCells;
 		final int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
 		final int yStepsize = (lowerRight.y - upperLeft.y) / yCells;
 		Iterator<Set<Vertex>> iterator = subgraphs.iterator();
 
-		for (int y = 0; y < yCells; y++) {
-			for (int x = 0; x < xCells; x++) {
+		for (int y = 0; y < yCells; ++y) {
+			for (int x = 0; x < xCells; ++x) {
+				Point upperLeftGrid = new Point(upperLeft.x + x * xStepsize + cellMargin,
+						upperLeft.y + y * yStepsize + cellMargin);
+				Point lowerRightGrid = new Point(upperLeft.x + x * xStepsize + xStepsize - cellMargin,
+						upperLeft.y + y * yStepsize + yStepsize - cellMargin);
 				if (iterator.hasNext()) {
-					arrangeInCircle(iterator.next(),
-							new Point(x * xStepsize, y * yStepsize),
-							new Point(x * xStepsize + xStepsize, y * yStepsize + yStepsize));
+					arrangeInCircle(iterator.next(), upperLeftGrid, lowerRightGrid);
 				} else {
-					arrangeInCircle(otherVertices,
-							new Point(x * xStepsize, y * yStepsize),
-							new Point(x * xStepsize + xStepsize, y * yStepsize + yStepsize));
+					arrangeInCircle(otherVertices, upperLeftGrid, lowerRightGrid);
 					return;
 				}
 			}
