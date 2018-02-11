@@ -212,4 +212,18 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
 	}
+
+	@Test
+	public void graphCliqueTest2() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("b", "c");
+		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
+		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+	}
 }

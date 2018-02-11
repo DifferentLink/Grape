@@ -43,7 +43,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 		boolean found = false;
 		Map<V, Integer> graphMap = new HashMap<>();
-		for (int j = 0; j < maxNumberOfContractEdges; j++) {
+		for (int j = 0; j <= maxNumberOfContractEdges; j++) {
 			//allocates the endComb and the actualComb f.e 5 Edges, numberOfContractEdges = 3 -> actualComb = (1,1,1,0,0)
 			//endComb = (0,0,1,1,1)
 			int[] actualComb = new int[graph.edgeSet().size()];
@@ -136,7 +136,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 				return new KkGraphImpl(subgraphs, vertieces.size());
 			}
 		}
-		//kk graph not found
+		//kkgraph not found
 		return new KkGraphImpl(new HashMap<V, Integer>(), 0);
 	}
 
