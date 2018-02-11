@@ -4,12 +4,10 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.MinimalProfileAlgorith
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
-import org.kohsuke.MetaInfServices;
 
 /**
  * the profile property
  */
-@MetaInfServices
 public class Profile extends ComplexProperty {
 	/**
 	 * Standard constructor
