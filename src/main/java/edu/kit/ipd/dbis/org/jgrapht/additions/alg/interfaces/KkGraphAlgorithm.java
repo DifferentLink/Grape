@@ -42,6 +42,7 @@ public interface KkGraphAlgorithm<V, E> {
 		 * @return the number of subgraphs
 		 */
 		int getNumberOfSubgraphs();
+
 	}
 
 	/**
