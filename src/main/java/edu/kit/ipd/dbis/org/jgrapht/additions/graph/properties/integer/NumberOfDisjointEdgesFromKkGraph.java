@@ -6,7 +6,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.KkGraph;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +36,6 @@ public class NumberOfDisjointEdgesFromKkGraph extends IntegerProperty {
 				}
 			}
 		}
-		System.out.println(subgraphEdges);
 		Set<Object> tmp = new HashSet<>(graph.edgeSet());
 		tmp.removeAll(subgraphEdges);
 		return tmp.size();
