@@ -9,13 +9,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NumberOfDisjointVertiecesFromKkGraph extends IntegerProperty {
+public class NumberOfDisjointVerticesFromKkGraph extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
 	 * @param graph input graph
 	 */
-	public NumberOfDisjointVertiecesFromKkGraph(PropertyGraph graph) {
+	public NumberOfDisjointVerticesFromKkGraph(PropertyGraph graph) {
 		super(graph);
 	}
 
