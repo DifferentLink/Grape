@@ -9,7 +9,6 @@ import java.util.*;
  * The local bfs code algorithm.
  *
  * @param <V> the graph vertex type
- * @param <E> the graph edge type
  */
 public class LocalBfsCodeAlgorithm<V> implements BfsCodeAlgorithm {
 	/**
