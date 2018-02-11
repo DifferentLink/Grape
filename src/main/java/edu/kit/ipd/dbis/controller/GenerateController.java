@@ -207,6 +207,7 @@ public class GenerateController {
 		try {
 			database.deleteGraph(id);
 			statusbar.addEvent(EventType.REMOVE, id);
+			grapeUI.updateTable();
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
