@@ -153,7 +153,7 @@ abstract class Correlation {
      * @param attributeCounter size of new list
      * @return short list which inherits only the last elements of the input list
      */
-    protected static TreeSet<CorrelationOutput> cutListMaximum(TreeSet<CorrelationOutput> resultSet,
+    protected static TreeSet<CorrelationOutput> cutListMinimum(TreeSet<CorrelationOutput> resultSet,
                                                                int attributeCounter) {
         TreeSet<CorrelationOutput> outputSet = new TreeSet<>();
         CorrelationOutput[] outputArray = new CorrelationOutput[resultSet.size()];
@@ -162,8 +162,18 @@ abstract class Correlation {
             outputArray[z] = current;
             z++;
         }
-        for (int k = 0; k < attributeCounter; k++) {
-            outputSet.add(outputArray[outputArray.length - 1 - k]);
+        int k = 0;
+        int l = 0;
+        while (k < attributeCounter) {
+            if ((outputArray[outputArray.length - 1 - l].getOutputNumber() == 0.0)
+                    || outputArray[outputArray.length - 1 - l].getFirstProperty().
+                    equals(outputArray[outputArray.length - 1 - l].getSecondProperty())) {
+                l++;
+            } else {
+                outputSet.add(outputArray[outputArray.length - 1 - l]);
+                l++;
+                k++;
+            }
         }
         return outputSet;
     }
@@ -174,23 +184,26 @@ abstract class Correlation {
      * @param attributeCounter size of new list
      * @return short list which inherits only the first elements of the input list
      */
-    protected static TreeSet<CorrelationOutput> cutListMinimum(TreeSet<CorrelationOutput> resultSet, int attributeCounter) {
+    protected static TreeSet<CorrelationOutput> cutListMaximum(TreeSet<CorrelationOutput> resultSet,
+                                                               int attributeCounter) {
         TreeSet<CorrelationOutput> outputSet = new TreeSet<>();
         CorrelationOutput[] outputArray = new CorrelationOutput[resultSet.size()];
-        for (CorrelationOutput string: resultSet) {
-            System.out.println(string.getFirstProperty() + " " + string.getSecondProperty() + " " + string.getOutputNumber());
-        }
         int z = 0;
         for (CorrelationOutput current: resultSet) {
             outputArray[z] = current;
             z++;
         }
-        for (int k = 0; k < attributeCounter; k++) {
-            outputSet.add(outputArray[k]);
-            System.out.println("######");
-            System.out.println(outputArray[k].getFirstProperty() + " "
-                    + outputArray[k].getSecondProperty() + " "
-                    + outputArray[k].getOutputNumber());
+        int k = 0;
+        int l = 0;
+        while (k < attributeCounter) {
+            if (outputArray[l].getFirstProperty().
+                    equals(outputArray[l].getSecondProperty())) {
+                l++;
+            } else {
+                outputSet.add(outputArray[l]);
+                l++;
+                k++;
+            }
         }
         return outputSet;
     }

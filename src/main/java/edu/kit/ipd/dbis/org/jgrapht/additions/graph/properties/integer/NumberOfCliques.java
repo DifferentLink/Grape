@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Cliques;
-import org.kohsuke.MetaInfServices;
 
 import java.util.List;
 import java.util.Set;
@@ -11,7 +10,6 @@ import java.util.Set;
 /**
  * Calculates the number of cliques.
  */
-@MetaInfServices
 public class NumberOfCliques extends IntegerProperty {
 	/**
 	 * Standard constructor
