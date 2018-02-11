@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
+import edu.kit.ipd.dbis.gui.filter.UIFilterManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
 import java.sql.ResultSet;
@@ -17,6 +18,7 @@ public class FilterController {
 	private Filtermanagement filter;
 	private StatusbarController statusbar;
 	private GrapeUI grapeUI;
+	private UIFilterManager uiFilterManager;
 
 	private static FilterController filterController;
 
@@ -44,6 +46,10 @@ public class FilterController {
 	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
+	}
+
+	public void setUIFilterManager(UIFilterManager uiFilterManager) {
+		this.uiFilterManager = uiFilterManager;
 	}
 
 	/**
@@ -149,6 +155,10 @@ public class FilterController {
 				| InsertionFailedException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
+	}
+
+	public void updateFilter() {
+
 	}
 
 	/**
