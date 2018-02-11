@@ -209,7 +209,7 @@ public abstract class Table {
 	 */
 	protected int getId() throws SQLException {
 		LinkedList<Integer> ids = this.getIds();
-		for (int i = 0; i < ids.size(); i++) {
+		for (int i = 1; i < ids.size(); i++) {
 			if (!ids.contains(i)) return i;
 		}
 		return ids.size();
@@ -227,6 +227,7 @@ public abstract class Table {
 		while (result.next()) {
 			ids.add(result.getInt("id"));
 		}
+		if (!ids.contains(0)) ids.add(0);
 		return ids;
 	}
 
