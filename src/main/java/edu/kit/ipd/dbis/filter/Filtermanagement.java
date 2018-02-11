@@ -25,6 +25,8 @@ public class Filtermanagement {
     private List<Filter> availableFilter;
     private GraphDatabase database;
 
+
+
     /**
      * Constructor of class Filtermanagement. The constructor creates two empty lists: One list for the
      * filter and another list for the filtergroups.
@@ -41,6 +43,14 @@ public class Filtermanagement {
 	public GraphDatabase getDatabase() {
 		return database;
 	}
+
+	public List<Filtergroup> getAvailableFilterGroups() {
+        return availableFilterGroups;
+    }
+
+    public List<Filter> getAvailableFilter() {
+        return availableFilter;
+    }
 
 	public void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
             UnexpectedObjectException, InsertionFailedException {

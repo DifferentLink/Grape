@@ -2,13 +2,17 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.filter.Filter;
+import edu.kit.ipd.dbis.filter.Filtergroup;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
+import edu.kit.ipd.dbis.gui.filter.FilterGroup;
 import edu.kit.ipd.dbis.gui.filter.UIFilterManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * The type Filter controller.
@@ -159,8 +163,17 @@ public class FilterController {
 
 	public void updateFilters() {
 		this.uiFilterManager.clearFilters();
-		String[][] filters = filter.parseFilterList();
-
+		List<Filter> filterList = filter.getAvailableFilter();
+		List<Filtergroup> filtergroupList = filter.getAvailableFilterGroups();
+		// create filters in GUI
+		for (Filtergroup availableFiltergroup: filtergroupList) {
+			for (Filter availableFilter : availableFiltergroup.getAvailableFilter()) {
+				this.uiFilterManager.stringToFilters("[" + availableFiltergroup.getName() + ";" + availableFilter.getName() + "]:");
+			}
+		}
+		for (Filter availableFilter : filterList) {
+			this.uiFilterManager.stringToFilters("[;" + availableFilter.getName() + "]:");
+		}
 	}
 
 	/**
