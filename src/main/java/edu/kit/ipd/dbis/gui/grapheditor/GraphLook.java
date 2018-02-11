@@ -82,7 +82,7 @@ public class GraphLook {
 			numberGridcells = 1;
 		}
 		if ((subgraphs.size() + otherVertices.size()) % 2 == 1) {
-			numberGridcells = subgraphs.size() + otherVertices.size() + 1;
+			numberGridcells = subgraphs.size() + otherVertices.size() + 2;
 		}
 
 
@@ -91,7 +91,6 @@ public class GraphLook {
 		final int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
 		final int yStepsize = (lowerRight.y - upperLeft.y) / yCells;
 		Iterator<Set<Vertex>> iterator = subgraphs.iterator();
-
 		Iterator<Vertex> iteratorOther = otherVertices.iterator();
 		for (int x = 0; x < xCells; x++) {
 			for (int y = 0; y < yCells; y++) {
