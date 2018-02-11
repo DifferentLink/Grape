@@ -157,7 +157,9 @@ public class FilterController {
 		}
 	}
 
-	public void updateFilter() {
+	public void updateFilters() {
+		this.uiFilterManager.clearFilters();
+		String[][] filters = filter.parseFilterList();
 
 	}
 
