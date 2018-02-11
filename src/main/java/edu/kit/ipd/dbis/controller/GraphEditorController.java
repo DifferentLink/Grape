@@ -170,6 +170,7 @@ public final class GraphEditorController {
 			statusbar.addMessage(e.getMessage());
 		}
 		if (duplicate) {
+			statusbar.addMessage("Given graph is a duplicate.");
 			throw new InvalidGraphInputException("Given graph is a duplicate.");
 		}
 		return true;
