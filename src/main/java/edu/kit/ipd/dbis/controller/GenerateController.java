@@ -203,7 +203,7 @@ public class GenerateController {
 	 *
 	 * @param id the ID of the PropertyGraph<V,E>.
 	 */
-	public void delGraph(int id) {
+	public void deleteGraph(int id) {
 		try {
 			database.deleteGraph(id);
 			statusbar.addEvent(EventType.REMOVE, id);

@@ -11,12 +11,16 @@ import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.TotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
 import static edu.kit.ipd.dbis.log.EventType.REMOVE;
@@ -193,6 +197,32 @@ public final class GraphEditorController {
 				ConnectionFailedException  e) {
 			statusbar.addMessage(e.getMessage());
 		}
+	}
+
+	public void addNextDenserToDatabase(final int id) {
+		try {
+			NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(database.getGraphById(id));
+
+			PropertyGraph<Integer, Integer> denserGraph;
+			try {
+				denserGraph = denserGraphFinder.getNextDenserGraph();
+				database.addGraph(denserGraph);
+				statusbar.continueCalculation();
+				this.grapeUI.updateTable();
+			} catch (NoDenserGraphException e) {
+				statusbar.addMessage(e.getMessage());
+			} catch (InsertionFailedException e) {}
+		} catch (ConnectionFailedException | UnexpectedObjectException ignored) {}
+
+	}
+
+	public String getProfile(final int id) {
+		int[][] profile = new int[][]{{}};
+		try {
+			PropertyGraph<Integer, Integer> graph = database.getGraphById(id);
+			graph.getProperty(Profile.class);
+		} catch (ConnectionFailedException | UnexpectedObjectException ignored) {}
+		return Arrays.deepToString(profile);
 	}
 
 	/**
