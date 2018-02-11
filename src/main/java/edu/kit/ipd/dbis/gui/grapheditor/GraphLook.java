@@ -77,13 +77,11 @@ public class GraphLook {
 		int numberGridcells;
 		final int cellMargin = 5;
 		if (subgraphs.size() > 0) {
-			//numberGridcells = subgraphs.size();
 			numberGridcells = subgraphs.size() + otherVertices.size();
 		} else {
 			numberGridcells = 1;
 		}
 		if ((subgraphs.size() + otherVertices.size()) % 2 == 1) {
-			//numberGridcells = subgraphs.size() + 1;
 			numberGridcells = subgraphs.size() + otherVertices.size() + 1;
 		}
 
@@ -97,7 +95,6 @@ public class GraphLook {
 		Iterator<Vertex> iteratorOther = otherVertices.iterator();
 		for (int x = 0; x < xCells; x++) {
 			for (int y = 0; y < yCells; y++) {
-				System.out.println(x + " " + y);
 				Point upperLeftGrid = new Point(upperLeft.x + x * xStepsize + cellMargin,
 						upperLeft.y + y * yStepsize + cellMargin);
 				Point lowerRightGrid = new Point(upperLeft.x + x * xStepsize + xStepsize - cellMargin,
