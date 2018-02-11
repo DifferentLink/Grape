@@ -196,7 +196,9 @@ public class RenderableGraph {
 				Vertex vertex1 = factory.createVertex();
 				vertex1.setFillColor(colorsToColorObjectMap.get(colors.get(v)));
 
-				kksubgraphs.put(vertex1, subgraphs.get(v));
+				if (subgraphs.containsKey(v)) {
+					kksubgraphs.put(vertex1, subgraphs.get(v));
+				}
 
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
@@ -220,7 +222,9 @@ public class RenderableGraph {
 				if (!objectVertexMap.containsKey(edgeTarget)) {
 					Vertex vertex2 = factory.createVertex();
 
-					kksubgraphs.put(vertex2, subgraphs.get(edgeTarget));
+					if (subgraphs.containsKey(edgeTarget)) {
+						kksubgraphs.put(vertex2, subgraphs.get(edgeTarget));
+					}
 
 					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
 					this.vertices.add(vertex2);
