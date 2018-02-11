@@ -9,16 +9,13 @@ import java.util.*;
 
 /**
  * A brute force implementation which works by calculating
- * all integer partitions for a number of colors, transforming
+ * all integer partitionings for a number of colors, transforming
  * the result into a color distribution (e.g. for 2 colors:
  * vertex 1 has color 0, vertex 2 color 0,...,vertex n color 1),
  * and determining all possible permutations (while ignoring repeated
  * values) of this distribution. For each one, the algorithm checks
  * if it represents a valid vertex coloring.
  * This process guarantees that no isomorphic colorings are checked.
- *
- * Works well for any graph of up to 10 vertices and sparse graphs
- * with 10-30 vertices.
  *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
@@ -327,7 +324,6 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 * @param <V> type
 	 * @return true if they are equal, false if they are not.
 	 */
-	@Deprecated
 	public static <V> boolean equivalentColoring(Coloring<V> c1, Coloring<V> c2) {
 		if (c1.getNumberColors() != c2.getNumberColors()) {
 			return false;
