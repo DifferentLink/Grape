@@ -2,10 +2,7 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * This class simply lists default render values for RenderableGraphs.
@@ -80,13 +77,16 @@ public class GraphLook {
 		int numberGridcells;
 		final int cellMargin = 5;
 		if (subgraphs.size() > 0) {
-			numberGridcells = subgraphs.size();
+			//numberGridcells = subgraphs.size();
+			numberGridcells = subgraphs.size() + otherVertices.size();
 		} else {
 			numberGridcells = 1;
 		}
-		if (subgraphs.size() % 2 == 1) {
-			numberGridcells = subgraphs.size() + 1;
+		if ((subgraphs.size() + otherVertices.size()) % 2 == 1) {
+			//numberGridcells = subgraphs.size() + 1;
+			numberGridcells = subgraphs.size() + otherVertices.size() + 1;
 		}
+
 
 		final int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
 		final int xStepsize = (lowerRight.x - upperLeft.x) / xCells;
@@ -94,17 +94,20 @@ public class GraphLook {
 		final int yStepsize = (lowerRight.y - upperLeft.y) / yCells;
 		Iterator<Set<Vertex>> iterator = subgraphs.iterator();
 
-		for (int y = 0; y < yCells; ++y) {
-			for (int x = 0; x < xCells; ++x) {
+		Iterator<Vertex> iteratorOther = otherVertices.iterator();
+		for (int x = 0; x < xCells; x++) {
+			for (int y = 0; y < yCells; y++) {
+				System.out.println(x + " " + y);
 				Point upperLeftGrid = new Point(upperLeft.x + x * xStepsize + cellMargin,
 						upperLeft.y + y * yStepsize + cellMargin);
 				Point lowerRightGrid = new Point(upperLeft.x + x * xStepsize + xStepsize - cellMargin,
 						upperLeft.y + y * yStepsize + yStepsize - cellMargin);
 				if (iterator.hasNext()) {
 					arrangeInCircle(iterator.next(), upperLeftGrid, lowerRightGrid);
-				} else {
-					arrangeInCircle(otherVertices, upperLeftGrid, lowerRightGrid);
-					return;
+				} else if (iteratorOther.hasNext()) {
+					Set<Vertex> set = new HashSet<>();
+					set.add(iteratorOther.next());
+					arrangeInCircle(set, upperLeftGrid, lowerRightGrid);
 				}
 			}
 		}
