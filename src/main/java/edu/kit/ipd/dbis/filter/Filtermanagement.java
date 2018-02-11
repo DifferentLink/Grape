@@ -304,7 +304,7 @@ public class Filtermanagement {
         if (parameters.length == 1) {
             switch (parameters[0]) {
                 case "hadwigerconjecture":
-                    inputCopy = "vertexcoloringnumberofcolors + 0 = largestsubgraphsize + 0";
+                    inputCopy = "kkgraphnumberofsubgraphs + 0 >= vertexcoloringnumberofcolors + 0";
                     parameters = inputCopy.split(" ", 7);
                     break;
                 case "totalcoloringconjecture":
