@@ -110,7 +110,7 @@ public class UIFilterManager {
 		}
 
 		for (SimpleFilter simpleFilter : simpleFilter) {
-			output.append("[;" + simpleFilter.getText() + "]");
+			output.append("[;" + simpleFilter.getText() + "]:");
 		}
 
 		return output.toString();
