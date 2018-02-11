@@ -23,14 +23,14 @@ public class NumberOfDisjointEdgesFromKkGraph extends IntegerProperty {
 		Map<Object, Integer> kkGraph = (Map<Object, Integer>) ((KkGraphAlgorithm.KkGraph) graph.getProperty(KkGraph.class).getValue()).getKkGraph();
 		Set<Object> subgraphEdges = new HashSet<>();
 		for (Object v : kkGraph.keySet()) {
-			Set<Object> outgoingedges = graph.outgoingEdgesOf(v);
-			for (Object o : outgoingedges) {
+			Set<Object> outgoingEdges = graph.outgoingEdgesOf(v);
+			for (Object o : outgoingEdges) {
 				if (kkGraph.keySet().contains(graph.getEdgeTarget(o)) && kkGraph.keySet().contains(graph.getEdgeSource(o))) {
 					subgraphEdges.add(o);
 				}
 			}
-			Set<Object> incomingedges = graph.incomingEdgesOf(v);
-			for (Object o : incomingedges) {
+			Set<Object> incomingEdges = graph.incomingEdgesOf(v);
+			for (Object o : incomingEdges) {
 				if (kkGraph.keySet().contains(graph.getEdgeTarget(o)) && kkGraph.keySet().contains(graph.getEdgeSource(o))) {
 					subgraphEdges.add(o);
 				}
