@@ -156,7 +156,12 @@ public class GraphTable extends Table {
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 
 		if (result.next()) {
-			return this.getInstanceOf(this.byteArrayToObject(result.getBytes("graph")));
+			PropertyGraph<Integer, Integer> graph =
+					this.getInstanceOf(this.byteArrayToObject(result.getBytes("graph")));
+
+			sql = "UPDATE " + this.name + " SET iscalculated = true, state = true WHERE id = " + graph.getId();
+			this.connection.prepareStatement(sql).executeUpdate();
+			return graph;
 		}
 		return null;
 
@@ -176,8 +181,7 @@ public class GraphTable extends Table {
 		LinkedList<Double> values = new LinkedList<>();
 		while (result.next()) {
 			try {
-				double value = (double) result.getObject(column);
-				values.add(value);
+				values.add(result.getDouble(column));
 			} catch (SQLException e) {
 
 			}

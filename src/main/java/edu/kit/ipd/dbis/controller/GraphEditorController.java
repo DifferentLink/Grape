@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.controller;
 
+import edu.kit.ipd.dbis.controller.exceptions.InvalidGraphInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
@@ -27,7 +28,7 @@ import static edu.kit.ipd.dbis.log.EventType.REMOVE;
 /**
  * The type Graph editor controller.
  */
-public class GraphEditorController {
+public final class GraphEditorController {
 
 	private GraphDatabase database;
 	private StatusbarController statusbar;
@@ -37,6 +38,11 @@ public class GraphEditorController {
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
 
+	/**
+	 * Sets grape ui.
+	 *
+	 * @param grapeUI the GUI the graph editor is part of
+	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
 	}
@@ -44,6 +50,11 @@ public class GraphEditorController {
 	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
+	/**
+	 * Sets statusbar ui.
+	 *
+	 * @param statusbarUI the statusbar ui
+	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}
@@ -74,6 +85,11 @@ public class GraphEditorController {
 		this.database = database;
 	}
 
+	/**
+	 * Sets graph editor.
+	 *
+	 * @param graphEditor the graph editor
+	 */
 	public void setGraphEditor(GraphEditorUI graphEditor) {
 		this.graphEditor = graphEditor;
 	}
@@ -87,7 +103,7 @@ public class GraphEditorController {
 	 * @param oldID    the id of the modified graph from the Grapheditor.
 	 */
 	public void addEditedGraph(PropertyGraph<Integer, Integer> newGraph, int oldID) {
-		Boolean isDuplicate = null;
+		boolean isDuplicate = false;
 		try {
 			isDuplicate = database.graphExists(newGraph);
 		} catch (ConnectionFailedException e) {
@@ -95,6 +111,7 @@ public class GraphEditorController {
 		}
 		if (!isDuplicate) {
 			try {
+				newGraph.calculateProperties();
 				database.addGraph(newGraph);
 				statusbar.addEvent(ADD, newGraph.getId());
 				database.deleteGraph(oldID);
@@ -110,6 +127,7 @@ public class GraphEditorController {
 	 * Add new graph.
 	 *
 	 * @param graph the graph
+	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
 	public void addNewGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException { // todo only duplicate check??
 		if (isValidGraph(graph)) {
@@ -125,6 +143,12 @@ public class GraphEditorController {
 		}
 	}
 
+	/**
+	 * Gets graph by id.
+	 *
+	 * @param id the id
+	 * @return the graph by id
+	 */
 	public PropertyGraph<Integer, Integer> getGraphById(int id) {
 		PropertyGraph<Integer, Integer> graph = null;
 		try {
@@ -140,9 +164,10 @@ public class GraphEditorController {
 	 *
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
+	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
 	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
-		Boolean duplicate = true;
+		boolean duplicate = false;
 		try {
 			duplicate = database.graphExists(graph);
 		} catch (ConnectionFailedException e) {
@@ -168,8 +193,8 @@ public class GraphEditorController {
 			database.addGraph(denserGraph);
 			statusbar.continueCalculation();
 			this.grapeUI.updateTable();
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException |
-				NoDenserGraphException e) {
+		} catch (NoDenserGraphException| UnexpectedObjectException | InsertionFailedException |
+				ConnectionFailedException  e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -223,7 +248,8 @@ public class GraphEditorController {
 	/**
 	 * Returns a coloring which is not equivalent to current coloring.
 	 *
-	 * @param graph input graph
+	 * @param graph           input graph
+	 * @param currentColoring the current coloring
 	 * @return alternative coloring
 	 */
 	public VertexColoringAlgorithm.Coloring<Integer> getNextVertexColoring(
@@ -242,7 +268,8 @@ public class GraphEditorController {
 	/**
 	 * Returns a total coloring which is not equivalent to current coloring.
 	 *
-	 * @param graph input graph
+	 * @param graph           input graph
+	 * @param currentColoring the current coloring
 	 * @return alternative coloring
 	 */
 	public TotalColoringAlgorithm.TotalColoring<Integer, Integer> getNextTotalColoring(
@@ -258,6 +285,9 @@ public class GraphEditorController {
 		}
 	}
 
+	/**
+	 * Empty graph to graph editor.
+	 */
 	public void emptyGraphToGraphEditor() {
 		graphEditor.showEmptyGraph();
 	}

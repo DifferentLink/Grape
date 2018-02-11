@@ -1,7 +1,3 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.StatusbarController;
@@ -9,18 +5,34 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.History;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
+/**
+ * The log window which becomes visible with a click on the log button
+ */
 public class LogUI extends JFrame {
 	private final History history;
 	private ResourceBundle language;
 	private Theme theme;
 
+	/**
+	 * @param statusbarController the responsible controller
+	 * @param language the language to use
+	 * @param theme the theme to style the log
+	 */
 	public LogUI(StatusbarController statusbarController, ResourceBundle language, Theme theme) {
 		this.history = statusbarController.getHistory();
 		this.language = language;
@@ -29,6 +41,10 @@ public class LogUI extends JFrame {
 		this.setResizable(false);
 	}
 
+	/**
+	 * Render's GUI elements from the history into a log
+	 * @param component the component used to position the log
+	 */
 	public void drawLog(Component component) {
 		this.dispose();
 		this.addFocusListener(new HasFocusListener(this));
@@ -47,11 +63,17 @@ public class LogUI extends JFrame {
 		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
 	}
 
+	/**
+	 * Takes an event as the input and calls the respective method to make a JPanel out of it
+	 * @param event
+	 * @return
+	 */
 	private JPanel renderEvent(Event event) {
 		switch (event.getType()) {
 			case MESSAGE : return renderMESSAGE(event);
 			case REMOVE : return renderREMOVE(event);
 			case ADD : return renderADD(event);
+			default : break;
 		}
 		return null;
 	}
@@ -91,7 +113,7 @@ public class LogUI extends JFrame {
 	private class HasFocusListener implements FocusListener {
 		private final LogUI logUI;
 
-		public HasFocusListener(LogUI logUI) {
+		HasFocusListener(LogUI logUI) {
 			this.logUI = logUI;
 		}
 

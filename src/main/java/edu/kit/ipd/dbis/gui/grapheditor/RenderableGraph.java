@@ -1,17 +1,21 @@
-/**
- * Created by Robin Link
- */
-
 package edu.kit.ipd.dbis.gui.grapheditor;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.KkGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
+import org.jgrapht.alg.util.IntegerVertexFactory;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.*;
 
+/**
+ * The graph representation used in the graph editor.
+ */
 public class RenderableGraph {
 
 	private Set<Vertex> vertices;
@@ -19,12 +23,23 @@ public class RenderableGraph {
 	private int id;
 	private Set<Set<Vertex>> subgraphs;
 
+	/**
+	 * Creates an empty graph
+	 *
+	 */
 	public RenderableGraph() {
 		vertices = new HashSet<>();
 		edges = new HashSet<>();
 		subgraphs = new HashSet<>();
 	}
 
+	/**
+	 * Creates a graph with the given edges and vertices and assigns an ID.
+	 *
+	 * @param vertices the graph's vertices
+	 * @param edges the graph's edges
+	 * @param id the graph's ID
+	 */
 	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id) {
 		this.vertices = vertices;
 		this.edges = edges;
@@ -32,6 +47,14 @@ public class RenderableGraph {
 		this.id = id;
 	}
 
+	/**
+	 * Creates a graph with the given subgraphs, edges and vertices and assigns an ID.
+	 *
+	 * @param vertices the graph's vertices
+	 * @param edges the graph's edges
+	 * @param id the graph's ID
+	 * @param subgraphs the graph's subgraphs
+	 */
 	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id, Set<Set<Vertex>> subgraphs) {
 		this.vertices = vertices;
 		this.edges = edges;
@@ -39,57 +62,71 @@ public class RenderableGraph {
 		this.subgraphs = subgraphs;
 	}
 
-	public RenderableGraph(PropertyGraph propertyGraph) {
+	/**
+	 * Takes a PropertyGraph as an input and parses it into a RenderableGraph.
+	 *
+	 * @param propertyGraph the input graph
+	 */
+	public RenderableGraph(PropertyGraph<Integer, Integer> propertyGraph, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
 			}
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
-				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
-					addedEdges.add(e);
-					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
-				}
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				this.edges.add(sourceTargetEdge);
 			}
 		}
 	}
 
+	/**
+	 * Converts a RenderableGraph to a PropertyGraph.
+	 *
+	 * @return the PropertyGraph
+	 */
 	public PropertyGraph<Integer, Integer> asPropertyGraph() {
 		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		Map<Vertex, Integer> vertexIntegerMap = new HashMap<>();
-		int vertexName = 0;
+		IntegerVertexFactory vertexFactory = new IntegerVertexFactory();
 
-		// iterate over vertices and assign
-		// integer value to each one
-		for (Vertex vertex : this.vertices) {
-			vertexIntegerMap.put(vertex, vertexName);
-			graph.addVertex(vertexName);
-			vertexName++;
+		// iterate over vertices
+		for (Vertex vertex : new TreeSet<>(this.vertices)) {
+			Integer newVertex = vertexFactory.createVertex();
+			vertexIntegerMap.put(vertex, newVertex);
+			graph.addVertex(newVertex);
 		}
 
 		// iterate over edges
@@ -111,7 +148,15 @@ public class RenderableGraph {
 		return graph;
 	}
 
-	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring) {
+	/**
+	 * Converts a PropertyGraph to a RenderableGraph with colored vertices.
+	 *
+	 * @param propertyGraph the input graph
+	 * @param coloring the abstract vertex coloring
+	 * @param <V> the type representing vertices
+	 * @param <E> the type representing edges
+	 */
+	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
@@ -120,6 +165,11 @@ public class RenderableGraph {
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> colorsToColorObjectMap = new HashMap<>();
 		Map<V, Integer> colors = coloring.getColors();
+
+
+		KkGraphAlgorithm.KkGraph kkGraph = (KkGraphAlgorithm.KkGraph) propertyGraph.getProperty(KkGraph.class).getValue();
+		Map<V, Integer> subgraphs = kkGraph.getKkGraph();
+
 
 		// associate integer value of colorings
 		// with Color object
@@ -134,42 +184,81 @@ public class RenderableGraph {
 		}
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
+
+		Map<Vertex, Integer> kksubgraphs = new HashMap<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				vertex1.setFillColor(colorsToColorObjectMap.get(colors.get(v)));
+
+				kksubgraphs.put(vertex1, subgraphs.get(v));
+
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
 			}
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
+
+					kksubgraphs.put(vertex2, subgraphs.get(edgeTarget));
+
 					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
-				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
-					addedEdges.add(e);
-					this.edges.add(new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget)));
-				}
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				this.edges.add(sourceTargetEdge);
 			}
 		}
+
+
+		Map<Integer, Set<Vertex>> groups = new HashMap<>();
+		kksubgraphs.forEach((v, subgraph) -> {
+			Set<Vertex> g = groups.get(subgraph);
+			if (g == null) {
+				g = new HashSet<>();
+				groups.put(subgraph, g);
+			}
+			g.add(v);
+		});
+		Set<Set<Vertex>> classes = new HashSet<>(kkGraph.getNumberOfSubgraphs());
+		for (Set<Vertex> c : groups.values()) {
+			classes.add(c);
+		}
+		this.subgraphs = classes;
+
 	}
 
-	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring) {
+	/**
+	 * Converts a PropertyGraph to a RenderableGraph with colored vertices and edges.
+	 *
+	 * @param propertyGraph the input graph
+	 * @param coloring the abstract vertex coloring
+	 * @param <V> the type representing vertices
+	 * @param <E> the type representing edges
+	 */
+	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
@@ -210,14 +299,14 @@ public class RenderableGraph {
 		}
 
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
-		Set addedEdges = new HashSet();
+		Set<Object> addedEdges = new HashSet<>();
 
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
 			// 'edgeTarget' in loop below
 			if (!objectVertexMap.containsKey(v)) {
-				Vertex vertex1 = new Vertex(0, 0);
+				Vertex vertex1 = factory.createVertex();
 				vertex1.setFillColor(vertexColorsToColorMap.get(vertexColors.get(v)));
 				this.vertices.add(vertex1);
 				objectVertexMap.put(v, vertex1);
@@ -225,40 +314,55 @@ public class RenderableGraph {
 
 			// iterate over vertex v's edges
 			for (Object e : propertyGraph.outgoingEdgesOf(v)) {
+				if (addedEdges.contains(e)) {
+					continue;
+				}
+
 				Object edgeTarget = propertyGraph.getEdgeTarget(e);
+				if (v.equals(edgeTarget)) {
+					edgeTarget = propertyGraph.getEdgeSource(e);
+				}
+
+				addedEdges.add(e);
+				addedEdges.add(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v));
 
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
-					Vertex vertex2 = new Vertex(0, 0);
+					Vertex vertex2 = factory.createVertex();
 					vertex2.setFillColor(vertexColorsToColorMap.get(vertexColors.get(edgeTarget)));
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
 
-				// check if edge was already added
-				if (!addedEdges.contains(e)
-						&& !addedEdges.contains(propertyGraph.getEdgeFactory().createEdge(edgeTarget, v))) {
-					addedEdges.add(e);
-					Edge edge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
-					edge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
-					this.edges.add(edge);
-				}
+				Edge sourceTargetEdge = new Edge(objectVertexMap.get(v), objectVertexMap.get(edgeTarget));
+				sourceTargetEdge.setColor(edgeColorsToColorMap.get(edgeColors.get((e))));
+				this.edges.add(sourceTargetEdge);
 			}
 		}
 	}
 
+	/**
+	 * Moves the vertices of a graph
+	 * @param delta the delta to move vertices by
+	 */
 	public void move(Point delta) {
 		for (Vertex vertex : vertices) {
 			vertex.move(delta);
 		}
 	}
 
+	/**
+	 * @param vertex the vertex to add to the graph
+	 */
 	public void add(Vertex vertex) {
 		if (getVertexAt(vertex.getPosition()) == null) {
 			vertices.add(vertex);
 		}
 	}
 
+	/**
+	 * @param vertex the vertex to remove from the graph
+	 */
 	public void remove(Vertex vertex) {
 		Set<Edge> edgesRemove = new HashSet<>();
 		for (Edge edge : edges) {
@@ -270,6 +374,10 @@ public class RenderableGraph {
 		edges.removeAll(edgesRemove);
 	}
 
+	/**
+	 * Removes the first vertex that covers the given point
+	 * @param point where to look for the vertex
+	 */
 	public void remove(Point point) {
 		Vertex foundVertex = getVertexAt(point);
 		if (foundVertex != null) {
@@ -277,6 +385,9 @@ public class RenderableGraph {
 		}
 	}
 
+	/**
+	 * @param edge the edge to add to the graph
+	 */
 	public void add(Edge edge) {
 
 		Vertex start = getVertexAt(edge.getStart().getPosition());
@@ -298,6 +409,11 @@ public class RenderableGraph {
 		}
 	}
 
+	/**
+	 * @param start the start vertex
+	 * @param end the end vertex
+	 * @return whether the vertices start and end are connected by an edge
+	 */
 	public boolean areConnected(Vertex start, Vertex end) {
 		for (Edge edge : edges) {
 			if ((edge.getStart() == start && edge.getEnd() == end)
@@ -309,10 +425,17 @@ public class RenderableGraph {
 		return false;
 	}
 
+	/**
+	 * @param edge the edge to remove from the graph
+	 */
 	public void remove(Edge edge) {
 		edges.remove(edge);
 	}
 
+	/**
+	 * @param vertex the vertex which' degree to check
+	 * @return the degree of the given vertex
+	 */
 	public int getDegree(final Vertex vertex) {
 		if (!vertices.contains(vertex)) {
 			return -1;
@@ -327,23 +450,23 @@ public class RenderableGraph {
 		return vertexDegree;
 	}
 
+	/**
+	 * @return the highest vertex degree
+	 */
 	public int getMaxDegree() {
 		int maxDegree = 0;
 		for (final Vertex vertex : vertices) {
 			final int vertexDegree = getDegree(vertex);
-			maxDegree = (vertexDegree > maxDegree)? vertexDegree : maxDegree;
+			maxDegree = (vertexDegree > maxDegree) ? vertexDegree : maxDegree;
 		}
 		return maxDegree;
 	}
 
-	public boolean isConnected() { // todo implement isConnected()
-		return true;
-	}
-
-	public void makeConnected() { // todo implement makeConnected() (only if sensible choice) by removing smallest disconnected graph
-
-	}
-
+	/**
+	 * Returns the first vertex under the given point
+	 * @param position where to look for the vertex
+	 * @return the found vertex or null
+	 */
 	public Vertex getVertexAt(final Point position) {
 		for (Vertex vertex : vertices) {
 			if (vertex.containsPoint(position.x, position.y)) {
@@ -354,38 +477,67 @@ public class RenderableGraph {
 		return null;
 	}
 
+	/**
+	 * @return the graph's vertices
+	 */
 	public Set<Vertex> getVertices() {
 		return vertices;
 	}
 
+	/**
+	 * @param vertices the graph's new vertices
+	 */
 	public void setVertices(Set<Vertex> vertices) {
 		this.vertices = vertices;
 	}
 
+	/**
+	 * @return the graph's edges
+	 */
 	public Set<Edge> getEdges() {
 		return edges;
 	}
 
+	/**
+	 * @param edges the graph's new edges
+	 */
 	public void setEdges(Set<Edge> edges) {
 		this.edges = edges;
 	}
 
+	/**
+	 * @return the graph's ID
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * @param id the graph's new ID
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the graph's subgraphs
+	 */
 	public Set<Set<Vertex>> getSubgraphs() {
 		return subgraphs;
 	}
 
+	/**
+	 * @param subgraphs the graph's new subgraphs
+	 */
 	public void setSubgraphs(Set<Set<Vertex>> subgraphs) {
 		this.subgraphs = subgraphs;
 	}
 
+	/**
+	 * Find the position of the vertex which is furthest right and down
+	 * @param vertices the vertices to check
+	 * @return the lower right position of the lower right vertex or (0, 0)
+	 */
 	public static Point getLowerRight(Set<Vertex> vertices) {
 		Iterator<Vertex> iterator = vertices.iterator();
 		if (iterator.hasNext()) {
@@ -406,6 +558,11 @@ public class RenderableGraph {
 		return new Point(0, 0);
 	}
 
+	/**
+	 * Find the position of the vertex which is furthest left and up
+	 * @param vertices the vertices to check
+	 * @return the uppper left position of the upper left vertex or (0, 0)
+	 */
 	public static Point getUpperLeft(Set<Vertex> vertices) {
 		Iterator<Vertex> iterator = vertices.iterator();
 		if (iterator.hasNext()) {
@@ -426,18 +583,27 @@ public class RenderableGraph {
 		return new Point(0, 0);
 	}
 
+	/**
+	 * Draws a line around the given vertices
+	 * @param vertices the vertices to draw a line around
+	 * @return the outline
+	 */
 	public static Shape outline(Set<Vertex> vertices) {
 		final Point upperleft = getUpperLeft(vertices);
 		final Point lowerright = getLowerRight(vertices);
 		final float margin = 1.025f;
 		return new RoundRectangle2D.Double(
-				upperleft.x - GraphLook.vertexDiameter * margin,
-				upperleft.y - GraphLook.vertexDiameter * margin,
-				lowerright.x - upperleft.x + 2 * GraphLook.vertexDiameter * margin,
-				lowerright.y - upperleft.y + 2 * GraphLook.vertexDiameter * margin,
-				15 , 15);
+				upperleft.x - GraphLook.VERTEX_DIAMETER * margin,
+				upperleft.y - GraphLook.VERTEX_DIAMETER * margin,
+				lowerright.x - upperleft.x + 2 * GraphLook.VERTEX_DIAMETER * margin,
+				lowerright.y - upperleft.y + 2 * GraphLook.VERTEX_DIAMETER * margin,
+				15, 15);
 	}
 
+	/**
+	 * Find the vertices in the graph with position (0, 0)
+	 * @return all the found vertices
+	 */
 	public Set<Vertex> getUnpositionedVertices() {
 		Set<Vertex> unpositionedVertices = new HashSet<>();
 		vertices.forEach(vertex -> {
@@ -448,6 +614,9 @@ public class RenderableGraph {
 		return unpositionedVertices;
 	}
 
+	/**
+	 * @return all vertices in the graph which aren't contained in any of it's subgraphs
+	 */
 	public Set<Vertex> getVerticesNotContainedInSubgraphs() {
 		Set<Vertex> notContainedVertices = new HashSet<>();
 		for (Vertex vertex : vertices) {
@@ -464,6 +633,9 @@ public class RenderableGraph {
 		return notContainedVertices;
 	}
 
+	/**
+	 * @return a deep copy of the given graph
+	 */
 	public RenderableGraph deepCopy() {
 		Set<Vertex> newVertices = (this.vertices == null) ? new HashSet<>() : new HashSet<>(vertices);
 		Set<Edge> newEdges = (this.edges == null) ? new HashSet<>() : new HashSet<>(edges);

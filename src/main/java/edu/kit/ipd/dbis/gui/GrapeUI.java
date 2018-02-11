@@ -1,30 +1,50 @@
-/**
-  Created by Robin Link
-*/
-
 package edu.kit.ipd.dbis.gui;
 
-import edu.kit.ipd.dbis.controller.*;
+import edu.kit.ipd.dbis.controller.CalculationController;
+import edu.kit.ipd.dbis.controller.CorrelationController;
+import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.controller.FilterController;
+import edu.kit.ipd.dbis.controller.GenerateController;
+import edu.kit.ipd.dbis.controller.GraphEditorController;
+import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.popups.GraphOptions;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.*;
+import edu.kit.ipd.dbis.gui.popups.GraphOptions;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Grape's main window
+ */
 public class GrapeUI {
 
 	private final CalculationController calculationController;
@@ -56,6 +76,18 @@ public class GrapeUI {
 
 	private float verticalSplitRatio = .1f;
 
+	/**
+	 * Constructs Grape's main window
+	 * @param calculationController the controller responsible for calculations
+	 * @param correlationController the controller responsible for correlation requests
+	 * @param databaseController the controller responsible for the database management
+	 * @param filterController the controller responsible for filtering the database
+	 * @param generateController the controller responsible for generating random graphs
+	 * @param graphEditorController the controller responsible for the graph editor
+	 * @param statusbarController the controller responsible for updating the statusbar and the log
+	 * @param language the language to use
+	 * @param theme the theme to style the GUI
+	 */
 	public GrapeUI(CalculationController calculationController,
 	               CorrelationController correlationController,
 	               DatabaseController databaseController,
@@ -90,11 +122,7 @@ public class GrapeUI {
 		try {
 			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
 			mainWindow.setIconImage(logo);
-		} catch (IOException e) {}
-
-		menuUI = new MenuUI(
-				generateController, databaseController, statusbarController, graphEditorController, language, theme);
-		mainWindow.setJMenuBar(menuUI);
+		} catch (IOException e) { }
 
 		filterUI = new FilterUI(filterController, language, theme);
 		correlationUI = new CorrelationUI(correlationController, language, theme);
@@ -147,6 +175,9 @@ public class GrapeUI {
 		rightUI.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
 		rightUI.add(statusbarUI, BorderLayout.SOUTH);
 
+		menuUI = new MenuUI(tableUI, generateController, databaseController, statusbarController, graphEditorController, language, theme);
+		mainWindow.setJMenuBar(menuUI);
+
 		JSplitPane verticalDivider;
 		verticalDivider = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT,
@@ -157,7 +188,6 @@ public class GrapeUI {
 		verticalDivider.setResizeWeight(verticalSplitRatio);
 
 		mainWindow.add(verticalDivider);
-
 		mainWindow.setVisible(true);
 	}
 
@@ -170,7 +200,7 @@ public class GrapeUI {
 				PropertyGraph<Integer, Integer> graph = graphEditorController.getGraphById(id);
 				graphEditorUI.displayGraph(graph);
 				statusbarUI.changeSelectedRow(tableUI.getSelectedRow());
-			} catch (IndexOutOfBoundsException ignored) {}
+			} catch (IndexOutOfBoundsException ignored) { }
 		}
 	}
 
@@ -180,30 +210,23 @@ public class GrapeUI {
 			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
 				try {
 					generateController.deleteGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
-					tableModel.update(filterController.getFilteredAndSortedGraphs());
 				} catch (IndexOutOfBoundsException | SQLException ignored) {}
 			}
 		}
 
 		@Override
-		public void keyPressed(KeyEvent keyEvent) {
-		}
+		public void keyPressed(KeyEvent keyEvent) { }
 
 		@Override
-		public void keyReleased(KeyEvent keyEvent) {
-		}
+		public void keyReleased(KeyEvent keyEvent) { }
 	}
 
 	private class TableHeaderAction implements MouseListener {
 		@Override
-		public void mouseClicked(MouseEvent mouseEvent) {
-
-		}
+		public void mouseClicked(MouseEvent mouseEvent) { }
 
 		@Override
-		public void mousePressed(MouseEvent mouseEvent) {
-
-		}
+		public void mousePressed(MouseEvent mouseEvent) { }
 
 		@Override
 		public void mouseReleased(MouseEvent mouseEvent) {
@@ -219,16 +242,16 @@ public class GrapeUI {
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent mouseEvent) {
-
-		}
+		public void mouseEntered(MouseEvent mouseEvent) { }
 
 		@Override
-		public void mouseExited(MouseEvent mouseEvent) {
-
-		}
+		public void mouseExited(MouseEvent mouseEvent) { }
 	}
 
+	/**
+	 * Updates the table by calling the respective controller method to sort by a property and filter
+	 * by the currently active filters.
+	 */
 	public void updateTable() {
 		boolean isSorted = false;
 		for (Property property : (new PropertyGraph<>()).getProperties()) {
@@ -240,17 +263,17 @@ public class GrapeUI {
 						tableModel.update(filterController.getFilteredAndDescendingSortedGraphs(property));
 					}
 					isSorted = true;
-				} catch (SQLException ignored) {}
+				} catch (SQLException ignored) { }
 			}
 		}
 		if (!isSorted) {
 			try {
 				tableModel.update(filterController.getFilteredAndSortedGraphs());
-			} catch (SQLException ignored) {}
+			} catch (SQLException ignored) { }
 		}
 
 		AffineTransform affinetransform = new AffineTransform();
-		FontRenderContext fontRenderer = new FontRenderContext(affinetransform,true,true);
+		FontRenderContext fontRenderer = new FontRenderContext(affinetransform, true, true);
 		Font font = theme.defaultFont;
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);

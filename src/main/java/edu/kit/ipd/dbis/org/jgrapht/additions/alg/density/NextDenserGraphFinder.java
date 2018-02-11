@@ -36,7 +36,7 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 			throw new NoDenserGraphException("empty graph");
 		}
 		if (graph.vertexSet().size() == 1 || graph.vertexSet().size() == 2) {
-			throw new NoDenserGraphException("no denser graph exists 1");
+			throw new NoDenserGraphException("no denser graph exists");
 		}
 
 		BfsCodeAlgorithm.BfsCodeImpl bfscode =
@@ -67,7 +67,7 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 			}
 		}
 		if (!denserGraphExist) {
-			throw new NoDenserGraphException("no denser graph exists 2");
+			throw new NoDenserGraphException("no denser graph exists");
 		}
 
 		//calculates next denser bfs code and checks if this code is a minimal bfscode and ,if the graph with this next
@@ -76,7 +76,7 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 		boolean graphIsConnected = false;
 		boolean isMinimalCode = false;
 
-		while(!(graphIsConnected && isMinimalCode) || (codeArray[codeArray.length - 1] != graph.vertexSet().size())) {
+		while (!(graphIsConnected && isMinimalCode) || (codeArray[codeArray.length - 1] != graph.vertexSet().size())) {
 			graphIsConnected = false;
 			isMinimalCode = false;
 
@@ -125,7 +125,8 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 		int[] prevLastEdge = {code[code.length - 5], code[code.length - 4]};
 
 		if ((lastEdge[1] == prevLastEdge[1] && lastEdge[0] == (prevLastEdge[0] + 1))
-				|| (lastEdge[0] == 1 && (prevLastEdge[1] == lastEdge[1] - 1 && prevLastEdge[0] == prevLastEdge[1] - 1))) {
+				|| (lastEdge[0] == 1 && (prevLastEdge[1] == lastEdge[1] - 1
+				&& prevLastEdge[0] == prevLastEdge[1] - 1))) {
 			//...113-123 -> ...113 oder ...123114 -> ...123
 			nextCode = new int[code.length - 3];
 			for (int i = 0; i < nextCode.length; i++) {

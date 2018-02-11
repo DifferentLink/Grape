@@ -7,11 +7,14 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.TotalColo
 
 import java.util.List;
 
+/**
+ * the total coloring number of colors property
+ */
 public class TotalColoringNumberOfColors extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public TotalColoringNumberOfColors(PropertyGraph graph) {
 		super(graph);

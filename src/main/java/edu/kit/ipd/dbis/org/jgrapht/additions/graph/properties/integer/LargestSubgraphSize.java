@@ -8,11 +8,14 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.KkGraph;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * the largest subgraph size property
+ */
 public class LargestSubgraphSize extends IntegerProperty {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public LargestSubgraphSize(PropertyGraph graph) {
 		super(graph);
@@ -21,10 +24,12 @@ public class LargestSubgraphSize extends IntegerProperty {
 	@Override
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
 		int largestSubgraphSize = 0;
-		for (Set<Object> s : (List<Set<Object>>) ((KkGraphAlgorithm.KkGraph) graph.getProperty(KkGraph.class).getValue()).getSubgraphs())
+		for (Set<Object> s : (List<Set<Object>>)
+				((KkGraphAlgorithm.KkGraph) graph.getProperty(KkGraph.class).getValue()).getSubgraphs()) {
 			if (s.size() > largestSubgraphSize) {
 				largestSubgraphSize = s.size();
 			}
+		}
 		return largestSubgraphSize;
 	}
 }
