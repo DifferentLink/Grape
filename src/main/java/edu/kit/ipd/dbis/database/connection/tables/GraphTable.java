@@ -196,7 +196,7 @@ public class GraphTable extends Table {
 	 */
 	public void deleteAll() throws SQLException {
 
-		String sql = "DELETE * FROM " + this.name + " WHERE state = true";
+		String sql = "DELETE FROM " + this.name + " WHERE state = true";
 		this.connection.prepareStatement(sql).executeUpdate();
 
 	}

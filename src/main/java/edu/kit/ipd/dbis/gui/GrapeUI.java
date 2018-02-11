@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
+import edu.kit.ipd.dbis.gui.popups.GraphOptions;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -26,12 +27,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import edu.kit.ipd.dbis.gui.popups.GraphOptions;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.font.FontRenderContext;
@@ -65,6 +68,7 @@ public class GrapeUI {
 	private String programName = "Grape";
 	private JFrame mainWindow;
 
+	private ResourceBundle language;
 	private Theme theme;
 
 	private String lastSortedColumn = "";
@@ -101,6 +105,7 @@ public class GrapeUI {
 		this.generateController = generateController;
 		this.graphEditorController = graphEditorController;
 		this.statusbarController = statusbarController;
+		this.language = language;
 		this.theme = theme;
 
 		this.calculationController.setGrapeUI(this);
@@ -160,6 +165,7 @@ public class GrapeUI {
 		tableUI.addKeyListener(new DeleteGraphAction());
 		JScrollPane scrollPane = new JScrollPane(tableUI,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		tableUI.addMouseListener(new RightClickAction());
 		tableUI.setFillsViewportHeight(true);
 		tableUI.setBackground(theme.backgroundColor);
 		tableUI.getTableHeader().addMouseListener(new TableHeaderAction());
@@ -204,9 +210,8 @@ public class GrapeUI {
 		public void keyTyped(KeyEvent keyEvent) {
 			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
 				try {
-					generateController.delGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
-					updateTable();
-				} catch (IndexOutOfBoundsException ignored) { }
+					generateController.deleteGraph((int) tableUI.getValueAt(tableUI.getSelectedRow(), 0));
+				} catch (IndexOutOfBoundsException ignored) {}
 			}
 		}
 
@@ -290,4 +295,35 @@ public class GrapeUI {
 		}
 	}
 
+	private class RightClickAction extends MouseAdapter {
+		@Override
+		public void mouseClicked(MouseEvent mouseEvent) {}
+
+		@Override
+		public void mousePressed(MouseEvent mouseEvent) {
+			openPopup(mouseEvent);
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent mouseEvent) {
+			openPopup(mouseEvent);
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent mouseEvent) {}
+
+		@Override
+		public void mouseExited(MouseEvent mouseEvent) {}
+
+		private void openPopup(MouseEvent mouseEvent) {
+			if (mouseEvent.isPopupTrigger()) {
+				int row = tableUI.rowAtPoint(mouseEvent.getPoint());
+				final int graphID = (int) tableUI.getValueAt(row, 0);
+				if (!tableUI.isRowSelected(row)) {
+					tableUI.changeSelection(row, 0, false, false);
+				}
+				(new GraphOptions(graphID, graphEditorController, generateController, language, theme)).show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+			}
+		}
+	}
 }
