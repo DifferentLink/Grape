@@ -120,7 +120,7 @@ public class RenderableGraphTest {
 		graph.addEdge(0, 2);
 		graph.addEdge(2, 3);
 		VertexColoringAlgorithm.Coloring coloring = ((List<VertexColoringAlgorithm.Coloring>) graph.getProperty(VertexColoring.class).getValue()).get(0);
-		RenderableGraph renderableGraph = new RenderableGraph(graph, coloring);
+		RenderableGraph renderableGraph = new RenderableGraph(graph, coloring, new VertexFactory());
 		PropertyGraph graph2 = renderableGraph.asPropertyGraph();
 		System.out.println(graph2.edgeSet());
 	}
