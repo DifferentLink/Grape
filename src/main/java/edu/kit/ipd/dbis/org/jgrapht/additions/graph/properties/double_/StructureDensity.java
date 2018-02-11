@@ -3,12 +3,10 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.StructureDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
-import org.kohsuke.MetaInfServices;
 
 /**
  * the structure density property
  */
-@MetaInfServices
 public class StructureDensity extends DoubleProperty {
 	/**
 	 * Standard constructor
