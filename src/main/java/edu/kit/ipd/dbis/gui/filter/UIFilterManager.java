@@ -104,7 +104,7 @@ public class UIFilterManager {
 		for (FilterGroup filterGroup : filterGroups) {
 			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
 				if (simpleFilter.isActive()) {
-					output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]");
+					output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]:");
 				}
 			}
 		}
@@ -137,16 +137,22 @@ public class UIFilterManager {
 	 * @param filter the string with the filters
 	 */
 	public void stringToFilters(String filter) {
-		Pattern pattern = Pattern.compile("(\\[\\w*;\\w+\\])+");
+		Pattern pattern = Pattern.compile("(\\[(.)*;(.)+\\]:)+");
 		Matcher matcher = pattern.matcher(filter);
-		while (matcher.find()) {
-			String[] filterInfo = matcher.group().split(";");
-			FilterGroup targetFilterGroup = getFilterGroupByName(filterInfo[0]);
-			if (targetFilterGroup != null) {
-				SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), filterInfo[1]);
-				addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
-			} else if (!filterInfo[0].equals("")) {
-				addNewFilterGroup(filterInfo[0]);
+		if (matcher.find()) {
+			String[] groups = matcher.group().split(":");
+			for (int i = 0; i < groups.length; i++) {
+				String[] filterInfo = groups[i].split(";");
+				String group = filterInfo[0].substring(1);
+				String content = filterInfo[1].substring(0, filterInfo[1].length() - 1);
+
+				FilterGroup targetFilterGroup = getFilterGroupByName(group);
+				if (targetFilterGroup != null) {
+					SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), content);
+					addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
+				} else if (!group.equals("")){
+					addNewFilterGroup(group);
+				}
 			}
 		}
 	}
