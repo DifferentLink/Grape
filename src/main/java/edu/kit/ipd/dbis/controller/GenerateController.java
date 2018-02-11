@@ -135,21 +135,20 @@ public class GenerateController {
 		} catch (NotEnoughGraphsException e) {
 			statusbar.addMessage(e.getMessage());
 		}
+		//save uncalculated graphs
 		this.saveGraphs(graphs);
-
 		List<Thread> jobs = new LinkedList<>();
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
 			jobs.add(new Thread(new Runnable() {
 				@Override
 				public void run() {
-					graph.calculateProperties();
 					try {
+						graph.calculateProperties();
 						database.replaceGraph(graph.getId(), graph);
 						statusbar.addEvent(EventType.ADD, graph.getId());
 					} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 						statusbar.addMessage(e.getMessage());
 					}
-					System.out.println("Finished graph " + graph.getId() + ": " + graph.toString());
 				}
 			}));
 		}
