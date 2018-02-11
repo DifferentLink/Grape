@@ -39,7 +39,7 @@ public class LocalBfsCodeAlgorithmTest {
 	@Test
 	public void localBfsCodeTest() {
 		PropertyGraph graph = generateSimpleTestGraph();
-		LocalBfsCodeAlgorithm<String, DefaultEdge> alg = new LocalBfsCodeAlgorithm<>("e");
+		LocalBfsCodeAlgorithm<String> alg = new LocalBfsCodeAlgorithm<>("e");
 		int[] result = alg.getBfsCode(graph).getCode();
 		int[] local = {1, 1, 2, 1, 1, 3, -1, 2, 3, 1, 1, 4, 1, 1, 5, -1, 4, 5, 1, 1, 6, 1, 2, 7, -1, 4, 7, -1, 6, 7};
 		BfsCodeAlgorithm.BfsCodeImpl localCode = new BfsCodeAlgorithm.BfsCodeImpl(local);

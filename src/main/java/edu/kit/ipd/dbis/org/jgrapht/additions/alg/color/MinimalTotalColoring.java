@@ -8,6 +8,7 @@ import org.jgrapht.alg.util.IntegerVertexFactory;
 
 import java.util.*;
 
+
 /**
  * The minimal coloring algorithm.
  *
@@ -41,7 +42,8 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 			return this.totalColorings;
 		}
 		PropertyGraph<Integer, Integer> edgeToVertexGraph = this.makeEdgesToVertices();
-		List<VertexColoringAlgorithm.Coloring<Integer>> colorings = new MinimalVertexColoring<>(edgeToVertexGraph).getAllColorings();
+		List<VertexColoringAlgorithm.Coloring<Integer>> colorings =
+				new MinimalVertexColoring<>(edgeToVertexGraph).getAllColorings();
 		for (VertexColoringAlgorithm.Coloring<Integer> c : colorings) {
 			this.totalColorings.add(this.createTotalColoringObject(c));
 		}
@@ -141,7 +143,11 @@ public class MinimalTotalColoring<V, E> implements TotalColoringAlgorithm<V, E> 
 		return edgeToVertexGraph;
 	}
 
-	private boolean shareVertex(Integer edgeToVertex1, Integer edgeToVertex2, Graph<Integer, Integer> graph, Set<String> addedEdges) {
+	private boolean shareVertex(
+			Integer edgeToVertex1,
+			Integer edgeToVertex2,
+			Graph<Integer, Integer> graph,
+			Set<String> addedEdges) {
 		Set<String> v1TargetVertices = new HashSet<>();
 		for (Object e : graph.outgoingEdgesOf(edgeToVertex1)) {
 			if (!addedEdges.contains(e.toString())) {

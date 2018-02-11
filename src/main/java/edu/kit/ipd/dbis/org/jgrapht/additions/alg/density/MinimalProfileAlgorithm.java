@@ -11,15 +11,14 @@ import java.util.Iterator;
  The minimal profile algorithm.
  *
  * @param <V> the graph vertex type
- * @param <E> the graph edge type
  */
-public class MinimalProfileAlgorithm<V, E> implements ProfileDensityAlgorithm {
+public class MinimalProfileAlgorithm<V> implements ProfileDensityAlgorithm {
 
 	@Override
 	public Profile getProfile(PropertyGraph graph) {
 		LinkedList<BfsCodeAlgorithm.BfsCode> allLocalCodes = new LinkedList<>(); //is sorted at the end
 		for (Object v : graph.vertexSet()) {
-			LocalBfsCodeAlgorithm local = new LocalBfsCodeAlgorithm((V) v);
+			LocalBfsCodeAlgorithm local = new LocalBfsCodeAlgorithm(v);
 			BfsCodeAlgorithm.BfsCode localCode = local.getBfsCode(graph);
 
 			//adds the localCode at the right sorted order
