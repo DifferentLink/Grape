@@ -41,6 +41,6 @@ public class BinomialDensityAlgorithm<V, E> implements NumberDensityAlgorithm {
 	public double getDensity() {
 		int k = graph.vertexSet().size();
 		int n = graph.edgeSet().size();
-		return (double)n / binomialCoefficient(k, 2);
+		return (double) n / binomialCoefficient(k, 2);
 	}
 }

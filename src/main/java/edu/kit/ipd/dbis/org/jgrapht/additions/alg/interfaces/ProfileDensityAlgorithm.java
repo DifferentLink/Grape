@@ -36,6 +36,10 @@ public interface ProfileDensityAlgorithm<V, E> {
 		 */
 		int[][] getMatrix();
 
+		/**
+		 * get the minimal bfs code
+		 * @return the minimal bfs code
+		 */
 		BfsCodeAlgorithm.BfsCode getMinBfsCode();
 	}
 
@@ -59,7 +63,11 @@ public interface ProfileDensityAlgorithm<V, E> {
 			this.profile = profile;
 		}
 
-		public ProfileImpl( List<BfsCodeAlgorithm.BfsCode> bfsList) {
+		/**
+		 * constructs a new profile
+		 * @param bfsList the list of all local bfs codes
+		 */
+		public ProfileImpl(List<BfsCodeAlgorithm.BfsCode> bfsList) {
 			this.profile = getMatrix(bfsList);
 			this.bfsList = bfsList;
 		}

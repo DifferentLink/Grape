@@ -67,12 +67,11 @@ public class RenderableGraph {
 	 *
 	 * @param propertyGraph the input graph
 	 */
-	public RenderableGraph(PropertyGraph<Integer, Integer> propertyGraph) {
+	public RenderableGraph(PropertyGraph<Integer, Integer> propertyGraph, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-		VertexFactory factory = new VertexFactory();
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
 		Set<Object> addedEdges = new HashSet<>();
 
@@ -157,15 +156,11 @@ public class RenderableGraph {
 	 * @param <V> the type representing vertices
 	 * @param <E> the type representing edges
 	 */
-	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring) {
+	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-
-
-
-		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> colorsToColorObjectMap = new HashMap<>();
@@ -174,7 +169,7 @@ public class RenderableGraph {
 
 		KkGraphAlgorithm.KkGraph kkGraph = (KkGraphAlgorithm.KkGraph) propertyGraph.getProperty(KkGraph.class).getValue();
 		Map<V, Integer> subgraphs = kkGraph.getKkGraph();
-		System.out.println(subgraphs);
+
 
 		// associate integer value of colorings
 		// with Color object
@@ -191,11 +186,8 @@ public class RenderableGraph {
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
 		Set<Object> addedEdges = new HashSet<>();
 
-		List<Set<V>> propertyKkSubgraphs = kkGraph.getSubgraphs();
-
 		Map<Vertex, Integer> kksubgraphs = new HashMap<>();
 
-		List<Set<Vertex>> renderableKksubgraph = new ArrayList<>();
 		// iterate over vertices
 		for (Object v : propertyGraph.vertexSet()) {
 			// check if vertex was already added as
@@ -227,6 +219,7 @@ public class RenderableGraph {
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
 					Vertex vertex2 = factory.createVertex();
+
 					kksubgraphs.put(vertex2, subgraphs.get(edgeTarget));
 
 					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
@@ -238,6 +231,8 @@ public class RenderableGraph {
 				this.edges.add(sourceTargetEdge);
 			}
 		}
+
+
 		Map<Integer, Set<Vertex>> groups = new HashMap<>();
 		kksubgraphs.forEach((v, subgraph) -> {
 			Set<Vertex> g = groups.get(subgraph);
@@ -252,6 +247,7 @@ public class RenderableGraph {
 			classes.add(c);
 		}
 		this.subgraphs = classes;
+
 	}
 
 	/**
@@ -262,13 +258,11 @@ public class RenderableGraph {
 	 * @param <V> the type representing vertices
 	 * @param <E> the type representing edges
 	 */
-	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring) {
+	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-
-		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> vertexColorsToColorMap = new HashMap<>();

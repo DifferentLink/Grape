@@ -7,6 +7,9 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Cliques;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * the largest clique size property
+ */
 public class LargestCliqueSize extends IntegerProperty {
 	/**
 	 * Standard constructor

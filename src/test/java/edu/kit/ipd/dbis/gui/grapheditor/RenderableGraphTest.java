@@ -24,7 +24,7 @@ public class RenderableGraphTest {
 		graph.addEdge(1, 3);
 		graph.addEdge(2, 3);
 		graph.addEdge(2, 4);
-		RenderableGraph renderableGraph = new RenderableGraph(graph);
+		RenderableGraph renderableGraph = new RenderableGraph(graph, new VertexFactory());
 		assertEquals(graph.vertexSet().size(), renderableGraph.getVertices().size());
 		assertEquals(graph.edgeSet().size(), renderableGraph.getEdges().size());
 	}
@@ -44,7 +44,7 @@ public class RenderableGraphTest {
 		MinimalTotalColoring alg = new MinimalTotalColoring(graph);
 
 		TotalColoringAlgorithm.TotalColoring coloring = alg.getColoring();
-		RenderableGraph renderableGraph = new RenderableGraph(graph, coloring);
+		RenderableGraph renderableGraph = new RenderableGraph(graph, coloring, new VertexFactory());
 
 		assertEquals(graph.vertexSet().size(), renderableGraph.getVertices().size());
 		assertEquals(graph.edgeSet().size(), renderableGraph.getEdges().size());
@@ -61,7 +61,7 @@ public class RenderableGraphTest {
 		graph.addEdge(0, 2);
 		graph.addEdge(1, 2);
 		graph.addEdge(1, 3);
-		RenderableGraph renderableGraph = new RenderableGraph(graph);
+		RenderableGraph renderableGraph = new RenderableGraph(graph, new VertexFactory());
 		assertEquals(true, graph.equals(renderableGraph.asPropertyGraph()));
 	}
 
@@ -76,10 +76,10 @@ public class RenderableGraphTest {
 		graph.addEdge(0, 2);
 		graph.addEdge(1, 2);
 		graph.addEdge(1, 3);
-		RenderableGraph renderableGraph = new RenderableGraph(graph);
+		RenderableGraph renderableGraph = new RenderableGraph(graph, new VertexFactory());
 		PropertyGraph<Integer, Integer> graph2 = renderableGraph.asPropertyGraph();
 		assertEquals(true, graph.equals(graph2));
-		renderableGraph = new RenderableGraph(graph2);
+		renderableGraph = new RenderableGraph(graph2, new VertexFactory());
 		graph2 = renderableGraph.asPropertyGraph();
 		assertEquals(true, graph.equals(graph2));
 	}
@@ -98,14 +98,30 @@ public class RenderableGraphTest {
 		VertexColoringAlgorithm.Coloring<Integer> coloring =
 				((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0);
 
-		RenderableGraph renderableGraph = new RenderableGraph(graph, coloring);
+		RenderableGraph renderableGraph = new RenderableGraph(graph, coloring, new VertexFactory());
 		PropertyGraph<Integer, Integer> graph2 = renderableGraph.asPropertyGraph();
 		assertEquals(true, graph.equals(graph2));
-		renderableGraph = new RenderableGraph(graph2, coloring);
+		renderableGraph = new RenderableGraph(graph2, coloring, new VertexFactory());
 		graph2 = renderableGraph.asPropertyGraph();
 		assertEquals(true, graph.equals(graph2));
-		renderableGraph = new RenderableGraph(graph2, coloring);
+		renderableGraph = new RenderableGraph(graph2, coloring, new VertexFactory());
 		graph2 = renderableGraph.asPropertyGraph();
 		assertEquals(true, graph.equals(graph2));
+	}
+
+	@Test
+	public void construvtorVertexColoringTest() {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		graph.addVertex(0);
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(2, 3);
+		VertexColoringAlgorithm.Coloring coloring = ((List<VertexColoringAlgorithm.Coloring>) graph.getProperty(VertexColoring.class).getValue()).get(0);
+		RenderableGraph renderableGraph = new RenderableGraph(graph, coloring);
+		PropertyGraph graph2 = renderableGraph.asPropertyGraph();
+		System.out.println(graph2.edgeSet());
 	}
 }
