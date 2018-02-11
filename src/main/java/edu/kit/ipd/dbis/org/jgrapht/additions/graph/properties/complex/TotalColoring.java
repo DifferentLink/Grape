@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * the total coloring property
+ * @param <V> the vertex type
  */
 public class TotalColoring<V> extends ComplexProperty {
 	/**
