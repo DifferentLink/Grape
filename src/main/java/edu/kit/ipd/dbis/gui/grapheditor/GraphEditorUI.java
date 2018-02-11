@@ -310,8 +310,7 @@ public class GraphEditorUI extends JPanel {
 				kanvas.setPaint(vertex.getOutlineColor());
 				kanvas.draw(vertexShape);
 			});
-
-			/*
+			
 			graph.getSubgraphs().forEach(subgraph -> {
 				Shape subgraphOutline = RenderableGraph.outline(subgraph);
 				float[] dash = new float[]{10.0f};
@@ -319,7 +318,7 @@ public class GraphEditorUI extends JPanel {
 				kanvas.setPaint(Color.darkGray);
 				kanvas.draw(subgraphOutline);
 			});
-			*/
+
 		}
 	}
 

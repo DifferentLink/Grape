@@ -108,4 +108,20 @@ public class RenderableGraphTest {
 		graph2 = renderableGraph.asPropertyGraph();
 		assertEquals(true, graph.equals(graph2));
 	}
+
+	@Test
+	public void construvtorVertexColoringTest() {
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		graph.addVertex(0);
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(2, 3);
+		VertexColoringAlgorithm.Coloring coloring = ((List<VertexColoringAlgorithm.Coloring>) graph.getProperty(VertexColoring.class).getValue()).get(0);
+		RenderableGraph renderableGraph = new RenderableGraph(graph, coloring);
+		PropertyGraph graph2 = renderableGraph.asPropertyGraph();
+		System.out.println(graph2.edgeSet());
+	}
 }
