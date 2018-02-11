@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -102,13 +104,13 @@ public class UIFilterManager {
 		for (FilterGroup filterGroup : filterGroups) {
 			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
 				if (simpleFilter.isActive()) {
-					output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]");
+					output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]:");
 				}
 			}
 		}
 
 		for (SimpleFilter simpleFilter : simpleFilter) {
-			output.append("[;" + simpleFilter.getText() + "]");
+			output.append("[;" + simpleFilter.getText() + "]:");
 		}
 
 		return output.toString();
@@ -123,9 +125,7 @@ public class UIFilterManager {
 			final int returnValue = fileChooser.showDialog(null, "Save Filters"); // todo use language resource
 			File file = fileChooser.getSelectedFile();
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-				writer.write(visibleFiltersToString());
-				System.out.println("Wrote: " + visibleFiltersToString());
+				Files.write(Paths.get(file.getPath()), visibleFiltersToString().getBytes());
 			}
 		} catch (IOException e) {
 			System.out.println("Failed to write filters to file!");
@@ -137,16 +137,22 @@ public class UIFilterManager {
 	 * @param filter the string with the filters
 	 */
 	public void stringToFilters(String filter) {
-		Pattern pattern = Pattern.compile("(\\[\\w*;\\w+\\])+");
+		Pattern pattern = Pattern.compile("(\\[(.)*;(.)+\\]:)+");
 		Matcher matcher = pattern.matcher(filter);
-		while (matcher.find()) {
-			String[] filterInfo = matcher.group().split(";");
-			FilterGroup targetFilterGroup = getFilterGroupByName(filterInfo[0]);
-			if (targetFilterGroup != null) {
-				SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), filterInfo[1]);
-				addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
-			} else if (!filterInfo[0].equals("")) {
-				addNewFilterGroup(filterInfo[0]);
+		if (matcher.find()) {
+			String[] groups = matcher.group().split(":");
+			for (int i = 0; i < groups.length; i++) {
+				String[] filterInfo = groups[i].split(";");
+				String group = filterInfo[0].substring(1);
+				String content = filterInfo[1].substring(0, filterInfo[1].length() - 1);
+
+				FilterGroup targetFilterGroup = getFilterGroupByName(group);
+				if (targetFilterGroup != null) {
+					SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), content);
+					addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
+				} else if (!group.equals("")){
+					addNewFilterGroup(group);
+				}
 			}
 		}
 	}
