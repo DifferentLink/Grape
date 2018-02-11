@@ -308,7 +308,7 @@ public class Filtermanagement {
                     parameters = inputCopy.split(" ", 7);
                     break;
                 case "totalcoloringconjecture":
-                    inputCopy = "largestcliquesize + 0 = totalcoloringnumberofcolors + 0";
+                    inputCopy = "totalcoloringnumberofcolors + 0 <= greatestdegree + 2";
                     parameters = inputCopy.split(" ", 7);
                     break;
                 default: throw new InvalidInputException();
