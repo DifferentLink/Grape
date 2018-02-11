@@ -88,12 +88,17 @@ public interface BfsCodeAlgorithm<V, E> {
 		 * Construct a new bfs code.
 		 *
 		 * @param code the bfs code
+		 * @param numberMap shows, which vertex is represented by which number in the bfs code
 		 */
 		public BfsCodeImpl(int[] code, Map<Integer, V> numberMap) {
 			this.code = code;
 			this.numberMap = numberMap;
 		}
 
+		/**
+		 * constructs a new BfsCodeImpl
+		 * @param code the bfs cde
+		 */
 		public BfsCodeImpl(int[] code) {
 			this.code = code;
 			this.numberMap = null;

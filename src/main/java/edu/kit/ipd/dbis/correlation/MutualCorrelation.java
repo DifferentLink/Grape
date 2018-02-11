@@ -87,23 +87,30 @@ public class MutualCorrelation extends Correlation {
             double i = MutualCorrelation.getMinimum(firstPropertyValues);
             while (!secondPropertyValues.isEmpty()) {
                 double j = MutualCorrelation.getMinimum(secondPropertyValues);
-                returnValue = returnValue + (MutualCorrelation.calculatePXY(firstPropertyValues, i,
-                        secondPropertyValues, j) * Math.log((MutualCorrelation.calculatePXY(firstPropertyValues, i,
-                        secondPropertyValues, j) / (MutualCorrelation.calculatePX(firstPropertyValues, i)
-                        * MutualCorrelation.calculatePX(secondPropertyValues, j)))));
+                double log = Math.log(MutualCorrelation.calculatePXY(firstPropertyValues, i,
+                        secondPropertyValues, j) / (MutualCorrelation.calculatePX(firstPropertyValues, i)));
+                if (log > -2000.0) {
+                    returnValue = returnValue + (MutualCorrelation.calculatePXY(firstPropertyValues, i,
+                            secondPropertyValues, j) * Math.log((MutualCorrelation.calculatePXY(firstPropertyValues, i,
+                            secondPropertyValues, j) / (MutualCorrelation.calculatePX(firstPropertyValues, i)
+                            * MutualCorrelation.calculatePX(secondPropertyValues, j)))));
+                }
                 secondPropertyValues.remove(j);
             }
             firstPropertyValues.remove(i);
+        }
+        if (!(returnValue > -2000 && returnValue < 2000)) {
+            return 0.0;
         }
         return returnValue;
     }
 
     private static double calculatePXY(LinkedList<Double> inputList1, double value1, LinkedList<Double> inputList2,
-                                double value2) {
+                                       double value2) {
         double counter = 0.0;
         try {
             for (int i = 0; i < inputList1.size(); i++) {
-                if (inputList1.get(i) == value1 && inputList2.get(i) == value2) {
+                if ((inputList1.get(i) - value1) < 0.01 && (inputList2.get(i) - value2) < 0.01) {
                     counter++;
                 }
             }
@@ -116,7 +123,7 @@ public class MutualCorrelation extends Correlation {
     private static double calculatePX(LinkedList<Double> inputList, double value) {
         double counter = 0.0;
         for (double currentElement: inputList) {
-            if (currentElement == value) {
+            if ((currentElement - value) < 0.01) {
                 counter++;
             }
         }

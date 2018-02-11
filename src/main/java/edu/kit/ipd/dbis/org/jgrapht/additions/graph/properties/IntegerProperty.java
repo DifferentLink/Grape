@@ -2,14 +2,15 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import org.kohsuke.MetaInfServices;
 
-@MetaInfServices
+/**
+ * the integer property
+ */
 public abstract class IntegerProperty extends Property {
 	/**
 	 * Standard constructor
 	 *
-	 * @param graph
+	 * @param graph the input graph
 	 */
 	public IntegerProperty(PropertyGraph graph) {
 		super(graph);

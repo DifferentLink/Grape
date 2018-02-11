@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.KkGraphAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.KkGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 
@@ -67,12 +66,11 @@ public class RenderableGraph {
 	 *
 	 * @param propertyGraph the input graph
 	 */
-	public RenderableGraph(PropertyGraph<Integer, Integer> propertyGraph) {
+	public RenderableGraph(PropertyGraph<Integer, Integer> propertyGraph, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-		VertexFactory factory = new VertexFactory();
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
 		Set<Object> addedEdges = new HashSet<>();
 
@@ -157,15 +155,11 @@ public class RenderableGraph {
 	 * @param <V> the type representing vertices
 	 * @param <E> the type representing edges
 	 */
-	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring) {
+	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-
-
-
-		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> colorsToColorObjectMap = new HashMap<>();
@@ -263,13 +257,11 @@ public class RenderableGraph {
 	 * @param <V> the type representing vertices
 	 * @param <E> the type representing edges
 	 */
-	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring) {
+	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new HashSet<>();
 		this.id = propertyGraph.getId();
-
-		VertexFactory factory = new VertexFactory();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
 		Map<Integer, Color> vertexColorsToColorMap = new HashMap<>();

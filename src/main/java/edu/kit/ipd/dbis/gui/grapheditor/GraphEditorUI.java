@@ -177,10 +177,10 @@ public class GraphEditorUI extends JPanel {
 		propertyGraph = graph;
 		if (currentColoringType == ColoringType.VERTEX) {
 			currentVertexColoring = GraphEditorController.getVertexColoring(graph);
-			this.graph = new RenderableGraph(graph, currentVertexColoring);
+			this.graph = new RenderableGraph(graph, currentVertexColoring, this.factory);
 		} else {
 			currentTotalColoring = GraphEditorController.getTotalColoring(graph);
-			this.graph = new RenderableGraph(graph, currentTotalColoring);
+			this.graph = new RenderableGraph(graph, currentTotalColoring, this.factory);
 		}
 		history.clear();
 		arrangeGraph();
@@ -194,7 +194,7 @@ public class GraphEditorUI extends JPanel {
 	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		propertyGraph = graph;
-		this.graph = new RenderableGraph(graph, coloring);
+		this.graph = new RenderableGraph(graph, coloring, this.factory);
 		history.clear();
 		arrangeGraph();
 		graphEditor.repaint();
@@ -207,7 +207,7 @@ public class GraphEditorUI extends JPanel {
 	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
 		propertyGraph = graph;
-		this.graph = new RenderableGraph(graph, coloring);
+		this.graph = new RenderableGraph(graph, coloring, this.factory);
 		history.clear();
 		arrangeGraph();
 		graphEditor.repaint();
