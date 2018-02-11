@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -123,9 +125,7 @@ public class UIFilterManager {
 			final int returnValue = fileChooser.showDialog(null, "Save Filters"); // todo use language resource
 			File file = fileChooser.getSelectedFile();
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-				writer.write(visibleFiltersToString());
-				System.out.println("Wrote: " + visibleFiltersToString());
+				Files.write(Paths.get(file.getPath()), visibleFiltersToString().getBytes());
 			}
 		} catch (IOException e) {
 			System.out.println("Failed to write filters to file!");
