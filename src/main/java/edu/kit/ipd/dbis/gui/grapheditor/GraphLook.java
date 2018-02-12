@@ -85,11 +85,18 @@ public class GraphLook {
 			numberGridcells = subgraphs.size() + otherVertices.size() + 1;
 		}
 
-		System.out.println("number: " + numberGridcells);
 
-		final int xCells = (int) Math.ceil(Math.sqrt(numberGridcells)) + 1;
+		int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
+		int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
+		if (xCells * yCells < numberGridcells) {
+			if (xCells <= yCells) {
+				xCells += 1;
+			} else {
+				yCells += 1;
+			}
+
+		}
 		final int xStepsize = (lowerRight.x - upperLeft.x) / xCells;
-		final int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
 		final int yStepsize = (lowerRight.y - upperLeft.y) / yCells;
 		Iterator<Set<Vertex>> iterator = subgraphs.iterator();
 		Iterator<Vertex> iteratorOther = otherVertices.iterator();
