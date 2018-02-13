@@ -79,16 +79,23 @@ public class GraphLook {
 		if (subgraphs.size() > 0) {
 			numberGridcells = subgraphs.size() + otherVertices.size();
 		} else {
-			numberGridcells = 1;
+			numberGridcells = otherVertices.size();
 		}
 		if ((subgraphs.size() + otherVertices.size()) % 2 == 1) {
-			numberGridcells = subgraphs.size() + otherVertices.size() + 2;
+			numberGridcells = subgraphs.size() + otherVertices.size() + 1;
 		}
 
+		int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
+		int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
+		if (xCells * yCells < numberGridcells) {
+			if (xCells <= yCells) {
+				xCells += 1;
+			} else {
+				yCells += 1;
+			}
 
-		final int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
+		}
 		final int xStepsize = (lowerRight.x - upperLeft.x) / xCells;
-		final int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
 		final int yStepsize = (lowerRight.y - upperLeft.y) / yCells;
 		Iterator<Set<Vertex>> iterator = subgraphs.iterator();
 		Iterator<Vertex> iteratorOther = otherVertices.iterator();
