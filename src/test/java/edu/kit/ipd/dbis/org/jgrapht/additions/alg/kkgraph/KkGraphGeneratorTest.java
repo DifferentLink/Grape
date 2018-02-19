@@ -251,6 +251,7 @@ public class KkGraphGeneratorTest {
 		graph.addEdge("e", "a");
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		System.out.println(kkGraph.getSubgraphs());
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
 		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
 	}
