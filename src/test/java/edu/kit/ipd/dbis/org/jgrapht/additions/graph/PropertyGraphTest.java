@@ -4,11 +4,13 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.GreatestDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfCliques;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfEdges;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.SmallestDegree;
+import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -153,5 +155,16 @@ public class PropertyGraphTest {
 				assertEquals(expectedLine[j], resultLine[j]);
 			}
 		}
+	}
+
+	@Test
+	public void propertyGraphFromBfsCodeTest() {
+		int[] code ={1,1,2,1,1,3,1,2,3,1,1,4,1,2,4,1,3,5,1,4,5,1,3,6,1,5,6,1,4,7,1,5,7,1,6,7};
+		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl<>(code);
+		PropertyGraph graph = new PropertyGraph(bfs);
+		graph.calculateProperties();
+		VertexColoringAlgorithm.Coloring c = ((List< VertexColoringAlgorithm.Coloring>) graph.getProperty(VertexColoring.class).getValue()).get(0);
+		System.out.println(c.getNumberColors());
+		System.out.println(graph.vertexSet());
 	}
 }

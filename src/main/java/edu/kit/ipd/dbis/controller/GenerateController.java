@@ -190,9 +190,11 @@ public class GenerateController {
 		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
 		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 		try {
+			System.out.println("a");
 			database.addGraph(graph);
 			calculation.run();
 			this.grapeUI.updateTable();
+			System.out.println("h");
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
