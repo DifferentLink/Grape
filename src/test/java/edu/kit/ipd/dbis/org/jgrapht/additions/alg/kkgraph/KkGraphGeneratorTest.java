@@ -212,24 +212,4 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
 	}
-
-	@Test
-	public void graphCircleTest1() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-		graph.addVertex("d");
-		graph.addVertex("e");
-		graph.addEdge("a", "b");
-		graph.addEdge("b", "c");
-		graph.addEdge("c", "d");
-		graph.addEdge("d", "e");
-		graph.addEdge("e", "a");
-		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
-		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		System.out.println(kkGraph.getSubgraphs());
-		System.out.println(kkGraph.getNumberOfSubgraphs());
-		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
-	}
 }
