@@ -42,7 +42,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		int maxNumberOfContractEdges = graph.vertexSet().size() - numberOfColors;
 
 		boolean found = false;
-		Map<V, Integer> graphMap = new HashMap<>();
+		Map<V, Integer> graphMap;
 		for (int j = 0; j <= maxNumberOfContractEdges; j++) {
 			//allocates the endComb and the actualComb f.e 5 Edges, numberOfContractEdges = 3 -> actualComb = (1,1,1,0,0)
 			//endComb = (0,0,1,1,1)
