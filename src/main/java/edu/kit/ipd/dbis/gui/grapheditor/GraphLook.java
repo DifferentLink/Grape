@@ -145,9 +145,9 @@ public class GraphLook {
 						(int) (radius * Math.sin(i * angle) + center.y));
 				i++;
 			}
-			int distance = Math.abs((int) ((radius * Math.cos(0 * angle) + center.x) - (radius * Math.cos(1 * angle) + center.x)));
 			for (Set<Vertex> subgraph : subgraphs) {
 				/*
+				int distance = Math.abs((int) ((radius * Math.cos(0 * angle) + center.x) - (radius * Math.cos(1 * angle) + center.x)));
 				Point upLeft = new Point(Math.max((int) (radius * Math.cos(i * angle) + center.x)
 						- distance, 5), Math.max ((int) (radius * Math.sin(i * angle) + center.y) - distance, 5));
 				Point lowRight = new Point(Math.min((int) (radius * Math.cos(i * angle) + center.x)
