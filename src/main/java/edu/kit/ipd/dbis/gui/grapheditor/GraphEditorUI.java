@@ -194,7 +194,6 @@ public class GraphEditorUI extends JPanel {
 	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph, VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		propertyGraph = graph;
-		System.out.println("graph: " + graph.edgeSet());
 		this.graph = new RenderableGraph(graph, coloring, this.factory);
 		history.clear();
 		arrangeGraph();
