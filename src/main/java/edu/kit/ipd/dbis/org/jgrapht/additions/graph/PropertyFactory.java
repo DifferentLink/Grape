@@ -32,6 +32,8 @@ public class PropertyFactory {
 		properties.add(new ProportionDensity(graph));
 		properties.add(new StructureDensity(graph));
 		properties.add(new BinomialDensity(graph));
+		properties.add(new NumberOfDisjointVerticesFromKkGraph(graph));
+		properties.add(new NumberOfDisjointEdgesFromKkGraph(graph));
 		properties.add(new GreatestDegree(graph));
 		properties.add(new KkGraphNumberOfSubgraphs(graph));
 		properties.add(new LargestCliqueSize(graph));

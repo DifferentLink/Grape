@@ -38,71 +38,111 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 		int numberOfColors = vertexColoring.getNumberColors();
 
 		//this is the number of edges that have to be contract to get the kk graph
-		int numberOfContractEdges = graph.vertexSet().size() - numberOfColors;
+		int maxNumberOfContractEdges = graph.vertexSet().size() - numberOfColors;
 
-		//allocates the endComb and the actualComb f.e 5 Edges, numberOfContractEdges = 3 -> actualComb = (1,1,1,0,0)
-		//endComb = (0,0,1,1,1)
-		int[] actualComb = new int[graph.edgeSet().size()];
-		int[] endComb = new int[graph.edgeSet().size()];
-		for (int i = 0; i < actualComb.length; i++) {
-			if (i < numberOfContractEdges) {
-				actualComb[i] = 1;
-			} else {
-				actualComb[i] = 0;
-			}
-			if (i < endComb.length - numberOfContractEdges) {
-				endComb[i] = 0;
-			} else {
-				endComb[i] = 1;
-			}
-		}
-
-		BfsCodeAlgorithm.BfsCodeImpl bfsCode =
-				(BfsCodeAlgorithm.BfsCodeImpl) graph.getProperty(BfsCode.class).getValue();
-		int[] bfsArray = bfsCode.getCode();
-		ArrayList<int[]> edges = this.getEdgeList(bfsArray);
-
-		Map<Integer, V> numberMap = bfsCode.getNumberMap();
 		boolean found = false;
-		boolean allCombsDone = false;
-
-		Map<V, Integer> graphMap = new HashMap<>();
-
-		//tries all different possibilities of edges until the kk graph gets found
-		while (!found && !allCombsDone) {
-			//reset graphMap for next combination
-			graphMap.clear();
-			Set<Integer> keySet = numberMap.keySet();
-			for (int i : keySet) {
-				graphMap.put(numberMap.get(i), i);
-			}
-
-			//contract all edges from this combination
+		Map<V, Integer> graphMap;
+		for (int j = 0; j <= maxNumberOfContractEdges; j++) {
+			//allocates the endComb and the actualComb f.e 5 Edges, numberOfContractEdges = 3 -> actualComb = (1,1,1,0,0)
+			//endComb = (0,0,1,1,1)
+			int[] actualComb = new int[graph.edgeSet().size()];
+			int[] endComb = new int[graph.edgeSet().size()];
 			for (int i = 0; i < actualComb.length; i++) {
-				if (actualComb[i] == 1) {
-					contractEdge(graphMap, numberMap.get(edges.get(i)[0]), numberMap.get(edges.get(i)[1]));
+				if (i < j) {
+					actualComb[i] = 1;
+				} else {
+					actualComb[i] = 0;
+				}
+				if (i < endComb.length - j) {
+					endComb[i] = 0;
+				} else {
+					endComb[i] = 1;
 				}
 			}
 
-			if (isClique(graphMap)) {
-				found = true;
-			}
-			if (sameComb(actualComb, endComb)) {
-				allCombsDone = true;
-			}
-			if (!found) {
-				actualComb = getNextEdgeCombination(actualComb);
-			}
-		}
+			BfsCodeAlgorithm.BfsCodeImpl bfsCode =
+					(BfsCodeAlgorithm.BfsCodeImpl) graph.getProperty(BfsCode.class).getValue();
+			int[] bfsArray = bfsCode.getCode();
+			ArrayList<int[]> edges = this.getEdgeList(bfsArray);
 
-		//kk graph not found
-		if (!found) {
-			return new KkGraphImpl(new HashMap<V, Integer>(), 0);
+			//number of the vertex in the bfs code
+			Map<Integer, V> numberMap = bfsCode.getNumberMap();
+
+			boolean allCombsDone = false;
+
+			//map from vertex to its integer (vertieces in the same subgraph has the same numbers after this)
+			graphMap = new HashMap<>();
+
+			PropertyGraph g = new PropertyGraph();
+			Collection<Integer> values; //the different sub graph values
+			Set<Integer> valueSet;
+
+			//tries all different possibilities of edges until the kk graph gets found
+			while (!found && !allCombsDone) {
+				//reset graphMap for next combination
+				graphMap.clear();
+				g = new PropertyGraph();
+				Set<Integer> keySet = numberMap.keySet();
+				//set graph map: every vertex is in another sub graph
+				for (int i : keySet) {
+					graphMap.put(numberMap.get(i), i);
+				}
+
+				//contract all edges from this combination (changes in graph map)
+				for (int i = 0; i < actualComb.length; i++) {
+					if (actualComb[i] == 1) {
+						contractEdge(graphMap, numberMap.get(edges.get(i)[0]), numberMap.get(edges.get(i)[1]));
+					}
+				}
+
+				values = graphMap.values();
+				valueSet = new HashSet<>();
+
+				//changes map into graph
+				valueSet.addAll(values); // subgraph values
+				for (int v : valueSet) {
+					g.addVertex(v);
+				}
+				//generate graph with sub graphs as one node
+				for (int i : valueSet) {
+					for (Object v : graph.vertexSet()) {
+						if (graphMap.get(v) == i) {
+							for (Object w : graph.vertexSet()) {
+								if (graph.containsEdge(v, w) && (graphMap.get(v) != graphMap.get(w))) {
+									g.addEdge(graphMap.get(w), graphMap.get(v));
+								}
+							}
+						}
+					}
+				}
+
+				if (hasCliqueOfSize(g, numberOfColors)) {
+					found = true;
+				}
+				if (sameComb(actualComb, endComb)) {
+					allCombsDone = true;
+				}
+				if (!found) {
+					actualComb = getNextEdgeCombination(actualComb);
+				}
+
+			}
+
+			if (found) {
+				Set<Object> vertieces = getCliqueOfSize(g, numberOfColors);
+				Map<V, Integer> subgraphs = new HashMap<>();
+				for (Object o : vertieces) {
+					for (Object v : graph.vertexSet()) {
+						if (graphMap.get(v) == o) {
+							subgraphs.put((V) v, (Integer) o);
+						}
+					}
+				}
+				return new KkGraphImpl(subgraphs, vertieces.size());
+			}
 		}
-		Collection<Integer> values = graphMap.values();
-		Set<Integer> v = new HashSet<>();
-		v.addAll(values);
-		return new KkGraphImpl(graphMap, v.size());
+		//kkgraph not found
+		return new KkGraphImpl(new HashMap<V, Integer>(), 0);
 	}
 
 	/**
@@ -207,41 +247,37 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 
 	/**
 	 * checks if the graph represented by the combMap is a clique
-	 * @param graphMap the graph
+	 * @param g the graph
 	 * @return if its a clique
 	 */
-	private boolean isClique(Map<V, Integer> graphMap) {
-
-		PropertyGraph g = new PropertyGraph();
-		Collection<Integer> values = graphMap.values();
-		Set<Integer> valueSet = new HashSet<>();
-		//changes map into graph
-		valueSet.addAll(values);
-
-		for (int v : valueSet) {
-			g.addVertex(v);
-		}
-		for (int i : valueSet) {
-			for (Object v : graph.vertexSet()) {
-				if (graphMap.get(v) == i) {
-					for (Object w : graph.vertexSet()) {
-						if (graph.containsEdge(v, w) && (graphMap.get(v) != graphMap.get(w))) {
-							g.addEdge(graphMap.get(w), graphMap.get(v));
-						}
-					}
-				}
-			}
-		}
+	private boolean hasCliqueOfSize(PropertyGraph g, int size) {
 		ArrayList<Set<Object>> cliques = new ArrayList<>();
 		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(g);
 		Iterator<Set<Object>> it = alg.iterator();
 		while (it.hasNext()) {
 			Set<Object> clique = it.next();
-			cliques.add(clique);
-		}
-		if (cliques.size() == 1) {
-			return true;
+			if (clique.size() == size) {
+				return true;
+			}
 		}
 		return false;
+	}
+
+	/**
+	 * checks if the graph represented by the combMap is a clique
+	 * @param g the graph
+	 * @return if its a clique
+	 */
+	private Set<Object> getCliqueOfSize(PropertyGraph g, int size) {
+		ArrayList<Set<Object>> cliques = new ArrayList<>();
+		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(g);
+		Iterator<Set<Object>> it = alg.iterator();
+		while (it.hasNext()) {
+			Set<Object> clique = it.next();
+			if (clique.size() == size) {
+				return clique;
+			}
+		}
+		return null;
 	}
 }
