@@ -44,6 +44,7 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 4);
 	}
 
 	@Test
@@ -52,6 +53,7 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
 	}
 
 	@Test
@@ -70,6 +72,7 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
 	}
 
 	@Test
@@ -91,6 +94,7 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 4);
 	}
 
 	@Test
@@ -144,6 +148,7 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 4);
 	}
 
 	@Test
@@ -169,6 +174,7 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
 	}
 
 	@Test
@@ -180,6 +186,7 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 2);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 2);
 	}
 
 
@@ -211,5 +218,41 @@ public class KkGraphGeneratorTest {
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 4);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 4);
+	}
+
+	@Test
+	public void graphCliqueTest2() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("b", "c");
+		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
+		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
+	}
+
+	@Test
+	public void graphCircleTest1() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addVertex("e");
+		graph.addEdge("a", "b");
+		graph.addEdge("b", "c");
+		graph.addEdge("c", "d");
+		graph.addEdge("d", "e");
+		graph.addEdge("e", "a");
+		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
+		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		System.out.println(kkGraph.getSubgraphs());
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
 	}
 }
