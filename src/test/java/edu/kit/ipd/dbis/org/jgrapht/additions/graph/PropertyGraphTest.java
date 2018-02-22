@@ -162,9 +162,7 @@ public class PropertyGraphTest {
 		int[] code ={1,1,2,1,1,3,1,2,3,1,1,4,1,2,4,1,3,5,1,4,5,1,3,6,1,5,6,1,4,7,1,5,7,1,6,7};
 		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl<>(code);
 		PropertyGraph graph = new PropertyGraph(bfs);
-		graph.calculateProperties();
-		VertexColoringAlgorithm.Coloring c = ((List< VertexColoringAlgorithm.Coloring>) graph.getProperty(VertexColoring.class).getValue()).get(0);
-		System.out.println(c.getNumberColors());
-		System.out.println(graph.vertexSet());
+		Assert.assertTrue(graph.vertexSet().size() == 7);
+		Assert.assertTrue(graph.edgeSet().size() == 12);
 	}
 }
