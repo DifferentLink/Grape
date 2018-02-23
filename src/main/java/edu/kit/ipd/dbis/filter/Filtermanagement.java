@@ -21,8 +21,8 @@ import java.util.Set;
  */
 public class Filtermanagement {
 
-    private List<Filtergroup> availableFilterGroups;
-    private List<Filter> availableFilter;
+    List<Filtergroup> availableFilterGroups;
+    List<Filter> availableFilter;
     private GraphDatabase database;
 
     /**
@@ -42,7 +42,7 @@ public class Filtermanagement {
 		return database;
 	}
 
-	public void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
+	private void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
             UnexpectedObjectException, InsertionFailedException {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
@@ -74,11 +74,6 @@ public class Filtermanagement {
             }
         }
         for (Filtergroup element : availableFilterGroups) {
-            if (element.id == id) {
-                availableFilterGroups.remove(element);
-                database.deleteFilter(id);
-                return 0;
-            }
             for (Filter filterInGroup : element.availableFilter) {
                 if (filterInGroup.id == id) {
                     element.availableFilter.remove(filterInGroup);
@@ -205,7 +200,7 @@ public class Filtermanagement {
             InsertionFailedException, UnexpectedObjectException, InvalidInputException {
         int groupID = this.removeFiltersegmentAngGetID(id);
         if (groupID != 0) {
-            this.addFilterToGroup(input, id, groupID);
+            this.updateFilter(input, id, groupID);
         } else {
             this.addFilter(input, id);
         }
@@ -276,7 +271,7 @@ public class Filtermanagement {
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
      */
-    public void addFilterToGroup(String input, int id, int groupID) throws InvalidInputException,
+    public void updateFilter(String input, int id, int groupID) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
     }
@@ -472,14 +467,6 @@ public class Filtermanagement {
         for (Filter element: activatedFilter) {
             stringArray = Filtermanagement.fillColumn(stringArray, currentColumn, element);
             currentColumn++;
-        }
-        for (Filtergroup element: availableFilterGroups) {
-            if (element.isActivated) {
-                for (Filter groupElement : element.availableFilter) {
-                    stringArray = Filtermanagement.fillColumn(stringArray, currentColumn, groupElement);
-                    currentColumn++;
-                }
-            }
         }
         return stringArray;
     }

@@ -84,9 +84,9 @@ public class FilterController {
 	 * @param groupId     the group id
 	 * @throws InvalidInputException the invalid input exception
 	 */
-	public void addFilterToGroup(String filterInput, int filterId, int groupId) throws InvalidInputException {
+	public void updateFilter(String filterInput, int filterId, int groupId) throws InvalidInputException {
 		try {
-			filter.addFilterToGroup(filterInput, filterId, groupId);
+			filter.updateFilter(filterInput, filterId, groupId);
 		} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 			statusbar.addMessage(e.getMessage());
 		}
