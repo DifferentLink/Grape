@@ -200,8 +200,10 @@ public class Filtermanagement {
             InsertionFailedException, UnexpectedObjectException, InvalidInputException {
         int groupID = this.removeFiltersegmentAngGetID(id);
         if (groupID != 0) {
+            this.removeFiltersegment(id);
             this.updateFilter(input, id, groupID);
         } else {
+            this.removeFiltersegment(id);
             this.addFilter(input, id);
         }
     }
@@ -273,6 +275,7 @@ public class Filtermanagement {
      */
     public void updateFilter(String input, int id, int groupID) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
+        this.removeFiltersegment(id);
         this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
     }
 
@@ -288,7 +291,7 @@ public class Filtermanagement {
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
      */
-    public void addFilter(String input, int id) throws InvalidInputException,
+    private void addFilter(String input, int id) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         this.addFilter(Filtermanagement.parseToFilter(input, id));
     }
