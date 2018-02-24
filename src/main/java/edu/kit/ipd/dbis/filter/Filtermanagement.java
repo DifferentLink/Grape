@@ -297,6 +297,7 @@ public class Filtermanagement {
     }
 
     private static Filter parseToFilter(String input, int id) throws InvalidInputException {
+        Filtermanagement.checkFilterInputNull(input);
         String inputCopy = input.toLowerCase();
         String[] parameters = inputCopy.split(" ", 7);
         if (parameters.length == 1) {
@@ -360,9 +361,6 @@ public class Filtermanagement {
             Relation relation = Filtermanagement.testRelation(relationString);
 
             String valueString = parameters[2];
-            if (!Filtermanagement.isIntegerOrDouble(valueString) || valueString.length() == 0) {
-                throw new InvalidInputException();
-            }
             checkFilterInputNull(parameters[2]);
             double value = Filtermanagement.parseToIntegerOrDouble(valueString);
             return new BasicFilter(input, false, value, relation, property1, id);
@@ -533,7 +531,8 @@ public class Filtermanagement {
         }
     }
 
-    private static boolean isIntegerOrDouble(String input) {
+    private static boolean isIntegerOrDouble(String input) throws InvalidInputException {
+        Filtermanagement.checkFilterInputNull(input);
         if (StringUtils.isStrictlyNumeric(input)) {
             return true;
         } else {
