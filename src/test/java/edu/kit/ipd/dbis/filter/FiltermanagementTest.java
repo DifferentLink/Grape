@@ -12,6 +12,7 @@ public class FiltermanagementTest {
 
     private static Filtermanagement manager;
 
+    @Ignore
     @Before
     public void delete() throws Exception {
         String url = "jdbc:mysql://localhost:3306/library";
@@ -31,11 +32,13 @@ public class FiltermanagementTest {
 
     }
 
+    @Ignore
     @Test
     public void testSettingOfDatabase() {
         assert manager.getDatabase() != null;
     }
 
+    @Ignore
     @Test
     public void testStringParserSimpleFilter() throws InvalidInputException, ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
@@ -72,6 +75,7 @@ public class FiltermanagementTest {
         assert output[2][6].equals("2.0");
     }
 
+    @Ignore
     @Test
     public void testStringParserFiltergroup() throws InvalidInputException, ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
@@ -100,6 +104,7 @@ public class FiltermanagementTest {
         assert output[1][6].equals("4.0");
     }
 
+    @Ignore
     @Test
     public void replaceFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -109,6 +114,7 @@ public class FiltermanagementTest {
         assert manager.availableFilter.get(0).getName().equals("averagedegree >= 12");
     }
 
+    @Ignore
     @Test
     public void replaceFilterGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -118,6 +124,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getName().equals("This is an updated filtergroup");
     }
 
+    @Ignore
     @Test
     public void replaceFilterInFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -128,6 +135,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getAvailableFilter().get(0).getName().equals("averagedegree < 41");
     }
 
+    @Ignore
     @Test
     public void replaceFiltersegments() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -156,6 +164,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(1).getAvailableFilter().size() == 2;
     }
 
+    @Ignore
     @Test
     public void removeFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -168,6 +177,7 @@ public class FiltermanagementTest {
         manager.removeFiltersegment(81);
     }
 
+    @Ignore
     @Test
     public void removeFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -177,6 +187,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.size() == 0;
     }
 
+    @Ignore
     @Test
     public void removeFilterFromGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -187,6 +198,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getAvailableFilter().size() == 0;
     }
 
+    @Ignore
     @Test
     public void deactivateFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -197,6 +209,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilter.get(0).isActivated;
     }
 
+    @Ignore
     @Test
     public void deactivateFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -207,6 +220,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).isActivated;
     }
 
+    @Ignore
     @Test
     public void deactivateFilterInGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -219,6 +233,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).getAvailableFilter().get(0).isActivated;
     }
 
+    @Ignore
     @Test
     public void deactivateFiltersegments() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -276,6 +291,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(1).getAvailableFilter().get(1).isActivated;
     }
 
+    @Ignore
     @Test
     public void testFilterInputParserBasicFilter() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -283,6 +299,7 @@ public class FiltermanagementTest {
         assert manager.availableFilter.get(0).getName().equals("averagedegree = 10.87");
     }
 
+    @Ignore
     @Test
     public void testFilterInputParserConnectedFilter() throws  ConnectionFailedException, InvalidInputException,
             InsertionFailedException,
@@ -348,8 +365,9 @@ public class FiltermanagementTest {
         manager.removeFiltersegment(9);
     }
 
+    @Ignore
     @Test
-    public void testFilterInputParserInvalidInputs() throws ConnectionFailedException, InvalidInputException,
+    public void testFilterInputParserInvalidInputs() throws ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
         int inputExceptionCounter = 0;
         try {
@@ -370,6 +388,7 @@ public class FiltermanagementTest {
         assert inputExceptionCounter == 3;
     }
 
+    @Ignore
     @Test
     public void testFilterInputParserInvalidBasicInput() throws UnexpectedObjectException, InsertionFailedException,
             ConnectionFailedException {
@@ -392,6 +411,7 @@ public class FiltermanagementTest {
         assert inputExceptionCounter == 3;
     }
 
+    @Ignore
     @Test
     public void testFilterInputParserInvalidConnectedInput() throws UnexpectedObjectException, InsertionFailedException,
             ConnectionFailedException {
