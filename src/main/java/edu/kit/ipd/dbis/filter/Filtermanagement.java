@@ -58,7 +58,7 @@ public class Filtermanagement {
             InsertionFailedException, UnexpectedObjectException {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == groupID) {
-                element.availableFilter.add(filter);
+                element.getAvailableFilter().add(filter);
                 database.replaceFilter(groupID, element);
             }
         }
@@ -74,9 +74,9 @@ public class Filtermanagement {
             }
         }
         for (Filtergroup element : availableFilterGroups) {
-            for (Filter filterInGroup : element.availableFilter) {
+            for (Filter filterInGroup : element.getAvailableFilter()) {
                 if (filterInGroup.id == id) {
-                    element.availableFilter.remove(filterInGroup);
+                    element.getAvailableFilter().remove(filterInGroup);
                     database.replaceFilter(element.id, element);
                     return element.id;
                 }
@@ -108,9 +108,9 @@ public class Filtermanagement {
                 database.deleteFilter(id);
                 return;
             }
-            for (Filter filterInGroup: element.availableFilter) {
+            for (Filter filterInGroup: element.getAvailableFilter()) {
                 if (filterInGroup.id == id) {
-                    element.availableFilter.remove(filterInGroup);
+                    element.getAvailableFilter().remove(filterInGroup);
                     database.replaceFilter(element.id, element);
                     return;
                 }
@@ -141,7 +141,7 @@ public class Filtermanagement {
                 database.replaceFilter(id, element);
                 return;
             }
-            for (Filter currentFilter: element.availableFilter) {
+            for (Filter currentFilter: element.getAvailableFilter()) {
                 if (currentFilter.id == id) {
                     currentFilter.activate();
                     database.replaceFilter(element.id, element);
@@ -175,7 +175,7 @@ public class Filtermanagement {
                 database.replaceFilter(id, currentElement);
                 return;
             }
-            for (Filter currentFilter : currentElement.availableFilter) {
+            for (Filter currentFilter : currentElement.getAvailableFilter()) {
                 if (currentFilter.id == id) {
                     currentFilter.deactivate();
                     database.replaceFilter(currentElement.id, currentElement);
@@ -453,7 +453,7 @@ public class Filtermanagement {
         }
         for (Filtergroup current: availableFilterGroups) {
             if (current.isActivated) {
-                List<Filter> filterInGroup = current.availableFilter;
+                List<Filter> filterInGroup = current.getAvailableFilter();
                 for (Filter currentFilterInGroup: filterInGroup) {
                     if (current.isActivated) {
                         activatedFilter.add(currentFilterInGroup);
