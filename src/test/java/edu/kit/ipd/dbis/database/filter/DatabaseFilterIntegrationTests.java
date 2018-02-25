@@ -21,6 +21,7 @@ import java.util.List;
 
 public class DatabaseFilterIntegrationTests {
 
+	/*
 	@Ignore
 	@Before
 	public void delete() throws Exception {
@@ -33,7 +34,7 @@ public class DatabaseFilterIntegrationTests {
 		FileManager files = new FileManager();
 		files.deleteGraphDatabase(database);
 
-	}
+	}*/
 
 	//@Ignore
 	@Test
