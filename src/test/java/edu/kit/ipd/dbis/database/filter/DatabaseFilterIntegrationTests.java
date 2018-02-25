@@ -53,7 +53,7 @@ public class DatabaseFilterIntegrationTests {
 		manager.setDatabase(database);
 		manager.addFilter("AverageDegree + 27 = AverageDegree / 66", 1);
 		assertEquals(true,
-				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 66"));
+				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 6"));
 	}
 
 	@Ignore
