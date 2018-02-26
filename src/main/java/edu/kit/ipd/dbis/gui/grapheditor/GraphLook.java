@@ -46,7 +46,7 @@ public class GraphLook {
 
 		final Point center =
 				new Point((lowerRight.x - upperLeft.x) / 2 + upperLeft.x, (lowerRight.y - upperLeft.y) / 2 + upperLeft.y);
-		final double radius = ((Math.min(center.x - upperLeft.x, center.y - lowerRight.y)) / 2 * .75);
+		final double radius = ((Math.min(center.x - upperLeft.x, center.y - lowerRight.y)) * .75);
 		final double angle = Math.toRadians(360d / (double) vertices.size());
 		int i = 0;
 
@@ -79,16 +79,23 @@ public class GraphLook {
 		if (subgraphs.size() > 0) {
 			numberGridcells = subgraphs.size() + otherVertices.size();
 		} else {
-			numberGridcells = 1;
+			numberGridcells = otherVertices.size();
 		}
 		if ((subgraphs.size() + otherVertices.size()) % 2 == 1) {
-			numberGridcells = subgraphs.size() + otherVertices.size() + 2;
+			numberGridcells = subgraphs.size() + otherVertices.size() + 1;
 		}
 
+		int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
+		int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
+		if (xCells * yCells < numberGridcells) {
+			if (xCells <= yCells) {
+				xCells += 1;
+			} else {
+				yCells += 1;
+			}
 
-		final int xCells = (int) Math.ceil(Math.sqrt(numberGridcells));
+		}
 		final int xStepsize = (lowerRight.x - upperLeft.x) / xCells;
-		final int yCells = (int) Math.floor(Math.sqrt(numberGridcells));
 		final int yStepsize = (lowerRight.y - upperLeft.y) / yCells;
 		Iterator<Set<Vertex>> iterator = subgraphs.iterator();
 		Iterator<Vertex> iteratorOther = otherVertices.iterator();
@@ -104,6 +111,46 @@ public class GraphLook {
 					Set<Vertex> set = new HashSet<>();
 					set.add(iteratorOther.next());
 					arrangeInCircle(set, upperLeftGrid, lowerRightGrid);
+				}
+			}
+		}
+	}
+	/**
+	 * Arrange the given vertices in a circle in the area defined by two points.
+	 * @param subgraphs the kk subgraphs
+	 * @param otherVertices vertices that are not contained in the kkgraph
+	 * @param upperLeft the upper left corner of the area
+	 * @param lowerRight the lower right corner of the area
+	 */
+	public static void arrangeInCircle(Set<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
+									   Point upperLeft, Point lowerRight) {
+
+		final Point center =
+				new Point((lowerRight.x - upperLeft.x) / 2 + upperLeft.x, (lowerRight.y - upperLeft.y) / 2 + upperLeft.y);
+		final double radius = ((Math.min(center.x - upperLeft.x, center.y - lowerRight.y)) * .75);
+
+		int numberOfVertices = otherVertices.size();
+		for (Set<Vertex> subgraph : subgraphs) {
+			numberOfVertices += subgraph.size();
+		}
+		final double angle = Math.toRadians(360d / (double) (numberOfVertices));
+		int i = 0;
+
+		if (subgraphs.size() == 0 && otherVertices.size() == 1) {
+			otherVertices.iterator().next().setPosition(center.x, center.y);
+		} else {
+			for (Vertex vertex : new ArrayList<>(new TreeSet<>(otherVertices))) {
+				vertex.setPosition(
+						(int) (radius * Math.cos(i * angle) + center.x),
+						(int) (radius * Math.sin(i * angle) + center.y));
+				i++;
+			}
+			for (Set<Vertex> subgraph : subgraphs) {
+				for (Vertex vertex : subgraph) {
+					vertex.setPosition(
+							(int) (radius * Math.cos(i * angle) + center.x),
+							(int) (radius * Math.sin(i * angle) + center.y));
+					i++;
 				}
 			}
 		}
