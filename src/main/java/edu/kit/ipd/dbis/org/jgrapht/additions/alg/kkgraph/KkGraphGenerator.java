@@ -138,6 +138,7 @@ public class KkGraphGenerator<V, E> implements KkGraphAlgorithm {
 						}
 					}
 				}
+
 				return new KkGraphImpl(subgraphs, vertieces.size());
 			}
 		}
