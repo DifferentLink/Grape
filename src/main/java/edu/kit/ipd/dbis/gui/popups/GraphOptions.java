@@ -1,7 +1,3 @@
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.GenerateController;
