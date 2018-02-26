@@ -3,6 +3,7 @@ package edu.kit.ipd.dbis.gui.grapheditor;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
+import java.util.Objects;
 
 /**
  * An edge that can be rendered in the graph editor
@@ -120,7 +121,13 @@ public class Edge {
 
 	@Override
 	public boolean equals(Object o) {
-		return this.getStart() == ((Edge) o).getStart()
+		return o instanceof Edge
+				&& this.getStart() == ((Edge) o).getStart()
 				&& this.getEnd() == ((Edge) o).getEnd();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(start, end, color, thickness);
 	}
 }
