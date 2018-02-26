@@ -167,8 +167,8 @@ public class RenderableGraph {
 		Map<V, Integer> colors = coloring.getColors();
 
 
-		KkGraphAlgorithm.KkGraph kkGraph = (KkGraphAlgorithm.KkGraph) propertyGraph.getProperty(KkGraph.class).getValue();
-		Map<V, Integer> subgraphs = kkGraph.getKkGraph();
+		KkGraphAlgorithm.KkGraph<V> kkGraph = (KkGraphAlgorithm.KkGraph) propertyGraph.getProperty(KkGraph.class).getValue();
+		Map<V, Integer> subgraphs = kkGraph.getKkGraphMap();
 
 
 		// associate integer value of colorings

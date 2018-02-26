@@ -32,7 +32,7 @@ public interface KkGraphAlgorithm<V> {
 		 *
 		 * @return the kk-graph
 		 */
-		Map<V, Integer> getKkGraph();
+		Map<V, Integer> getKkGraphMap();
 
 		/**
 		 * Get the number of subgraphs.
@@ -84,7 +84,7 @@ public interface KkGraphAlgorithm<V> {
 		}
 
 		@Override
-		public Map<V, Integer> getKkGraph() {
+		public Map<V, Integer> getKkGraphMap() {
 			return this.kkGraph;
 		}
 
