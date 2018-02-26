@@ -7,22 +7,20 @@ import java.util.*;
  * A algorithm that computes a kk-graph of a given graph based on the Hadwiger Conjecture
  *
  * @param <V> the graph vertex type
- * @param <E> the graph edge type
  */
-public interface KkGraphAlgorithm<V, E> {
+public interface KkGraphAlgorithm<V> {
 	/**
 	 * Get the kk-graph. If the kk graph was not found, the returned KkGraph contains an empty list
 	 * @return the kk-graph
 	 */
-	KkGraph getKkGraph();
+	KkGraph<V> getKkGraph();
 
 	/**
 	 * A kk-graph.
 	 *
 	 * @param <V> the graph vertex type
-	 * @param <E> the graph edge type
 	 */
-	interface KkGraph<V, E> extends Serializable {
+	interface KkGraph<V> extends Serializable {
 		/**
 		 * Get the subgraphs of the kk-graph.
 		 * @return the subgraphs
@@ -51,7 +49,7 @@ public interface KkGraphAlgorithm<V, E> {
 	 * @param <V> the graph vertex type
 	 * @param <E> the graph edge type
 	 */
-	class KkGraphImpl<V, E> implements KkGraph<V, E> {
+	class KkGraphImpl<V, E> implements KkGraph<V> {
 
 		private final int numberOfSubgraphs;
 		private final Map<V, Integer> kkGraph;
@@ -73,7 +71,7 @@ public interface KkGraphAlgorithm<V, E> {
 			kkGraph.forEach((v, kkgraph) -> {
 				Set<V> g = groups.get(kkgraph);
 				if (g == null) {
-					g = new HashSet<>();
+					g = new TreeSet<>();
 					groups.put(kkgraph, g);
 				}
 				g.add(v);
