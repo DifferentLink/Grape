@@ -27,6 +27,13 @@ public class RandomConnectedGraphGeneratorTest {
 		GraphGenerator gen = new RandomConnectedGraphGenerator(5, 10, 100, 120);
 	}
 
+	@Test (expected = IllegalArgumentException.class)
+	public void numberVertiecesToSmallTest() {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(3, 4, 30, 400);
+		PropertyGraph graph = new PropertyGraph<>();
+		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+	}
+
 	@Test
 	public void zeroTest() {
 		GraphGenerator gen = new RandomConnectedGraphGenerator(0, 0, 0, 0);
