@@ -1,5 +1,9 @@
 package edu.kit.ipd.dbis.gui.filter;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
 import javax.swing.BoxLayout;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -14,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class FilterSuggestions extends JPopupMenu {
 
@@ -39,17 +44,24 @@ public class FilterSuggestions extends JPopupMenu {
 	}
 
 	public void showSuggestionsFor(String input) {
-		List<String> availableFilterExpressions = new LinkedList<>(); // todo get available filter expressions & relations
+		Set<Property> properties = PropertyFactory.createAllProperties(new PropertyGraph());
+		List<String> availableFilterExpressions = new LinkedList<>();
+		properties.forEach(property -> availableFilterExpressions.add(property.getClass().getSimpleName()));
 		this.removeAll();
 		revalidate();
 		String[] parts = input.split(" ");
 		String lastKeyword = parts[parts.length - 1];
-
-		for (String string : availableFilterExpressions) { // todo check if input is empty to suggest everything
-			if (string.contains(lastKeyword)) {
-				JMenuItem menuItem = new JMenuItem(string);
-				menuItem.addActionListener(new ApplySuggestionAction());
-				this.add(menuItem);
+		if (!lastKeyword.equals("")) {
+			for (String string : availableFilterExpressions) {
+				if (string.contains(lastKeyword)) {
+					JMenuItem menuItem = new JMenuItem(string);
+					menuItem.addActionListener(new ApplySuggestionAction());
+					this.add(menuItem);
+				}
+			}
+		} else {
+			for (String string : availableFilterExpressions) {
+				this.add(string);
 			}
 		}
 	}
