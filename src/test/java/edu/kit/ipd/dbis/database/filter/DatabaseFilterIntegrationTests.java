@@ -14,14 +14,18 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.List;
 
 public class DatabaseFilterIntegrationTests {
 
+	/*
 	@Ignore
 	@Before
 	public void delete() throws Exception {
-		String url = "jdbc:mysql://localhost:3306/library";
+		String url = "jdbc:mysql://127.0.0.1/library";
 		String username = "user";
 		String password = "password";
 		GraphTable graphs = new GraphTable(url, username, password, "grape2");
@@ -30,14 +34,18 @@ public class DatabaseFilterIntegrationTests {
 		FileManager files = new FileManager();
 		files.deleteGraphDatabase(database);
 
-	}
+	}*/
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void addConnectedFilterToDatabase() throws Exception, InvalidInputException {
-		String url = "jdbc:mysql://localhost:3306/library";
-		String username = "user";
-		String password = "password";
+		Connection conn = DriverManager.getConnection
+				("jdbc:mysql://127.0.0.1/?user=travis&password=");
+		Statement s = conn.createStatement();
+		int Result = s.executeUpdate("CREATE DATABASE library");
+		String url = "jdbc:mysql://127.0.0.1/library";
+		String username = "travis";
+		String password = "";
 		Filtermanagement manager = new Filtermanagement();
 		GraphTable graphs = new GraphTable(url, username, password, "grape2");
 		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
@@ -45,13 +53,13 @@ public class DatabaseFilterIntegrationTests {
 		manager.setDatabase(database);
 		manager.updateFilter("AverageDegree + 27 = AverageDegree / 66", 1);
 		assertEquals(true,
-				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 66"));
+				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 6"));
 	}
 
 	@Ignore
 	@Test (expected = NullPointerException.class)
 	public void removeFilterfromDatabase() throws Exception, InvalidInputException {
-		String url = "jdbc:mysql://localhost:3306/library";
+		String url = "jdbc:mysql://127.0.0.1/library";
 		String username = "user";
 		String password = "password";
 		Filtermanagement manager = new Filtermanagement();
