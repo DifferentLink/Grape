@@ -13,7 +13,7 @@ public class FiltermanagementTest {
     private static Filtermanagement manager;
     private static GraphDatabase database;
 
-    //@Ignore
+    @Ignore
     @Before
     public void delete() throws Exception {
         String url = "jdbc:mysql://localhost:3306/library";
@@ -34,6 +34,7 @@ public class FiltermanagementTest {
 
     }
 
+    @Ignore
     @Test
     public void testSetDatabase() throws InvalidInputException, ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         manager.updateFilter("Averagedegree = 10", 1);
