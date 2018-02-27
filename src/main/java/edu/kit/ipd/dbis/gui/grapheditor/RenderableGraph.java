@@ -21,7 +21,7 @@ public class RenderableGraph {
 	private Set<Vertex> vertices;
 	private Set<Edge> edges;
 	private int id;
-	private Set<Set<Vertex>> subgraphs;
+	private List<Set<Vertex>> subgraphs;
 
 	/**
 	 * Creates an empty graph
@@ -30,7 +30,7 @@ public class RenderableGraph {
 	public RenderableGraph() {
 		vertices = new HashSet<>();
 		edges = new HashSet<>();
-		subgraphs = new HashSet<>();
+		subgraphs = new ArrayList<>();
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class RenderableGraph {
 	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id) {
 		this.vertices = vertices;
 		this.edges = edges;
-		this.subgraphs = new HashSet<>();
+		this.subgraphs = new ArrayList<>();
 		this.id = id;
 	}
 
@@ -55,7 +55,7 @@ public class RenderableGraph {
 	 * @param id the graph's ID
 	 * @param subgraphs the graph's subgraphs
 	 */
-	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id, Set<Set<Vertex>> subgraphs) {
+	public RenderableGraph(Set<Vertex> vertices, Set<Edge> edges, int id, List<Set<Vertex>> subgraphs) {
 		this.vertices = vertices;
 		this.edges = edges;
 		this.id = id;
@@ -70,7 +70,7 @@ public class RenderableGraph {
 	public RenderableGraph(PropertyGraph<Integer, Integer> propertyGraph, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
-		this.subgraphs = new HashSet<>();
+		this.subgraphs = new ArrayList<>();
 		this.id = propertyGraph.getId();
 		Map<Object, Vertex> objectVertexMap = new HashMap<>();
 		Set<Object> addedEdges = new HashSet<>();
@@ -160,7 +160,7 @@ public class RenderableGraph {
 	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, VertexColoringAlgorithm.Coloring<V> coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
-		this.subgraphs = new HashSet<>();
+		this.subgraphs = new ArrayList<>();
 		this.id = propertyGraph.getId();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
@@ -240,7 +240,13 @@ public class RenderableGraph {
 			Set<Vertex> g = groups.computeIfAbsent(subgraph, k -> new HashSet<>());
 			g.add(v);
 		});
-		this.subgraphs = new HashSet<>(groups.values());
+		List<Set<Vertex>> classes = new ArrayList<>(kkGraph.getNumberOfSubgraphs());
+		for (Set<Vertex> c : groups.values()) {
+			classes.add(c);
+		}
+		this.subgraphs = classes;
+
+		this.subgraphs = new ArrayList<>(groups.values());
 	}
 
 	/**
@@ -254,7 +260,7 @@ public class RenderableGraph {
 	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
-		this.subgraphs = new HashSet<>();
+		this.subgraphs = new ArrayList<>();
 		this.id = propertyGraph.getId();
 
 		Color[] colorArray = GraphLook.spreadColors(coloring.getNumberColors());
@@ -515,14 +521,14 @@ public class RenderableGraph {
 	/**
 	 * @return the graph's subgraphs
 	 */
-	public Set<Set<Vertex>> getSubgraphs() {
+	public List<Set<Vertex>> getSubgraphs() {
 		return subgraphs;
 	}
 
 	/**
 	 * @param subgraphs the graph's new subgraphs
 	 */
-	public void setSubgraphs(Set<Set<Vertex>> subgraphs) {
+	public void setSubgraphs(List<Set<Vertex>> subgraphs) {
 		this.subgraphs = subgraphs;
 	}
 
@@ -632,7 +638,7 @@ public class RenderableGraph {
 	public RenderableGraph deepCopy() {
 		Set<Vertex> newVertices = (this.vertices == null) ? new HashSet<>() : new HashSet<>(vertices);
 		Set<Edge> newEdges = (this.edges == null) ? new HashSet<>() : new HashSet<>(edges);
-		Set<Set<Vertex>> newSubgraphs = (this.subgraphs == null) ? new HashSet<>() : new HashSet<>(subgraphs);
+		List<Set<Vertex>> newSubgraphs = (this.subgraphs == null) ? new ArrayList<>() : new ArrayList<>(subgraphs);
 		return new RenderableGraph(newVertices, newEdges, id, newSubgraphs);
 	}
 }
