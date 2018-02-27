@@ -36,7 +36,6 @@ public class BulkRandomConnectedGraphGeneratorTest {
 		try {
 			bulkGen.generateBulk(target, 2000, 5, 5, 1, 1000);
 		} catch (IllegalArgumentException | NotEnoughGraphsException e) {
-			System.out.println(target.size());
 			Assert.assertTrue(target.size() == 21);
 		}
 	}
@@ -46,7 +45,7 @@ public class BulkRandomConnectedGraphGeneratorTest {
 		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator<>();
 		HashSet<PropertyGraph> target = new HashSet<>();
 		try {
-			bulkGen.generateBulk(target, 5000, 5, 5, 0, 1000);
+			bulkGen.generateBulk(target, 5000, 4, 4, 0, 1000);
 		} catch (IllegalArgumentException | NotEnoughGraphsException e) {
 			LinkedList<BfsCodeAlgorithm.BfsCode> allCodes = new LinkedList<>();
 
@@ -63,15 +62,7 @@ public class BulkRandomConnectedGraphGeneratorTest {
 				}
 				allCodes.add(index, code);
 			}
-			for (BfsCodeAlgorithm.BfsCode code : allCodes) {
-				int[] c = code.getCode();
-				for (int i = 0; i < c.length; i++) {
-					System.out.print(c[i]);
-				}
-				System.out.println();
-			}
-			System.out.println(target.size());
-			//Assert.assertTrue(target.size() == 6);
+			Assert.assertTrue(target.size() == 6);
 		}
 	}
 

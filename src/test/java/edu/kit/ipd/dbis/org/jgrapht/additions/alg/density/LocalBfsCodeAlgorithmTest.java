@@ -56,9 +56,6 @@ public class LocalBfsCodeAlgorithmTest {
 			Set<Object> clique = it.next();
 			result.add(clique);
 		}
-		for (Set<Object> set : result) {
-			System.out.println(set);
-		}
 	}
 
 }

@@ -21,9 +21,6 @@ public class BinomialDensityAlgorithmTest {
 		graph.addEdge("c", "e");
 		BinomialDensityAlgorithm alg = new BinomialDensityAlgorithm(graph);
 		double value = 6.0 / 10.0;
-
-		System.out.println(alg.getDensity());
-		System.out.println(value);
 		Assert.assertTrue(alg.getDensity() - 0.01 < value && alg.getDensity() + 0.1 > value);
 	}
 }

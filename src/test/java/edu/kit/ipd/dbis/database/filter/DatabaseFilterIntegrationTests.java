@@ -51,7 +51,7 @@ public class DatabaseFilterIntegrationTests {
 		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
 		GraphDatabase database = new GraphDatabase(graphs, filter);
 		manager.setDatabase(database);
-		manager.addFilter("AverageDegree + 27 = AverageDegree / 66", 1);
+		manager.updateFilter("AverageDegree + 27 = AverageDegree / 66", 1);
 		assertEquals(true,
 				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 6"));
 	}
@@ -68,7 +68,7 @@ public class DatabaseFilterIntegrationTests {
 		GraphDatabase database = new GraphDatabase(graphs, filter);
 		manager.setDatabase(database);
 
-		manager.addFilter("AverageDegree = 10", 2);
+		manager.updateFilter("AverageDegree = 10", 2);
 		assertEquals(database.getFilterById(2).getName().equals("AverageDegree = 10"), true);
 		manager.removeFiltersegment(2);
 		database.getFilterById(2).getName();
@@ -87,8 +87,8 @@ public class DatabaseFilterIntegrationTests {
 		GraphDatabase database = new GraphDatabase(graphs, filter);
 		manager.setDatabase(database);
 
-		Filtergroup filtergroup = new Filtergroup("Beispielgruppe", true, 3);
-		manager.addFilterGroup(filtergroup);
+		manager.updateFiltergroup("Beispielgruppe", 3);
+		manager.activate(3);
 		assertEquals(database.getFilterById(3).getName().equals("Beispielgruppe"), true);
 
 		manager.removeFiltersegment(3);
@@ -108,11 +108,11 @@ public class DatabaseFilterIntegrationTests {
 		GraphDatabase database = new GraphDatabase(graphs, filter);
 		manager.setDatabase(database);
 
-		Filtergroup filtergroup = new Filtergroup("NeueGruppe", true, 5);
-		manager.addFilterGroup(filtergroup);
+		manager.updateFiltergroup("NeueGruppe", 5);
+		manager.activate(5);
 		assertEquals(database.getFilterById(5).getName().equals("NeueGruppe"), true);
 
-		manager.addFilterToGroup("NumberOfEdges = 60", 60, 5);
+		manager.updateFilter("NumberOfEdges = 60", 60, 5);
 		assertEquals(database.getFilterById(5) instanceof Filtergroup, true);
 
 		if (database.getFilterById(5) instanceof Filtergroup) {
@@ -152,11 +152,11 @@ public class DatabaseFilterIntegrationTests {
 		GraphDatabase database = new GraphDatabase(graphs, filter);
 		manager.setDatabase(database);
 
-		Filtergroup filtergroup = new Filtergroup("DiesIstEineGruppe", true, 6);
-		manager.addFilterGroup(filtergroup);
+		manager.updateFiltergroup("DiesIstEineGruppe", 6);
+		manager.activate(6);
 		assertEquals(database.getFilterById(6).getName().equals("DiesIstEineGruppe"),true);
 
-		manager.addFilterToGroup("TotalColoringNumberOfColors = 0", 31, 6);
+		manager.updateFilter("TotalColoringNumberOfColors = 0", 31, 6);
 		assertEquals((database.getFilterById(6) instanceof Filtergroup), true);
 
 		if (database.getFilterById(6) instanceof Filtergroup) {

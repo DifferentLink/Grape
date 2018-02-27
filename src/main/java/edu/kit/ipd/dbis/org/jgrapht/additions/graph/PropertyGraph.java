@@ -105,8 +105,13 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 		if (!(o instanceof PropertyGraph)) {
 			return false;
 		}
-		VF2GraphIsomorphismInspector<V, E> iI = new VF2GraphIsomorphismInspector<>(((PropertyGraph<V, E>) o), this);
+		VF2GraphIsomorphismInspector<V, E> iI = new VF2GraphIsomorphismInspector<V, E>(((PropertyGraph<V, E>) o), this);
 		return iI.isomorphismExists();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), id, properties);
 	}
 
 	/**
@@ -116,7 +121,7 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 */
 	public int[][] getAdjacencyMatrix() {
 		int[][] matrix;
-		List<V> sortedVertices = new ArrayList<>(new TreeSet<>(this.vertexSet()));
+		List<V> sortedVertices = new ArrayList<>(new TreeSet<V>(this.vertexSet()));
 		matrix = new int[sortedVertices.size()][sortedVertices.size()];
 		for (int i = 0; i < sortedVertices.size(); i++) {
 			V v = sortedVertices.get(i);

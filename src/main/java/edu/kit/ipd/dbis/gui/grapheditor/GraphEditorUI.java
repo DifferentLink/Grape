@@ -459,8 +459,9 @@ public class GraphEditorUI extends JPanel {
 	}
 
 	private void arrangeGraph() {
-		GraphLook.arrangeInGrid(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
+		GraphLook.arrangeInCircle(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
 				new Point(0, 0), new Point(graphEditor.getWidth(), graphEditor.getHeight()));
 		repaint();
+
 	}
 }
