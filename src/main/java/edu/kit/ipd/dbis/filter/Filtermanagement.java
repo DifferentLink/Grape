@@ -443,11 +443,9 @@ public class Filtermanagement {
         LinkedList<Filtersegment> activatedFilter = database.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
-                if (element.getClass() == Filtergroup.class) {
-                    availableFilterGroups.add((Filtergroup) element);
-                } else {
-                    availableFilter.add((Filter) element);
-                }
+                availableFilterGroups.add((Filtergroup) element);
+            } else {
+                availableFilter.add((Filter) element);
             }
         }
     }

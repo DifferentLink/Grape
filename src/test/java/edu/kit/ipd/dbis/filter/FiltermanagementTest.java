@@ -11,8 +11,9 @@ import org.junit.*;
 public class FiltermanagementTest {
 
     private static Filtermanagement manager;
+    private static GraphDatabase database;
 
-    @Ignore
+    //@Ignore
     @Before
     public void delete() throws Exception {
         String url = "jdbc:mysql://localhost:3306/library";
@@ -28,7 +29,22 @@ public class FiltermanagementTest {
         graphs = new GraphTable(url, username, password, "grape2");
         filter = new FilterTable(url, username, password, "grape2filters");
         database = new GraphDatabase(graphs, filter);
+        this.database = database;
         manager.setDatabase(database);
+
+    }
+
+    @Test
+    public void testSetDatabase() throws InvalidInputException, ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
+        manager.updateFilter("Averagedegree = 10", 1);
+        manager.updateFiltergroup("asf", 2);
+        manager.updateFilter("greatestDegree < 5", 3, 2);
+        manager.availableFilter.clear();
+        manager.availableFilterGroups.clear();
+        manager.setDatabase(database);
+        System.out.println(manager.availableFilter.get(0));
+        System.out.println(manager.availableFilterGroups.get(0));
+        System.out.println(manager.availableFilterGroups.get(0).getAvailableFilter().get(0));
 
     }
 
