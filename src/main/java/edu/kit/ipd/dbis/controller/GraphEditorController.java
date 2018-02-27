@@ -114,7 +114,6 @@ public final class GraphEditorController {
 				newGraph.calculateProperties();
 				database.addGraph(newGraph);
 				statusbar.addEvent(ADD, newGraph.getId());
-				database.deleteGraph(oldID);
 				statusbar.addEvent(REMOVE, oldID);
 				this.grapeUI.updateTable();
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
