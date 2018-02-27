@@ -8,6 +8,9 @@ import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import org.junit.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 public class FiltermanagementTest {
 
     private static Filtermanagement manager;
@@ -15,21 +18,18 @@ public class FiltermanagementTest {
 
     @Ignore
     @Before
-    public void delete() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/library";
-        String username = "user";
-        String password = "password";
-        GraphTable graphs = new GraphTable(url, username, password, "grape2");
-        FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-        GraphDatabase database = new GraphDatabase(graphs, filter);
-        FileManager files = new FileManager();
-        files.deleteGraphDatabase(database);
+    public void setUp() throws Exception {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+        connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+        String url = "jdbc:mysql://127.0.0.1/library";
+        String user = "travis";
+        String password = "";
+        String name = "grape";
+
+        FileManager fileManager = new FileManager();
+        database = fileManager.createGraphDatabase(url, user, password, name);
 
         manager = new Filtermanagement();
-        graphs = new GraphTable(url, username, password, "grape2");
-        filter = new FilterTable(url, username, password, "grape2filters");
-        database = new GraphDatabase(graphs, filter);
-        this.database = database;
         manager.setDatabase(database);
 
     }
