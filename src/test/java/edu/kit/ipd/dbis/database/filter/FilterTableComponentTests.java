@@ -39,23 +39,6 @@ public class FilterTableComponentTests {
 
 	}
 
-	@Test
-	public void switchStateTest() throws UnexpectedObjectException, IOException, SQLException, ClassNotFoundException {
-		String input = "averagedegree = 10";
-		boolean isActivated = false;
-		double value = 10;
-		Relation relation = Relation.EQUAL;
-		String property = "averagedegree = 10";
-		int id = 1;
-		BasicFilter filter = new BasicFilter(input, isActivated, value, relation, property, id);
-
-		database.getFilterTable().insert(filter);
-		database.getFilterTable().switchState(1);
-		assertEquals(database.getFilterTable().getContent(1).getIsActivated(), true);
-		database.getFilterTable().delete(1);
-
-	}
-
 	@Test (expected = NullPointerException.class)
 	public void deleteTest() throws IOException, SQLException, UnexpectedObjectException, ClassNotFoundException {
 		String input = "greatestdegree = 55";
@@ -125,7 +108,7 @@ public class FilterTableComponentTests {
 		BasicFilter filter = new BasicFilter(input, isActivated, value, relation, property, id);
 
 		database.getFilterTable().insert(filter);
-		assertEquals(database.getFilterTable().getContent(1), "largestcliquesize = 0");
+		assertEquals(database.getFilterTable().getContent(1).getName(), "largestcliquesize = 0");
 		database.getFilterTable().delete(1);
 
 	}
