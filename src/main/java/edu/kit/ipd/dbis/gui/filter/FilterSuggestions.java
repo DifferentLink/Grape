@@ -1,8 +1,11 @@
 package edu.kit.ipd.dbis.gui.filter;
 
-import edu.kit.ipd.dbis.gui.listener.HasFocusListener;
-
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -42,7 +45,7 @@ public class FilterSuggestions extends JPopupMenu {
 		String[] parts = input.split(" ");
 		String lastKeyword = parts[parts.length - 1];
 
-		for (String string : availableFilterExpressions) {
+		for (String string : availableFilterExpressions) { // todo check if input is empty to suggest everything
 			if (string.contains(lastKeyword)) {
 				JMenuItem menuItem = new JMenuItem(string);
 				menuItem.addActionListener(new ApplySuggestionAction());
