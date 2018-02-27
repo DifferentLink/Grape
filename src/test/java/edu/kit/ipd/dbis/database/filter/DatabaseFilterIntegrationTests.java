@@ -3,7 +3,6 @@ package edu.kit.ipd.dbis.database.filter;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
 import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
-import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filter;
 import edu.kit.ipd.dbis.filter.Filtergroup;
@@ -11,73 +10,55 @@ import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.List;
 
 public class DatabaseFilterIntegrationTests {
 
-	@Ignore
+	private static GraphDatabase database;
+	private static Filtermanagement manager;
+
 	@Before
-	public void delete() throws Exception {
-		String url = "jdbc:mysql://localhost:3306/library";
-		String username = "user";
-		String password = "password";
-		GraphTable graphs = new GraphTable(url, username, password, "grape2");
-		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-		GraphDatabase database = new GraphDatabase(graphs, filter);
-		FileManager files = new FileManager();
-		files.deleteGraphDatabase(database);
+	public void setUp() throws Exception {
+		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+		String url = "jdbc:mysql://127.0.0.1/library";
+		String user = "travis";
+		String password = "";
+		String name = "grape";
+
+		FileManager fileManager = new FileManager();
+		database = fileManager.createGraphDatabase(url, user, password, name);
+		manager = new Filtermanagement();
+		manager.setDatabase(database);
 
 	}
 
-	@Ignore
 	@Test
 	public void addConnectedFilterToDatabase() throws Exception, InvalidInputException {
-		String url = "jdbc:mysql://localhost:3306/library";
-		String username = "user";
-		String password = "password";
-		Filtermanagement manager = new Filtermanagement();
-		GraphTable graphs = new GraphTable(url, username, password, "grape2");
-		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-		GraphDatabase database = new GraphDatabase(graphs, filter);
-		manager.setDatabase(database);
+
 		manager.updateFilter("AverageDegree + 27 = AverageDegree / 66", 1);
 		assertEquals(true,
 				database.getFilterById(1).getName().equals("AverageDegree + 27 = AverageDegree / 66"));
+
 	}
 
-	@Ignore
 	@Test (expected = NullPointerException.class)
 	public void removeFilterfromDatabase() throws Exception, InvalidInputException {
-		String url = "jdbc:mysql://localhost:3306/library";
-		String username = "user";
-		String password = "password";
-		Filtermanagement manager = new Filtermanagement();
-		GraphTable graphs = new GraphTable(url, username, password, "grape2");
-		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-		GraphDatabase database = new GraphDatabase(graphs, filter);
-		manager.setDatabase(database);
 
 		manager.updateFilter("AverageDegree = 10", 2);
 		assertEquals(database.getFilterById(2).getName().equals("AverageDegree = 10"), true);
+
 		manager.removeFiltersegment(2);
 		database.getFilterById(2).getName();
 
 	}
 
-	@Ignore
 	@Test (expected = NullPointerException.class)
-	public void removeFiltergroupfromDatabase() throws Exception, InvalidInputException {
-		String url = "jdbc:mysql://localhost:3306/library";
-		String username = "user";
-		String password = "password";
-		Filtermanagement manager = new Filtermanagement();
-		GraphTable graphs = new GraphTable(url, username, password, "grape2");
-		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-		GraphDatabase database = new GraphDatabase(graphs, filter);
-		manager.setDatabase(database);
+	public void removeFiltergroupfromDatabase() throws Exception {
 
 		manager.updateFiltergroup("Beispielgruppe", 3);
 		manager.activate(3);
@@ -88,17 +69,8 @@ public class DatabaseFilterIntegrationTests {
 
 	}
 
-	@Ignore
 	@Test
 	public void removeFilterFromFiltergroupInDatabase() throws Exception, InvalidInputException {
-		String url = "jdbc:mysql://localhost:3306/library";
-		String username = "user";
-		String password = "password";
-		Filtermanagement manager = new Filtermanagement();
-		GraphTable graphs = new GraphTable(url, username, password, "grape2");
-		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-		GraphDatabase database = new GraphDatabase(graphs, filter);
-		manager.setDatabase(database);
 
 		manager.updateFiltergroup("NeueGruppe", 5);
 		manager.activate(5);
@@ -132,17 +104,11 @@ public class DatabaseFilterIntegrationTests {
 
 	}
 
-	@Ignore
 	@Test
 	public void testSetDatabaseMethod() throws  Exception, InvalidInputException {
 		String url = "jdbc:mysql://localhost:3306/library";
-		String username = "user";
-		String password = "password";
-		Filtermanagement manager = new Filtermanagement();
-		GraphTable graphs = new GraphTable(url, username, password, "grape2");
-		FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-		GraphDatabase database = new GraphDatabase(graphs, filter);
-		manager.setDatabase(database);
+		String username = "travis";
+		String password = "";
 
 		manager.updateFiltergroup("DiesIstEineGruppe", 6);
 		manager.activate(6);
