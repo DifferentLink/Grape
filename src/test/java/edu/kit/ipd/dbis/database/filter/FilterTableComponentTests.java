@@ -2,6 +2,8 @@ package edu.kit.ipd.dbis.database.filter;
 import static org.junit.Assert.assertEquals;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
+import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
@@ -34,7 +36,12 @@ public class FilterTableComponentTests {
 		String password = "";
 		String name = "grape";
 
+		GraphTable graphs = new GraphTable(url, user, password, name);
+		FilterTable filters = new FilterTable(url, user, password, name);
+		GraphDatabase graphDatabase = new GraphDatabase(graphs, filters);
+
 		FileManager fileManager = new FileManager();
+		fileManager.deleteGraphDatabase(graphDatabase);
 		database = fileManager.createGraphDatabase(url, user, password, name);
 
 	}

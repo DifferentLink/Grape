@@ -26,8 +26,13 @@ public class FiltermanagementTest {
         String password = "";
         String name = "grape";
 
-        FileManager fileManager = new FileManager();
-        database = fileManager.createGraphDatabase(url, user, password, name);
+	    GraphTable graphs = new GraphTable(url, user, password, name);
+	    FilterTable filters = new FilterTable(url, user, password, name);
+	    GraphDatabase graphDatabase = new GraphDatabase(graphs, filters);
+
+	    FileManager fileManager = new FileManager();
+	    fileManager.deleteGraphDatabase(graphDatabase);
+	    database = fileManager.createGraphDatabase(url, user, password, name);
 
         manager = new Filtermanagement();
         manager.setDatabase(database);
