@@ -71,7 +71,7 @@ public class GraphLook {
 	 * @param upperLeft the upper left corner of the area which is split into a grid
 	 * @param lowerRight the lower right corner of the area which is split into a grid
 	 */
-	public static void arrangeInGrid(Set<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
+	public static void arrangeInGrid(List<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
 	                                 Point upperLeft, Point lowerRight) {
 
 		int numberGridcells;
@@ -122,7 +122,7 @@ public class GraphLook {
 	 * @param upperLeft the upper left corner of the area
 	 * @param lowerRight the lower right corner of the area
 	 */
-	public static void arrangeInCircle(Set<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
+	public static void arrangeInCircle(List<Set<Vertex>> subgraphs, Set<Vertex> otherVertices,
 									   Point upperLeft, Point lowerRight) {
 
 		final Point center =
@@ -146,7 +146,7 @@ public class GraphLook {
 				i++;
 			}
 			for (Set<Vertex> subgraph : subgraphs) {
-				for (Vertex vertex : subgraph) {
+				for (Vertex vertex : new ArrayList<>(new TreeSet<>(subgraph))) {
 					vertex.setPosition(
 							(int) (radius * Math.cos(i * angle) + center.x),
 							(int) (radius * Math.sin(i * angle) + center.y));
