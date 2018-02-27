@@ -182,4 +182,10 @@ public class UIFilterManager {
 		return filterGroups.stream()
 				.filter(filterGroup -> filterGroup.getText().equals(name)).findFirst().orElse(null);
 	}
+
+	public void clearFilters() {
+		simpleFilter = new ArrayList<>();
+		filterGroups = new ArrayList<>();
+		nextUniqueID = 0;
+	}
 }
