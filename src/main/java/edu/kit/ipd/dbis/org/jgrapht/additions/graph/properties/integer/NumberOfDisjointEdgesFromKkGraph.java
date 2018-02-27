@@ -20,7 +20,7 @@ public class NumberOfDisjointEdgesFromKkGraph extends IntegerProperty {
 	}
 
 	protected Integer calculateAlgorithm(PropertyGraph graph) {
-		Map<Object, Integer> kkGraph = (Map<Object, Integer>) ((KkGraphAlgorithm.KkGraph) graph.getProperty(KkGraph.class).getValue()).getKkGraph();
+		Map<Object, Integer> kkGraph = (Map<Object, Integer>) ((KkGraphAlgorithm.KkGraph) graph.getProperty(KkGraph.class).getValue()).getKkGraphMap();
 		Set<Object> subgraphEdges = new HashSet<>();
 		for (Object v : kkGraph.keySet()) {
 			Set<Object> outgoingEdges = graph.outgoingEdgesOf(v);

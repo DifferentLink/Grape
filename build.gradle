@@ -3,6 +3,7 @@ version '0.0.1-SNAPSHOT'
 
 // Allows to build JAR. Implicitly applies the 'java' plugin
 apply plugin: 'application'
+apply plugin: 'pmd'
 
 // Java version
 sourceCompatibility = 1.8
