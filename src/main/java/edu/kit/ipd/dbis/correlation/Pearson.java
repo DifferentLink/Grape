@@ -110,7 +110,12 @@ public class Pearson extends Correlation {
         return coefficient;
     }
 
-    private static double createRandomMedium(LinkedList<Double> inputList) {
+    /**
+     * method which calculates the random medium
+     * @param inputList list of double values
+     * @return returns the random medium of all values of the input list
+     */
+    static double createRandomMedium(LinkedList<Double> inputList) {
         double sum = 0;
         for (double currentValue: inputList) {
             sum = (sum + currentValue);
@@ -118,7 +123,16 @@ public class Pearson extends Correlation {
         return (sum / inputList.size());
     }
 
-    private static double getSampleVariationskoeffizient(LinkedList<Double> inputList, double randomMedium) {
+    /**
+     * method which calculates the sample variation coefficient
+     * @param inputList list of double values
+     * @param randomMedium random medium to compare with
+     * @return returns the calculated variation coefficient
+     */
+    static double getSampleVariationskoeffizient(LinkedList<Double> inputList, double randomMedium) {
+        if (inputList.size() == 1) {
+            return 0;
+        }
         double sum = 0;
         for (double currentValue: inputList) {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));
