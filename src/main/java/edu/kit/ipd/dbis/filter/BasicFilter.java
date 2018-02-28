@@ -3,7 +3,7 @@ package edu.kit.ipd.dbis.filter;
 /**
  * class which checks a specific attribute of a graph
  */
-class BasicFilter extends Filter {
+public class BasicFilter extends Filter {
 
     /**
      * Constructor of class BasicFilter
@@ -16,7 +16,7 @@ class BasicFilter extends Filter {
      * @param property1 property the current filter inspects
      * @param id unique identifier the current filter has
      */
-    BasicFilter(String name, boolean isActivated, double value1,
+    public BasicFilter(String name, boolean isActivated, double value1,
                 Relation relation, String property1, int id) {
         this.name = name;
         this.property1 = property1;
