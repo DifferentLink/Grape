@@ -9,12 +9,10 @@ import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * class which communicates with other packages of Grape
@@ -412,7 +410,13 @@ public class Filtermanagement {
 
     private static String testProperty(String input) throws InvalidInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> propertySet = PropertyFactory.createAllProperties(graph);
+        Set<Property> fullPropertySet = PropertyFactory.createAllProperties(graph);
+        Set<Property> propertySet = new HashSet<>();
+        for (Property current: fullPropertySet) {
+            if (!current.getClass().getSuperclass().equals(ComplexProperty.class)) {
+                propertySet.add(current);
+            }
+        }
         String[] propertyStrings = new String[propertySet.size()];
         int i = 0;
         for (Property currentProperty: propertySet) {
