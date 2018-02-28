@@ -6,10 +6,13 @@ import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
 import org.junit.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.List;
 
 public class FiltermanagementTest {
 
@@ -470,5 +473,39 @@ public class FiltermanagementTest {
             inputExceptionCounter++;
         }
         assert inputExceptionCounter == 7;
+    }
+
+    @Ignore
+    @Test
+    public void testGetAvailableFilterGroups() throws InvalidInputException, ConnectionFailedException,
+            InsertionFailedException, UnexpectedObjectException {
+        manager.updateFilter("VertexColoringNumberOfColors < 45.8", 1);
+        manager.updateFilter("LargestCliqueSize > 22.1", 2);
+        manager.updateFiltergroup("This is the first sample group", 3);
+        manager.updateFiltergroup("This is the second sample group", 4);
+        List<Filter> filterOutputList = manager.getAvailableFilter();
+        assert filterOutputList.get(0).getName().equals("VertexColoringNumberOfColors < 45.8");
+        assert filterOutputList.get(1).getName().equals("LargestCliqueSize > 22.1");
+        List<Filtergroup> filtergroupsOutputList = manager.getAvailableFilterGroups();
+        assert filtergroupsOutputList.get(0).getName().equals("This is the first sample group");
+        assert filtergroupsOutputList.get(1).getName().equals("This is the second sample group");
+    }
+
+    @Ignore
+    @Test
+    public void testGetFilteredAndAscendingSortedGraphs() throws ConnectionFailedException {
+        manager.getFilteredAndAscendingSortedGraphs(new AverageDegree(new PropertyGraph<Integer, Integer>()));
+    }
+
+    @Ignore
+    @Test
+    public void testGetFilteredAndDescendingSortedGraphs() throws ConnectionFailedException {
+        manager.getFilteredAndDescendingSortedGraphs(new AverageDegree(new PropertyGraph<Integer, Integer>()));
+    }
+
+    @Ignore
+    @Test
+    public void testGetFilteredAndSortedGraphs() throws ConnectionFailedException {
+        manager.getFilteredAndSortedGraphs();
     }
 }
