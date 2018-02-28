@@ -1,5 +1,10 @@
 package edu.kit.ipd.dbis.correlation;
 
+import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
+import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
+import edu.kit.ipd.dbis.database.file.FileManager;
+import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.*;
@@ -9,6 +14,19 @@ import java.util.LinkedList;
 import java.util.Set;
 
 public class PearsonCorrelationTest {
+
+    private static GraphDatabase database;
+
+    private static void delete() throws Exception {
+        String url = "jdbc:mysql://localhost:3306/library";
+        String username = "user";
+        String password = "password";
+        GraphTable graphs = new GraphTable(url, username, password, "grape2");
+        FilterTable filter = new FilterTable(url, username, password, "grape2filters");
+        database = new GraphDatabase(graphs, filter);
+        FileManager files = new FileManager();
+        files.deleteGraphDatabase(database);
+    }
 
     @Test
     public void testGetSampleVariationskoeffizient() {
@@ -41,11 +59,14 @@ public class PearsonCorrelationTest {
     }
 
     @Test
-    public void testCalculateCorrelation() {
+    public void testCalculateCorrelation() throws Exception {
         PropertyGraph<Integer, Integer> testGraph1 = new PropertyGraph<>();
         Set<PropertyGraph> mySet = new HashSet<>();
         BulkRandomConnectedGraphGenerator<Integer, Integer> myGenerator = new BulkRandomConnectedGraphGenerator<>();
         myGenerator.generateBulk(mySet, 2,4,4,5,6);
-
+        PearsonCorrelationTest.delete();
+        for (PropertyGraph<Integer, Integer> current: mySet) {
+            database.addGraph(current);
+        }
     }
 }
