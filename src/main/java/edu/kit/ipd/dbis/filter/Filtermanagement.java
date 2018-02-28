@@ -34,23 +34,31 @@ public class Filtermanagement {
         availableFilter = new ArrayList<>();
     }
 
-	/**
-	 * getter-method for database
-	 * @return database
-	 */
-	public GraphDatabase getDatabase() {
-		return database;
-	}
+    /**
+     * getter-method for database
+     * @return current database of the filtermanager
+     */
+    public GraphDatabase getDatabase() {
+        return database;
+    }
 
-	public List<Filtergroup> getAvailableFilterGroups() {
+    /**
+     * getter-method for filter groups
+     * @return returns all filtergroups the current filtermanager inherits
+     */
+    public List<Filtergroup> getAvailableFilterGroups() {
         return availableFilterGroups;
     }
 
+    /**
+     * getter-method for filter
+     * @return returns all filter the current filtermanager inherits
+     */
     public List<Filter> getAvailableFilter() {
         return availableFilter;
     }
 
-	public void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
+    private void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
 
             UnexpectedObjectException, InsertionFailedException {
         database.addFilter(filtergroup);
