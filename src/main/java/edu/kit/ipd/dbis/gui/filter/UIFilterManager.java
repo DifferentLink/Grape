@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -165,20 +166,23 @@ public class UIFilterManager {
 		Pattern pattern = Pattern.compile("(\\[(.)*;(.)+\\]:)+");
 		Matcher matcher = pattern.matcher(filter);
 		if (matcher.find()) {
+			List<String> groupNames = new LinkedList<>();
 			String[] groups = matcher.group().split(":");
 			for (int i = 0; i < groups.length; i++) {
 				String[] filterInfo = groups[i].split(";");
 				String group = filterInfo[0].substring(1);
 				String content = filterInfo[1].substring(0, filterInfo[1].length() - 1);
-
-				FilterGroup targetFilterGroup = getFilterGroupByName(group);
-				if (targetFilterGroup != null) {
-					SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), content);
-					addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
-				} else if (!group.equals("")){
-					addNewFilterGroup(group);
+				if (group.equals("")) {
+					SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
+					this.simpleFilter.add(simpleFilter);
+				} else {
+					groupNames.add(group);
+					SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
+					this.simpleFilter.add(simpleFilter);
 				}
 			}
+			//TODO: Groups
+
 		}
 	}
 
