@@ -17,15 +17,27 @@ public class PearsonCorrelationTest {
 
     private static GraphDatabase database;
 
-    private static void delete() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/library";
-        String username = "user";
-        String password = "password";
-        GraphTable graphs = new GraphTable(url, username, password, "grape2");
-        FilterTable filter = new FilterTable(url, username, password, "grape2filters");
-        database = new GraphDatabase(graphs, filter);
-        FileManager files = new FileManager();
-        files.deleteGraphDatabase(database);
+    @Before
+    public void delete() throws Exception {
+
+    	/*Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+		String url = "jdbc:mysql://127.0.0.1/library";
+		String user = "travis";
+		String password = "";
+		String name = "grape";
+		FileManager fileManager = new FileManager();
+		database = fileManager.createGraphDatabase(url, user, password, name);*/
+
+	    String url = "jdbc:mysql://127.0.0.1/library";
+	    String user = "user";
+	    String password = "password";
+	    String name = "grape2";
+	    GraphDatabase gdb = new GraphDatabase(new GraphTable(url, user, password, name),
+			    new FilterTable(url, user, password, "grape2filters"));
+	    FileManager fileManager = new FileManager();
+	    fileManager.deleteGraphDatabase(gdb);
+	    database = fileManager.createGraphDatabase(url, user, password, name);
     }
 
     @Test
@@ -64,7 +76,6 @@ public class PearsonCorrelationTest {
         Set<PropertyGraph> mySet = new HashSet<>();
         BulkRandomConnectedGraphGenerator<Integer, Integer> myGenerator = new BulkRandomConnectedGraphGenerator<>();
         myGenerator.generateBulk(mySet, 2,4,4,5,6);
-        PearsonCorrelationTest.delete();
         for (PropertyGraph<Integer, Integer> current: mySet) {
             database.addGraph(current);
         }
