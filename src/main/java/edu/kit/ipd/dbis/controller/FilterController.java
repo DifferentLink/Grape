@@ -57,10 +57,20 @@ public class FilterController {
 		this.grapeUI = grapeUI;
 	}
 
+	/**
+	 * Sets filter ui.
+	 *
+	 * @param filterUI the filter ui
+	 */
 	public void setFilterUI(FilterUI filterUI) {
 		this.filterUI = filterUI;
 	}
 
+	/**
+	 * Sets filter manager.
+	 *
+	 * @param uiFilterManager the filter manager
+	 */
 	public void setUIFilterManager(UIFilterManager uiFilterManager) {
 		this.uiFilterManager = uiFilterManager;
 	}
@@ -170,6 +180,9 @@ public class FilterController {
 		}
 	}
 
+	/**
+	 * Displays every filter that the current database contains.
+	 */
 	public void updateFilters() {
 		this.uiFilterManager.clearFilters();
 		List<Filter> filterList = filter.getAvailableFilter();

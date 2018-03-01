@@ -25,6 +25,11 @@ public class UIFilterManager {
 	private List<FilterGroup> filterGroups = new ArrayList<>();
 	private int nextUniqueID = 0;
 
+	/**
+	 * setter method
+	 *
+	 * @param id the new id
+	 */
 	public void setNextUniqueID(int id) {
 		this.nextUniqueID = id;
 	}
@@ -62,6 +67,10 @@ public class UIFilterManager {
 		filterGroup.add(new SimpleFilter(getUniqueID()));
 	}
 
+	/**
+	 * Adds a new FilterGroup to the known Filters.
+	 * @param filterGroup the FilterGroup
+	 */
 	public void addNewFilterGroup(FilterGroup filterGroup) {
 		filterGroups.add(filterGroup);
 	}
