@@ -127,9 +127,7 @@ public class UIFilterManager {
 
 		for (FilterGroup filterGroup : filterGroups) {
 			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
-				if (simpleFilter.isActive()) {
-					output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]:");
-				}
+				output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]:");
 			}
 		}
 
@@ -179,8 +177,8 @@ public class UIFilterManager {
 					filterGroup.add(new SimpleFilter(this.getUniqueID(), content));
 					filterGroups.put(group, filterGroup);
 
-					//SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
-					//this.simpleFilter.add(simpleFilter);
+					SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
+					this.simpleFilter.add(simpleFilter);
 				} else {
 					filterGroups.get(group).add(new SimpleFilter(this.getUniqueID(), content));
 				}
