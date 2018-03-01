@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -166,8 +164,9 @@ public class UIFilterManager {
 		Pattern pattern = Pattern.compile("(\\[(.)*;(.)+\\]:)+");
 		Matcher matcher = pattern.matcher(filter);
 		if (matcher.find()) {
-			List<String> groupNames = new LinkedList<>();
+			Map<String, FilterGroup> filterGroups = new HashMap<>();
 			String[] groups = matcher.group().split(":");
+
 			for (int i = 0; i < groups.length; i++) {
 				String[] filterInfo = groups[i].split(";");
 				String group = filterInfo[0].substring(1);
@@ -175,12 +174,25 @@ public class UIFilterManager {
 				if (group.equals("")) {
 					SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
 					this.simpleFilter.add(simpleFilter);
+				} else if (!filterGroups.containsKey(group)) {
+					FilterGroup filterGroup = new FilterGroup(getUniqueID(), group);
+					filterGroup.add(new SimpleFilter(this.getUniqueID(), content));
+					filterGroups.put(group, filterGroup);
+
+					//SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
+					//this.simpleFilter.add(simpleFilter);
 				} else {
-					groupNames.add(group);
-					SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
-					this.simpleFilter.add(simpleFilter);
+					filterGroups.get(group).add(new SimpleFilter(this.getUniqueID(), content));
 				}
 			}
+
+			Iterator iterator = filterGroups.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry pair = (Map.Entry)iterator.next();
+				this.filterGroups.add((FilterGroup) pair.getValue());
+				iterator.remove();
+			}
+
 			//TODO: Groups
 
 		}
