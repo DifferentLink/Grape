@@ -68,5 +68,6 @@ public class PearsonCorrelationTest {
         for (PropertyGraph<Integer, Integer> current: mySet) {
             database.addGraph(current);
         }
+        Pearson.calculateCorrelation("averagedegree", "smallestdegree", database);
     }
 }

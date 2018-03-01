@@ -72,7 +72,15 @@ public class Pearson extends Correlation {
         return Pearson.cutListMinimum(resultSet, this.getAttributeCounter());
     }
 
-    private static double calculateCorrelation(String firstProperty, String secondProperty,
+    /**
+     * calculates a specific correlation
+     * @param firstProperty first property to focus on
+     * @param secondProperty second property to focus on
+     * @param database database with graphs
+     * @return returns a set of CorrelationOutput objects
+     * @throws ConnectionFailedException thrown if there was no connection to database possible
+     */
+    static double calculateCorrelation(String firstProperty, String secondProperty,
                                                GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
