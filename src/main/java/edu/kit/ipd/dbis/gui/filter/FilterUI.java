@@ -51,6 +51,7 @@ public class FilterUI extends JPanel {
 		this.theme = theme;
 
 		uiFilterManager = new UIFilterManager();
+		filterController.setUIFilterManager(uiFilterManager);
 
 		this.setLayout(new BorderLayout());
 		this.setBackground(theme.backgroundColor);
