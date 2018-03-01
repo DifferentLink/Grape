@@ -26,11 +26,28 @@ public class UIFilterManager {
 	private int nextUniqueID = 0;
 
 	/**
+	 * setter method
+	 *
+	 * @param id the new id
+	 */
+	public void setNextUniqueID(int id) {
+		this.nextUniqueID = id;
+	}
+
+	/**
 	 * Adds a new SimpleFilter to the known Filters.
 	 */
 	public void addNewSimpleFilter() {
 		SimpleFilter newFilter = new SimpleFilter(getUniqueID());
 		simpleFilter.add(newFilter);
+	}
+
+	/**
+	 * Adds a new SimpleFilter to the known Filters.
+	 * @param simpleFilter
+	 */
+	public void addNewSimpleFilter(SimpleFilter simpleFilter) {
+		this.simpleFilter.add(simpleFilter);
 	}
 
 	/**
@@ -48,6 +65,14 @@ public class UIFilterManager {
 	 */
 	public void addNewSimpleFilterToGroup(FilterGroup filterGroup) {
 		filterGroup.add(new SimpleFilter(getUniqueID()));
+	}
+
+	/**
+	 * Adds a new FilterGroup to the known Filters.
+	 * @param filterGroup the FilterGroup
+	 */
+	public void addNewFilterGroup(FilterGroup filterGroup) {
+		filterGroups.add(filterGroup);
 	}
 
 	/**
