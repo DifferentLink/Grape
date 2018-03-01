@@ -62,6 +62,10 @@ public class UIFilterManager {
 		filterGroup.add(new SimpleFilter(getUniqueID()));
 	}
 
+	public void addNewFilterGroup(FilterGroup filterGroup) {
+		filterGroups.add(filterGroup);
+	}
+
 	/**
 	 * Adds a new FilterGroup to the known Filters.
 	 * @param name the name of the FilterGroup

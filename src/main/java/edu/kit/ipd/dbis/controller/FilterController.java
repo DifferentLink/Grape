@@ -14,6 +14,8 @@ import edu.kit.ipd.dbis.gui.filter.UIFilterManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
 import java.sql.ResultSet;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -172,12 +174,25 @@ public class FilterController {
 		this.uiFilterManager.clearFilters();
 		List<Filter> filterList = filter.getAvailableFilter();
 		List<Filtergroup> filtergroupList = filter.getAvailableFilterGroups();
+		List<Integer> newId = new LinkedList<>();
+		newId.add(0);
 
 		for (Filter f : filterList) {
 			SimpleFilter simpleFilter = new SimpleFilter(f.getID(), f.getName());
 			uiFilterManager.addNewSimpleFilter(simpleFilter);
-			uiFilterManager.setNextUniqueID(f.getID() + 1);
+			newId.add(f.getID());
 		}
+		for (Filtergroup f : filtergroupList) {
+			FilterGroup filterGroup = new FilterGroup(f.getID(), f.getName());
+			for (Filter filter : f.getAvailableFilter()) {
+				SimpleFilter simpleFilter = new SimpleFilter(filter.getID(), filter.getName());
+				filterGroup.add(simpleFilter);
+				newId.add(filter.getID());
+			}
+			uiFilterManager.addNewFilterGroup(filterGroup);
+			newId.add(f.getID());
+		}
+		uiFilterManager.setNextUniqueID(Collections.max(newId) + 1);
 		this.filterUI.update();
 
 	}
