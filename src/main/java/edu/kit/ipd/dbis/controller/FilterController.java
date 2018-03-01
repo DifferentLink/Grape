@@ -8,6 +8,7 @@ import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.filter.FilterGroup;
+import edu.kit.ipd.dbis.gui.filter.SimpleFilter;
 import edu.kit.ipd.dbis.gui.filter.UIFilterManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
@@ -165,15 +166,13 @@ public class FilterController {
 		this.uiFilterManager.clearFilters();
 		List<Filter> filterList = filter.getAvailableFilter();
 		List<Filtergroup> filtergroupList = filter.getAvailableFilterGroups();
-		// create filters in GUI
-		for (Filtergroup availableFiltergroup: filtergroupList) {
-			for (Filter availableFilter : availableFiltergroup.getAvailableFilter()) {
-				this.uiFilterManager.stringToFilters("[" + availableFiltergroup.getName() + ";" + availableFilter.getName() + "]:");
-			}
+
+		for (Filter f : filterList) {
+			SimpleFilter simpleFilter = new SimpleFilter(f.getID(), f.getName());
+			uiFilterManager.addNewSimpleFilter(simpleFilter);
+			uiFilterManager.setNextUniqueID(f.getID() + 1);
 		}
-		for (Filter availableFilter : filterList) {
-			this.uiFilterManager.stringToFilters("[;" + availableFilter.getName() + "]:");
-		}
+
 	}
 
 	/**

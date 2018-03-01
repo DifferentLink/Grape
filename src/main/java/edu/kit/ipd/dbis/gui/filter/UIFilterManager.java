@@ -25,12 +25,24 @@ public class UIFilterManager {
 	private List<FilterGroup> filterGroups = new ArrayList<>();
 	private int nextUniqueID = 0;
 
+	public void setNextUniqueID(int id) {
+		this.nextUniqueID = id;
+	}
+
 	/**
 	 * Adds a new SimpleFilter to the known Filters.
 	 */
 	public void addNewSimpleFilter() {
 		SimpleFilter newFilter = new SimpleFilter(getUniqueID());
 		simpleFilter.add(newFilter);
+	}
+
+	/**
+	 * Adds a new SimpleFilter to the known Filters.
+	 * @param simpleFilter
+	 */
+	public void addNewSimpleFilter(SimpleFilter simpleFilter) {
+		this.simpleFilter.add(simpleFilter);
 	}
 
 	/**
