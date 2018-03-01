@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,9 +127,7 @@ public class UIFilterManager {
 
 		for (FilterGroup filterGroup : filterGroups) {
 			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
-				if (simpleFilter.isActive()) {
-					output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]:");
-				}
+				output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]:");
 			}
 		}
 
@@ -165,20 +162,34 @@ public class UIFilterManager {
 		Pattern pattern = Pattern.compile("(\\[(.)*;(.)+\\]:)+");
 		Matcher matcher = pattern.matcher(filter);
 		if (matcher.find()) {
+			Map<String, FilterGroup> filterGroups = new HashMap<>();
 			String[] groups = matcher.group().split(":");
+
 			for (int i = 0; i < groups.length; i++) {
 				String[] filterInfo = groups[i].split(";");
 				String group = filterInfo[0].substring(1);
 				String content = filterInfo[1].substring(0, filterInfo[1].length() - 1);
-
-				FilterGroup targetFilterGroup = getFilterGroupByName(group);
-				if (targetFilterGroup != null) {
-					SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), content);
-					addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
-				} else if (!group.equals("")){
-					addNewFilterGroup(group);
+				if (group.equals("")) {
+					SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
+					this.simpleFilter.add(simpleFilter);
+				} else if (!filterGroups.containsKey(group)) {
+					FilterGroup filterGroup = new FilterGroup(getUniqueID(), group);
+					filterGroup.add(new SimpleFilter(this.getUniqueID(), content));
+					filterGroups.put(group, filterGroup);
+				} else {
+					filterGroups.get(group).add(new SimpleFilter(this.getUniqueID(), content));
 				}
 			}
+
+			Iterator iterator = filterGroups.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry pair = (Map.Entry)iterator.next();
+				this.filterGroups.add((FilterGroup) pair.getValue());
+				iterator.remove();
+			}
+
+			//TODO: Groups
+
 		}
 	}
 
