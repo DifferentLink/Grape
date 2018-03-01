@@ -9,11 +9,9 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * class which is used to handle correlation requests
@@ -134,7 +132,13 @@ public class CorrelationRequest {
 
     private static void testProperty(String input) throws InvalidCorrelationInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> propertySet = PropertyFactory.createAllProperties(graph);
+        Set<Property> fullPropertySet = PropertyFactory.createAllProperties(graph);
+        Set<Property> propertySet = new HashSet<>();
+        for (Property current: fullPropertySet) {
+            if (!current.getClass().getSuperclass().equals(ComplexProperty.class)) {
+                propertySet.add(current);
+            }
+        }
         String[] propertyStrings = new String[propertySet.size()];
         int i = 0;
         for (Property currentProperty: propertySet) {
