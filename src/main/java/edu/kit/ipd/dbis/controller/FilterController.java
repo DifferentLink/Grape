@@ -8,6 +8,7 @@ import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.filter.FilterGroup;
+import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.filter.SimpleFilter;
 import edu.kit.ipd.dbis.gui.filter.UIFilterManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -24,6 +25,7 @@ public class FilterController {
 	private StatusbarController statusbar;
 	private GrapeUI grapeUI;
 	private UIFilterManager uiFilterManager;
+	private FilterUI filterUI;
 
 	private static FilterController filterController;
 
@@ -51,6 +53,10 @@ public class FilterController {
 	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
+	}
+
+	public void setFilterUI(FilterUI filterUI) {
+		this.filterUI = filterUI;
 	}
 
 	public void setUIFilterManager(UIFilterManager uiFilterManager) {
@@ -172,6 +178,7 @@ public class FilterController {
 			uiFilterManager.addNewSimpleFilter(simpleFilter);
 			uiFilterManager.setNextUniqueID(f.getID() + 1);
 		}
+		this.filterUI.update();
 
 	}
 
