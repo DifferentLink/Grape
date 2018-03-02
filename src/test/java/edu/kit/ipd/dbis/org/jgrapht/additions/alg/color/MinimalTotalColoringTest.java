@@ -2,6 +2,7 @@ package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.jgrapht.graph.SimpleGraph;
 import org.junit.Test;
 
 import java.util.List;
@@ -53,34 +54,18 @@ public class MinimalTotalColoringTest {
 	}
 
 	@Test
-	public void getColoring2() {
-		PropertyGraph graph = createCompleteGraph(4);
-		MinimalTotalColoring<String, String> totalColoring = new MinimalTotalColoring<>(graph);
+	public void cliqueOfFourTest() {
+		PropertyGraph<Integer, Integer> graph = Util.createCompleteGraph(4);
+		MinimalTotalColoring<Integer, Integer> totalColoring = new MinimalTotalColoring<>(graph);
 		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
 		assertEquals(5, coloring.getNumberColors());
 	}
 
 	@Test
 	public void cliqueOfFiveTest() {
-		PropertyGraph graph = createCompleteGraph(5);
+		PropertyGraph graph = Util.createCompleteGraph(5);
 		MinimalTotalColoring<Integer, Integer> totalColoring = new MinimalTotalColoring<>(graph);
 		TotalColoringAlgorithm.TotalColoring coloring = totalColoring.getColoring();
 		assertEquals(5, coloring.getNumberColors());
-	}
-
-	private PropertyGraph createCompleteGraph(int numberOfVertices) {
-		PropertyGraph graph = new PropertyGraph();
-		for (int i = 0; i < numberOfVertices; i++) {
-			graph.addVertex(i);
-		}
-		for (int i = 0; i < numberOfVertices; i++) {
-			for (int j = 0; j < numberOfVertices; j++) {
-				if (j != i && !graph.containsEdge(graph.getEdgeFactory().createEdge(j, i))) {
-					graph.addEdge(i, j);
-
-				}
-			}
-		}
-		return graph;
 	}
 }
