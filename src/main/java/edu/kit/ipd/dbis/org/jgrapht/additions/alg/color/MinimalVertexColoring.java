@@ -59,11 +59,11 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			return this.colorings;
 		}
 
-		List<int[]> partitions = this.integerPartitioning(numberOfVertices, largestCliqueSize);
 		int numberOfColors = Integer.MAX_VALUE;
+		int[] partitioning = getFirstPartitioning(numberOfVertices, largestCliqueSize);
 
 		// iterate over partitions
-		for (int[] partitioning : partitions) {
+		while (partitioning != null) {
 			// because different partitionings can have the
 			// same length (= number of colors), this is
 			// needed in order to determine every isomorphic
@@ -88,8 +88,17 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 					break;
 				}
 			} while (getNextPermutation(colors));
+			partitioning = nextPartitioning(partitioning, numberOfVertices);
 		}
 		return this.colorings;
+	}
+
+	@Override
+	public Coloring<V> getColoring() {
+		if (this.colorings.isEmpty()) {
+			this.getAllColorings();
+		}
+		return this.colorings.get(0);
 	}
 
 	// determines permutations lexicographically,
@@ -124,20 +133,6 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return true;
 	}
 
-	private void swap(int[] array, int a, int b) {
-		int tmp = array[a];
-		array[a] = array[b];
-		array[b] = tmp;
-	}
-
-	@Override
-	public Coloring<V> getColoring() {
-		if (this.colorings.isEmpty()) {
-			this.getAllColorings();
-		}
-		return this.colorings.get(0);
-	}
-
 	private int[] parseIntegerPartitioning(int[] partitioning, int numberOfVertices) {
 		int[] result = new int[numberOfVertices];
 		int index = 0;
@@ -159,72 +154,57 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		return result;
 	}
 
-	private List<int[]> integerPartitioning(int numberOfVertices, int largestCliqueSize) {
-		List<int[]> result = new LinkedList<>();
+	private int[] nextPartitioning(int[] array, int numberOfVertices) {
+		if (array.length == numberOfVertices) {
+			return null;
+		}
+		int[] arrayCopy = new int[array.length];
+		System.arraycopy(array, 0, arrayCopy, 0, array.length);
 
-		// create first partitioning
-		int numberOfColors = largestCliqueSize;
-		int[] array = getFirstPartitioning(numberOfVertices, largestCliqueSize);
-		if (numberOfColors == numberOfVertices) {
-			result.add(array);
-			return result;
+		// check if first element equals last element
+		// or if their difference is less than 2.
+		// this means that there are no more possible
+		// partitions for the numberOfVertices and
+		// numberOfColors in this iteration.
+		if (arrayCopy[0] == arrayCopy[arrayCopy.length - 1]
+				|| arrayCopy[0] - arrayCopy[arrayCopy.length - 1] < 2) {
+			// initialize arrayCopy with one more color.
+			arrayCopy = new int[arrayCopy.length + 1];
+			int tmp = numberOfVertices;
+			for (int j = arrayCopy.length - 1; j > 0; j--) {
+				arrayCopy[j] = 1;
+				tmp--;
+			}
+			arrayCopy[0] = tmp;
+			return arrayCopy;
 		}
 
-		// iterate over all possible partitions
-		// for numberOfVertices.
-		while (numberOfColors < numberOfVertices) {
-			int[] arrayCopy = new int[array.length];
-			System.arraycopy(array, 0, arrayCopy, 0, array.length);
-			result.add(arrayCopy);
-
-			// check if first element equals last element
-			// or if their difference is less than 2.
-			// this means that there are no more possible
-			// partitions for the numberOfVertices and
-			// numberOfColors in this iteration.
-			if (array[0] == array[array.length - 1] || array[0] - array[array.length - 1] < 2) {
-				// initialize array with one more color.
-				array = new int[++numberOfColors];
-				int tmp = numberOfVertices;
-				for (int j = array.length - 1; j > 0; j--) {
-					array[j] = 1;
-					tmp--;
-				}
-				array[0] = tmp;
-
-				// add initial array to the results.
-				int[] arrayCopy2 = new int[array.length];
-				System.arraycopy(array, 0, arrayCopy2, 0, array.length);
-				result.add(arrayCopy2);
-			}
-
-			// iterate over array to calculate
-			// next distribution.
-			for (int j = 1; j < array.length; j++) {
-				// check if the difference between
-				// the first and the j-th element
-				// of the array is bigger than 2.
-				// this means that there exists
-				// a possible next distribution.
-				if (array[0] - array[j] >= 2) {
-					array[j]++;
-					array[j - 1]--;
-					j--;
-					// if array is not in ascending order,
-					// the distribution is not correct yet.
-					while (!isInDescendingOrder(array)) {
-						if (array[j] >= array[j - 1]) {
-							break;
-						}
-						array[j]++;
-						array[j - 1]--;
-						j--;
+		// iterate over arrayCopy to calculate
+		// next distribution.
+		for (int j = 1; j < arrayCopy.length; j++) {
+			// check if the difference between
+			// the first and the j-th element
+			// of the arrayCopy is bigger than 2.
+			// this means that there exists
+			// a possible next distribution.
+			if (arrayCopy[0] - arrayCopy[j] >= 2) {
+				arrayCopy[j]++;
+				arrayCopy[j - 1]--;
+				j--;
+				// if arrayCopy is not in ascending order,
+				// the distribution is not correct yet.
+				while (!isInDescendingOrder(arrayCopy)) {
+					if (arrayCopy[j] >= arrayCopy[j - 1]) {
+						break;
 					}
-					break;
+					arrayCopy[j]++;
+					arrayCopy[j - 1]--;
+					j--;
 				}
+				return arrayCopy;
 			}
 		}
-		return result;
+		return null;
 	}
 
 	private boolean isInDescendingOrder(int[] array) {
