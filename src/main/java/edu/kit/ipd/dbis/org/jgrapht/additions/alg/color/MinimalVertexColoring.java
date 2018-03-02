@@ -15,7 +15,7 @@ import java.util.*;
  * and determining all possible permutations (while ignoring repeated
  * values) of this distribution. For each one, the algorithm checks
  * if it represents a valid vertex coloring.
- * This process guarantees that no isomorphic colorings are checked.
+ * This process guarantees that no equivalent colorings are checked.
  *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
@@ -79,33 +79,55 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			// 0 0 0 0 0 0 0 1
 			colors = this.parseIntegerPartitioning(partitioning, numberOfVertices);
 
-			// create copy of array and
-			// sort it backwards.
-			// when all permutations are checked,
-			// the color array is in ascending order.
-			// using colorCopy, we can define an end
-			// for the while loop below.
-			int[] colorCopy = this.reverseArray(colors);
-
-			if (isValidVertexColoring(colors)) {
-				// found one coloring of this partitioning.
-				this.colorings.add(createColoringObject(colors, sortedVertices));
-				numberOfColors = partitioning.length;
-			} else {
-				// get all permutations of partitioning
-				while (!Arrays.equals(colors, colorCopy)) {
-					colors = getNextPermutation(colors);
-					if (isValidVertexColoring(colors)) {
-						// found one coloring of this partitioning.
-						this.colorings.add(createColoringObject(colors, sortedVertices));
-						numberOfColors = partitioning.length;
-						break;
-					}
+			// get all permutations of partitioning
+			do {
+				if (isValidVertexColoring(colors)) {
+					// found one coloring of this partitioning.
+					this.colorings.add(createColoringObject(colors, sortedVertices));
+					numberOfColors = partitioning.length;
+					break;
 				}
-			}
-
+			} while (getNextPermutation(colors));
 		}
 		return this.colorings;
+	}
+
+	// determines permutations lexicographically,
+	// input array must be in ascending order.
+	private boolean getNextPermutation(int[] ascendingArray) {
+		int i = ascendingArray.length - 1;
+		while (i > 0 && ascendingArray[i - 1] >= ascendingArray[i]) {
+			i--;
+		}
+		if (i <= 0) {
+			// last permutation
+			return false;
+		}
+		int j = ascendingArray.length - 1;
+		while (ascendingArray[j] <= ascendingArray[i - 1]) {
+			j--;
+		}
+
+		// Swap
+		int temp = ascendingArray[i - 1];
+		ascendingArray[i - 1] = ascendingArray[j];
+		ascendingArray[j] = temp;
+
+		j = ascendingArray.length - 1;
+		while (i < j) {
+			temp = ascendingArray[i];
+			ascendingArray[i] = ascendingArray[j];
+			ascendingArray[j] = temp;
+			i++;
+			j--;
+		}
+		return true;
+	}
+
+	private void swap(int[] array, int a, int b) {
+		int tmp = array[a];
+		array[a] = array[b];
+		array[b] = tmp;
 	}
 
 	@Override
@@ -185,11 +207,6 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 				// this means that there exists
 				// a possible next distribution.
 				if (array[0] - array[j] >= 2) {
-					// the following section
-					// launches increment and
-					// decrement commands which
-					// flow to the front like
-					// air bubbles out of water.
 					array[j]++;
 					array[j - 1]--;
 					j--;
@@ -217,47 +234,6 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			}
 		}
 		return true;
-	}
-
-	private int[] getNextPermutation(int[] ascendingArray) {
-		for (int i = ascendingArray.length - 1; i > 0; i--) {
-			if (ascendingArray[i - 1] < ascendingArray[i]) {
-				// find last element which does not exceed ascendingArray[i-1]
-				int s = ascendingArray.length - 1;
-				while (ascendingArray[i - 1] >= ascendingArray[s]) {
-					s--;
-				}
-				swap(ascendingArray, i - 1, s);
-				// reverse order of elements
-				for (int j = i, k = ascendingArray.length - 1; j < k; j++, k--) {
-					swap(ascendingArray, j, k);
-				}
-				break;
-			}
-		}
-		return ascendingArray;
-	}
-
-	private void swap(int[] array, int a, int b) {
-		int tmp = array[a];
-		array[a] = array[b];
-		array[b] = tmp;
-	}
-
-	/**
-	 * Reverses input array while
-	 * leaving it intact.
-	 *
-	 * @param array input array
-	 * @return reversed new array
-	 */
-	private int[] reverseArray(int[] array) {
-		int[] result = new int[array.length];
-		for (int x = 0, y = array.length - 1; x <= y; x++, y--) {
-			result[y] = array[x];
-			result[x] = array[y];
-		}
-		return result;
 	}
 
 	private Coloring<V> createColoringObject(int[] coloring, List<V> sortedNodes) {
