@@ -50,7 +50,7 @@ public class GraphEditorUI extends JPanel {
 	private JButton center;
 	private JButton preview;
 	private JButton apply;
-	private JLabel graphInfo; // todo add to GUI
+	private JLabel graphInfo;
 	private JComboBox<String> coloringType;
 
 	private static ColoringType currentColoringType;
