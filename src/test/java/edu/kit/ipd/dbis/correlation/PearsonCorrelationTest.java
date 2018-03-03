@@ -3,21 +3,26 @@ package edu.kit.ipd.dbis.correlation;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
 import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.*;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class PearsonCorrelationTest {
 
     private static GraphDatabase database;
 
-    private static void putGraphsIntoDatabase() throws UnexpectedObjectException, InsertionFailedException,
+    /**
+     * generates two (of two possible) graphs and adds them to the database
+     * @throws UnexpectedObjectException thrown if the object type is wrong
+     * @throws InsertionFailedException thrown if the graphs could not be added to database
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     */
+    public static void putGraphsIntoDatabase() throws UnexpectedObjectException, InsertionFailedException,
             ConnectionFailedException {
         Set<PropertyGraph> mySet = new HashSet<>();
         BulkRandomConnectedGraphGenerator<Integer, Integer> myGenerator = new BulkRandomConnectedGraphGenerator<>();
@@ -31,7 +36,8 @@ public class PearsonCorrelationTest {
     }
 
     @Before
-    public void delete() throws Exception {
+    public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+            ConnectionFailedException {
 
     	/*Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
