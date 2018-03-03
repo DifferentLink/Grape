@@ -45,6 +45,9 @@ public class CorrelationTest {
         if (!testSet.contains("Profile") || !testSet.contains("Cliques")) {
             throw new AssertionError();
         }
+        if (testSet.contains("NumberOfEdges") || testSet.contains("SmallestDegree")) {
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -54,7 +57,10 @@ public class CorrelationTest {
         CorrelationOutput output3 = new CorrelationOutput("TotalColoringNumberOfColors", "NumberOfCliques", 1.89);
         CorrelationOutput output4 = new CorrelationOutput("VertexColoringNumberOfColors", "NumberOfDisjointVerticesFromKkGraph", 6.83);
         CorrelationOutput output5 = new CorrelationOutput("SmallestDegree", "NumberOfDisjointEdgesFromKkGraph", 8.71);
+        //correlation value is null --> may happen due to a division by zero --> result should be ignored
         CorrelationOutput output6 = new CorrelationOutput("GreatestDegree", "LargestCliqueSize", 0.0);
+        //first property is equal to second property --> correlation values are only interesting between different properties
+        CorrelationOutput output7 = new CorrelationOutput("GreatestDegree", "GreatestDegree", 9.32);
         TreeSet<CorrelationOutput> testSet = new TreeSet<>();
         testSet.add(output1);
         testSet.add(output2);
@@ -62,16 +68,26 @@ public class CorrelationTest {
         testSet.add(output4);
         testSet.add(output5);
         testSet.add(output6);
+        testSet.add(output7);
         TreeSet<CorrelationOutput> outputSet = Correlation.cutListMinimum(testSet, 3);
-        for (CorrelationOutput current: outputSet) {
-            System.out.println(current.getFirstProperty());
-        }
         assert outputSet.size() == 3;
-        assert outputSet.contains(output1);
-        assert outputSet.contains(output2);
-        assert outputSet.contains(output3);
+        int counter = 0;
         for (CorrelationOutput current: outputSet) {
-            System.out.println(current.getFirstProperty());
+            if (counter == 0) {
+                assert current.getFirstProperty().equals("LargestCliqueSize");
+                assert current.getSecondProperty().equals("NumberOfVertices");
+                assert current.getOutputNumber() == 4.32;
+
+            } else if (counter == 1) {
+                assert current.getFirstProperty().equals("AverageDegree");
+                assert current.getSecondProperty().equals("StructureDensity");
+                assert current.getOutputNumber() == 2.43;
+            } else {
+                assert current.getFirstProperty().equals("TotalColoringNumberOfColors");
+                assert current.getSecondProperty().equals("NumberOfCliques");
+                assert current.getOutputNumber() == 1.89;
+            }
+            counter++;
         }
     }
 
@@ -82,7 +98,9 @@ public class CorrelationTest {
         CorrelationOutput output3 = new CorrelationOutput("TotalColoringNumberOfColors", "NumberOfCliques", 1.89);
         CorrelationOutput output4 = new CorrelationOutput("VertexColoringNumberOfColors", "NumberOfDisjointVerticesFromKkGraph", 6.83);
         CorrelationOutput output5 = new CorrelationOutput("SmallestDegree", "NumberOfDisjointEdgesFromKkGraph", 8.71);
+        //correlation value is null --> may happen due to a division by zero --> result should be ignored
         CorrelationOutput output6 = new CorrelationOutput("GreatestDegree", "LargestCliqueSize", 0.0);
+        //first property is equal to second property --> correlation values are only interesting between different properties
         CorrelationOutput output7 = new CorrelationOutput("GreatestDegree", "GreatestDegree", 9.32);
         TreeSet<CorrelationOutput> testSet = new TreeSet<>();
         testSet.add(output1);
@@ -97,11 +115,23 @@ public class CorrelationTest {
             System.out.println(current.getFirstProperty());
         }
         assert outputSet.size() == 3;
-        assert outputSet.contains(output5);
-        assert outputSet.contains(output4);
-        assert outputSet.contains(output2);
+        int counter = 0;
         for (CorrelationOutput current: outputSet) {
-            System.out.println(current.getFirstProperty());
+            if (counter == 0) {
+                assert current.getFirstProperty().equals("SmallestDegree");
+                assert current.getSecondProperty().equals("NumberOfDisjointEdgesFromKkGraph");
+                assert current.getOutputNumber() == 8.71;
+
+            } else if (counter == 1) {
+                assert current.getFirstProperty().equals("VertexColoringNumberOfColors");
+                assert current.getSecondProperty().equals("NumberOfDisjointVerticesFromKkGraph");
+                assert current.getOutputNumber() == 6.83;
+            } else {
+                assert current.getFirstProperty().equals("LargestCliqueSize");
+                assert current.getSecondProperty().equals("NumberOfVertices");
+                assert current.getOutputNumber() == 4.32;
+            }
+            counter++;
         }
     }
 }
