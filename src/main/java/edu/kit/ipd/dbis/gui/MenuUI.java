@@ -176,21 +176,14 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, "Open"); // todo replace with language resource
+			final int returnValue = fileChooser.showDialog(null, language.getString("open"));
 			File file = fileChooser.getSelectedFile();
 
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Open a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName());
-					try {
-						databaseController.loadDatabase(file.getPath());
-					} catch (Exception e) { // todo replace with correct exception as soon as available
-						e.printStackTrace();
-					}
+					databaseController.loadDatabase(file.getPath());
 				}
-			} else {
-				System.out.println("Creating file failed"); // todo remove sout
 			}
 		}
 	}
@@ -210,21 +203,14 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, "Import"); // todo replace with language resource
+			final int returnValue = fileChooser.showDialog(null, language.getString("import"));
 			File file = fileChooser.getSelectedFile();
 
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Import a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName());
-					try {
-						databaseController.mergeDatabase(file.getPath());
-					} catch (Exception e) { // todo replace with correct exception as soon as available
-						e.printStackTrace();
-					}
+					databaseController.mergeDatabase(file.getPath());
 				}
-			} else {
-				System.out.println("Importing database failed"); // todo remove sout
 			}
 		}
 	}
@@ -244,26 +230,20 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, "Save"); // todo replace with language resource
+			final int returnValue = fileChooser.showDialog(null, language.getString("save"));
+			fileChooser.setBackground(theme.backgroundColor);
 			File file = fileChooser.getSelectedFile();
 
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Saved a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
-					try {
-						databaseController.saveDatabase(file.getPath());
-					} catch (Exception e) { // todo replace with correct exception as soon as available
-						e.printStackTrace();
-					}
+					databaseController.saveDatabase(file.getPath());
 				}
-			} else {
-				System.out.println("Saving database failed"); // todo remove sout
 			}
 		}
 	}
 
-	private class SaveAsAction implements ActionListener { // todo same as Save
+	private class SaveAsAction implements ActionListener {
 
 		private final DatabaseController databaseController;
 		private final ResourceBundle language;
@@ -278,21 +258,15 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, "Save"); // todo replace with language resource
+			final int returnValue = fileChooser.showDialog(null, language.getString("saveAs"));
 			File file = fileChooser.getSelectedFile();
+			fileChooser.setBackground(theme.backgroundColor);
 
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Saved a database under new name!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
-					try {
-						databaseController.saveDatabase(file.getPath());
-					} catch (Exception e) { // todo replace with correct exception as soon as available
-						e.printStackTrace();
-					}
+					databaseController.saveDatabase(file.getPath());
 				}
-			} else {
-				System.out.println("Saving database under a new name failed"); // todo remove sout
 			}
 		}
 	}
@@ -312,11 +286,10 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, "Save"); // todo replace with language resource
+			final int returnValue = fileChooser.showDialog(null, language.getString("saveSelection"));
 			File file = fileChooser.getSelectedFile();
 
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Saved selection to a database!"); // todo remove sout
 				if (file != null) {
 					file = new File(file.getParentFile(), file.getName() + ".txt");
 					//Inserting selected graphIds
@@ -331,11 +304,10 @@ public class MenuUI extends JMenuBar {
 						}
 					}
 					//Open Database configuration window
-					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController, language, theme, file.getPath(), graphs);
+					JFrame configureDatabaseOfSelectionUI = new ConfigureDatabaseOfSelectionUI(databaseController,
+							language, theme, file.getPath(), graphs);
 					configureDatabaseOfSelectionUI.setVisible(true);
 				}
-			} else {
-				System.out.println("Saving selection as database failed"); // todo remove sout
 			}
 		}
 	}

@@ -176,7 +176,8 @@ public class GrapeUI {
 		rightUI.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
 		rightUI.add(statusbarUI, BorderLayout.SOUTH);
 
-		menuUI = new MenuUI(tableUI, generateController, databaseController, statusbarController, graphEditorController, language, theme);
+		menuUI = new MenuUI(tableUI, generateController, databaseController, statusbarController,
+				graphEditorController, language, theme);
 		mainWindow.setJMenuBar(menuUI);
 
 		JSplitPane verticalDivider;
@@ -205,7 +206,7 @@ public class GrapeUI {
 		}
 	}
 
-	private class DeleteGraphAction implements KeyListener { // todo implement delete graphs
+	private class DeleteGraphAction implements KeyListener {
 		@Override
 		public void keyTyped(KeyEvent keyEvent) {
 			if (keyEvent.getKeyChar() == KeyEvent.VK_DELETE) {
@@ -285,7 +286,8 @@ public class GrapeUI {
 				column.setPreferredWidth(columnWidths[i]);
 			} else {
 				final int optimalWidth =
-						(int) (font.getStringBounds("  " + tableUI.getColumnName(i) + "  ", fontRenderer).getWidth());
+						(int) (font.getStringBounds(
+								" " + tableUI.getColumnName(i) + " ", fontRenderer).getWidth());
 				column.setPreferredWidth(optimalWidth);
 				columnWidths[i] = optimalWidth;
 			}
@@ -322,7 +324,8 @@ public class GrapeUI {
 				if (!tableUI.isRowSelected(row)) {
 					tableUI.changeSelection(row, 0, false, false);
 				}
-				(new GraphOptions(graphID, graphEditorController, generateController, language, theme)).show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+				(new GraphOptions(graphID, graphEditorController, generateController, language, theme))
+						.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
 			}
 		}
 	}
