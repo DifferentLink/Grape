@@ -53,7 +53,7 @@ public class FilterUI extends JPanel {
 		this.language = language;
 		this.theme = theme;
 
-		uiFilterManager = new UIFilterManager();
+		uiFilterManager = new UIFilterManager(language);
 		filterController.setUIFilterManager(uiFilterManager);
 		filterController.setFilterUI(this);
 
