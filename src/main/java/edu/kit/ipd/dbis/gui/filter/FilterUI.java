@@ -52,6 +52,7 @@ public class FilterUI extends JPanel {
 
 		uiFilterManager = new UIFilterManager();
 		filterController.setUIFilterManager(uiFilterManager);
+		filterController.setFilterUI(this);
 
 		this.setLayout(new BorderLayout());
 		this.setBackground(theme.backgroundColor);
@@ -383,6 +384,9 @@ public class FilterUI extends JPanel {
 				case "Load filter..." : uiFilterManager.importFilters(); break;
 				default : break;
 			}
+			update();
+			repaint();
+			revalidate();
 		}
 	}
 

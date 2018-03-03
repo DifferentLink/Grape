@@ -173,8 +173,8 @@ public class RenderableGraph {
 		// associate integer value of colorings
 		// with Color object
 		int i = 0;
-		for (V key : coloring.getColors().keySet()) {
-			colorsToColorObjectMap.put(colors.get(key), colorArray[i]);
+		for (Integer key : new HashSet<>(colors.values())) {
+			colorsToColorObjectMap.put(key, colorArray[i]);
 			if (i + 1 < colorArray.length) {
 				i++;
 			} else {
@@ -220,12 +220,11 @@ public class RenderableGraph {
 				// check if vertex was already added
 				if (!objectVertexMap.containsKey(edgeTarget)) {
 					Vertex vertex2 = factory.createVertex();
+					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
 
 					if (subgraphs.containsKey(edgeTarget)) {
 						kksubgraphs.put(vertex2, subgraphs.get(edgeTarget));
 					}
-
-					vertex2.setFillColor(colorsToColorObjectMap.get(colors.get(edgeTarget)));
 					this.vertices.add(vertex2);
 					objectVertexMap.put(edgeTarget, vertex2);
 				}
@@ -240,12 +239,6 @@ public class RenderableGraph {
 			Set<Vertex> g = groups.computeIfAbsent(subgraph, k -> new HashSet<>());
 			g.add(v);
 		});
-		List<Set<Vertex>> classes = new ArrayList<>(kkGraph.getNumberOfSubgraphs());
-		for (Set<Vertex> c : groups.values()) {
-			classes.add(c);
-		}
-		this.subgraphs = classes;
-
 		this.subgraphs = new ArrayList<>(groups.values());
 	}
 
