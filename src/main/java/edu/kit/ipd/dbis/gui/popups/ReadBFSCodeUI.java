@@ -31,7 +31,7 @@ public class ReadBFSCodeUI extends JFrame {
 	 * @param theme the theme to style the window with
 	 */
 	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) {
-		super("Read BFS-Code"); // todo use language resource
+		super(language.getString("readBFSCode"));
 		this.setSize(350, 200);
 		this.setResizable(false);
 
@@ -44,7 +44,7 @@ public class ReadBFSCodeUI extends JFrame {
 		bfsCodeInput.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		content.add(bfsCodeInput);
 
-		JButton readGraph = new JButton("Read BFS-Code"); // todo use language resource
+		JButton readGraph = new JButton(language.getString("readBFSCode"));
 		readGraph.addActionListener(new ReadBFSCodeAction(generateController, this));
 		readGraph.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		readGraph.setBackground(theme.assertiveBackground);

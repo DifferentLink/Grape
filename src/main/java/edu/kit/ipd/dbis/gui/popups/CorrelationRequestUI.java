@@ -47,7 +47,7 @@ public class CorrelationRequestUI extends JFrame {
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-		JLabel correlationText = new JLabel("Request: " + correlationRequest); // todo use language resource
+		JLabel correlationText = new JLabel(language.getString("request") + ": " + correlationRequest);
 		theme.style(correlationText);
 		container.add(correlationText);
 
@@ -57,7 +57,7 @@ public class CorrelationRequestUI extends JFrame {
 		JPanel buttonAlignment = new JPanel();
 		buttonAlignment.setLayout(new BoxLayout(buttonAlignment, BoxLayout.X_AXIS));
 		buttonAlignment.add(Box.createHorizontalGlue());
-		JButton addToTable = new JButton("Close"); // todo use language resource
+		JButton addToTable = new JButton(language.getString("close"));
 		addToTable.addActionListener(new CloseAction(this));
 		theme.style(addToTable);
 		buttonAlignment.add(addToTable);

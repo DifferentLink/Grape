@@ -38,7 +38,7 @@ public class ConfigureDatabaseUI extends JFrame {
 	 */
 	public ConfigureDatabaseUI(DatabaseController databaseController, ResourceBundle language, Theme theme) {
 
-		super.setTitle("Configure Database"); // todo use language resource
+		super.setTitle(language.getString("configureDatabase"));
 		this.databaseController = databaseController;
 		this.language = language;
 		this.theme = theme;
@@ -46,29 +46,29 @@ public class ConfigureDatabaseUI extends JFrame {
 		JPanel inputContainer = new JPanel();
 		inputContainer.setLayout(new GridLayout(4, 2, 2, 10));
 
-		JLabel nameLabel = new JLabel("Name"); // todo use language resource
+		JLabel nameLabel = new JLabel(language.getString("name"));
 		nameInput = new JTextArea("graphs");
 		inputContainer.add(nameLabel);
 		inputContainer.add(nameInput);
 
-		JLabel urlLabel = new JLabel("URL"); // todo use language resource
+		JLabel urlLabel = new JLabel(language.getString("url"));
 		urlInput = new JTextArea("jdbc:mysql://localhost:3306/library");
 		inputContainer.add(urlLabel);
 		inputContainer.add(urlInput);
 
-		JLabel userLabel = new JLabel("User"); // todo use language resource
+		JLabel userLabel = new JLabel(language.getString("user"));
 		userInput = new JTextArea("user");
 		inputContainer.add(userLabel);
 		inputContainer.add(userInput);
 
-		JLabel passwordLabel = new JLabel("Password"); // todo use language resource
+		JLabel passwordLabel = new JLabel(language.getString("password"));
 		passwordInput = new JTextArea("password");
 		inputContainer.add(passwordLabel);
 		inputContainer.add(passwordInput);
 
 		JPanel buttonContainer = new JPanel();
 		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
-		JButton configureButton = new JButton("Configure"); // todo use language resource
+		JButton configureButton = new JButton(language.getString("configure"));
 		configureButton.addActionListener(new ConfigureDatabaseAction(this));
 		theme.style(configureButton);
 		configureButton.setMaximumSize(new Dimension(50, 30));

@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 public class MenuUI extends JMenuBar {
 
 	private final StatusbarController statusbarController;
+	private final ResourceBundle language;
 	private final Theme theme;
 	private final JTable tableUI;
 
@@ -46,6 +47,7 @@ public class MenuUI extends JMenuBar {
 
 		this.tableUI = tableUI;
 		this.statusbarController = statusbarController;
+		this.language = language;
 		this.theme = theme;
 
 		JMenu file = new JMenu(language.getString("file"));
@@ -342,7 +344,7 @@ public class MenuUI extends JMenuBar {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			JFrame aboutUI = new AboutUI(theme);
+			JFrame aboutUI = new AboutUI(theme, language);
 			aboutUI.setVisible(true);
 		}
 	}
