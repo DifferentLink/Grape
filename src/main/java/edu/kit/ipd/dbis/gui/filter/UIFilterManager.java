@@ -20,12 +20,21 @@ import java.util.regex.Pattern;
  */
 public class UIFilterManager {
 
+	private final ResourceBundle language;
 	private List<SimpleFilter> simpleFilter = new ArrayList<>();
 	private List<FilterGroup> filterGroups = new ArrayList<>();
 	private int nextUniqueID = 0;
 
 	/**
-	 * setter method
+	 * Constructs a new UIFilterManger
+	 * @param language the language resource to use for text
+	 */
+	public UIFilterManager(ResourceBundle language) {
+		this.language = language;
+	}
+
+	/**
+	 * Setter method
 	 *
 	 * @param id the new id
 	 */
@@ -43,7 +52,7 @@ public class UIFilterManager {
 
 	/**
 	 * Adds a new SimpleFilter to the known Filters.
-	 * @param simpleFilter
+	 * @param simpleFilter the SimpleFilter to add
 	 */
 	public void addNewSimpleFilter(SimpleFilter simpleFilter) {
 		this.simpleFilter.add(simpleFilter);
@@ -144,7 +153,7 @@ public class UIFilterManager {
 	public void exportVisibleFilters() {
 		try {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, "Save Filters"); // todo use language resource
+			final int returnValue = fileChooser.showDialog(null, language.getString("saveFilters"));
 			File file = fileChooser.getSelectedFile();
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				Files.write(Paths.get(file.getPath()), visibleFiltersToString().getBytes());
@@ -189,7 +198,6 @@ public class UIFilterManager {
 			}
 
 			//TODO: Groups
-
 		}
 	}
 
@@ -199,7 +207,7 @@ public class UIFilterManager {
 	public void importFilters() {
 		try {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, "Import Filters"); // todo use language resource
+			final int returnValue = fileChooser.showDialog(null, language.getString("loadFilters"));
 			File file = fileChooser.getSelectedFile();
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -211,7 +219,7 @@ public class UIFilterManager {
 				}
 				stringToFilters(stringBuilder.toString());
 			}
-		} catch (IOException e) { }  // todo handle possible exception
+		} catch (IOException ignored) { }
 	}
 
 	private FilterGroup getFilterGroupByName(String name) {
