@@ -86,6 +86,7 @@ public class MinimalProfileAlgorithmTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph1() {
 		PropertyGraph graph = generateSimpleTestGraph1();
@@ -102,6 +103,7 @@ public class MinimalProfileAlgorithmTest {
 		System.out.println(p.getMinBfsCode().getNumberMap());
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph2() {
 		PropertyGraph graph = new PropertyGraph();
@@ -139,6 +141,7 @@ public class MinimalProfileAlgorithmTest {
 		System.out.println(p.getMinBfsCode().getNumberMap());
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph3() {
 		PropertyGraph graph = new PropertyGraph();
@@ -176,6 +179,7 @@ public class MinimalProfileAlgorithmTest {
 		System.out.println(p.getMinBfsCode().getNumberMap());
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph4() {
 		PropertyGraph graph = new PropertyGraph();
@@ -213,6 +217,7 @@ public class MinimalProfileAlgorithmTest {
 		System.out.println(p.getMinBfsCode().getNumberMap());
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph5() {
 		PropertyGraph graph = new PropertyGraph();
@@ -249,6 +254,7 @@ public class MinimalProfileAlgorithmTest {
 		System.out.println(p.getMinBfsCode().getNumberMap());
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph6() {
 		PropertyGraph graph = new PropertyGraph();
@@ -286,6 +292,7 @@ public class MinimalProfileAlgorithmTest {
 		System.out.println(p.getMinBfsCode().getNumberMap());
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph7() {
 		PropertyGraph graph = new PropertyGraph();
@@ -323,6 +330,7 @@ public class MinimalProfileAlgorithmTest {
 		System.out.println(p.getMinBfsCode().getNumberMap());
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph8() {
 		PropertyGraph graph = new PropertyGraph();
@@ -359,6 +367,7 @@ public class MinimalProfileAlgorithmTest {
 		System.out.println(p.getMinBfsCode().getNumberMap());
 	}
 
+	@Ignore
 	@Test
 	public void profBoehmGraph9() {
 		PropertyGraph graph = new PropertyGraph();

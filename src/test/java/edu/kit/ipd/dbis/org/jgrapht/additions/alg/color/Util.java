@@ -4,7 +4,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 public class Util {
 	public static PropertyGraph<Integer, Integer> createCompleteGraph(int numberOfVertices) {
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		for (int i = 0; i < numberOfVertices; i++) {
 			graph.addVertex(i);
 		}
