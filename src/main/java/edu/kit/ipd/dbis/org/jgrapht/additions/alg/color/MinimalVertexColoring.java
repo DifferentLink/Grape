@@ -117,16 +117,16 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 			j--;
 		}
 
-		// Swap
-		int temp = ascendingArray[i - 1];
+		// swap
+		int tmp = ascendingArray[i - 1];
 		ascendingArray[i - 1] = ascendingArray[j];
-		ascendingArray[j] = temp;
+		ascendingArray[j] = tmp;
 
 		j = ascendingArray.length - 1;
 		while (i < j) {
-			temp = ascendingArray[i];
+			tmp = ascendingArray[i];
 			ascendingArray[i] = ascendingArray[j];
-			ascendingArray[j] = temp;
+			ascendingArray[j] = tmp;
 			i++;
 			j--;
 		}
@@ -158,6 +158,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		if (array.length == numberOfVertices) {
 			return null;
 		}
+
 		int[] arrayCopy = new int[array.length];
 		System.arraycopy(array, 0, arrayCopy, 0, array.length);
 
@@ -233,7 +234,7 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 	 * @param graph    the graph
 	 * @return true if valid, false if invalid
 	 */
-	public boolean isValidVertexColoring(Coloring<V> coloring, Graph<V, E> graph) {
+	public static <V, E> boolean isValidVertexColoring(Coloring<V> coloring, Graph<V, E> graph) {
 		for (Set<V> colorClass : coloring.getColorClasses()) {
 			for (V v : colorClass) {
 				TreeSet<V> collect = new TreeSet<>();
