@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
 import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.FileManager;
+import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.*;
@@ -15,6 +16,11 @@ import java.util.*;
 public class PearsonCorrelationTest {
 
     private static GraphDatabase database;
+    private static Filtermanagement manager;
+
+    public static GraphDatabase getDatabase() {
+        return database;
+    }
 
     /**
      * generates two (of two possible) graphs and adds them to the database
@@ -46,7 +52,9 @@ public class PearsonCorrelationTest {
 		String password = "";
 		String name = "grape";
 		FileManager fileManager = new FileManager();
-		database = fileManager.createGraphDatabase(url, user, password, name);*/
+		database = fileManager.createGraphDatabase(url, user, password, name);
+		manager = new Filtermanagement();
+        manager.setDatabase(database);*/
 
 	    String url = "jdbc:mysql://127.0.0.1/library";
 	    String user = "user";
@@ -57,6 +65,8 @@ public class PearsonCorrelationTest {
 	    FileManager fileManager = new FileManager();
 	    fileManager.deleteGraphDatabase(gdb);
 	    database = fileManager.createGraphDatabase(url, user, password, name);
+        manager = new Filtermanagement();
+        manager.setDatabase(database);
     }
 
     @Test

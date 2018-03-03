@@ -2,17 +2,21 @@ package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
+import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import org.junit.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
 public class CorrelationRequestTest {
 
     private static GraphDatabase database;
-    private static Filtermanagement manager;
 
     @Test
     public void testGetCorrelation() throws InvalidCorrelationInputException {
@@ -140,6 +144,7 @@ public class CorrelationRequestTest {
             InvalidCorrelationInputException {
         PearsonCorrelationTest test = new PearsonCorrelationTest();
         test.delete();
+        database = test.getDatabase();
         PearsonCorrelationTest.putGraphsIntoDatabase();
 
         CorrelationRequest testRequest1 = new CorrelationRequest("Min Pearson 4", database);
