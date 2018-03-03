@@ -54,12 +54,14 @@ public class CorrelationTest {
         CorrelationOutput output3 = new CorrelationOutput("TotalColoringNumberOfColors", "NumberOfCliques", 1.89);
         CorrelationOutput output4 = new CorrelationOutput("VertexColoringNumberOfColors", "NumberOfDisjointVerticesFromKkGraph", 6.83);
         CorrelationOutput output5 = new CorrelationOutput("SmallestDegree", "NumberOfDisjointEdgesFromKkGraph", 8.71);
+        CorrelationOutput output6 = new CorrelationOutput("GreatestDegree", "LargestCliqueSize", 0.0);
         TreeSet<CorrelationOutput> testSet = new TreeSet<>();
         testSet.add(output1);
         testSet.add(output2);
         testSet.add(output3);
         testSet.add(output4);
         testSet.add(output5);
+        testSet.add(output6);
         TreeSet<CorrelationOutput> outputSet = Correlation.cutListMinimum(testSet, 3);
         for (CorrelationOutput current: outputSet) {
             System.out.println(current.getFirstProperty());
@@ -68,6 +70,36 @@ public class CorrelationTest {
         assert outputSet.contains(output1);
         assert outputSet.contains(output2);
         assert outputSet.contains(output3);
+        for (CorrelationOutput current: outputSet) {
+            System.out.println(current.getFirstProperty());
+        }
+    }
+
+    @Test
+    public void testCutListMaximum() {
+        CorrelationOutput output1 = new CorrelationOutput("AverageDegree", "StructureDensity", 2.43);
+        CorrelationOutput output2 = new CorrelationOutput("LargestCliqueSize", "NumberOfVertices", 4.32);
+        CorrelationOutput output3 = new CorrelationOutput("TotalColoringNumberOfColors", "NumberOfCliques", 1.89);
+        CorrelationOutput output4 = new CorrelationOutput("VertexColoringNumberOfColors", "NumberOfDisjointVerticesFromKkGraph", 6.83);
+        CorrelationOutput output5 = new CorrelationOutput("SmallestDegree", "NumberOfDisjointEdgesFromKkGraph", 8.71);
+        CorrelationOutput output6 = new CorrelationOutput("GreatestDegree", "LargestCliqueSize", 0.0);
+        CorrelationOutput output7 = new CorrelationOutput("GreatestDegree", "GreatestDegree", 9.32);
+        TreeSet<CorrelationOutput> testSet = new TreeSet<>();
+        testSet.add(output1);
+        testSet.add(output2);
+        testSet.add(output3);
+        testSet.add(output4);
+        testSet.add(output5);
+        testSet.add(output6);
+        testSet.add(output7);
+        TreeSet<CorrelationOutput> outputSet = Correlation.cutListMaximum(testSet, 3);
+        for (CorrelationOutput current: outputSet) {
+            System.out.println(current.getFirstProperty());
+        }
+        assert outputSet.size() == 3;
+        assert outputSet.contains(output5);
+        assert outputSet.contains(output4);
+        assert outputSet.contains(output2);
         for (CorrelationOutput current: outputSet) {
             System.out.println(current.getFirstProperty());
         }

@@ -3,6 +3,9 @@ package edu.kit.ipd.dbis.correlation;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
 import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
@@ -12,6 +15,7 @@ import org.junit.*;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class PearsonCorrelationTest {
 
@@ -72,13 +76,30 @@ public class PearsonCorrelationTest {
 
     @Test
     public void testCalculateCorrelation() throws Exception {
-        PropertyGraph<Integer, Integer> testGraph1 = new PropertyGraph<>();
         Set<PropertyGraph> mySet = new HashSet<>();
         BulkRandomConnectedGraphGenerator<Integer, Integer> myGenerator = new BulkRandomConnectedGraphGenerator<>();
         myGenerator.generateBulk(mySet, 2,4,4,5,6);
         for (PropertyGraph<Integer, Integer> current: mySet) {
             database.addGraph(current);
         }
-        Pearson.calculateCorrelation("averagedegree", "smallestdegree", database);
+        double result = Pearson.calculateCorrelation("averagedegree", "smallestdegree", database);
+        assert result == 0.0;
+    }
+
+    @Test
+    public void testUseMinimumWithProperty() throws UnexpectedObjectException, InsertionFailedException,
+            ConnectionFailedException {
+        Set<PropertyGraph> mySet = new HashSet<>();
+        BulkRandomConnectedGraphGenerator<Integer, Integer> myGenerator = new BulkRandomConnectedGraphGenerator<>();
+        myGenerator.generateBulk(mySet, 2,4,4,5,6);
+        for (PropertyGraph<Integer, Integer> current: mySet) {
+            database.addGraph(current);
+        }
+        Pearson pearsonObject = new Pearson();
+        TreeSet<CorrelationOutput> resultSet = pearsonObject.useMinimum("AverageDegree", database);
+        System.out.println("Hier wird etwas ausgegeben");
+        for (CorrelationOutput current: resultSet) {
+            System.out.println(current.getFirstProperty() + " " + current.getSecondProperty() + " " + current.getOutputNumber());
+        }
     }
 }
