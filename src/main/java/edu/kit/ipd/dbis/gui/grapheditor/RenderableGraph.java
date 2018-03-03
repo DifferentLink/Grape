@@ -167,7 +167,8 @@ public class RenderableGraph {
 		Map<Integer, Color> colorsToColorObjectMap = new HashMap<>();
 		Map<V, Integer> colors = coloring.getColors();
 
-		KkGraphAlgorithm.KkGraph<V> kkGraph = (KkGraphAlgorithm.KkGraph) propertyGraph.getProperty(KkGraph.class).getValue();
+		KkGraphAlgorithm.KkGraph<V> kkGraph =
+				(KkGraphAlgorithm.KkGraph) propertyGraph.getProperty(KkGraph.class).getValue();
 		Map<V, Integer> subgraphs = kkGraph.getKkGraphMap();
 
 		// associate integer value of colorings
@@ -250,7 +251,8 @@ public class RenderableGraph {
 	 * @param <V> the type representing vertices
 	 * @param <E> the type representing edges
 	 */
-	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph, TotalColoringAlgorithm.TotalColoring coloring, VertexFactory factory) {
+	public <V, E> RenderableGraph(PropertyGraph<V, E> propertyGraph,
+	                              TotalColoringAlgorithm.TotalColoring coloring, VertexFactory factory) {
 		this.edges = new HashSet<>();
 		this.vertices = new HashSet<>();
 		this.subgraphs = new ArrayList<>();
