@@ -7,19 +7,28 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.file.FileManager;
-import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.*;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class PearsonCorrelationTest {
 
     private static GraphDatabase database;
+
+    private static void putGraphsIntoDatabase() throws UnexpectedObjectException, InsertionFailedException,
+            ConnectionFailedException {
+        Set<PropertyGraph> mySet = new HashSet<>();
+        BulkRandomConnectedGraphGenerator<Integer, Integer> myGenerator = new BulkRandomConnectedGraphGenerator<>();
+        myGenerator.generateBulk(mySet, 2,4,4,5,6);
+        for (PropertyGraph<Integer, Integer> current: mySet) {
+            current.calculateProperties();
+        }
+        for (PropertyGraph<Integer, Integer> current: mySet) {
+            database.addGraph(current);
+        }
+    }
 
     @Before
     public void delete() throws Exception {
@@ -56,10 +65,10 @@ public class PearsonCorrelationTest {
     }
 
     @Test
-    public void testGetSampleVariationskoeffizientWithSmallList() {
-        LinkedList<Double> sampleNumbers = new LinkedList<>();
-        sampleNumbers.add(9.34);
-        double result = Pearson.getSampleVariationskoeffizient(sampleNumbers, 6.78);
+    public void testGetSampleVariationskoeffizientOneElementList() {
+        LinkedList<Double> sampleNumber = new LinkedList<>();
+        sampleNumber.add(3.14);
+        double result = Pearson.getSampleVariationskoeffizient(sampleNumber, 3.52);
         assert result == 0.0;
     }
 
@@ -76,30 +85,84 @@ public class PearsonCorrelationTest {
 
     @Test
     public void testCalculateCorrelation() throws Exception {
-        Set<PropertyGraph> mySet = new HashSet<>();
-        BulkRandomConnectedGraphGenerator<Integer, Integer> myGenerator = new BulkRandomConnectedGraphGenerator<>();
-        myGenerator.generateBulk(mySet, 2,4,4,5,6);
-        for (PropertyGraph<Integer, Integer> current: mySet) {
-            database.addGraph(current);
-        }
-        double result = Pearson.calculateCorrelation("averagedegree", "smallestdegree", database);
+        PearsonCorrelationTest.putGraphsIntoDatabase();
+        double result = Pearson.calculateCorrelation("numberofedges", "VertexColoringNumberOfColors", database);
+        assert (result - 1) < 0.01;
+    }
+
+    @Test
+    public void testCalculateCorrelationDivisionByZero() throws Exception {
+        PearsonCorrelationTest.putGraphsIntoDatabase();
+        //The number of vertex colorings is 1 in both cases --> SampleVariationskoeffizient is 0 --> Division by zero
+        double result = Pearson.calculateCorrelation("numberofvertexcolorings", "VertexColoringNumberOfColors", database);
         assert result == 0.0;
     }
 
     @Test
     public void testUseMinimumWithProperty() throws UnexpectedObjectException, InsertionFailedException,
             ConnectionFailedException {
-        Set<PropertyGraph> mySet = new HashSet<>();
-        BulkRandomConnectedGraphGenerator<Integer, Integer> myGenerator = new BulkRandomConnectedGraphGenerator<>();
-        myGenerator.generateBulk(mySet, 2,4,4,5,6);
-        for (PropertyGraph<Integer, Integer> current: mySet) {
-            database.addGraph(current);
-        }
+        PearsonCorrelationTest.putGraphsIntoDatabase();
         Pearson pearsonObject = new Pearson();
+        pearsonObject.setAttributeCounter(3);
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMinimum("AverageDegree", database);
-        System.out.println("Hier wird etwas ausgegeben");
+
+        assert resultSet.size() == 3;
+        int counter = 0;
         for (CorrelationOutput current: resultSet) {
-            System.out.println(current.getFirstProperty() + " " + current.getSecondProperty() + " " + current.getOutputNumber());
+            if (counter == 0) {
+                assert current.getFirstProperty().equals("StructureDensity");
+                assert current.getSecondProperty().equals("AverageDegree");
+                assert Math.abs(current.getOutputNumber() - 0.8) < 0.01;
+            } else if (counter == 1) {
+                assert current.getFirstProperty().equals("BinomialDensity");
+                assert current.getSecondProperty().equals("AverageDegree");
+                assert Math.abs(current.getOutputNumber() - 0.5) < 0.01;
+            } else {
+                assert current.getFirstProperty().equals("ProportionDensity");
+                assert current.getSecondProperty().equals("AverageDegree");
+                assert Math.abs(current.getOutputNumber() - 0.2) < 0.01;
+            }
+            counter++;
         }
+    }
+
+    @Test
+    public void testUseMinimum() throws ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
+        PearsonCorrelationTest.putGraphsIntoDatabase();
+        Pearson pearsonObject = new Pearson();
+        pearsonObject.setAttributeCounter(4);
+        TreeSet<CorrelationOutput> resultSet = pearsonObject.useMinimum(database);
+
+        assert resultSet.size() == 4;
+        int counter = 0;
+        for (CorrelationOutput current: resultSet) {
+            if (counter == 4) {
+                assert current.getFirstProperty().equals("ProportionDensity");
+                assert current.getSecondProperty().equals("NumberOfDisjointEdgesFromKkGraph");
+                assert Math.abs(current.getOutputNumber() - 0.05) < 0.01;
+            }
+            counter++;
+        }
+    }
+
+    @Test
+    public void testUseMaximumWithProperty() throws UnexpectedObjectException, InsertionFailedException,
+            ConnectionFailedException {
+        PearsonCorrelationTest.putGraphsIntoDatabase();
+        Pearson pearsonObject = new Pearson();
+        pearsonObject.setAttributeCounter(3);
+        TreeSet<CorrelationOutput> resultSet = pearsonObject.useMaximum("VertexColoringNumberOfColors", database);
+
+        assert resultSet.size() == 3;
+    }
+
+    @Test
+    public void testUseMaximum() throws ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
+        PearsonCorrelationTest.putGraphsIntoDatabase();
+        Pearson pearsonObject = new Pearson();
+        pearsonObject.setAttributeCounter(4);
+        TreeSet<CorrelationOutput> resultSet = pearsonObject.useMaximum(database);
+
+        assert resultSet.size() == 4;
     }
 }
