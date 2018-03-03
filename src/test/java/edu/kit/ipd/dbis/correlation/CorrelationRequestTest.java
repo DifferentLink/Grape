@@ -17,6 +17,35 @@ import java.util.*;
 public class CorrelationRequestTest {
 
     private static GraphDatabase database;
+	private static Filtermanagement manager;
+
+	@Before
+	public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+			ConnectionFailedException {
+
+    	/*Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+		String url = "jdbc:mysql://127.0.0.1/library";
+		String user = "travis";
+		String password = "";
+		String name = "grape";
+		FileManager fileManager = new FileManager();
+		database = fileManager.createGraphDatabase(url, user, password, name);
+		manager = new Filtermanagement();
+        manager.setDatabase(database);*/
+
+		String url = "jdbc:mysql://127.0.0.1/library";
+		String user = "user";
+		String password = "password";
+		String name = "grape2";
+		GraphDatabase gdb = new GraphDatabase(new GraphTable(url, user, password, name),
+				new FilterTable(url, user, password, "grape2filters"));
+		FileManager fileManager = new FileManager();
+		fileManager.deleteGraphDatabase(gdb);
+		database = fileManager.createGraphDatabase(url, user, password, name);
+		manager = new Filtermanagement();
+		manager.setDatabase(database);
+	}
 
     @Test
     public void testGetCorrelation() throws InvalidCorrelationInputException {
@@ -142,9 +171,7 @@ public class CorrelationRequestTest {
     public void testApplyCorrelation() throws ConnectionFailedException, InsertionFailedException,
             UnexpectedObjectException, DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
             InvalidCorrelationInputException {
-        PearsonCorrelationTest test = new PearsonCorrelationTest();
-        test.delete();
-        database = test.getDatabase();
+		PearsonCorrelationTest.setDatabase(database);
         PearsonCorrelationTest.putGraphsIntoDatabase();
 
         CorrelationRequest testRequest1 = new CorrelationRequest("Min Pearson 4", database);

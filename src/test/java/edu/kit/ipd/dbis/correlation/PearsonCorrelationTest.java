@@ -16,10 +16,9 @@ import java.util.*;
 public class PearsonCorrelationTest {
 
     private static GraphDatabase database;
-    private static Filtermanagement manager;
 
-    public static GraphDatabase getDatabase() {
-        return database;
+    public static void setDatabase(GraphDatabase newDatabase) {
+        database = newDatabase;
     }
 
     /**
@@ -52,9 +51,7 @@ public class PearsonCorrelationTest {
 		String password = "";
 		String name = "grape";
 		FileManager fileManager = new FileManager();
-		database = fileManager.createGraphDatabase(url, user, password, name);
-		manager = new Filtermanagement();
-        manager.setDatabase(database);*/
+		database = fileManager.createGraphDatabase(url, user, password, name);*/
 
 	    String url = "jdbc:mysql://127.0.0.1/library";
 	    String user = "user";
@@ -65,8 +62,6 @@ public class PearsonCorrelationTest {
 	    FileManager fileManager = new FileManager();
 	    fileManager.deleteGraphDatabase(gdb);
 	    database = fileManager.createGraphDatabase(url, user, password, name);
-        manager = new Filtermanagement();
-        manager.setDatabase(database);
     }
 
     @Test
