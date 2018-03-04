@@ -97,6 +97,7 @@ public class GenerateGraphUI extends JFrame {
 		generate.add(generateGraphsButton);
 
 		content.add(generate);
+		this.getRootPane().setDefaultButton(generateGraphsButton);
 		this.add(content);
 		this.setLocationRelativeTo(null);
 	}
