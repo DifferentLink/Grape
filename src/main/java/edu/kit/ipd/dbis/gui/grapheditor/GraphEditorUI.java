@@ -181,7 +181,8 @@ public class GraphEditorUI extends JPanel {
 			currentTotalColoring = GraphEditorController.getTotalColoring(graph);
 			this.graph = new RenderableGraph(graph, currentTotalColoring, this.factory);
 		}
-		history.clear();
+		this.history = new GraphEditorHistory();
+		this.history.addToHistory(this.graph);
 		arrangeGraph();
 		graphEditor.repaint();
 	}
@@ -195,7 +196,8 @@ public class GraphEditorUI extends JPanel {
 	                         VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring, this.factory);
-		history.clear();
+		this.history = new GraphEditorHistory();
+		this.history.addToHistory(this.graph);
 		arrangeGraph();
 		graphEditor.repaint();
 	}
@@ -209,7 +211,8 @@ public class GraphEditorUI extends JPanel {
 	                         TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring, this.factory);
-		history.clear();
+		this.history = new GraphEditorHistory();
+		this.history.addToHistory(this.graph);
 		arrangeGraph();
 		graphEditor.repaint();
 	}
