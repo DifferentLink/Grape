@@ -4,16 +4,10 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import javax.swing.BoxLayout;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -22,40 +16,26 @@ import java.util.Set;
 
 public class FilterSuggestions extends JPopupMenu {
 
-	private final JTextArea inputField;
+	private final JTextField inputField;
 
-	public FilterSuggestions(JTextArea inputField) {
+	public FilterSuggestions(JTextField inputField) {
 		this.inputField = inputField;
+		updateSuggestions();
 	}
 
-	public void drawFilterSuggestions(String input, Component component) {
-		JPanel container = new JPanel();
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-		JScrollPane scrollPane = new JScrollPane(container);
-		scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
-		this.add(scrollPane);
-		this.setMinimumSize(new Dimension(500, 100));
-		this.setMaximumSize(new Dimension(500, 200));
-		Point position = new Point(component.getLocationOnScreen().x - this.getWidth() + component.getWidth(),
-				component.getLocationOnScreen().y - this.getHeight());
-		this.setLocation(position);
-		this.setVisible(true);
-		showSuggestionsFor(input);
-	}
-
-	public void showSuggestionsFor(String input) {
+	private void updateSuggestions() {
 		Set<Property> properties = PropertyFactory.createAllProperties(new PropertyGraph());
 		List<String> availableFilterExpressions = new LinkedList<>();
 		properties.forEach(property -> availableFilterExpressions.add(property.getClass().getSimpleName()));
 		this.removeAll();
 		revalidate();
-		String[] parts = input.split(" ");
+		String[] parts = inputField.getText().split(" ");
 		String lastKeyword = parts[parts.length - 1];
 		if (!lastKeyword.equals("")) {
 			for (String string : availableFilterExpressions) {
-				if (string.contains(lastKeyword)) {
+				if (string.toLowerCase().contains(lastKeyword.toLowerCase())) {
 					JMenuItem menuItem = new JMenuItem(string);
-					menuItem.addActionListener(new ApplySuggestionAction());
+					menuItem.addActionListener(new ApplySuggestionAction(string));
 					this.add(menuItem);
 				}
 			}
@@ -64,18 +44,27 @@ public class FilterSuggestions extends JPopupMenu {
 				this.add(string);
 			}
 		}
+		this.revalidate();
 	}
 
 
 	private class ApplySuggestionAction implements ActionListener {
 
+		private final String suggestion;
+
+		public ApplySuggestionAction(String suggestion) {
+			this.suggestion = suggestion;
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			String[] parts = inputField.getText().split(" ");
+			String inputText = inputField.getText();
+			String[] parts = inputText.split(" ");
 			String lastKeyword = parts[parts.length - 1];
 			try {
-				inputField.setText(inputField.getText(0, lastKeyword.length()));
-			} catch (BadLocationException ignored) {}
+				String cutText = inputField.getText(0, inputText.length() - lastKeyword.length());
+				inputField.setText(cutText + suggestion);
+			} catch (BadLocationException ignored) { }
 		}
 	}
 }
