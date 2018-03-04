@@ -165,4 +165,19 @@ public class PropertyGraphTest {
 		Assert.assertTrue(graph.vertexSet().size() == 7);
 		Assert.assertTrue(graph.edgeSet().size() == 12);
 	}
+
+	@Test
+	public void simpleColoringTest() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("b", "c");
+		graph.addEdge("b", "d");
+		graph.addEdge("c", "d");
+		List colorings = (List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue();
+	}
 }

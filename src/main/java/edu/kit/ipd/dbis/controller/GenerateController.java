@@ -181,21 +181,21 @@ public class GenerateController {
 	 */
 	public void generateBFSGraph(String bfsCode) {
 		// Parsing String into int[]
-		String[] splitCode = bfsCode.split(",");
-		int[] code = new int[splitCode.length];
-		for (int i = 0; i < splitCode.length; i++) {
-			code[i] = Integer.parseInt(splitCode[i]);
-		}
-		// Creating BfsCode Object
-		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
-		try {
-			database.addGraph(graph);
-			calculation.run();
-			this.grapeUI.updateTable();
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
-			statusbar.addMessage(e.getMessage());
-		}
+			String[] splitCode = bfsCode.split(",");
+			int[] code = new int[splitCode.length];
+			for (int i = 0; i < splitCode.length; i++) {
+				code[i] = Integer.parseInt(splitCode[i]);
+			}
+			// Creating BfsCode Object
+			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+			PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
+			try {
+				database.addGraph(graph);
+				calculation.run();
+				this.grapeUI.updateTable();
+			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
+				statusbar.addMessage(e.getMessage());
+			}
 	}
 
 	/**
