@@ -182,5 +182,13 @@ public class CorrelationRequestTest {
         testRequest3.applyCorrelation();
         CorrelationRequest testRequest4 = new CorrelationRequest("Max MutualCorrelation 6", database);
         testRequest4.applyCorrelation();
+        CorrelationRequest testRequest5 = new CorrelationRequest("Min Pearson AverageDegree 2", database);
+        testRequest5.applyCorrelation();
+        CorrelationRequest testRequest6 = new CorrelationRequest("Max Pearson NumberOfEdges 2", database);
+        testRequest6.applyCorrelation();
+        CorrelationRequest testRequest7 = new CorrelationRequest("Min MutualCorrelation SmallestDegree 2", database);
+        testRequest7.applyCorrelation();
+        CorrelationRequest testRequest8 = new CorrelationRequest("Max MutualCorrelation BinomialDensity 2", database);
+        testRequest8.applyCorrelation();
     }
 }
