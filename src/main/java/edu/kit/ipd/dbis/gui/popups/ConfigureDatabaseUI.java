@@ -10,7 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -26,10 +26,10 @@ public class ConfigureDatabaseUI extends JFrame {
 	private final ResourceBundle language;
 	private final Theme theme;
 
-	JTextArea nameInput;
-	JTextArea urlInput;
-	JTextArea userInput;
-	JTextArea passwordInput;
+	JTextField nameInput;
+	JTextField urlInput;
+	JTextField userInput;
+	JTextField passwordInput;
 
 	/**
 	 * @param databaseController the responsible controller
@@ -47,22 +47,22 @@ public class ConfigureDatabaseUI extends JFrame {
 		inputContainer.setLayout(new GridLayout(4, 2, 2, 10));
 
 		JLabel nameLabel = new JLabel("Name"); // todo use language resource
-		nameInput = new JTextArea("graphs");
+		nameInput = new JTextField("graphs");
 		inputContainer.add(nameLabel);
 		inputContainer.add(nameInput);
 
 		JLabel urlLabel = new JLabel("URL"); // todo use language resource
-		urlInput = new JTextArea("jdbc:mysql://localhost:3306/library");
+		urlInput = new JTextField("jdbc:mysql://localhost:3306/library");
 		inputContainer.add(urlLabel);
 		inputContainer.add(urlInput);
 
 		JLabel userLabel = new JLabel("User"); // todo use language resource
-		userInput = new JTextArea("user");
+		userInput = new JTextField("user");
 		inputContainer.add(userLabel);
 		inputContainer.add(userInput);
 
 		JLabel passwordLabel = new JLabel("Password"); // todo use language resource
-		passwordInput = new JTextArea("password");
+		passwordInput = new JTextField("password");
 		inputContainer.add(passwordLabel);
 		inputContainer.add(passwordInput);
 
@@ -81,6 +81,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		container.add(inputContainer);
 		container.add(Box.createVerticalStrut(10));
 		container.add(buttonContainer);
+		this.getRootPane().setDefaultButton(configureButton);
 		this.add(container);
 		this.setMinimumSize(new Dimension(300, 200));
 		this.setLocationRelativeTo(null);
