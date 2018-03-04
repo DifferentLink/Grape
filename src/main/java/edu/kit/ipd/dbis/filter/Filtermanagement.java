@@ -9,21 +9,21 @@ import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * class which communicates with other packages of Grape
  */
 public class Filtermanagement {
 
-    private List<Filtergroup> availableFilterGroups;
-    private List<Filter> availableFilter;
+    List<Filtergroup> availableFilterGroups;
+    List<Filter> availableFilter;
     private GraphDatabase database;
+
+
 
     /**
      * Constructor of class Filtermanagement. The constructor creates two empty lists: One list for the
@@ -34,15 +34,32 @@ public class Filtermanagement {
         availableFilter = new ArrayList<>();
     }
 
-	/**
-	 * getter-method for database
-	 * @return database
-	 */
-	public GraphDatabase getDatabase() {
-		return database;
-	}
+    /**
+     * getter-method for database
+     * @return current database of the filtermanager
+     */
+    public GraphDatabase getDatabase() {
+        return database;
+    }
 
-	public void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
+    /**
+     * getter-method for filter groups
+     * @return returns all filtergroups the current filtermanager inherits
+     */
+    public List<Filtergroup> getAvailableFilterGroups() {
+        return availableFilterGroups;
+    }
+
+    /**
+     * getter-method for filter
+     * @return returns all filter the current filtermanager inherits
+     */
+    public List<Filter> getAvailableFilter() {
+        return availableFilter;
+    }
+
+    private void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
+
             UnexpectedObjectException, InsertionFailedException {
         database.addFilter(filtergroup);
         availableFilterGroups.add(filtergroup);
@@ -58,7 +75,7 @@ public class Filtermanagement {
             InsertionFailedException, UnexpectedObjectException {
         for (Filtergroup element: availableFilterGroups) {
             if (element.id == groupID) {
-                element.availableFilter.add(filter);
+                element.getAvailableFilter().add(filter);
                 database.replaceFilter(groupID, element);
             }
         }
@@ -74,14 +91,9 @@ public class Filtermanagement {
             }
         }
         for (Filtergroup element : availableFilterGroups) {
-            if (element.id == id) {
-                availableFilterGroups.remove(element);
-                database.deleteFilter(id);
-                return 0;
-            }
-            for (Filter filterInGroup : element.availableFilter) {
+            for (Filter filterInGroup : element.getAvailableFilter()) {
                 if (filterInGroup.id == id) {
-                    element.availableFilter.remove(filterInGroup);
+                    element.getAvailableFilter().remove(filterInGroup);
                     database.replaceFilter(element.id, element);
                     return element.id;
                 }
@@ -113,9 +125,9 @@ public class Filtermanagement {
                 database.deleteFilter(id);
                 return;
             }
-            for (Filter filterInGroup: element.availableFilter) {
+            for (Filter filterInGroup: element.getAvailableFilter()) {
                 if (filterInGroup.id == id) {
-                    element.availableFilter.remove(filterInGroup);
+                    element.getAvailableFilter().remove(filterInGroup);
                     database.replaceFilter(element.id, element);
                     return;
                 }
@@ -146,7 +158,7 @@ public class Filtermanagement {
                 database.replaceFilter(id, element);
                 return;
             }
-            for (Filter currentFilter: element.availableFilter) {
+            for (Filter currentFilter: element.getAvailableFilter()) {
                 if (currentFilter.id == id) {
                     currentFilter.activate();
                     database.replaceFilter(element.id, element);
@@ -180,7 +192,7 @@ public class Filtermanagement {
                 database.replaceFilter(id, currentElement);
                 return;
             }
-            for (Filter currentFilter : currentElement.availableFilter) {
+            for (Filter currentFilter : currentElement.getAvailableFilter()) {
                 if (currentFilter.id == id) {
                     currentFilter.deactivate();
                     database.replaceFilter(currentElement.id, currentElement);
@@ -205,8 +217,10 @@ public class Filtermanagement {
             InsertionFailedException, UnexpectedObjectException, InvalidInputException {
         int groupID = this.removeFiltersegmentAngGetID(id);
         if (groupID != 0) {
-            this.addFilterToGroup(input, id, groupID);
+            this.removeFiltersegment(id);
+            this.updateFilter(input, id, groupID);
         } else {
+            this.removeFiltersegment(id);
             this.addFilter(input, id);
         }
     }
@@ -276,8 +290,9 @@ public class Filtermanagement {
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
      */
-    public void addFilterToGroup(String input, int id, int groupID) throws InvalidInputException,
+    public void updateFilter(String input, int id, int groupID) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
+        this.removeFiltersegment(id);
         this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
     }
 
@@ -293,12 +308,13 @@ public class Filtermanagement {
      * @throws InsertionFailedException thrown if filter could not be added to database
      * @throws UnexpectedObjectException thrown if there is an unknown object
      */
-    public void addFilter(String input, int id) throws InvalidInputException,
+    private void addFilter(String input, int id) throws InvalidInputException,
             ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         this.addFilter(Filtermanagement.parseToFilter(input, id));
     }
 
     private static Filter parseToFilter(String input, int id) throws InvalidInputException {
+        Filtermanagement.checkFilterInputNull(input);
         String inputCopy = input.toLowerCase();
         String[] parameters = inputCopy.split(" ", 7);
         if (parameters.length == 1) {
@@ -362,9 +378,6 @@ public class Filtermanagement {
             Relation relation = Filtermanagement.testRelation(relationString);
 
             String valueString = parameters[2];
-            if (!Filtermanagement.isIntegerOrDouble(valueString) || valueString.length() == 0) {
-                throw new InvalidInputException();
-            }
             checkFilterInputNull(parameters[2]);
             double value = Filtermanagement.parseToIntegerOrDouble(valueString);
             return new BasicFilter(input, false, value, relation, property1, id);
@@ -405,7 +418,13 @@ public class Filtermanagement {
 
     private static String testProperty(String input) throws InvalidInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> propertySet = PropertyFactory.createAllProperties(graph);
+        Set<Property> fullPropertySet = PropertyFactory.createAllProperties(graph);
+        Set<Property> propertySet = new HashSet<>();
+        for (Property current: fullPropertySet) {
+            if (!current.getClass().getSuperclass().equals(ComplexProperty.class)) {
+                propertySet.add(current);
+            }
+        }
         String[] propertyStrings = new String[propertySet.size()];
         int i = 0;
         for (Property currentProperty: propertySet) {
@@ -436,11 +455,9 @@ public class Filtermanagement {
         LinkedList<Filtersegment> activatedFilter = database.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
-                if (element.getClass() == Filtergroup.class) {
-                    availableFilterGroups.add((Filtergroup) element);
-                } else {
-                    availableFilter.add((Filter) element);
-                }
+                availableFilterGroups.add((Filtergroup) element);
+            } else {
+                availableFilter.add((Filter) element);
             }
         }
     }
@@ -458,7 +475,7 @@ public class Filtermanagement {
         }
         for (Filtergroup current: availableFilterGroups) {
             if (current.isActivated) {
-                List<Filter> filterInGroup = current.availableFilter;
+                List<Filter> filterInGroup = current.getAvailableFilter();
                 for (Filter currentFilterInGroup: filterInGroup) {
                     if (current.isActivated) {
                         activatedFilter.add(currentFilterInGroup);
@@ -472,14 +489,6 @@ public class Filtermanagement {
         for (Filter element: activatedFilter) {
             stringArray = Filtermanagement.fillColumn(stringArray, currentColumn, element);
             currentColumn++;
-        }
-        for (Filtergroup element: availableFilterGroups) {
-            if (element.isActivated) {
-                for (Filter groupElement : element.availableFilter) {
-                    stringArray = Filtermanagement.fillColumn(stringArray, currentColumn, groupElement);
-                    currentColumn++;
-                }
-            }
         }
         return stringArray;
     }
@@ -543,7 +552,8 @@ public class Filtermanagement {
         }
     }
 
-    private static boolean isIntegerOrDouble(String input) {
+    private static boolean isIntegerOrDouble(String input) throws InvalidInputException {
+        Filtermanagement.checkFilterInputNull(input);
         if (StringUtils.isStrictlyNumeric(input)) {
             return true;
         } else {

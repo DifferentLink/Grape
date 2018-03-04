@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,11 +25,28 @@ public class UIFilterManager {
 	private int nextUniqueID = 0;
 
 	/**
+	 * setter method
+	 *
+	 * @param id the new id
+	 */
+	public void setNextUniqueID(int id) {
+		this.nextUniqueID = id;
+	}
+
+	/**
 	 * Adds a new SimpleFilter to the known Filters.
 	 */
 	public void addNewSimpleFilter() {
 		SimpleFilter newFilter = new SimpleFilter(getUniqueID());
 		simpleFilter.add(newFilter);
+	}
+
+	/**
+	 * Adds a new SimpleFilter to the known Filters.
+	 * @param simpleFilter
+	 */
+	public void addNewSimpleFilter(SimpleFilter simpleFilter) {
+		this.simpleFilter.add(simpleFilter);
 	}
 
 	/**
@@ -48,6 +64,14 @@ public class UIFilterManager {
 	 */
 	public void addNewSimpleFilterToGroup(FilterGroup filterGroup) {
 		filterGroup.add(new SimpleFilter(getUniqueID()));
+	}
+
+	/**
+	 * Adds a new FilterGroup to the known Filters.
+	 * @param filterGroup the FilterGroup
+	 */
+	public void addNewFilterGroup(FilterGroup filterGroup) {
+		filterGroups.add(filterGroup);
 	}
 
 	/**
@@ -103,9 +127,7 @@ public class UIFilterManager {
 
 		for (FilterGroup filterGroup : filterGroups) {
 			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
-				if (simpleFilter.isActive()) {
-					output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]:");
-				}
+				output.append("[" + filterGroup.getText() + ";" + simpleFilter.getText() + "]:");
 			}
 		}
 
@@ -140,20 +162,34 @@ public class UIFilterManager {
 		Pattern pattern = Pattern.compile("(\\[(.)*;(.)+\\]:)+");
 		Matcher matcher = pattern.matcher(filter);
 		if (matcher.find()) {
+			Map<String, FilterGroup> filterGroups = new HashMap<>();
 			String[] groups = matcher.group().split(":");
+
 			for (int i = 0; i < groups.length; i++) {
 				String[] filterInfo = groups[i].split(";");
 				String group = filterInfo[0].substring(1);
 				String content = filterInfo[1].substring(0, filterInfo[1].length() - 1);
-
-				FilterGroup targetFilterGroup = getFilterGroupByName(group);
-				if (targetFilterGroup != null) {
-					SimpleFilter newSimpleFilter = new SimpleFilter(getUniqueID(), content);
-					addSimpleFilterToGroup(targetFilterGroup, newSimpleFilter);
-				} else if (!group.equals("")){
-					addNewFilterGroup(group);
+				if (group.equals("")) {
+					SimpleFilter simpleFilter = new SimpleFilter(this.getUniqueID(), content);
+					this.simpleFilter.add(simpleFilter);
+				} else if (!filterGroups.containsKey(group)) {
+					FilterGroup filterGroup = new FilterGroup(getUniqueID(), group);
+					filterGroup.add(new SimpleFilter(this.getUniqueID(), content));
+					filterGroups.put(group, filterGroup);
+				} else {
+					filterGroups.get(group).add(new SimpleFilter(this.getUniqueID(), content));
 				}
 			}
+
+			Iterator iterator = filterGroups.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry pair = (Map.Entry)iterator.next();
+				this.filterGroups.add((FilterGroup) pair.getValue());
+				iterator.remove();
+			}
+
+			//TODO: Groups
+
 		}
 	}
 
@@ -181,5 +217,11 @@ public class UIFilterManager {
 	private FilterGroup getFilterGroupByName(String name) {
 		return filterGroups.stream()
 				.filter(filterGroup -> filterGroup.getText().equals(name)).findFirst().orElse(null);
+	}
+
+	public void clearFilters() {
+		simpleFilter = new ArrayList<>();
+		filterGroups = new ArrayList<>();
+		nextUniqueID = 0;
 	}
 }

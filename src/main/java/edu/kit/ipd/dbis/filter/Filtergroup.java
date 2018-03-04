@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Filtergroup extends Filtersegment {
 
-    List<Filter> availableFilter;
+    private List<Filter> availableFilter;
 
     /**
      * getter-method for availableFilter
@@ -26,7 +26,7 @@ public class Filtergroup extends Filtersegment {
      * graphs
      * @param id unique identifier the filtergroup should have
      */
-    public Filtergroup(String name, boolean isActivated, int id) {
+    Filtergroup(String name, boolean isActivated, int id) {
         this.name = name;
         this.isActivated = isActivated;
         this.id = id;

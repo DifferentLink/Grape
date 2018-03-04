@@ -2,12 +2,21 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.filter.Filter;
+import edu.kit.ipd.dbis.filter.Filtergroup;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
+import edu.kit.ipd.dbis.gui.filter.FilterGroup;
+import edu.kit.ipd.dbis.gui.filter.FilterUI;
+import edu.kit.ipd.dbis.gui.filter.SimpleFilter;
+import edu.kit.ipd.dbis.gui.filter.UIFilterManager;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 
 import java.sql.ResultSet;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The type Filter controller.
@@ -17,6 +26,8 @@ public class FilterController {
 	private Filtermanagement filter;
 	private StatusbarController statusbar;
 	private GrapeUI grapeUI;
+	private UIFilterManager uiFilterManager;
+	private FilterUI filterUI;
 
 	private static FilterController filterController;
 
@@ -44,6 +55,24 @@ public class FilterController {
 	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
+	}
+
+	/**
+	 * Sets filter ui.
+	 *
+	 * @param filterUI the filter ui
+	 */
+	public void setFilterUI(FilterUI filterUI) {
+		this.filterUI = filterUI;
+	}
+
+	/**
+	 * Sets filter manager.
+	 *
+	 * @param uiFilterManager the filter manager
+	 */
+	public void setUIFilterManager(UIFilterManager uiFilterManager) {
+		this.uiFilterManager = uiFilterManager;
 	}
 
 	/**
@@ -84,9 +113,9 @@ public class FilterController {
 	 * @param groupId     the group id
 	 * @throws InvalidInputException the invalid input exception
 	 */
-	public void addFilterToGroup(String filterInput, int filterId, int groupId) throws InvalidInputException {
+	public void updateFilter(String filterInput, int filterId, int groupId) throws InvalidInputException {
 		try {
-			filter.addFilterToGroup(filterInput, filterId, groupId);
+			filter.updateFilter(filterInput, filterId, groupId);
 		} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -149,6 +178,36 @@ public class FilterController {
 				| InsertionFailedException | ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
+	}
+
+	/**
+	 * Displays every filter that the current database contains.
+	 */
+	public void updateFilters() {
+		this.uiFilterManager.clearFilters();
+		List<Filter> filterList = filter.getAvailableFilter();
+		List<Filtergroup> filtergroupList = filter.getAvailableFilterGroups();
+		List<Integer> newId = new LinkedList<>();
+		newId.add(0);
+
+		for (Filter f : filterList) {
+			SimpleFilter simpleFilter = new SimpleFilter(f.getID(), f.getName());
+			uiFilterManager.addNewSimpleFilter(simpleFilter);
+			newId.add(f.getID());
+		}
+		for (Filtergroup f : filtergroupList) {
+			FilterGroup filterGroup = new FilterGroup(f.getID(), f.getName());
+			for (Filter filter : f.getAvailableFilter()) {
+				SimpleFilter simpleFilter = new SimpleFilter(filter.getID(), filter.getName());
+				filterGroup.add(simpleFilter);
+				newId.add(filter.getID());
+			}
+			uiFilterManager.addNewFilterGroup(filterGroup);
+			newId.add(f.getID());
+		}
+		uiFilterManager.setNextUniqueID(Collections.max(newId) + 1);
+		this.filterUI.update();
+
 	}
 
 	/**

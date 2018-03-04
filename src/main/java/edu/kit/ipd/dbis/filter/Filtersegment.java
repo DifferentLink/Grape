@@ -32,16 +32,6 @@ public abstract class Filtersegment implements Serializable {
     }
 
     /**
-     * sets a name for a specific filter. The name should be identical to the user input.
-     * If the user wrote Kanten = 10, the name of the filtersegment should be Kanten
-     * = 10
-     * @param name name of the filtersegment
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * allows to get the name of a specific filtersegment
      * @return name of filtersegment
      */
