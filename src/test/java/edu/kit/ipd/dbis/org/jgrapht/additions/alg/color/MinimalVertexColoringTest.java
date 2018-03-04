@@ -1,11 +1,15 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm.Coloring;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -324,6 +328,17 @@ public class MinimalVertexColoringTest {
 
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
 		assertEquals(2, alg.getColoring().getNumberColors());
+	}
+
+	@Test
+	public <V, E> void randomColoringTest() {
+		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator();
+		HashSet<PropertyGraph<V, E>> target = new HashSet<>();
+		bulkGen.generateBulk(target, 30, 3, 8, 2, 8);
+		for (PropertyGraph graph : target) {
+			Coloring c = ((List<Coloring<V>>) graph.getProperty(VertexColoring.class).getValue()).get(0);
+			assertEquals(true, MinimalVertexColoring.isValidVertexColoring(c, graph));
+		}
 	}
 
 	private PropertyGraph createCompleteGraph(int numberOfVertices) {
