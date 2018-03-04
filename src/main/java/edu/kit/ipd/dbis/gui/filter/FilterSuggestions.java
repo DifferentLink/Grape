@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,7 @@ public class FilterSuggestions extends JPopupMenu {
 				this.add(string);
 			}
 		}
+		Collections.sort(availableFilterExpressions);
 		this.revalidate();
 	}
 
