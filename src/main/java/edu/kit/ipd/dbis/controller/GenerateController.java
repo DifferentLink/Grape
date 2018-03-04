@@ -258,4 +258,15 @@ public class GenerateController {
 		return true;
 	}
 
+	public static boolean isValidVerticesInput(String input) {
+		return input.matches("\\d+") || input.matches("\\d+-\\d+");
+	}
+
+	public static boolean isValidEdgesInput(String input) {
+		return input.matches("\\d+");
+	}
+
+	public static boolean isValidNumberOfGraphs(String input) {
+		return input.matches("\\d+");
+	}
 }

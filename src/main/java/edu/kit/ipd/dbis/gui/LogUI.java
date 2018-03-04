@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.controller.StatusbarController;
+import edu.kit.ipd.dbis.gui.listener.HasFocusListener;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.History;
@@ -108,23 +109,5 @@ public class LogUI extends JFrame {
 		JPanel container = new JPanel(new BorderLayout());
 		container.add(new JLabel(event.getMessage()));
 		return container;
-	}
-
-	private class HasFocusListener implements FocusListener {
-		private final LogUI logUI;
-
-		HasFocusListener(LogUI logUI) {
-			this.logUI = logUI;
-		}
-
-		@Override
-		public void focusGained(FocusEvent focusEvent) {
-
-		}
-
-		@Override
-		public void focusLost(FocusEvent focusEvent) {
-			logUI.dispose();
-		}
 	}
 }
