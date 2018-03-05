@@ -1,15 +1,11 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
-import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
-import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm.Coloring;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -34,14 +30,14 @@ public class MinimalVertexColoringTest {
 		colors.put("c", 1);
 		colors.put("d", 0);
 		Coloring coloring = new VertexColoringAlgorithm.ColoringImpl<>(colors, 2);
-		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		MinimalVertexColoring<String, Integer> alg = new MinimalVertexColoring<>(graph);
 
 		assertEquals(false, alg.isValidVertexColoring(coloring, graph));
 	}
 
 	@Test
 	public void isValidVertexColoring2() {
-		PropertyGraph graph = new PropertyGraph();
+		PropertyGraph<String, Integer> graph = new PropertyGraph<>();
 		graph.addVertex("a");
 		graph.addVertex("b");
 		graph.addVertex("c");
@@ -56,7 +52,7 @@ public class MinimalVertexColoringTest {
 		colors.put("c", 1);
 		colors.put("d", 0);
 		Coloring coloring = new VertexColoringAlgorithm.ColoringImpl<String>(colors, 2);
-		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
+		MinimalVertexColoring<String, Integer> alg = new MinimalVertexColoring<>(graph);
 
 		assertEquals(true, alg.isValidVertexColoring(coloring, graph));
 	}
@@ -223,7 +219,7 @@ public class MinimalVertexColoringTest {
 
 	@Test
 	public void bigCompleteGraph() {
-		PropertyGraph graph = createCompleteGraph(10);
+		PropertyGraph graph = Util.createCompleteGraph(10);
 
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
 		Coloring coloring = alg.getColoring();
@@ -328,32 +324,5 @@ public class MinimalVertexColoringTest {
 
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
 		assertEquals(2, alg.getColoring().getNumberColors());
-	}
-
-	@Test
-	public <V, E> void randomColoringTest() {
-		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator();
-		HashSet<PropertyGraph<V, E>> target = new HashSet<>();
-		bulkGen.generateBulk(target, 30, 3, 8, 2, 8);
-		for (PropertyGraph graph : target) {
-			Coloring c = ((List<Coloring<V>>) graph.getProperty(VertexColoring.class).getValue()).get(0);
-			assertEquals(true, MinimalVertexColoring.isValidVertexColoring(c, graph));
-		}
-	}
-
-	private PropertyGraph createCompleteGraph(int numberOfVertices) {
-		PropertyGraph graph = new PropertyGraph();
-		for (int i = 0; i < numberOfVertices; i++) {
-			graph.addVertex(i);
-		}
-		for (int i = 0; i < numberOfVertices; i++) {
-			for (int j = 0; j < numberOfVertices; j++) {
-				if (j != i && !graph.containsEdge(graph.getEdgeFactory().createEdge(j, i))) {
-					graph.addEdge(i, j);
-
-				}
-			}
-		}
-		return graph;
 	}
 }
