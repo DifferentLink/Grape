@@ -155,7 +155,6 @@ public class FilterUI extends JPanel {
 
 		JScrollPane scrollPane = new JScrollPane(container);
 		scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		filter.add(scrollPane, BorderLayout.CENTER);
 	}
 
