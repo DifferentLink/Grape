@@ -273,7 +273,7 @@ public class GenerateController {
 	}
 
 	public static boolean isValidEdgesInput(String input) {
-		return input.matches("\\d+-\\d+");
+		return input.matches("\\d+") || input.matches("\\d+-\\d+");
 	}
 
 	public static boolean isValidNumberOfGraphs(String input) {
