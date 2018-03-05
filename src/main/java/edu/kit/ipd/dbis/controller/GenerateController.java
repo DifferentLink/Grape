@@ -241,7 +241,7 @@ public class GenerateController {
 	 * @return the boolean
 	 */
 	public Boolean isValidBFS(String bfsCode) {
-		if (!bfsCode.matches("(-?1,\\d,\\d)(,-?1,\\d,\\d)*")) {
+		if (!bfsCode.matches("(-?1,\\d+,\\d+)(,-?1,\\d+,\\d+)*")) {
 			return false;
 		}
 		// convert to int Array
