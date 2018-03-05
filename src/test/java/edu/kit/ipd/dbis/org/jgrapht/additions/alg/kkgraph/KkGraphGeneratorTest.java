@@ -39,7 +39,7 @@ public class KkGraphGeneratorTest {
 	}
 
 	@Test
-	public void cliqueGraphTest() {
+	public void cliqueGraphTest1() {
 		PropertyGraph graph = this.generateSimpleTestCliqueGraph();
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
@@ -47,8 +47,24 @@ public class KkGraphGeneratorTest {
 		Assert.assertTrue(kkGraph.getSubgraphs().size() == 4);
 	}
 
+
 	@Test
-	public void simpleGraphTest() {
+	public void graphCliqueTest2() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("b", "c");
+		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
+		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
+	}
+
+	@Test
+	public void simpleGraphTest1() {
 		PropertyGraph graph = this.generateSimpleTestGraph();
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
@@ -152,7 +168,7 @@ public class KkGraphGeneratorTest {
 	}
 
 	@Test
-	public void bfsPaperGraphTest() {
+	public void bfsPaperGraphTest1() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -176,19 +192,6 @@ public class KkGraphGeneratorTest {
 		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
 		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
 	}
-
-	@Test
-	public void generatedGraphTest() {
-		int[] code = {1,1,2,1,1,3,1,1,4,1,1,5,1,2,6,1,6,7};
-		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-		PropertyGraph graph = new PropertyGraph(bfs);
-
-		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
-		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 2);
-		Assert.assertTrue(kkGraph.getSubgraphs().size() == 2);
-	}
-
 
 	@Test
 	public void bfsPaperGraphTest2() {
@@ -222,22 +225,19 @@ public class KkGraphGeneratorTest {
 	}
 
 	@Test
-	public void graphCliqueTest2() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-		graph.addEdge("a", "b");
-		graph.addEdge("a", "c");
-		graph.addEdge("b", "c");
+	public void bfsCodeGraphTest() {
+		int[] code = {1,1,2,1,1,3,1,1,4,1,1,5,1,2,6,1,6,7};
+		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+		PropertyGraph graph = new PropertyGraph(bfs);
+
 		KkGraphAlgorithm alg = new KkGraphGenerator(graph);
 		KkGraphAlgorithm.KkGraph kkGraph = alg.getKkGraph();
-		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 3);
-		Assert.assertTrue(kkGraph.getSubgraphs().size() == 3);
+		Assert.assertTrue(kkGraph.getNumberOfSubgraphs() == 2);
+		Assert.assertTrue(kkGraph.getSubgraphs().size() == 2);
 	}
 
 	@Test
-	public void graphCircleTest1() {
+	public void graphCircleTest() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
