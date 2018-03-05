@@ -25,7 +25,7 @@ public class FilterSuggestions extends JPopupMenu {
 	}
 
 	private void updateSuggestions() {
-		Set<Property> properties = PropertyFactory.createAllProperties(new PropertyGraph());
+		Set<Property> properties = PropertyFactory.createNumberProperties(new PropertyGraph());
 		List<String> availableFilterExpressions = new LinkedList<>();
 		properties.forEach(property -> availableFilterExpressions.add(property.getClass().getSimpleName()));
 		this.removeAll();
