@@ -385,4 +385,18 @@ public class GraphDatabase {
 			throw new ConnectionFailedException(e.getMessage());
 		}
 	}
+
+	/**
+	 * returns the total number of PropertyGraph-objects in this database
+	 * @return the number of graphs
+	 * @throws ConnectionFailedException if a database connection could not be established
+	 */
+	public int getNumberOfGraphs() throws ConnectionFailedException {
+		try {
+			return this.graphTable.getNumberOfRows();
+		} catch (SQLException e) {
+			throw new ConnectionFailedException();
+		}
+	}
+
 }
