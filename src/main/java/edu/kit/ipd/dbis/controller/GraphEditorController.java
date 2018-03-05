@@ -20,7 +20,9 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexCol
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
@@ -226,12 +228,20 @@ public final class GraphEditorController {
 
 		} catch (ConnectionFailedException | UnexpectedObjectException ignored) {}
 		String result = "";
+		Set<Integer> negative = new HashSet<>();
 		for (int i = 0; i < profile.length; i++) {
 			for (int j = 0; j < profile[0].length; j++) {
-				result += profile[i][j];
-				if (j < profile[0].length - 1) {
-					result += ",";
+				if (profile[i][j] == -1) {
+					negative.add(j);
 				}
+			}
+		}
+		for (int i = 0; i < profile.length; i++) {
+			for (int j = 0; j < profile[0].length; j++) {
+				if (negative.contains(j) && profile[i][j] != -1) {
+					result += " ";
+				}
+				result += profile[i][j];
 			}
 			if (i < profile.length) {
 				result += "\n";
