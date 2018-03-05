@@ -59,7 +59,9 @@ public class FilterTable extends Table {
 	public void insert(Serializable object) throws SQLException, UnexpectedObjectException, IOException {
 
 		Filtersegment filter = this.getInstanceOf(object);
-		String sql = "INSERT INTO " + this.name + " (filter, id, state) VALUES (?, "
+		String sql = "INSERT INTO "
+				+ this.name
+				+ " (filter, id, state) VALUES (?, "
 				+ filter.getID() + ", "
 				+ filter.getIsActivated() + ")";
 
@@ -72,7 +74,11 @@ public class FilterTable extends Table {
 	public Filtersegment getContent(int id)
 			throws SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
 
-		String sql = "SELECT filter FROM " + this.name + " WHERE id = " + id;
+		String sql = "SELECT filter FROM "
+				+ this.name
+				+ " WHERE id = "
+				+ id;
+
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 
 		if (result.next()) {
@@ -87,7 +93,9 @@ public class FilterTable extends Table {
 	 */
 	public LinkedList<Filtersegment> getContent() throws SQLException {
 
-		String sql = "SELECT filter FROM " + this.name;
+		String sql = "SELECT filter FROM "
+				+ this.name;
+
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		LinkedList<Filtersegment> filters = new LinkedList<>();
 
