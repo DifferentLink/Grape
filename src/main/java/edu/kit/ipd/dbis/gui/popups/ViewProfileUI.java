@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 
 public class ViewProfileUI extends JFrame {
 	public ViewProfileUI(String profile, ResourceBundle language, Theme theme) throws HeadlessException {
-		super.setTitle("Profile"); // todo use language resource
+		super.setTitle(language.getString("profile"));
 
 		JPanel content = new JPanel(new BorderLayout());
 		JTextArea text = new JTextArea();

@@ -11,7 +11,7 @@ public class LightTheme extends Theme {
 	/**
 	 * Defines colors, font's and dimensions for the GUI
 	 */
-	public LightTheme() { // todo choose proper colors for GUI
+	public LightTheme() {
 		super.fontColor = Color.BLACK;
 		super.defaultFontSize = 12;
 		super.defaultFont = new Font("Open Sans", Font.PLAIN, defaultFontSize);
