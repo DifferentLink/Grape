@@ -65,7 +65,12 @@ public class ReadBFSCodeUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			generateController.generateBFSGraph(bfsCodeInput.getText());
+			try {
+				generateController.generateBFSGraph(bfsCodeInput.getText());
+			} catch (InvalidBfsCodeInputException e) {
+				// TODO: implement me
+				e.printStackTrace();
+			}
 			readBFSCodeUI.dispose();
 		}
 	}
