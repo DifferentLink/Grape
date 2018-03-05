@@ -42,14 +42,14 @@ public class NextDenserGraphFinderTest {
 	}
 
 	@Test (expected = NoDenserGraphException.class)
-	public void noDenserGraphTest1() {
+	public void noDenserGraphExistsTest1() {
 		PropertyGraph graph = generateNoDenserGraph();
 		NextDenserGraphFinder f = new NextDenserGraphFinder(graph);
 		PropertyGraph nextDenserGraph = f.getNextDenserGraph();
 	}
 
 	@Test
-	public void nextDenserGraphFourVertiecesTest1() {
+	public void nextDenserGraphWithFourVertiecesTest1() {
 		PropertyGraph graph = generateSimpleGraph();
 		NextDenserGraphFinder f = new NextDenserGraphFinder(graph);
 		PropertyGraph nextDenserGraph = f.getNextDenserGraph();
@@ -62,7 +62,7 @@ public class NextDenserGraphFinderTest {
 	}
 
 	@Test
-	public void nextDenserGraphFourVertiecesTest2() {
+	public void nextDenserGraphWithFourVertiecesTest2() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -82,7 +82,7 @@ public class NextDenserGraphFinderTest {
 	}
 
 	@Test
-	public void nextDenserGraphFourVertiecesTest3() {
+	public void nextDenserGraphWithFourVertiecesTest3() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -102,7 +102,7 @@ public class NextDenserGraphFinderTest {
 	}
 
 	@Test
-	public void nextDenserGraphFiveVertiecesTest1() {
+	public void nextDenserGraphWithFiveVertiecesTest1() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -125,7 +125,7 @@ public class NextDenserGraphFinderTest {
 	}
 
 	@Test
-	public void nextDenserGraphFiveVertiecesTest2() {
+	public void nextDenserGraphWithFiveVertiecesTest2() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -147,7 +147,7 @@ public class NextDenserGraphFinderTest {
 	}
 
 	@Test
-	public void nextDenserGraphFiveVertiecesTest3() {
+	public void nextDenserGraphWithFiveVertiecesTest3() {
 		PropertyGraph graph = new PropertyGraph();
 		graph.addVertex("a");
 		graph.addVertex("b");
@@ -185,27 +185,6 @@ public class NextDenserGraphFinderTest {
 			} catch (NoDenserGraphException e) {
 				System.out.println(graph.edgeSet());
 			}
-		}
-	}
-	@Test
-	public void nextDenserGraphSimpleTest() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-		graph.addVertex("d");
-		graph.addEdge("a", "b");
-		graph.addEdge("a", "c");
-		graph.addEdge("a", "d");
-		graph.addEdge("b", "c");
-		graph.addEdge("b", "d");
-		NextDenserGraphFinder f = new NextDenserGraphFinder(graph);
-		PropertyGraph nextDenserGraph = f.getNextDenserGraph();
-		int[] code = ((BfsCodeAlgorithm.BfsCodeImpl) nextDenserGraph.getProperty(BfsCode.class).getValue()).getCode();
-		int[] nextDenserCode = {1,1,2,1,1,3,-1,2,3,1,1,4};
-		Assert.assertTrue(code.length == nextDenserCode.length);
-		for (int i = 0; i < Math.min(code.length, nextDenserCode.length); i++) {
-			Assert.assertTrue(code[i] == nextDenserCode[i]);
 		}
 	}
 }

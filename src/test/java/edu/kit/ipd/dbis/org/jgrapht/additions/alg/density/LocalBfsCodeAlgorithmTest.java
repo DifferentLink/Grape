@@ -45,17 +45,4 @@ public class LocalBfsCodeAlgorithmTest {
 		BfsCodeAlgorithm.BfsCodeImpl localCode = new BfsCodeAlgorithm.BfsCodeImpl(local);
 		Assert.assertTrue(localCode.compareTo(new BfsCodeAlgorithm.BfsCodeImpl<>(result)) == 0);
 	}
-
-	@Test
-	public void test() {
-		PropertyGraph graph = generateSimpleTestGraph();
-		ArrayList<Set<Object>> result = new ArrayList<>();
-		BronKerboschCliqueFinder alg = new BronKerboschCliqueFinder(graph);
-		Iterator<Set<Object>> it = alg.iterator();
-		while (it.hasNext()) {
-			Set<Object> clique = it.next();
-			result.add(clique);
-		}
-	}
-
 }
