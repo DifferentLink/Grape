@@ -248,8 +248,7 @@ public class GenerateController {
 		for (int i = 0; i < splitCode.length; i++) {
 			code[i] = Integer.parseInt(splitCode[i]);
 		}
-
-		for (int i = 0; i < splitCode.length; i += 3) {
+		for (int i = 0; i < splitCode.length - 3; i += 3) {
 			if (code[i] != 1 || code[i] != -1) {
 				return false;
 			}
@@ -257,7 +256,6 @@ public class GenerateController {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
