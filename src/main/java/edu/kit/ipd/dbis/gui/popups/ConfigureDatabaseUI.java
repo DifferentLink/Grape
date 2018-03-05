@@ -3,15 +3,9 @@ package edu.kit.ipd.dbis.gui.popups;
 import edu.kit.ipd.dbis.controller.DatabaseController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import java.awt.Dimension;
+import javax.swing.JTextField;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,9 +21,9 @@ public class ConfigureDatabaseUI extends JFrame {
 	private final ResourceBundle language;
 	private final Theme theme;
 
-	JTextArea nameInput;
-	JTextArea urlInput;
-	JTextArea userInput;
+	JTextField nameInput;
+	JTextField urlInput;
+	JTextField userInput;
 	JPasswordField passwordInput;
 
 	/**
@@ -48,21 +42,22 @@ public class ConfigureDatabaseUI extends JFrame {
 		inputContainer.setLayout(new GridLayout(4, 2, 2, 10));
 
 		JLabel nameLabel = new JLabel(language.getString("name"));
-		nameInput = new JTextArea("graphs");
+		nameInput = new JTextField("graphs");
 		inputContainer.add(nameLabel);
 		inputContainer.add(nameInput);
 
 		JLabel urlLabel = new JLabel(language.getString("url"));
-		urlInput = new JTextArea("jdbc:mysql://localhost:3306/library");
+		urlInput = new JTextField("jdbc:mysql://localhost:3306/library");
 		inputContainer.add(urlLabel);
 		inputContainer.add(urlInput);
 
 		JLabel userLabel = new JLabel(language.getString("user"));
-		userInput = new JTextArea("user");
+		userInput = new JTextField("user");
 		inputContainer.add(userLabel);
 		inputContainer.add(userInput);
 
-		JLabel passwordLabel = new JLabel("Password"); // todo use language resource
+		JLabel passwordLabel = new JLabel(language.getString("password")); // todo use language resource
+
 		passwordInput = new JPasswordField("password");
 		inputContainer.add(passwordLabel);
 		inputContainer.add(passwordInput);
@@ -82,6 +77,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		container.add(inputContainer);
 		container.add(Box.createVerticalStrut(10));
 		container.add(buttonContainer);
+		this.getRootPane().setDefaultButton(configureButton);
 		this.add(container);
 		this.setMinimumSize(new Dimension(300, 200));
 		this.setLocationRelativeTo(null);
