@@ -16,6 +16,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
+import javax.swing.JPasswordField;
 
 /**
  * A window to configure the database
@@ -29,7 +30,7 @@ public class ConfigureDatabaseUI extends JFrame {
 	JTextArea nameInput;
 	JTextArea urlInput;
 	JTextArea userInput;
-	JTextArea passwordInput;
+	JPasswordField passwordInput;
 
 	/**
 	 * @param databaseController the responsible controller
@@ -61,8 +62,8 @@ public class ConfigureDatabaseUI extends JFrame {
 		inputContainer.add(userLabel);
 		inputContainer.add(userInput);
 
-		JLabel passwordLabel = new JLabel(language.getString("password"));
-		passwordInput = new JTextArea("password");
+		JLabel passwordLabel = new JLabel("Password"); // todo use language resource
+		passwordInput = new JPasswordField("password");
 		inputContainer.add(passwordLabel);
 		inputContainer.add(passwordInput);
 

@@ -10,6 +10,7 @@ import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -220,9 +221,23 @@ public final class GraphEditorController {
 		int[][] profile = new int[][]{{}};
 		try {
 			PropertyGraph<Integer, Integer> graph = database.getGraphById(id);
-			graph.getProperty(Profile.class);
+			ProfileDensityAlgorithm.Profile p = (ProfileDensityAlgorithm.Profile) graph.getProperty(Profile.class).getValue();
+			profile = p.getMatrix();
+
 		} catch (ConnectionFailedException | UnexpectedObjectException ignored) {}
-		return Arrays.deepToString(profile);
+		String result = "";
+		for (int i = 0; i < profile.length; i++) {
+			for (int j = 0; j < profile[0].length; j++) {
+				result += profile[i][j];
+				if (j < profile[0].length - 1) {
+					result += ",";
+				}
+			}
+			if (i < profile.length) {
+				result += "\n";
+			}
+		}
+		return result;
 	}
 
 	/**

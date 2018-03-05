@@ -72,7 +72,15 @@ public class Pearson extends Correlation {
         return Pearson.cutListMinimum(resultSet, this.getAttributeCounter());
     }
 
-    private static double calculateCorrelation(String firstProperty, String secondProperty,
+    /**
+     * calculates a specific correlation
+     * @param firstProperty first property to focus on
+     * @param secondProperty second property to focus on
+     * @param database database with graphs
+     * @return returns a set of CorrelationOutput objects
+     * @throws ConnectionFailedException thrown if there was no connection to database possible
+     */
+    static double calculateCorrelation(String firstProperty, String secondProperty,
                                                GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
@@ -110,7 +118,12 @@ public class Pearson extends Correlation {
         return coefficient;
     }
 
-    private static double createRandomMedium(LinkedList<Double> inputList) {
+    /**
+     * method which calculates the random medium
+     * @param inputList list of double values
+     * @return returns the random medium of all values of the input list
+     */
+    static double createRandomMedium(LinkedList<Double> inputList) {
         double sum = 0;
         for (double currentValue: inputList) {
             sum = (sum + currentValue);
@@ -118,7 +131,16 @@ public class Pearson extends Correlation {
         return (sum / inputList.size());
     }
 
-    private static double getSampleVariationskoeffizient(LinkedList<Double> inputList, double randomMedium) {
+    /**
+     * method which calculates the sample variation coefficient
+     * @param inputList list of double values
+     * @param randomMedium random medium to compare with
+     * @return returns the calculated variation coefficient
+     */
+    static double getSampleVariationskoeffizient(LinkedList<Double> inputList, double randomMedium) {
+        if (inputList.size() == 1) {
+            return 0;
+        }
         double sum = 0;
         for (double currentValue: inputList) {
             sum = (sum + Math.pow(currentValue - randomMedium, 2));
