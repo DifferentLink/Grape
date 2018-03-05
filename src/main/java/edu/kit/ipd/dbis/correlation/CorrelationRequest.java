@@ -61,7 +61,12 @@ public class CorrelationRequest {
         }
     }
 
-    private static List<CorrelationOutput> parseToList(TreeSet<CorrelationOutput> input) {
+    /**
+     * parse which parses a tree set into al list
+     * @param input tree set which should be transformed int a list
+     * @return list which inherits all elements the tree set inherits
+     */
+    static List<CorrelationOutput> parseToList(TreeSet<CorrelationOutput> input) {
         return new ArrayList<>(input);
     }
 
@@ -71,16 +76,22 @@ public class CorrelationRequest {
         }
     }
 
-    private static Correlation parseCorrelationToString(String correlationInput) throws
+    /**
+     * parses the user input into a valid correlation request
+     * @param correlationInput string which is entered by user
+     * @return returns a correlation object which collects all information about the correlation in this object
+     * @throws InvalidCorrelationInputException thrown if the user input was not valid
+     */
+    static Correlation parseCorrelationToString(String correlationInput) throws
             InvalidCorrelationInputException {
-
+        CorrelationRequest.checkCorrelationInputNull(correlationInput);
         String[] potentialPropertyArray = correlationInput.split(" ", 4);
+        if (potentialPropertyArray.length < 3) {
+            throw new InvalidCorrelationInputException();
+        }
         String potentialProperty = potentialPropertyArray[2];
         String inputCopy = correlationInput.toLowerCase();
         String[] parameters = inputCopy.split(" ", 4);
-        if (parameters.length < 3) {
-            throw new InvalidCorrelationInputException();
-        }
 
         String maxOrMin = parameters[0];
         checkCorrelationInputNull(maxOrMin);
@@ -112,7 +123,13 @@ public class CorrelationRequest {
         return correlation;
     }
 
-    private static boolean testMaxOrMin(String input) throws InvalidCorrelationInputException {
+    /**
+     * checks if the user entered min or max
+     * @param input string which should be "min" or "max"
+     * @return returns true if the user entered "max" and false if the user entered "min"
+     * @throws InvalidCorrelationInputException thrown if the user input was not valid
+     */
+    static boolean testMaxOrMin(String input) throws InvalidCorrelationInputException {
         if (input.equals("min")) {
             return false;
         } else if (input.equals("max")) {
@@ -121,7 +138,13 @@ public class CorrelationRequest {
         throw new InvalidCorrelationInputException();
     }
 
-    private static Correlation testCorrelationString(String input) throws InvalidCorrelationInputException {
+    /**
+     * checks if the user entered a valid correlation
+     * @param input string which might code a valid correlation
+     * @return correlation object of the specific correlation
+     * @throws InvalidCorrelationInputException thrown if the user input was not valid
+     */
+    static Correlation testCorrelationString(String input) throws InvalidCorrelationInputException {
         if (input.equals("pearson")) {
             return new Pearson();
         } else if (input.equals("mutualcorrelation")) {
@@ -130,7 +153,13 @@ public class CorrelationRequest {
         throw new InvalidCorrelationInputException();
     }
 
-    private static void testProperty(String input) throws InvalidCorrelationInputException {
+    /**
+     * checks if the input string codes a valid property. If this is not true, an InvalidCorrelationInputException
+     * is thrown
+     * @param input string which might code a valid property
+     * @throws InvalidCorrelationInputException thrown if the input string does not code a valid property
+     */
+    static void testProperty(String input) throws InvalidCorrelationInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
         Set<Property> fullPropertySet = PropertyFactory.createAllProperties(graph);
         Set<Property> propertySet = new HashSet<>();
