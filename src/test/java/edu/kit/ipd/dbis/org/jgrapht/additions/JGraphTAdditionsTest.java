@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.HashSet;
 
-public class JGraphAdditionsTest {
+public class JGraphTAdditionsTest {
 
 	@Ignore
 	@Test

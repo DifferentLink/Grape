@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.controller;
 
 
+import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
 import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
@@ -179,22 +180,26 @@ public class GenerateController {
 	 * @param bfsCode the BFS Code of the graph to save.
 	 *                //@throws InvalidBfsCodeInputException the invalid bfs code input exception
 	 */
-	public void generateBFSGraph(String bfsCode) {
-		// Parsing String into int[]
-		String[] splitCode = bfsCode.split(",");
-		int[] code = new int[splitCode.length];
-		for (int i = 0; i < splitCode.length; i++) {
-			code[i] = Integer.parseInt(splitCode[i]);
-		}
-		// Creating BfsCode Object
-		BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
-		try {
-			database.addGraph(graph);
-			calculation.run();
-			this.grapeUI.updateTable();
-		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
-			statusbar.addMessage(e.getMessage());
+	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
+		if (!isValidBFS(bfsCode)) {
+			throw new InvalidBfsCodeInputException("wrong input");
+		} else {
+			// Parsing String into int[]
+			String[] splitCode = bfsCode.split(",");
+			int[] code = new int[splitCode.length];
+			for (int i = 0; i < splitCode.length; i++) {
+				code[i] = Integer.parseInt(splitCode[i]);
+			}
+			// Creating BfsCode Object
+			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
+			PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
+			try {
+				database.addGraph(graph);
+				calculation.run();
+				this.grapeUI.updateTable();
+			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
+				statusbar.addMessage(e.getMessage());
+			}
 		}
 	}
 
@@ -235,10 +240,24 @@ public class GenerateController {
 	 * @param bfsCode the bfs code
 	 * @return the boolean
 	 */
-	public Boolean isValidBFS(String bfsCode) {
+	public static Boolean isValidBFS(String bfsCode) {
+		if (!bfsCode.matches("(-?1,\\d+,\\d+)(,-?1,\\d+,\\d+)*")) {
+			return false;
+		}
+		// convert to int Array
 		String[] splitCode = bfsCode.split(",");
-		for (String aSplitCode : splitCode) {
-			if (!isNumeric(aSplitCode)) {
+		int[] code = new int[splitCode.length];
+		for (int i = 0; i < splitCode.length; i++) {
+			code[i] = Integer.parseInt(splitCode[i]);
+		}
+		for (int i = 0; i < splitCode.length - 3; i += 3) {
+			if (code[i] != 1 && code[i] != -1) {
+				return false;
+			}
+			if (code[i + 1] < 0 || code[i + 2] < 0) {
+				return false;
+			}
+			if (code[i + 1] >= code[i + 2]) {
 				return false;
 			}
 		}
@@ -249,13 +268,15 @@ public class GenerateController {
 		return minVertices >= 0 && minEdges >= 0 && maxEdges >= 0 && maxVertices >= 0 && amount >= 1;
 	}
 
-	private Boolean isNumeric(String text) {
-		try {
-			int number = Integer.parseInt(text);
-		} catch (NumberFormatException nfe) {
-			return false;
-		}
-		return true;
+	public static boolean isValidVerticesInput(String input) {
+		return input.matches("\\d+") || input.matches("\\d+-\\d+");
 	}
 
+	public static boolean isValidEdgesInput(String input) {
+		return input.matches("\\d+") || input.matches("\\d+-\\d+");
+	}
+
+	public static boolean isValidNumberOfGraphs(String input) {
+		return input.matches("\\d+");
+	}
 }

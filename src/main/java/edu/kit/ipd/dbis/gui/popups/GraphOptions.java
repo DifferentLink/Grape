@@ -1,7 +1,3 @@
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.GenerateController;
@@ -21,19 +17,20 @@ public class GraphOptions extends JPopupMenu {
 	private final ResourceBundle language;
 	private final Theme theme;
 
-	public GraphOptions(final int id, GraphEditorController graphEditorController, GenerateController generateController, ResourceBundle language, Theme theme) {
+	public GraphOptions(final int id, GraphEditorController graphEditorController,
+	                    GenerateController generateController, ResourceBundle language, Theme theme) {
 		this.id = id;
 		this.graphEditorController = graphEditorController;
 		this.generateController = generateController;
 		this.language = language;
 		this.theme = theme;
-		JMenuItem showProfile = new JMenuItem("Show Profile...");
+		JMenuItem showProfile = new JMenuItem(language.getString("showProfile"));
 		showProfile.addActionListener(new ShowProfileAction());
 
-		JMenuItem nextDenser = new JMenuItem("Find next-denser");
+		JMenuItem nextDenser = new JMenuItem(language.getString("findNextDenser"));
 		nextDenser.addActionListener(new AddNextDenserAction());
 
-		JMenuItem delete = new JMenuItem("Delete");
+		JMenuItem delete = new JMenuItem(language.getString("delete"));
 		delete.addActionListener(new DeleteAction());
 
 		this.add(showProfile);

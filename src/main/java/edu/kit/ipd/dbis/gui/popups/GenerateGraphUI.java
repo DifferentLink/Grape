@@ -128,11 +128,9 @@ public class GenerateGraphUI extends JFrame {
 	}
 
 	private void update() {
-		final boolean verticesMatch = numVerticesInput.getText().matches("\\d+")
-				|| numVerticesInput.getText().matches("\\d+-\\d+");
-		final boolean edgesMatch = numEdgesInput.getText().matches("\\d+")
-				|| numEdgesInput.getText().matches("\\d+-\\d+");
-		final boolean amountMatch = numGraphsInput.getText().matches("\\d+");
+		final boolean verticesMatch = GenerateController.isValidVerticesInput(numVerticesInput.getText());
+		final boolean edgesMatch = GenerateController.isValidEdgesInput(numEdgesInput.getText());
+		final boolean amountMatch = GenerateController.isValidNumberOfGraphs(numGraphsInput.getText());
 
 		if (verticesMatch) {
 			numVerticesInput.setBackground(theme.backgroundColor);

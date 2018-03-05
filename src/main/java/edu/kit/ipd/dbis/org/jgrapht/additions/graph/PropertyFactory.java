@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.*;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.BinomialDensity;
@@ -46,6 +47,22 @@ public class PropertyFactory {
 		properties.add(new SmallestDegree(graph));
 		properties.add(new TotalColoringNumberOfColors(graph));
 		properties.add(new VertexColoringNumberOfColors(graph));
+		return properties;
+	}
+
+	/**
+	 * Creates an instance of properties which are not a ComplexProperty.
+	 *
+	 * @param graph the input graph
+	 * @return a set of properties
+	 */
+	public static Set<Property> createNumberProperties(PropertyGraph graph) {
+		Set<Property> properties = new HashSet<>();
+		for (Property p : PropertyFactory.createAllProperties(graph)) {
+			if (!(p instanceof ComplexProperty)) {
+				properties.add(p);
+			}
+		}
 		return properties;
 	}
 }

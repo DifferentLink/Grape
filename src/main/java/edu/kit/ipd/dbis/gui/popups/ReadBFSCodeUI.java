@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
@@ -23,7 +25,13 @@ import java.util.ResourceBundle;
  */
 public class ReadBFSCodeUI extends JFrame {
 
+	private final GenerateController generateController;
+	private final ResourceBundle language;
+	private final Theme theme;
+
 	private JTextField bfsCodeInput;
+	private JButton readGraph;
+	private String bfsCode;
 
 	/**
 	 * @param generateController the controller responsible for parsing the BFS-Code
@@ -31,7 +39,11 @@ public class ReadBFSCodeUI extends JFrame {
 	 * @param theme the theme to style the window with
 	 */
 	public ReadBFSCodeUI(GenerateController generateController, ResourceBundle language, Theme theme) {
-		super("Read BFS-Code"); // todo use language resource
+		super(language.getString("readBFSCode"));
+		this.generateController = generateController;
+		this.language = language;
+		this.theme = theme;
+
 		this.setSize(350, 200);
 		this.setResizable(false);
 
@@ -42,15 +54,34 @@ public class ReadBFSCodeUI extends JFrame {
 
 		bfsCodeInput = new JTextField();
 		bfsCodeInput.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
+		bfsCodeInput.getDocument().addDocumentListener(new TextInputChangeListener());
 		content.add(bfsCodeInput);
 
-		JButton readGraph = new JButton("Read BFS-Code"); // todo use language resource
+		JButton readGraph = new JButton(language.getString("readBFSCode"));
 		readGraph.addActionListener(new ReadBFSCodeAction(generateController, this));
 		readGraph.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
 		readGraph.setBackground(theme.assertiveBackground);
 		content.add(readGraph);
 		this.add(content);
 		this.setLocationRelativeTo(null);
+	}
+
+	private void updateInput() {
+		if (bfsCodeInput.getText().matches("(-?1,\\d+,\\d+)(,-?1,\\d+,\\d+)*")) {
+			bfsCode = bfsCodeInput.getText();
+		}
+
+		update();
+	}
+
+	private void update() {
+		final boolean bfsCodeMatch = GenerateController.isValidBFS(bfsCodeInput.getText());
+
+		if (bfsCodeMatch) {
+			bfsCodeInput.setBackground(theme.backgroundColor);
+		} else if (!bfsCodeInput.getText().equals("")) {
+			bfsCodeInput.setBackground(theme.unassertiveBackground);
+		}
 	}
 
 	private class ReadBFSCodeAction implements ActionListener {
@@ -65,8 +96,30 @@ public class ReadBFSCodeUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			generateController.generateBFSGraph(bfsCodeInput.getText());
+			try {
+				generateController.generateBFSGraph(bfsCode);
+			} catch (InvalidBfsCodeInputException e) {
+				// TODO: implement me
+				e.printStackTrace();
+			}
 			readBFSCodeUI.dispose();
+		}
+	}
+
+	private class TextInputChangeListener implements DocumentListener {
+		@Override
+		public void insertUpdate(DocumentEvent documentEvent) {
+			updateInput();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent documentEvent) {
+			updateInput();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent documentEvent) {
+			updateInput();
 		}
 	}
 }
