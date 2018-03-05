@@ -50,7 +50,7 @@ public class GraphEditorUI extends JPanel {
 	private JButton center;
 	private JButton preview;
 	private JButton apply;
-	private JLabel graphInfo; // todo add to GUI
+	private JLabel graphInfo;
 	private JComboBox<String> coloringType;
 
 	private static ColoringType currentColoringType;
@@ -89,31 +89,30 @@ public class GraphEditorUI extends JPanel {
 		this.theme = theme;
 		this.setLayout(new BorderLayout());
 
-		// todo get text from language resource
 		JPanel topBarButtons = new JPanel();
 		topBarButtons.setLayout(new BoxLayout(topBarButtons, BoxLayout.X_AXIS));
 		topBarButtons.setPreferredSize(new Dimension(Integer.MAX_VALUE, barHeight));
 		theme.style(topBarButtons);
 		topBarButtons.setBorder(null);
-		undo = new JButton("U"); // todo replace with icon
+		undo = new JButton("U");
 		undo.addActionListener(new UndoAction());
 		theme.style(undo);
 		undo.setMinimumSize(buttonSize);
 		undo.setPreferredSize(buttonSize);
 		undo.setMaximumSize(buttonSize);
-		redo = new JButton("R"); // todo replace with icon
+		redo = new JButton("R");
 		redo.addActionListener(new RedoAction());
 		theme.style(redo);
 		redo.setMinimumSize(buttonSize);
 		redo.setPreferredSize(buttonSize);
 		redo.setMaximumSize(buttonSize);
-		denser = new JButton("D+"); // todo replace with icon
+		denser = new JButton("D+");
 		denser.addActionListener(new NextDenserGraphAction(graphEditorController));
 		theme.style(denser);
 		denser.setMinimumSize(buttonSize);
 		denser.setPreferredSize(buttonSize);
 		denser.setMaximumSize(buttonSize);
-		switchColor = new JButton("<>"); // todo replace with icon
+		switchColor = new JButton("<>");
 		switchColor.addActionListener(new SwitchColorAction(graphEditorController));
 		theme.style(switchColor);
 		switchColor.setMinimumSize(buttonSize);
@@ -142,13 +141,13 @@ public class GraphEditorUI extends JPanel {
 		bottomBarButtons.setPreferredSize(new Dimension(Integer.MAX_VALUE, barHeight));
 		theme.style(bottomBarButtons);
 		bottomBarButtons.setBorder(null);
-		center = new JButton("Center"); // todo replace with language resource
+		center = new JButton(language.getString("center"));
 		theme.style(center);
 		center.addActionListener(new CenterVerticesAction());
-		preview = new JButton("Preview"); // todo replace with language resource
+		preview = new JButton(language.getString("preview"));
 		preview.addActionListener(new PreviewAction(graphEditorController));
 		theme.style(preview);
-		apply = new JButton("Apply"); // todo replace with language resource
+		apply = new JButton(language.getString("apply"));
 		apply.addActionListener(new ApplyAction(graphEditorController));
 
 		theme.style(apply);
@@ -165,7 +164,7 @@ public class GraphEditorUI extends JPanel {
 		graphEditor.setForeground(theme.foregroundColor);
 
 		this.add(topBarButtons, BorderLayout.NORTH);
-		this.add(graphEditor, BorderLayout.CENTER); // todo use GridBagLayout Manager for to properly display graph information
+		this.add(graphEditor, BorderLayout.CENTER);
 		this.add(bottomBarButtons, BorderLayout.SOUTH);
 	}
 
@@ -193,7 +192,8 @@ public class GraphEditorUI extends JPanel {
 	 * @param graph the graph to display
 	 * @param coloring the vertex coloring to display
 	 */
-	public void displayGraph(PropertyGraph<Integer, Integer> graph, VertexColoringAlgorithm.Coloring<Integer> coloring) {
+	public void displayGraph(PropertyGraph<Integer, Integer> graph,
+	                         VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring, this.factory);
 		this.history = new GraphEditorHistory();
@@ -207,7 +207,8 @@ public class GraphEditorUI extends JPanel {
 	 * @param graph the graph to display
 	 * @param coloring the vertex coloring to display
 	 */
-	public void displayGraph(PropertyGraph<Integer, Integer> graph, TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
+	public void displayGraph(PropertyGraph<Integer, Integer> graph,
+	                         TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring, this.factory);
 		this.history = new GraphEditorHistory();
@@ -318,7 +319,10 @@ public class GraphEditorUI extends JPanel {
 			graph.getSubgraphs().forEach(subgraph -> {
 				Shape subgraphOutline = RenderableGraph.outline(subgraph);
 				float[] dash = new float[]{10.0f};
-				kanvas.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+				kanvas.setStroke(new BasicStroke(1.5f,
+						BasicStroke.CAP_BUTT,
+						BasicStroke.JOIN_MITER,
+						10.0f, dash, 0.0f));
 				kanvas.setPaint(Color.darkGray);
 				kanvas.draw(subgraphOutline);
 			});
@@ -415,10 +419,12 @@ public class GraphEditorUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			if (currentColoringType == ColoringType.VERTEX) {
-				currentVertexColoring = graphEditorController.getNextVertexColoring(propertyGraph, currentVertexColoring);
+				currentVertexColoring = graphEditorController.getNextVertexColoring(
+						propertyGraph, currentVertexColoring);
 				displayGraph(propertyGraph, currentVertexColoring);
 			} else {
-				currentTotalColoring = graphEditorController.getNextTotalColoring(propertyGraph, currentTotalColoring);
+				currentTotalColoring = graphEditorController.getNextTotalColoring(
+						propertyGraph, currentTotalColoring);
 				displayGraph(propertyGraph, currentTotalColoring);
 			}
 		}

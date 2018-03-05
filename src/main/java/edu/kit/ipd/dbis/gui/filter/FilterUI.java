@@ -30,6 +30,8 @@ public class FilterUI extends JPanel {
 
 	private final int simpleFilterUIHeight = 22;
 
+	private final ResourceBundle language;
+
 	/**
 	 * Constructs the filter panel.
 	 * @param filterController the responsible controller
@@ -39,9 +41,10 @@ public class FilterUI extends JPanel {
 	public FilterUI(FilterController filterController, ResourceBundle language, Theme theme) {
 
 		this.filterController = filterController;
+		this.language = language;
 		this.theme = theme;
 
-		uiFilterManager = new UIFilterManager();
+		uiFilterManager = new UIFilterManager(language);
 		filterController.setUIFilterManager(uiFilterManager);
 		filterController.setFilterUI(this);
 
@@ -52,7 +55,8 @@ public class FilterUI extends JPanel {
 		filterMenu = new JPanel();
 		filterMenu.setLayout(new GridBagLayout());
 
-		String[] filterMenuEntries = {"Save selected filter...", "Load filter..."}; // todo use language resource
+		String[] filterMenuEntries = {language.getString("saveSelectedFilters"),
+				language.getString("loadFilters")};
 		filterDropdown = new JComboBox<>(filterMenuEntries);
 		filterDropdown.addActionListener(new ManageFilterAction());
 		filterDropdown.setFocusable(false);
@@ -89,10 +93,10 @@ public class FilterUI extends JPanel {
 		buttonConstraints.fill = GridBagConstraints.VERTICAL;
 		buttonConstraints.weightx = 1;
 
-		JButton newFilter = new JButton(" New Filter "); // todo replace with string from language
+		JButton newFilter = new JButton(language.getString("newFilter"));
 		newFilter.setBackground(theme.assertiveBackground);
 		newFilter.addActionListener(new NewFilterAction(filterController));
-		JButton newFilterGroup = new JButton(" New Group "); // todo replace with string from language
+		JButton newFilterGroup = new JButton(language.getString("newGroup"));
 		newFilterGroup.setBackground(theme.assertiveBackground);
 		newFilterGroup.addActionListener(new NewFilterGroupAction());
 		buttons.add(newFilter, buttonConstraints);
@@ -121,7 +125,7 @@ public class FilterUI extends JPanel {
 
 		if (uiFilterManager.getFilterGroups().size() > 0) {
 			JPanel textContainerGroup = new JPanel(new BorderLayout());
-			JLabel groupLabel = new JLabel("Filter Groups:"); // todo use language resource
+			JLabel groupLabel = new JLabel(language.getString("filterGroups"));
 			groupLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
 			groupLabel.setFont(theme.smallFont);
 			textContainerGroup.add(groupLabel, BorderLayout.CENTER);
@@ -136,7 +140,7 @@ public class FilterUI extends JPanel {
 
 		if (uiFilterManager.getSimpleFilter().size() > 0) {
 			JPanel textContainerSimple = new JPanel(new BorderLayout());
-			JLabel simpleLabel = new JLabel("Simple Filters:"); // todo use language resource
+			JLabel simpleLabel = new JLabel(language.getString("simpleFilters"));
 			simpleLabel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, theme.foregroundColor));
 			simpleLabel.setFont(theme.smallFont);
 			textContainerSimple.add(simpleLabel, BorderLayout.CENTER);
@@ -144,7 +148,7 @@ public class FilterUI extends JPanel {
 			container.add(textContainerSimple);
 
 			for (SimpleFilter simpleFilter : uiFilterManager.getSimpleFilter()) {
-				container.add(drawSimpleFilter(simpleFilter)); // todo throws InvalidInputException
+				container.add(drawSimpleFilter(simpleFilter));
 				container.add(Box.createVerticalStrut(2));
 			}
 		}
@@ -259,7 +263,7 @@ public class FilterUI extends JPanel {
 		}
 	}
 
-	private class ToggleFilterAction implements ActionListener { // todo use filtercontroller
+	private class ToggleFilterAction implements ActionListener {
 
 		private final Filter filter;
 		private final JCheckBox checkBox;
@@ -308,7 +312,7 @@ public class FilterUI extends JPanel {
 		}
 
 		@Override
-		public void insertUpdate(DocumentEvent documentEvent) { // todo use filtercontroller and only update()/remove()
+		public void insertUpdate(DocumentEvent documentEvent) {
 			update();
 		}
 
@@ -370,12 +374,14 @@ public class FilterUI extends JPanel {
 
 	private class ManageFilterAction implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent actionEvent) { // todo use lanague resource
-			switch ((String) Objects.requireNonNull(filterDropdown.getSelectedItem())) {
-				case "Save selected filter..." : uiFilterManager.exportVisibleFilters(); break;
-				case "Load filter..." : uiFilterManager.importFilters(); break;
-				default : break;
+		public void actionPerformed(ActionEvent actionEvent) {
+			final String dropdown = (String) Objects.requireNonNull(filterDropdown.getSelectedItem());
+			if (dropdown.equals(language.getString("saveSelectedFilters"))) {
+				uiFilterManager.exportVisibleFilters();
+			} else if (dropdown.equals(language.getString("loadFilters"))) {
+				uiFilterManager.importFilters();
 			}
+
 			update();
 			repaint();
 			revalidate();
