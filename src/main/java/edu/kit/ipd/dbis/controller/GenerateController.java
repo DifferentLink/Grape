@@ -240,7 +240,7 @@ public class GenerateController {
 	 * @param bfsCode the bfs code
 	 * @return the boolean
 	 */
-	public Boolean isValidBFS(String bfsCode) {
+	public static Boolean isValidBFS(String bfsCode) {
 		if (!bfsCode.matches("(-?1,\\d+,\\d+)(,-?1,\\d+,\\d+)*")) {
 			return false;
 		}
