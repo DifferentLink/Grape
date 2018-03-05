@@ -1,8 +1,3 @@
-
-/**
- * Created by robinlink
- */
-
 package edu.kit.ipd.dbis.gui;
 
 import edu.kit.ipd.dbis.gui.themes.Theme;

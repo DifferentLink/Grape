@@ -4,16 +4,7 @@ import edu.kit.ipd.dbis.controller.FilterController;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.BorderLayout;
@@ -172,7 +163,7 @@ public class FilterUI extends JPanel {
 		isActive.setSelected(simpleFilter.isActive());
 		isActive.addActionListener(new ToggleFilterAction(simpleFilter, isActive));
 		simpleFilterUI.add(isActive);
-		JTextArea filterInput = new JTextArea(simpleFilter.getText());
+		JTextField filterInput = new JTextField(simpleFilter.getText());
 		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		try {
@@ -200,7 +191,7 @@ public class FilterUI extends JPanel {
 		isActive.setSelected(filterGroup.isActive());
 		isActive.addActionListener(new ToggleFilterAction(filterGroup, isActive));
 		filterGroupHeaderUI.add(isActive);
-		JTextArea filterInput = new JTextArea(filterGroup.getText());
+		JTextField filterInput = new JTextField(filterGroup.getText());
 		filterInput.getDocument().addDocumentListener(new FilterGroupInputChange(filterGroup, filterInput));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		filterController.updateFilterGroup(filterGroup.getText(), filterGroup.getID());
@@ -309,11 +300,11 @@ public class FilterUI extends JPanel {
 	private class SimpleFilterInputChange implements DocumentListener {
 
 		private final SimpleFilter filter;
-		private final JTextArea textArea;
+		private final JTextField textField;
 
-		SimpleFilterInputChange(SimpleFilter simpleFilter, JTextArea textArea) {
+		SimpleFilterInputChange(SimpleFilter simpleFilter, JTextField textField) {
 			this.filter = simpleFilter;
-			this.textArea = textArea;
+			this.textField = textField;
 		}
 
 		@Override
@@ -332,23 +323,25 @@ public class FilterUI extends JPanel {
 		}
 
 		private void update() {
-			filter.setText(textArea.getText());
+			filter.setText(textField.getText());
+			(new FilterSuggestions(textField)).show(textField, textField.getX(), textField.getY() + textField.getHeight());
+			textField.requestFocus();
 			try {
-				filterController.updateFilter(textArea.getText(), filter.getID());
-				textArea.setBackground(Color.WHITE);
+				filterController.updateFilter(textField.getText(), filter.getID());
+				textField.setBackground(Color.WHITE);
 			} catch (InvalidInputException e) {
-				textArea.setBackground(theme.lightNeutralColor);
+				textField.setBackground(theme.lightNeutralColor);
 			}
 		}
 	}
 
 	private class FilterGroupInputChange implements DocumentListener {
 		private final FilterGroup filterGroup;
-		private final JTextArea textArea;
+		private final JTextField textField;
 
-		FilterGroupInputChange(FilterGroup filterGroup, JTextArea textArea) {
+		FilterGroupInputChange(FilterGroup filterGroup, JTextField textField) {
 			this.filterGroup = filterGroup;
-			this.textArea = textArea;
+			this.textField = textField;
 		}
 
 		@Override
@@ -367,13 +360,12 @@ public class FilterUI extends JPanel {
 		}
 
 		private void update() {
-			filterGroup.setText(textArea.getText());
-			filterController.updateFilterGroup(textArea.getText(), filterGroup.getID());
-			textArea.setBackground(Color.WHITE);
-			textArea.setBackground(theme.lightNeutralColor);
+			filterGroup.setText(textField.getText());
+			filterController.updateFilterGroup(textField.getText(), filterGroup.getID());
+			textField.setBackground(Color.WHITE);
+			textField.setBackground(theme.lightNeutralColor);
 
 		}
-
 	}
 
 	private class ManageFilterAction implements ActionListener {
