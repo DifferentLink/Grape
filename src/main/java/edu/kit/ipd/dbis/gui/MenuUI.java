@@ -15,9 +15,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.sql.SQLException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -118,7 +116,7 @@ public class MenuUI extends JMenuBar {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			JFrame configureDatabaseUI = new ConfigureDatabaseUI(databaseController, language, theme);
+			JFrame configureDatabaseUI = new ConfigureDatabaseUI(null, databaseController, language, theme);
 			configureDatabaseUI.setVisible(true);
 			}
 	}
