@@ -241,14 +241,11 @@ public class GenerateController {
 	 * @return the boolean
 	 */
 	public Boolean isValidBFS(String bfsCode) {
-		if (!bfsCode.matches("[-?\\d+,]*[\\d]")) {
+		if (!bfsCode.matches("(-?1,\\d,\\d)(,-?1,\\d,\\d)*")) {
 			return false;
 		}
 		// convert to int Array
 		String[] splitCode = bfsCode.split(",");
-		if (splitCode.length % 3 != 0) {
-			return false;
-		}
 		int[] code = new int[splitCode.length];
 		for (int i = 0; i < splitCode.length; i++) {
 			code[i] = Integer.parseInt(splitCode[i]);
