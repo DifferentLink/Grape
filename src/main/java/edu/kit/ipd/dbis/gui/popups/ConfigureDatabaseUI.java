@@ -57,6 +57,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		inputContainer.add(userInput);
 
 		JLabel passwordLabel = new JLabel(language.getString("password")); // todo use language resource
+
 		passwordInput = new JPasswordField("password");
 		inputContainer.add(passwordLabel);
 		inputContainer.add(passwordInput);
