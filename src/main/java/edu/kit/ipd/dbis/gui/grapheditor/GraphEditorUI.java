@@ -388,6 +388,8 @@ public class GraphEditorUI extends JPanel {
 					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
 					graph = new RenderableGraph();
 					history = new GraphEditorHistory();
+					history.addToHistory(graph);
+					graphEditor.repaint();
 				}
 			} catch (InvalidGraphInputException e) {
 				e.printStackTrace();
