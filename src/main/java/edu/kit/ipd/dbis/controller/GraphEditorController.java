@@ -118,11 +118,11 @@ public final class GraphEditorController {
 				database.addGraph(newGraph);
 				statusbar.addEvent(ADD, newGraph.getId());
 				statusbar.addEvent(REMOVE, oldID);
-				this.grapeUI.updateTable();
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
 		}
+		this.grapeUI.updateTable();
 	}
 
 	/**
@@ -176,10 +176,10 @@ public final class GraphEditorController {
 			statusbar.addMessage(e.getMessage());
 		}
 		if (duplicate) {
-			statusbar.addMessage("Given graph is a duplicate.");
-			throw new InvalidGraphInputException("Given graph is a duplicate.");
+			statusbar.addMessage("Given graph already exists.");
+			this.grapeUI.updateTable();
 		}
-		return true;
+		return duplicate;
 	}
 
 	/**

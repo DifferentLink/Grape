@@ -115,12 +115,16 @@ public class CorrelationRequest {
         if (!StringUtils.isStrictlyNumeric(propertyCounterString) || propertyCounterString.length() == 0) {
             throw new InvalidCorrelationInputException();
         }
-        int attributeCounter = Integer.parseInt(propertyCounterString);
 
+        try {
+            int attributeCounter = Integer.parseInt(propertyCounterString);
 
-        correlation.setMaximum(maximum);
-        correlation.setAttributeCounter(attributeCounter);
-        return correlation;
+            correlation.setMaximum(maximum);
+            correlation.setAttributeCounter(attributeCounter);
+            return correlation;
+        } catch (NumberFormatException e) {
+            throw new InvalidCorrelationInputException();
+        }
     }
 
     /**
