@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
+import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
 import edu.kit.ipd.dbis.gui.popups.GraphOptions;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
@@ -191,6 +192,9 @@ public class GrapeUI {
 
 		mainWindow.add(verticalDivider);
 		mainWindow.setVisible(true);
+		mainWindow.setEnabled(false);
+		JFrame configureDatabaseUI = new ConfigureDatabaseUI(mainWindow, databaseController, language, theme);
+		configureDatabaseUI.setVisible(true);
 	}
 
 	private class TableSelectionChangeAction implements ListSelectionListener {
