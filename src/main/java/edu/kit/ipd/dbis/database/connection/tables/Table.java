@@ -149,7 +149,12 @@ public abstract class Table {
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		if (result.next()) {
 			boolean value = (result.getInt("state") != 1);
-			sql = "UPDATE " + this.name + " SET state = " + value + " WHERE id = " + id;
+			sql = "UPDATE "
+					+ this.name
+					+ " SET state = "
+					+ value
+					+ " WHERE id = "
+					+ id;
 			this.connection.prepareStatement(sql).executeUpdate();
 		}
 
@@ -162,7 +167,10 @@ public abstract class Table {
 	 */
 	public void delete(int id) throws SQLException {
 
-		String sql = "DELETE FROM " + this.name + " WHERE id = " + id;
+		String sql = "DELETE FROM "
+				+ this.name
+				+ " WHERE id = "
+				+ id;
 		this.connection.prepareStatement(sql).executeUpdate();
 	}
 
@@ -173,7 +181,9 @@ public abstract class Table {
 	 */
 	public LinkedList<String> getColumns() throws SQLException {
 
-		String sql = "SHOW COLUMNS FROM " + this.name;
+		String sql = "SHOW COLUMNS FROM "
+				+ this.name;
+
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		LinkedList<String> columns = new LinkedList<>();
 		while (result.next()) {
@@ -221,7 +231,9 @@ public abstract class Table {
 	 */
 	protected LinkedList<Integer> getIds() throws SQLException {
 
-		String sql = "SELECT id FROM " + this.name;
+		String sql = "SELECT id FROM "
+				+ this.name;
+
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		LinkedList<Integer> ids = new LinkedList<>();
 		while (result.next()) {

@@ -116,7 +116,10 @@ public class GraphTable extends Table {
 	public PropertyGraph<Integer, Integer> getContent(int id)
 			throws SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
 
-		String sql = "SELECT graph FROM " + this.name + " WHERE id = " + id;
+		String sql = "SELECT graph FROM "
+				+ this.name
+				+ " WHERE id = "
+				+ id;
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		if (result.next()) {
 			Object object = this.byteArrayToObject(result.getBytes("graph"));
@@ -152,7 +155,9 @@ public class GraphTable extends Table {
 	public PropertyGraph<Integer, Integer> getUncalculatedGraph()
 			throws SQLException, IOException, ClassNotFoundException, UnexpectedObjectException {
 
-		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false LIMIT 1";
+		String sql = "SELECT graph FROM "
+				+ this.name
+				+ " WHERE iscalculated = false LIMIT 1";
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 
 		if (result.next()) {
@@ -196,7 +201,9 @@ public class GraphTable extends Table {
 	 */
 	public void deleteAll() throws SQLException {
 
-		String sql = "DELETE FROM " + this.name + " WHERE state = true";
+		String sql = "DELETE FROM "
+				+ this.name
+				+ " WHERE state = true";
 		this.connection.prepareStatement(sql).executeUpdate();
 
 	}
@@ -231,9 +238,16 @@ public class GraphTable extends Table {
 	 */
 	public boolean graphExists(PropertyGraph<Integer, Integer> graph) throws SQLException {
 
-		String sql = "SELECT * FROM " + this.name + " WHERE BfsCode = '" + this.minimalBfsCodeToString(graph) + "'";
+		String sql = "SELECT * FROM "
+				+ this.name
+				+ " WHERE BfsCode = '"
+				+ this.minimalBfsCodeToString(graph)
+				+ "'";
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		if (result.next()) {
+			if (result.getBoolean("state")) {
+				this.switchState(result.getInt("id"));
+			}
 			return this.minimalBfsCodeToString(graph).equals(result.getString("bfscode"));
 		}
 		return false;
@@ -246,7 +260,9 @@ public class GraphTable extends Table {
 	 * @throws SQLException if the connection to the database fails
 	 */
 	public boolean hasUncalculated() throws SQLException {
-		String sql = "SELECT graph FROM " + this.name + " WHERE iscalculated = false LIMIT 1";
+		String sql = "SELECT graph FROM "
+				+ this.name
+				+ " WHERE iscalculated = false LIMIT 1";
 		return this.connection.prepareStatement(sql).executeQuery().next();
 
 	}
@@ -261,15 +277,21 @@ public class GraphTable extends Table {
 	 */
 	private String getFilteredTableQuery(String[][] filters, String column, boolean ascending) throws SQLException {
 
-		String sql = "SELECT " + this.getPropertyColumns() + " FROM " + this.name
+		String sql = "SELECT "
+				+ this.getPropertyColumns()
+				+ " FROM "
+				+ this.name
 				+ " WHERE iscalculated = true AND state = false";
 		String order = (ascending) ? ("ASC") : ("DESC");
 		sql += this.filtersToQuery(filters);
 
 		if (!column.equals("bfscode")) {
-			sql += " ORDER BY " + column + " " + order;
+			sql += " ORDER BY "
+					+ column
+					+ " " + order;
 		} else {
-			sql += " ORDER BY bfscode, CHAR_LENGTH(bfscode) " + order;
+			sql += " ORDER BY bfscode, CHAR_LENGTH(bfscode) "
+					+ order;
 		}
 		return sql;
 	}
@@ -281,7 +303,11 @@ public class GraphTable extends Table {
 	 * @return the according MySQL-Query
 	 */
 	private String getValuesQuery(String[][] filters, String column) {
-		String sql = "SELECT " + column + " FROM " + this.name + " WHERE 0 = 0";
+		String sql = "SELECT "
+				+ column
+				+ " FROM "
+				+ this.name
+				+ " WHERE 0 = 0";
 		sql += this.filtersToQuery(filters);
 		return sql;
 	}
