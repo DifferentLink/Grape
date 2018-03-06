@@ -19,10 +19,9 @@ public class CorrelationRequestTest {
     private static GraphDatabase database;
 	private static Filtermanagement manager;
 
-	@Before
-	public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
-			ConnectionFailedException {
-
+    @Before
+    public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+            ConnectionFailedException {
     	Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
 		String url = "jdbc:mysql://127.0.0.1/library";
@@ -33,7 +32,7 @@ public class CorrelationRequestTest {
 		database = fileManager.createGraphDatabase(url, user, password, name);
 		manager = new Filtermanagement();
         manager.setDatabase(database);
-	}
+    }
 
     @Test
     public void testGetCorrelation() throws InvalidCorrelationInputException {
@@ -128,6 +127,11 @@ public class CorrelationRequestTest {
     }
 
     @Test (expected = InvalidCorrelationInputException.class)
+    public void testParseCorrelationToStringIntegerTooBig() throws InvalidCorrelationInputException {
+        CorrelationRequest.parseCorrelationToString("Max Pearson 500000000000000");
+    }
+
+    @Test (expected = InvalidCorrelationInputException.class)
     public void testCheckCorrelationInputNull() throws InvalidCorrelationInputException {
         CorrelationRequest.parseCorrelationToString(null);
     }
@@ -157,7 +161,7 @@ public class CorrelationRequestTest {
 
     @Test
     public void testApplyCorrelation() throws ConnectionFailedException, InsertionFailedException,
-            UnexpectedObjectException, DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+            UnexpectedObjectException, DatabaseDoesNotExistException, AccessDeniedForUserException,
             InvalidCorrelationInputException {
 		PearsonCorrelationTest.setDatabase(database);
         PearsonCorrelationTest.putGraphsIntoDatabase();
@@ -178,5 +182,9 @@ public class CorrelationRequestTest {
         testRequest7.applyCorrelation();
         CorrelationRequest testRequest8 = new CorrelationRequest("Max MutualCorrelation BinomialDensity 2", database);
         testRequest8.applyCorrelation();
+        CorrelationRequest testRequest9 = new CorrelationRequest("Min MutualCorrelation SmallestDegree 20000", database);
+        testRequest9.applyCorrelation();
+        CorrelationRequest testRequest10 = new CorrelationRequest("Max MutualCorrelation BinomialDensity 20000", database);
+        testRequest10.applyCorrelation();
     }
 }

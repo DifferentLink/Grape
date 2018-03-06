@@ -165,6 +165,9 @@ abstract class Correlation {
         int k = 0;
         int l = 0;
         while (k < attributeCounter) {
+            if ((outputArray.length - l - 1) < 0) {
+                return outputSet;
+            }
             if ((outputArray[outputArray.length - 1 - l].getOutputNumber() == 0.0)
                     || outputArray[outputArray.length - 1 - l].getFirstProperty().
                     equals(outputArray[outputArray.length - 1 - l].getSecondProperty())) {
@@ -196,6 +199,9 @@ abstract class Correlation {
         int k = 0;
         int l = 0;
         while (k < attributeCounter) {
+            if (l >= outputArray.length) {
+                return outputSet;
+            }
             if (outputArray[l].getFirstProperty().
                     equals(outputArray[l].getSecondProperty())) {
                 l++;
