@@ -231,7 +231,7 @@ public class GraphTable extends Table {
 	}
 
 	/**
-	 * Checks if a PropertyGraph-Object already Exists.
+	 * Checks if a PropertyGraph-Object already exists and restores it if it is marked as deleted.
 	 * @param graph PropertyGaph-Object.
 	 * @return true if the given graph already exists in the represented MySQLTable.
 	 * @throws SQLException if the connection to the database fails
