@@ -199,7 +199,8 @@ public abstract class Table {
 	 */
 	public int getNumberOfRows() throws SQLException {
 		String sql = "SELECT COUNT(*) FROM "
-				+ this.getName();
+				+ this.getName()
+				+ " WHERE state = 0";
 		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
 		if (result.next()) {
 			return result.getInt(1);
