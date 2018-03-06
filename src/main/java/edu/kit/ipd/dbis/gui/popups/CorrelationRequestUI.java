@@ -47,12 +47,18 @@ public class CorrelationRequestUI extends JFrame {
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-		JLabel correlationText = new JLabel(language.getString("request") + ": " + correlationRequest);
-		theme.style(correlationText);
-		container.add(correlationText);
 
 		JTable table = populateTable();
 		container.add(table);
+
+		String[] separatedCorrelationRequest = correlationRequest.split(" ");
+		String amount = separatedCorrelationRequest[separatedCorrelationRequest.length - 1];
+		String cutCorrelationRequest =
+				correlationRequest.substring(0, correlationRequest.length() - amount.length() - 1);
+		JLabel correlationText = new JLabel(language.getString("request") + " "
+				+ cutCorrelationRequest + " " + (table.getColumnCount() - 1));
+		theme.style(correlationText);
+		container.add(correlationText);
 
 		JPanel buttonAlignment = new JPanel();
 		buttonAlignment.setLayout(new BoxLayout(buttonAlignment, BoxLayout.X_AXIS));
@@ -66,7 +72,6 @@ public class CorrelationRequestUI extends JFrame {
 		this.add(container);
 		this.pack();
 		this.setPreferredSize(new Dimension(400, 300));
-		//this.setResizable(false);
 		this.setLocationRelativeTo(null);
 	}
 
