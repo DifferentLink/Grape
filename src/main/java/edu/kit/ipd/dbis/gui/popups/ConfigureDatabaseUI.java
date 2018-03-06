@@ -17,6 +17,7 @@ import javax.swing.JPasswordField;
  */
 public class ConfigureDatabaseUI extends JFrame {
 
+	private final JFrame mainWindow;
 	private final DatabaseController databaseController;
 	private final ResourceBundle language;
 	private final Theme theme;
@@ -27,13 +28,15 @@ public class ConfigureDatabaseUI extends JFrame {
 	JPasswordField passwordInput;
 
 	/**
+	 * @param mainWindow
 	 * @param databaseController the responsible controller
 	 * @param language the language to use
 	 * @param theme the theme to style the window
 	 */
-	public ConfigureDatabaseUI(DatabaseController databaseController, ResourceBundle language, Theme theme) {
+	public ConfigureDatabaseUI(JFrame mainWindow, DatabaseController databaseController, ResourceBundle language, Theme theme) {
 
 		super.setTitle(language.getString("configureDatabase"));
+		this.mainWindow = mainWindow;
 		this.databaseController = databaseController;
 		this.language = language;
 		this.theme = theme;
@@ -96,6 +99,9 @@ public class ConfigureDatabaseUI extends JFrame {
 			databaseController.newDatabase(urlInput.getText(), userInput.getText(),
 					passwordInput.getText(), nameInput.getText());
 			configureDatabaseUI.dispose();
+			if (mainWindow != null) {
+				mainWindow.setEnabled(true);
+			}
 		}
 	}
 }
