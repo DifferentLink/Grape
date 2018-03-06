@@ -165,13 +165,7 @@ public class CorrelationRequest {
      */
     static void testProperty(String input) throws InvalidCorrelationInputException {
         PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
-        Set<Property> fullPropertySet = PropertyFactory.createAllProperties(graph);
-        Set<Property> propertySet = new HashSet<>();
-        for (Property current: fullPropertySet) {
-            if (!current.getClass().getSuperclass().equals(ComplexProperty.class)) {
-                propertySet.add(current);
-            }
-        }
+        Set<Property> propertySet = PropertyFactory.createNumberProperties(graph);
         String[] propertyStrings = new String[propertySet.size()];
         int i = 0;
         for (Property currentProperty: propertySet) {
