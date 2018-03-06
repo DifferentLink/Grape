@@ -370,6 +370,17 @@ public class Filtermanagement {
             }
             double secondValue = Filtermanagement.parseToIntegerOrDouble(secondValueString);
 
+            if (parameters[5].equals("+") && parameters[6].equals("0")) {
+                input = parameters[0] + " " + parameters[1] + " " + parameters[2] + " " + parameters[3]
+                        + " " + parameters[4];
+                if (parameters[1].equals("+") && parameters[2].equals("0")) {
+                    input = parameters[0] + " " + parameters[3] + " " + parameters[4];
+                }
+            }
+            else if (parameters[1].equals("+") && parameters[2].equals("0")) {
+                input = parameters[0] + " " + parameters[3] + " " + parameters[4] + " " + parameters[5]
+                        + " " + parameters[6];
+            }
             return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
         } else if (parameters.length == 3 && Filtermanagement.isIntegerOrDouble(parameters[2])) {
