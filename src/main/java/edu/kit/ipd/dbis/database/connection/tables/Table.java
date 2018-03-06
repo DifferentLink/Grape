@@ -193,6 +193,21 @@ public abstract class Table {
 	}
 
 	/**
+	 * returns the total number of PropertyGraph-objects in this database
+	 * @return the number of graphs
+	 * @throws SQLException if the connection to the database fails
+	 */
+	public int getNumberOfRows() throws SQLException {
+		String sql = "SELECT COUNT(*) FROM "
+				+ this.getName();
+		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
+		if (result.next()) {
+			return result.getInt(1);
+		}
+		return 0;
+	}
+
+	/**
 	 * Returns every column that shall be displayed on the gui-table
 	 * @return the column names
 	 * @throws SQLException if the connection to the database fails
