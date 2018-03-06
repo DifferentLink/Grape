@@ -66,7 +66,7 @@ public class DatabaseController {
 		try {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
-			this.statusbarUI.setDatabaseInfo(name, 0);
+			this.statusbarUI.setDatabaseInfo(name, this.database.getNumberOfGraphs());
 			this.statusbarUI.setRemainingCalculations(0);
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
