@@ -51,6 +51,31 @@ public class CorrelationTest {
     }
 
     @Test
+    public void testCutListMinimumNotEnoughValues() {
+        CorrelationOutput output1 = new CorrelationOutput("AverageDegree", "StructureDensity", 2.43);
+        CorrelationOutput output2 = new CorrelationOutput("LargestCliqueSize", "NumberOfVertices", 4.32);
+        TreeSet<CorrelationOutput> testSet = new TreeSet<>();
+        testSet.add(output1);
+        testSet.add(output2);
+        TreeSet<CorrelationOutput> outputSet = Correlation.cutListMinimum(testSet, 3);
+        assert outputSet.size() == 2;
+        int counter = 0;
+        for (CorrelationOutput current: outputSet) {
+            if (counter == 0) {
+                assert current.getFirstProperty().equals("LargestCliqueSize");
+                assert current.getSecondProperty().equals("NumberOfVertices");
+                assert current.getOutputNumber() == 4.32;
+
+            } else {
+                assert current.getFirstProperty().equals("AverageDegree");
+                assert current.getSecondProperty().equals("StructureDensity");
+                assert current.getOutputNumber() == 2.43;
+            }
+            counter++;
+        }
+    }
+
+    @Test
     public  void testCutListMinimum() {
         CorrelationOutput output1 = new CorrelationOutput("AverageDegree", "StructureDensity", 2.43);
         CorrelationOutput output2 = new CorrelationOutput("LargestCliqueSize", "NumberOfVertices", 4.32);
@@ -92,6 +117,31 @@ public class CorrelationTest {
     }
 
     @Test
+    public void testCutListMaximumNotEnoughValues() {
+        CorrelationOutput output1 = new CorrelationOutput("SmallestDegree", "NumberOfDisjointEdgesFromKkGraph", 8.71);
+        CorrelationOutput output2 = new CorrelationOutput("VertexColoringNumberOfColors", "NumberOfDisjointVerticesFromKkGraph", 6.83);
+        TreeSet<CorrelationOutput> testSet = new TreeSet<>();
+        testSet.add(output1);
+        testSet.add(output2);
+        TreeSet<CorrelationOutput> outputSet = Correlation.cutListMaximum(testSet, 3);
+        assert outputSet.size() == 2;
+        int counter = 0;
+        for (CorrelationOutput current: outputSet) {
+            if (counter == 0) {
+                assert current.getFirstProperty().equals("SmallestDegree");
+                assert current.getSecondProperty().equals("NumberOfDisjointEdgesFromKkGraph");
+                assert current.getOutputNumber() == 8.71;
+
+            } else {
+                assert current.getFirstProperty().equals("VertexColoringNumberOfColors");
+                assert current.getSecondProperty().equals("NumberOfDisjointVerticesFromKkGraph");
+                assert current.getOutputNumber() == 6.83;
+            }
+            counter++;
+        }
+    }
+
+    @Test
     public void testCutListMaximum() {
         CorrelationOutput output1 = new CorrelationOutput("AverageDegree", "StructureDensity", 2.43);
         CorrelationOutput output2 = new CorrelationOutput("LargestCliqueSize", "NumberOfVertices", 4.32);
@@ -111,9 +161,6 @@ public class CorrelationTest {
         testSet.add(output6);
         testSet.add(output7);
         TreeSet<CorrelationOutput> outputSet = Correlation.cutListMaximum(testSet, 3);
-        for (CorrelationOutput current: outputSet) {
-            System.out.println(current.getFirstProperty());
-        }
         assert outputSet.size() == 3;
         int counter = 0;
         for (CorrelationOutput current: outputSet) {
