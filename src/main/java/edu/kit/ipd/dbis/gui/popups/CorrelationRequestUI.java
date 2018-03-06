@@ -5,6 +5,8 @@ import edu.kit.ipd.dbis.correlation.CorrelationOutput;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.gui.AlternateTable;
 import edu.kit.ipd.dbis.gui.themes.Theme;
+
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -43,6 +46,11 @@ public class CorrelationRequestUI extends JFrame {
 		this.correlationController = correlationController;
 		this.correlationRequest = correlationRequest;
 		this.theme = theme;
+
+		try {
+			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
+			this.setIconImage(logo);
+		} catch (IOException e) { }
 
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));

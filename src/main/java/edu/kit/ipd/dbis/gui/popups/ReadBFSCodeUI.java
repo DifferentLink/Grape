@@ -8,6 +8,7 @@ import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,8 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 /**
@@ -43,6 +46,11 @@ public class ReadBFSCodeUI extends JFrame {
 		this.generateController = generateController;
 		this.language = language;
 		this.theme = theme;
+
+		try {
+			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
+			this.setIconImage(logo);
+		} catch (IOException e) { }
 
 		this.setSize(350, 200);
 		this.setResizable(false);
