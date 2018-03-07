@@ -174,7 +174,7 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, language.getString("open"));
+			final int returnValue = fileChooser.showDialog(tableUI, language.getString("open"));
 			File file = fileChooser.getSelectedFile();
 
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -201,7 +201,7 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, language.getString("import"));
+			final int returnValue = fileChooser.showDialog(tableUI, language.getString("import"));
 			File file = fileChooser.getSelectedFile();
 
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -228,7 +228,7 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, language.getString("save"));
+			final int returnValue = fileChooser.showDialog(tableUI, language.getString("save"));
 			fileChooser.setBackground(theme.backgroundColor);
 			File file = fileChooser.getSelectedFile();
 
@@ -256,7 +256,7 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, language.getString("saveAs"));
+			final int returnValue = fileChooser.showDialog(tableUI, language.getString("saveAs"));
 			File file = fileChooser.getSelectedFile();
 			fileChooser.setBackground(theme.backgroundColor);
 
@@ -284,7 +284,7 @@ public class MenuUI extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, language.getString("saveSelection"));
+			final int returnValue = fileChooser.showDialog(tableUI, language.getString("saveSelection"));
 			File file = fileChooser.getSelectedFile();
 
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
