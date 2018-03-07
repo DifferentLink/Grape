@@ -176,7 +176,7 @@ public class GenerateController {
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
 			changedGraphs.add(graph.getId());
 		}
-		statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " were generated.", changedGraphs));
+		statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated.", changedGraphs));
 		grapeUI.updateTable();
 	}
 
