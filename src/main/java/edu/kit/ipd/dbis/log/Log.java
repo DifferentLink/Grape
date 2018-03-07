@@ -55,7 +55,7 @@ public class Log {
 				historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (" + changedGraphs + ")\n";
 			}
 		}
-		historyEntries = historyEntries.substring(0, historyEntries.length() - 1);
+		historyEntries = historyEntries.substring(0, historyEntries.length());
 		return historyEntries;
 	}
 

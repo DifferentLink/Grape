@@ -72,6 +72,7 @@ public class DatabaseController {
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
 			this.statusbar.setHistory(new History(50));
+			this.statusbar.addMessage("database \"" + name + "\" opened.");
 		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());
 		}

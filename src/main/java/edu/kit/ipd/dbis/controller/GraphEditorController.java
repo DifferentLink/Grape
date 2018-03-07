@@ -197,7 +197,7 @@ public final class GraphEditorController {
 			if (!database.graphExists(denserGraph)) {
 				denserGraph.calculateProperties();
 				database.addGraph(denserGraph);
-				statusbar.addEvent(EventType.ADD, denserGraph.getId());
+				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "next denser graph added.");
 				this.grapeUI.updateTable();
 			} else {
 				statusbar.addMessage("Denser graph already exists.");
