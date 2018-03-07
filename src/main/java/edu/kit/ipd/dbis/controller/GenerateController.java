@@ -210,21 +210,21 @@ public class GenerateController {
 			PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 			try {
 				boolean validBfs = true;
+				boolean graphExists = false;
 				try {
-					boolean graphExists = database.graphExists(graph);
+					graphExists = database.graphExists(graph);
 				} catch (Exception e) { //TODO: specific exception
 					statusbar.addMessage("BFS-Code: " +  bfsCode + " not valid");
 					validBfs = false;
 				}
 				if (validBfs) {
-					if(!database.graphExists(graph)) {
-						graph.calculateProperties();
-						database.addGraph(graph);
-						statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
-						this.grapeUI.updateTable();
-					}
-					else {
+					database.addGraph(graph);
+					calculation.run();
+					this.grapeUI.updateTable();
+					if (graphExists) { //TODO: message is shown if the graph was deleted before (don't know if graph is visible)
 						statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists");
+					} else {
+						statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
 					}
 				}
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
