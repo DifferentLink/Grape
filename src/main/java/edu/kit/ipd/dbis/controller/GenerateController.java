@@ -221,7 +221,9 @@ public class GenerateController {
 					database.addGraph(graph);
 					calculation.run();
 					this.grapeUI.updateTable();
-					if (graphExists) { //TODO: message is shown if the graph was deleted before (don't know if graph is visible)
+					if (graphExists) {
+						//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
+						//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
 						statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists");
 					} else {
 						statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
