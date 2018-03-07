@@ -122,6 +122,7 @@ public class DatabaseController {
 	public void saveDatabase(String filepath) {
 		try {
 			connector.saveGraphDatabase(filepath, database);
+			statusbar.addMessage("Database saved");
 		} catch (FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
