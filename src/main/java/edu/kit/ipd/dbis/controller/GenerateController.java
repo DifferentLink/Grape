@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
+import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
@@ -129,7 +130,6 @@ public class GenerateController {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
-
 		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 		try {
 			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
@@ -146,7 +146,6 @@ public class GenerateController {
 					try {
 						graph.calculateProperties();
 						database.replaceGraph(graph.getId(), graph);
-						statusbar.addEvent(EventType.ADD, graph.getId());
 					} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 						statusbar.addMessage(e.getMessage());
 					}
@@ -171,6 +170,13 @@ public class GenerateController {
 		for (Thread job : jobs) {
 			job.join();
 		}
+
+		//create log entry
+		Set<Integer> changedGraphs = new HashSet<>();
+		for (PropertyGraph<Integer, Integer> graph : graphs) {
+			changedGraphs.add(graph.getId());
+		}
+		statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " were generated.", changedGraphs));
 		grapeUI.updateTable();
 	}
 
@@ -182,7 +188,7 @@ public class GenerateController {
 	 */
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
 		if (!isValidBFS(bfsCode)) {
-			throw new InvalidBfsCodeInputException("wrong input");
+			throw new InvalidBfsCodeInputException("wrong BFS input");
 		} else {
 			// Parsing String into int[]
 			String[] splitCode = bfsCode.split(",");
@@ -194,8 +200,9 @@ public class GenerateController {
 			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
 			PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 			try {
+				graph.calculateProperties();
 				database.addGraph(graph);
-				calculation.run();
+				statusbar.addEvent(EventType.ADD, graph.getId());
 				this.grapeUI.updateTable();
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
