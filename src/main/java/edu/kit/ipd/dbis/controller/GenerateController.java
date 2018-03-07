@@ -202,10 +202,15 @@ public class GenerateController {
 			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
 			PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 			try {
-				graph.calculateProperties();
-				database.addGraph(graph);
-				statusbar.addEvent(EventType.ADD, graph.getId());
-				this.grapeUI.updateTable();
+				if(!database.graphExists(graph)) {
+					graph.calculateProperties();
+					database.addGraph(graph);
+					statusbar.addEvent(EventType.ADD, graph.getId());
+					this.grapeUI.updateTable();
+				}
+				else {
+					statusbar.addMessage("BFS-Graph already exists.");
+				}
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
