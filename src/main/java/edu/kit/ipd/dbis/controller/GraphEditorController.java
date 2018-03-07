@@ -119,7 +119,6 @@ public final class GraphEditorController {
 				newGraph.calculateProperties();
 				database.addGraph(newGraph);
 				statusbar.addEvent(ADD, newGraph.getId());
-				statusbar.addEvent(REMOVE, oldID);
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
@@ -181,7 +180,7 @@ public final class GraphEditorController {
 			statusbar.addMessage("Given graph already exists");
 			this.grapeUI.updateTable();
 		}
-		return duplicate;
+		return !duplicate;
 	}
 
 	/**
