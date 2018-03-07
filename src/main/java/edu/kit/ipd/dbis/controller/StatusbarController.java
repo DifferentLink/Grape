@@ -143,9 +143,9 @@ public class StatusbarController {
 		Event event;
 		String message;
 		if (type.equals(EventType.ADD)) {
-			message = "New graph added.";
+			message = "New graph added";
 		} else if (type.equals(EventType.REMOVE)) {
-			message = "graph deleted.";
+			message = "Graph deleted";
 		} else {
 			return;
 		}

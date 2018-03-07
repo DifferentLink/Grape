@@ -72,7 +72,7 @@ public class DatabaseController {
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
 			this.statusbar.setHistory(new History(50));
-			this.statusbar.addMessage("database \"" + name + "\" opened.");
+			this.statusbar.addMessage("Database \"" + name + "\" opened.");
 		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -90,6 +90,7 @@ public class DatabaseController {
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
 			this.statusbar.setHistory(new History(50));
+			this.statusbar.addMessage("Database loaded.");
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | FileContentCouldNotBeReadException
 				| ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
@@ -110,6 +111,7 @@ public class DatabaseController {
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
 			this.statusbar.setHistory(new History(50));
+			this.statusbar.addMessage("Databases merged");
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -148,6 +150,7 @@ public class DatabaseController {
 				selectionDatabase.addGraph(this.database.getGraphById(id));
 			}
 			connector.saveGraphDatabase(filepath, selectionDatabase);
+			this.statusbar.addMessage("Selection saved");
 		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException
 				| InsertionFailedException | UnexpectedObjectException | FileCouldNotBeSavedException
 				| FileNameAlreadyTakenException e) {

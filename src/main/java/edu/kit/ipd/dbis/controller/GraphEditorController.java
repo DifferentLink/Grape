@@ -178,7 +178,7 @@ public final class GraphEditorController {
 			statusbar.addMessage(e.getMessage());
 		}
 		if (duplicate) {
-			statusbar.addMessage("Given graph already exists.");
+			statusbar.addMessage("Given graph already exists");
 			this.grapeUI.updateTable();
 		}
 		return duplicate;
@@ -197,10 +197,10 @@ public final class GraphEditorController {
 			if (!database.graphExists(denserGraph)) {
 				denserGraph.calculateProperties();
 				database.addGraph(denserGraph);
-				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "next denser graph added.");
+				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
 				this.grapeUI.updateTable();
 			} else {
-				statusbar.addMessage("Denser graph already exists.");
+				statusbar.addMessage("Denser graph already exists");
 			}
 		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
 				ConnectionFailedException e) {
@@ -216,6 +216,7 @@ public final class GraphEditorController {
 			denserGraph = denserGraphFinder.getNextDenserGraph();
 			denserGraph.calculateProperties();
 			database.addGraph(denserGraph);
+			statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
 			this.grapeUI.updateTable();
 		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
 				ConnectionFailedException e) {
