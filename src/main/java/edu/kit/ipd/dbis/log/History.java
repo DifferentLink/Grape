@@ -37,7 +37,6 @@ public class History {
 	 *
 	 * @return the active state
 	 */
-	// TODO: New Getter
 	public Event getActiveState() {
 		return activeState;
 	}
@@ -103,7 +102,6 @@ public class History {
 	 *
 	 * @param event the event
 	 */
-	// TODO: method added
 	public void removeEvent(Event event) {
 		events.remove(event);
 	}

@@ -85,10 +85,9 @@ public class Log {
 	 * @throws DatabaseDoesNotExistException the database does not exist exception
 	 * @throws AccessDeniedForUserException  the access denied for user exception
 	 * @throws ConnectionFailedException     the connection failed exception
-	 * @throws ConnectionFailedException  the tables not as expected exception
+	 * @throws ConnectionFailedException     the tables not as expected exception
 	 */
-	public void undo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-			ConnectionFailedException {
+	public void undo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 		Event action = history.getActiveState();
 		history.moveBackward();
 		action.getType().undo(this.database, action.getChangedGraphs());
@@ -100,10 +99,9 @@ public class Log {
 	 * @throws DatabaseDoesNotExistException the database does not exist exception
 	 * @throws AccessDeniedForUserException  the access denied for user exception
 	 * @throws ConnectionFailedException     the connection failed exception
-	 * @throws ConnectionFailedException  the tables not as expected exception
+	 * @throws ConnectionFailedException     the tables not as expected exception
 	 */
-	public void redo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException,
-			ConnectionFailedException {
+	public void redo() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 		history.moveForward();
 		Event action = history.getActiveState();
 		action.getType().redo(this.database, action.getChangedGraphs());
