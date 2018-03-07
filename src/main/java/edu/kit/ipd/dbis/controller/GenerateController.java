@@ -178,6 +178,8 @@ public class GenerateController {
 		}
 		statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated.", changedGraphs));
 		grapeUI.updateTable();
+		System.out.println(statusbar.getAsString());
+		System.out.println("------------------");
 	}
 
 	/**

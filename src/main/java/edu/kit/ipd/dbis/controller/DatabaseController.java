@@ -10,6 +10,7 @@ import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
+import edu.kit.ipd.dbis.log.History;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -70,6 +71,7 @@ public class DatabaseController {
 			this.statusbarUI.setRemainingCalculations(0);
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
+			this.statusbar.setHistory(new History(50));
 		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -86,6 +88,7 @@ public class DatabaseController {
 			this.updateDatabases();
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
+			this.statusbar.setHistory(new History(50));
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | FileContentCouldNotBeReadException
 				| ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
@@ -105,6 +108,7 @@ public class DatabaseController {
 			this.updateDatabases();
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
+			this.statusbar.setHistory(new History(50));
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
 		}
