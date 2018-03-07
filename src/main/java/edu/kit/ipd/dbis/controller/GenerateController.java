@@ -174,7 +174,9 @@ public class GenerateController {
 		//create log entry
 		Set<Integer> changedGraphs = new HashSet<>();
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
-			changedGraphs.add(graph.getId());
+			if(graph.getId() != 0) {
+				changedGraphs.add(graph.getId());
+			}
 		}
 		statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated.", changedGraphs));
 		grapeUI.updateTable();
