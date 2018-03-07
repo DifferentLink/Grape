@@ -36,7 +36,7 @@ public class NextDenserGraphFinder<V, E> implements NextDensityAlgorithm {
 			throw new NoDenserGraphException("empty graph");
 		}
 		if (graph.vertexSet().size() == 1 || graph.vertexSet().size() == 2) {
-			throw new NoDenserGraphException("no denser graph exists");
+			throw new NoDenserGraphException("No denser graph exists");
 		}
 
 		BfsCodeAlgorithm.BfsCodeImpl bfscode =

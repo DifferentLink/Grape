@@ -211,11 +211,16 @@ public final class GraphEditorController {
 		try {
 			NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(database.getGraphById(id));
 			PropertyGraph<Integer, Integer> denserGraph;
-
 			denserGraph = denserGraphFinder.getNextDenserGraph();
 			denserGraph.calculateProperties();
+			boolean graphExists = database.graphExists(denserGraph);
 			database.addGraph(denserGraph);
-			statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
+			//TODO: same problem: graph marked as deleted?
+			if (graphExists) {
+				statusbar.addMessage("Database already contains next denser graph");
+			} else {
+				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
+			}
 			this.grapeUI.updateTable();
 		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
 				ConnectionFailedException e) {
