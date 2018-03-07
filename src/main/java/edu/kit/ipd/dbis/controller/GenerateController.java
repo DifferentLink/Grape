@@ -133,9 +133,7 @@ public class GenerateController {
 		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 		try {
 			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-		} catch (NotEnoughGraphsException e) {
-			statusbar.addMessage(e.getMessage());
-		}
+		} catch (NotEnoughGraphsException e) { }
 		//save uncalculated graphs
 		this.saveGraphs(graphs);
 		List<Thread> jobs = new LinkedList<>();
@@ -178,7 +176,16 @@ public class GenerateController {
 				changedGraphs.add(graph.getId());
 			}
 		}
-		statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated.", changedGraphs));
+		if (changedGraphs.size() > 0) {
+			if (changedGraphs.size() < amount) {
+				statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated. " + amount +
+						" different graphs haven't been found", changedGraphs));
+			} else {
+				statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated.", changedGraphs));
+			}
+		} else {
+			statusbar.addMessage("all possible graphs already exists in the database.");
+		}
 		grapeUI.updateTable();
 		System.out.println(statusbar.getAsString());
 		System.out.println("------------------");
@@ -192,7 +199,7 @@ public class GenerateController {
 	 */
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
 		if (!isValidBFS(bfsCode)) {
-			throw new InvalidBfsCodeInputException("wrong BFS input");
+			throw new InvalidBfsCodeInputException("wrong BFS input.");
 		} else {
 			// Parsing String into int[]
 			String[] splitCode = bfsCode.split(",");
@@ -207,16 +214,18 @@ public class GenerateController {
 				if(!database.graphExists(graph)) {
 					graph.calculateProperties();
 					database.addGraph(graph);
-					statusbar.addEvent(EventType.ADD, graph.getId());
+					statusbar.addEvent(EventType.ADD, graph.getId(), "graph added with BFS-Code: " + bfsCode + ".");
 					this.grapeUI.updateTable();
 				}
 				else {
-					statusbar.addMessage("BFS-Graph already exists.");
+					statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists.");
 				}
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
 		}
+		System.out.println(statusbar.getAsString());
+		System.out.println("------------------");
 	}
 
 	/**
@@ -227,7 +236,7 @@ public class GenerateController {
 	public void deleteGraph(int id) {
 		try {
 			database.deleteGraph(id);
-			statusbar.addEvent(EventType.REMOVE, id);
+			statusbar.addEvent(EventType.REMOVE, id, "graph deleted");
 			grapeUI.updateTable();
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
@@ -244,6 +253,7 @@ public class GenerateController {
 			try {
 				database.addGraph(graph);
 				this.statusbarUI.setRemainingCalculations(0);
+				statusbar.addMessage("graphs saved.");
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
 			}

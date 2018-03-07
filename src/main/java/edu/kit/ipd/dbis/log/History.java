@@ -113,6 +113,7 @@ public class History {
 	 */
 	private void cutTrailing() {
 		int indexOfActiveState = events.indexOf(activeState);
+
 		for (int i = indexOfActiveState + 1; i < events.size(); i++) {
 			events.remove(i);
 		}
