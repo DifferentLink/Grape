@@ -3,10 +3,12 @@ package edu.kit.ipd.dbis.gui.popups;
 import edu.kit.ipd.dbis.controller.DatabaseController;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,6 +33,11 @@ public class ConfigureDatabaseOfSelectionUI extends JFrame {
 		this.databaseController = databaseController;
 		this.language = language;
 		this.theme = theme;
+
+		try {
+			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
+			this.setIconImage(logo);
+		} catch (IOException e) { }
 
 		JPanel inputContainer = new JPanel();
 		inputContainer.setLayout(new GridLayout(4, 2, 2, 10));
