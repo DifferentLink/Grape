@@ -187,8 +187,6 @@ public class GenerateController {
 			statusbar.addMessage("all possible graphs already exists in the database.");
 		}
 		grapeUI.updateTable();
-		System.out.println(statusbar.getAsString());
-		System.out.println("------------------");
 	}
 
 	/**
@@ -211,21 +209,28 @@ public class GenerateController {
 			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
 			PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 			try {
-				if(!database.graphExists(graph)) {
-					graph.calculateProperties();
-					database.addGraph(graph);
-					statusbar.addEvent(EventType.ADD, graph.getId(), "graph added with BFS-Code: " + bfsCode + ".");
-					this.grapeUI.updateTable();
+				boolean validBfs = true;
+				try {
+					boolean graphExists = database.graphExists(graph);
+				} catch (Exception e) { //TODO: specific exception
+					statusbar.addMessage("BFS-Code: " +  bfsCode + " not valid.");
+					validBfs = false;
 				}
-				else {
-					statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists.");
+				if (validBfs) {
+					if(!database.graphExists(graph)) {
+						graph.calculateProperties();
+						database.addGraph(graph);
+						statusbar.addEvent(EventType.ADD, graph.getId(), "graph added with BFS-Code: " + bfsCode + ".");
+						this.grapeUI.updateTable();
+					}
+					else {
+						statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists.");
+					}
 				}
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
 		}
-		System.out.println(statusbar.getAsString());
-		System.out.println("------------------");
 	}
 
 	/**
@@ -236,7 +241,7 @@ public class GenerateController {
 	public void deleteGraph(int id) {
 		try {
 			database.deleteGraph(id);
-			statusbar.addEvent(EventType.REMOVE, id, "graph deleted");
+			statusbar.addEvent(EventType.REMOVE, id, "graph " + id + " deleted");
 			grapeUI.updateTable();
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
@@ -253,7 +258,6 @@ public class GenerateController {
 			try {
 				database.addGraph(graph);
 				this.statusbarUI.setRemainingCalculations(0);
-				statusbar.addMessage("graphs saved.");
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
 			}

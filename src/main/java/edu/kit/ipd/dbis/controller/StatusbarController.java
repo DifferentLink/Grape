@@ -127,6 +127,8 @@ public class StatusbarController {
 	 */
 	public void addEvent(Event event) {
 		log.addEvent(event);
+		System.out.println(statusbar.getAsString());
+		System.out.println("------------------");
 	}
 
 	/**
