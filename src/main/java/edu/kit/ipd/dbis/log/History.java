@@ -142,9 +142,7 @@ public class History {
 			for (int id : event.getChangedGraphs()) {
 				changedGraphs += id + ", ";
 			}
-			if (event.getType() == EventType.MESSAGE) {
-				historyEntries += "[" + event.getType() + "] " + event.getMessage();
-			} else {
+			if (event.getType() != EventType.MESSAGE) {
 				changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 2);
 				historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (ID's: " + changedGraphs + ")\n";
 			}

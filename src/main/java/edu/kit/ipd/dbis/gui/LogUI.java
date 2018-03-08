@@ -81,6 +81,7 @@ public class LogUI extends JFrame {
 	 * @return
 	 */
 
+	/**
 	private JPanel renderEvent(Event event) {
 		switch (event.getType()) {
 			case MESSAGE : return renderMESSAGE(event);
@@ -131,5 +132,6 @@ public class LogUI extends JFrame {
 		container.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, theme.neutralColor));
 		return container;
 	}
+	 */
 
 }
