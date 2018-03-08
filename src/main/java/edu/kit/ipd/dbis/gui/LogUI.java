@@ -55,6 +55,7 @@ public class LogUI extends JFrame {
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		JScrollPane scrollPane = new JScrollPane(container);
 		scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
+
 		//history.getEvents().forEach(event -> container.add(renderEvent(event)));
 
 		JTextArea text = new JTextArea(history.toString());
@@ -79,7 +80,7 @@ public class LogUI extends JFrame {
 	 * @param event
 	 * @return
 	 */
-	/**
+
 	private JPanel renderEvent(Event event) {
 		switch (event.getType()) {
 			case MESSAGE : return renderMESSAGE(event);
@@ -92,14 +93,18 @@ public class LogUI extends JFrame {
 
 	private JPanel renderMESSAGE(Event event) {
 		JPanel container = new JPanel(new BorderLayout());
-		container.add(new JLabel(event.getMessage()));
+		String changedGraphs = "";
+		for (int id : event.getChangedGraphs()) {
+			changedGraphs += id + ", ";
+		}
+		container.add(new JLabel("[Message] " + event.getMessage()));
 		container.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, theme.neutralColor));
 		return container;
 	}
 
 	private JPanel renderREMOVE(Event event) {
 		JPanel container = new JPanel(new BorderLayout());
-		String changedGraphs = "";
+		String changedGraphs = "[REMOVE] ";
 		if (event.getChangedGraphs().size() > 3) {
 			Iterator iterator = event.getChangedGraphs().iterator();
 			changedGraphs = String.valueOf(iterator.next()) + ", "
@@ -118,8 +123,13 @@ public class LogUI extends JFrame {
 
 	private JPanel renderADD(Event event) {
 		JPanel container = new JPanel(new BorderLayout());
-		container.add(new JLabel(event.getMessage()));
+		String changedGraphs = "";
+		for (int id : event.getChangedGraphs()) {
+			changedGraphs += id + ", ";
+		}
+		container.add(new JLabel("[ADD] " + event.getMessage() + " (ID's: " + changedGraphs + ")"));
+		container.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, theme.neutralColor));
 		return container;
 	}
-	 */
+
 }
