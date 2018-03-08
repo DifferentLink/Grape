@@ -30,6 +30,7 @@ public class LogUI extends JFrame {
 	 * @param theme the theme to style the log
 	 */
 	public LogUI(StatusbarController statusbarController, ResourceBundle language, Theme theme) {
+
 		this.history = statusbarController.getHistory();
 		this.language = language;
 		this.theme = theme;
@@ -50,6 +51,7 @@ public class LogUI extends JFrame {
 	 * @param component the component used to position the log
 	 */
 	public void drawLog(Component component) {
+		//dispose();
 		this.addFocusListener(new HasFocusListener(this));
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
