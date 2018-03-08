@@ -34,6 +34,7 @@ public class StatusbarUI extends JPanel {
 	private GraphEditorController graphEditorController;
 	private boolean isCalculationRunning = true;
 	private JLabel statusText;
+	private String logMessage;
 	private String remainingCalculations = "-";
 	private String selectedRow = "Position -";
 	private String databaseInfo = "-";
@@ -77,6 +78,7 @@ public class StatusbarUI extends JPanel {
 		this.generateController.setStatusbarUI(this);
 		this.graphEditorController.setStatusbarUI(this);
 		this.databaseController.setStatusbarUI(this);
+		this.statusbarController.setStatusbarUI(this);
 
 		this.add(Box.createHorizontalGlue());
 		this.add(log);
@@ -178,7 +180,15 @@ public class StatusbarUI extends JPanel {
 		updateStatusbarText();
 	}
 
+	/**
+	 * @param logMessage tsdfgdfhe message of the last logentry
+	 */
+	public void setLastLogentry(final String logMessage) {
+		this.logMessage = "						" + logMessage;
+		updateStatusbarText();
+	}
+
 	private void updateStatusbarText() {
-		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo);
+		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo + " |	" + logMessage);
 	}
 }

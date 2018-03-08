@@ -153,4 +153,17 @@ public class History {
 		return historyEntries;
 	}
 
+	/**
+	 * get the latest event
+	 * @return the latest event
+	 */
+	public String getLastEvent() {
+		String historyEntries = "";
+		if (this.getEvents().size() == 0) {
+			return "";
+		}
+		String[] events = this.toString().split("\n");
+		return events[events.length - 1];
+	}
+
 }
