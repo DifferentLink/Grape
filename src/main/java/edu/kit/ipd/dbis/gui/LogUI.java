@@ -55,6 +55,7 @@ public class LogUI extends JFrame {
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		JScrollPane scrollPane = new JScrollPane(container);
 		scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
+		scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(Integer.MAX_VALUE, 10));
 
 		//history.getEvents().forEach(event -> container.add(renderEvent(event)));
 
@@ -72,6 +73,7 @@ public class LogUI extends JFrame {
 		this.setLocation(position);
 		this.setVisible(true);
 		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
 	}
 
 
