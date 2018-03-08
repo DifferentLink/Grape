@@ -68,7 +68,6 @@ public class CalculationController implements Runnable {
 					PropertyGraph<Integer, Integer> graph = database.getUncalculatedGraph();
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
-					statusbar.addEvent(EventType.ADD, graph.getId());
 					grapeUI.updateTable();
 				}
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {

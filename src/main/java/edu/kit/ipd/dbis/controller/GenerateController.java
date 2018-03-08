@@ -217,6 +217,7 @@ public class GenerateController {
 					statusbar.addMessage("BFS-Code: " +  bfsCode + " not valid");
 					validBfs = false;
 				}
+
 				if (validBfs) {
 					database.addGraph(graph);
 					calculation.run();
