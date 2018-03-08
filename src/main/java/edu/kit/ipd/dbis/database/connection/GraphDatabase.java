@@ -399,4 +399,13 @@ public class GraphDatabase {
 		}
 	}
 
+	/**
+	 *
+	 * @return
+	 * @throws ConnectionFailedException
+	 */
+	public int getNumberOfUncalculatedGraphs() throws ConnectionFailedException {
+		return 0;
+	}
+
 }
