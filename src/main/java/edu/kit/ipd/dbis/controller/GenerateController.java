@@ -128,65 +128,66 @@ public class GenerateController {
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InvalidGeneratorInputException, InterruptedException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
-			throw new InvalidGeneratorInputException();
-		}
-		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
-		try {
-			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-		} catch (NotEnoughGraphsException e) { }
-		//save uncalculated graphs
-		this.saveGraphs(graphs);
-		List<Thread> jobs = new LinkedList<>();
-		for (PropertyGraph<Integer, Integer> graph : graphs) {
-			jobs.add(new Thread(new Runnable() {
-				@Override
-				public void run() {
+			statusbar.addMessage("Invalid Input");
+		} else {
+			Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
+			try {
+				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			} catch (NotEnoughGraphsException e) { }
+			//save uncalculated graphs
+			this.saveGraphs(graphs);
+			List<Thread> jobs = new LinkedList<>();
+			for (PropertyGraph<Integer, Integer> graph : graphs) {
+				jobs.add(new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							graph.calculateProperties();
+							database.replaceGraph(graph.getId(), graph);
+						} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+							statusbar.addMessage(e.getMessage());
+						}
+					}
+				}));
+			}
+			int runningJobs = 0;
+			final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
+
+			for (Thread job : jobs) {
+				job.start();
+				if (runningJobs < maxJobs) {
+					runningJobs++;
+				} else {
 					try {
-						graph.calculateProperties();
-						database.replaceGraph(graph.getId(), graph);
-					} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-						statusbar.addMessage(e.getMessage());
+						job.join();
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
 					}
 				}
-			}));
-		}
-		int runningJobs = 0;
-		final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
+			}
+			for (Thread job : jobs) {
+				job.join();
+			}
 
-		for (Thread job : jobs) {
-			job.start();
-			if (runningJobs < maxJobs) {
-				runningJobs++;
-			} else {
-				try {
-					job.join();
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
+			//create log entry
+			Set<Integer> changedGraphs = new HashSet<>();
+			for (PropertyGraph<Integer, Integer> graph : graphs) {
+				if(graph.getId() != 0) {
+					changedGraphs.add(graph.getId());
 				}
 			}
-		}
-		for (Thread job : jobs) {
-			job.join();
-		}
-
-		//create log entry
-		Set<Integer> changedGraphs = new HashSet<>();
-		for (PropertyGraph<Integer, Integer> graph : graphs) {
-			if(graph.getId() != 0) {
-				changedGraphs.add(graph.getId());
-			}
-		}
-		if (changedGraphs.size() > 0) {
-			if (changedGraphs.size() < amount) {
-				statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated " + amount +
-						" different graphs haven't been found", changedGraphs));
+			if (changedGraphs.size() > 0) {
+				if (changedGraphs.size() < amount) {
+					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated " + amount +
+							" different graphs haven't been found", changedGraphs));
+				} else {
+					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated", changedGraphs));
+				}
 			} else {
-				statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated", changedGraphs));
+				statusbar.addMessage("All possible graphs already exists in the database");
 			}
-		} else {
-			statusbar.addMessage("All possible graphs already exists in the database");
+			grapeUI.updateTable();
 		}
-		grapeUI.updateTable();
 	}
 
 	/**

@@ -158,12 +158,18 @@ public class History {
 	 * @return the latest event
 	 */
 	public String getLastEvent() {
-		String historyEntries = "";
+		String lastEvent = "";
 		if (this.getEvents().size() == 0) {
 			return "";
 		}
-		String[] events = this.toString().split("\n");
-		return events[events.length - 1];
+		//Building String
+		Event event = events.get(events.size() - 1);
+		if (event.getType() == EventType.MESSAGE) {
+			lastEvent += "[" + event.getType() + "] " + event.getMessage();
+		} else {
+			lastEvent += "[" + event.getType() + "] " + event.getMessage();
+		}
+	return lastEvent;
 	}
 
 }

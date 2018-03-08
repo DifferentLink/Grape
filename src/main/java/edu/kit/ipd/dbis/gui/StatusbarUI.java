@@ -184,11 +184,12 @@ public class StatusbarUI extends JPanel {
 	 * @param logMessage tsdfgdfhe message of the last logentry
 	 */
 	public void setLastLogentry(final String logMessage) {
-		this.logMessage = "						" + logMessage;
+		this.logMessage = logMessage;
 		updateStatusbarText();
 	}
 
 	private void updateStatusbarText() {
-		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo + " |	" + logMessage);
+		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo + " |	                " +
+				"          " + logMessage);
 	}
 }
