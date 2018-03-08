@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
  * The log window which becomes visible with a click on the log button
  */
 public class LogUI extends JFrame {
-	private final History history;
+	private History history;
 	private ResourceBundle language;
 	private Theme theme;
 
@@ -40,6 +40,14 @@ public class LogUI extends JFrame {
 		this.theme = theme;
 		this.setUndecorated(true);
 		this.setResizable(false);
+	}
+
+	/**
+	 * set history
+	 * @param history new history
+	 */
+	public void setHistory(History history) {
+		this.history = history;
 	}
 
 	/**
