@@ -471,7 +471,8 @@ public class GraphEditorUI extends JPanel {
 
 	private void arrangeGraph() {
 		GraphLook.arrangeInCircle(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
-				new Point(0, 0), new Point(graphEditor.getWidth(), graphEditor.getHeight()));
+				new Point(0, 0), new Point(Math.min(graphEditor.getWidth(), graphEditor.getHeight()),
+						Math.min(graphEditor.getHeight(), graphEditor.getWidth())));
 		repaint();
 
 	}
