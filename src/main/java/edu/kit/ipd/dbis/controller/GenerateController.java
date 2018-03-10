@@ -208,31 +208,26 @@ public class GenerateController {
 			}
 			// Creating BfsCode Object
 			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-			PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 			try {
-				boolean validBfs = true;
+				PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 				boolean graphExists = false;
-				try {
-					graphExists = database.graphExists(graph);
-				} catch (Exception e) { //TODO: specific exception
-					statusbar.addMessage("BFS-Code: " +  bfsCode + " not valid");
-					validBfs = false;
+				graphExists = database.graphExists(graph);
+				database.addGraph(graph);
+				calculation.run();
+				this.grapeUI.updateTable();
+
+				if (graphExists) {
+					//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
+					//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
+					statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists");
+				} else {
+					statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
 				}
 
-				if (validBfs) {
-					database.addGraph(graph);
-					calculation.run();
-					this.grapeUI.updateTable();
-					if (graphExists) {
-						//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
-						//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
-						statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists");
-					} else {
-						statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
-					}
-				}
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
+			} catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+				statusbar.addMessage("Illegal bfs code");
 			}
 		}
 	}
