@@ -12,7 +12,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 /**
  * The type Calculation controller.
  */
-public class CalculationController implements Runnable {
+public class CalculationController {
 
 	private Boolean isCalculating;
 	private StatusbarController statusbar;
@@ -69,6 +69,7 @@ public class CalculationController implements Runnable {
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
 					grapeUI.updateTable();
+					this.statusbar.setRemainingCalculations();
 				}
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
@@ -82,17 +83,6 @@ public class CalculationController implements Runnable {
 				statusbar.addMessage(e.getMessage());
 			}
 		}
-	}
-
-	/**
-	 * Gets number not calculated graphs.
-	 *
-	 * @return the length of the graphlist of CalculationController.
-	 */
-	public int getNumberNotCalculatedGraphs() { //Todo: perhaps remove method
-		int numberGraphs = 0;
-		//numberGraphs = database.getUncalculatedGraph().size();
-		return numberGraphs;
 	}
 
 	/**
@@ -114,7 +104,7 @@ public class CalculationController implements Runnable {
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public synchronized void continueCalculation() {
+	public void continueCalculation() {
 		isCalculating = true;
 		run();
 	}
