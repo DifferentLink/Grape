@@ -58,10 +58,10 @@ public class DatabaseController {
 	/**
 	 * Triggers the database to open a new database table.
 	 *
-	 * @param url      the url
-	 * @param user     the user
+	 * @param url the url
+	 * @param user the user
 	 * @param password the password
-	 * @param name     the name
+	 * @param name the name
 	 */
 	public void newDatabase(String url, String user, String password, String name) {
 		try {
