@@ -58,8 +58,7 @@ public class LogTest {
 
 	@Test
 	public void getAsString() {
-		String expectedOutput = "[ADD] a1 (1, 2, 3, 4)\n" + "[REMOVE] r2 (1, 2, 3, 4)\n" + "[MESSAGE] m3 (1, 2, 3, " +
-				"4)";
+		String expectedOutput = "[ADD] a1 (1, 2, 3, 4)\n" + "[REMOVE] r2 (1, 2, 3, 4)\n" + "[MESSAGE] m3";
 		String output;
 		log.addEvent(a1);
 		log.addEvent(r2);
@@ -70,7 +69,7 @@ public class LogTest {
 
 	@Test
 	public void getAsString2() {
-		String expectedOutput = "[REMOVE] r2 (1, 2, 3, 4)";
+		String expectedOutput = "[REMOVE] r2 (1, 2, 3, 4)\n";
 		String output;
 		log.addEvent(r2);
 		output = log.getAsString();
@@ -87,7 +86,7 @@ public class LogTest {
 
 	@Test
 	public void removeMessages() {
-		String expectedOutput = "[ADD] a1 (1, 2, 3, 4)\n" + "[REMOVE] r2 (1, 2, 3, 4)";
+		String expectedOutput = "[ADD] a1 (1, 2, 3, 4)\n" + "[REMOVE] r2 (1, 2, 3, 4)\n";
 		String output;
 		log.addEvent(a1);
 		log.addEvent(m2);
