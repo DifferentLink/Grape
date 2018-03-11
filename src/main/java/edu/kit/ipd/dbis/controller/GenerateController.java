@@ -82,38 +82,6 @@ public class GenerateController {
 		this.database = database;
 	}
 
-
-	/**
-	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
-	 *
-	 * @param minVertices lower bound of vertices
-	 * @param maxVertices upper bound of vertices
-	 * @param minEdges    lower bound of edges.
-	 * @param maxEdges    upper bound of edges.
-	 * @param amount      the number of graphs
-	 * @throws InvalidGeneratorInputException the invalid generator input exception
-	 */
-	public void generateGraphsSequential(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InvalidGeneratorInputException {
-		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
-			throw new InvalidGeneratorInputException();
-		}
-		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
-		try {
-			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-			this.saveGraphs(graphs);
-			Thread calculate = new Thread(CalculationController.getInstance());
-			SwingUtilities.invokeLater(calculate);
-		} catch (IllegalArgumentException e) {
-			throw new InvalidGeneratorInputException();
-		} catch (NotEnoughGraphsException e) {
-			statusbar.addMessage(e.getMessage());
-			this.saveGraphs(graphs);
-			Thread calculate = new Thread(CalculationController.getInstance());
-			SwingUtilities.invokeLater(calculate);
-		}
-	}
-
 	/**
 	 * Generate graphs.
 	 *

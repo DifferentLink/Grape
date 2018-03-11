@@ -90,6 +90,7 @@ public class DatabaseController {
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
 			this.statusbarUI.setRemainingCalculations(this.database.getNumberOfUncalculatedGraphs());
+			this.statusbarUI.setNumberOfGraphs(database.getNumberOfGraphs());
 			this.statusbar.setHistory(new History(50));
 			this.statusbar.addMessage("Database loaded.");
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | FileContentCouldNotBeReadException
@@ -112,6 +113,7 @@ public class DatabaseController {
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
 			this.statusbarUI.setRemainingCalculations(this.database.getNumberOfUncalculatedGraphs());
+			this.statusbarUI.setNumberOfGraphs(database.getNumberOfGraphs());
 			this.statusbar.setHistory(new History(50));
 			this.statusbar.addMessage("Databases merged");
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
