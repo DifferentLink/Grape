@@ -22,7 +22,7 @@ public class StatusbarController {
 	private Log log;
 	private CalculationController calculation;
 	private GrapeUI grapeUI;
-
+	private GraphDatabase database;
 	private static StatusbarController statusbar;
 	private StatusbarUI statusbarUI;
 
@@ -48,6 +48,7 @@ public class StatusbarController {
 	 * @param database the database
 	 */
 	public void setDatabase(GraphDatabase database) {
+		this.database = database;
 		log.setDatabase(database);
 	}
 
@@ -152,7 +153,6 @@ public class StatusbarController {
 		}
 		event = new Event(type, message, changedGraph);
 		this.addEvent(event);
-
 	}
 
 	/**
@@ -199,6 +199,11 @@ public class StatusbarController {
 			setCalculation();
 		}
 		calculation.continueCalculation();
+		try {
+			this.statusbarUI.setRemainingCalculations(this.database.getNumberOfUncalculatedGraphs());
+		} catch (ConnectionFailedException e) {
+			this.addMessage(e.getMessage());
+		}
 	}
 
 	/**
@@ -207,6 +212,11 @@ public class StatusbarController {
 	 * @return the number uncalculated graphs
 	 */
 	public int getNumberUncalculatedGraphs() {
+		try {
+			return this.database.getNumberOfUncalculatedGraphs();
+		} catch (ConnectionFailedException e) {
+			this.addMessage(e.getMessage());
+		}
 		return 0;
 	}
 
