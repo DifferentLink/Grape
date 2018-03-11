@@ -6,7 +6,6 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
-import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 /**
@@ -83,15 +82,6 @@ public class CalculationController implements Runnable {
 				statusbar.addMessage(e.getMessage());
 			}
 		}
-	}
-
-	/**
-	 * checks if the current calculation is running.
-	 *
-	 * @return true if the calculation is running.
-	 */
-	public Boolean getCalcStatus() {
-		return isCalculating;
 	}
 
 	/**
