@@ -487,6 +487,5 @@ public class GraphEditorUI extends JPanel {
 		GraphLook.arrangeInCircle(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
 				upperLeft, lowerRight);
 		repaint();
-
 	}
 }

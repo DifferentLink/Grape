@@ -153,6 +153,21 @@ public class StatusbarController {
 		}
 		event = new Event(type, message, changedGraph);
 		this.addEvent(event);
+
+	}
+
+	/**
+	 * Add event.
+	 *
+	 * @param type the EventType
+	 * @param id   the id of the graph
+	 */
+	public void addEvent(EventType type, int id, String message) {
+		Set<Integer> changedGraph = new HashSet<>();
+		changedGraph.add(id);
+		Event event;
+		event = new Event(type, message, changedGraph);
+		this.addEvent(event);
 	}
 
 	/**
@@ -216,6 +231,15 @@ public class StatusbarController {
 		} catch (ConnectionFailedException e) {
 			this.addMessage(e.getMessage());
 		}
+	}
+
+	/**
+	 * Sets statusbar ui.
+	 *
+	 * @param statusbarUI the statusbar ui
+	 */
+	public void setStatusbarUI(StatusbarUI statusbarUI) {
+		this.statusbarUI = statusbarUI;
 	}
 
 	/**
