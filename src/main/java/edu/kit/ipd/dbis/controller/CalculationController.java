@@ -12,7 +12,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 /**
  * The type Calculation controller.
  */
-public class CalculationController {
+public class CalculationController implements Runnable {
 
 	private Boolean isCalculating;
 	private StatusbarController statusbar;
