@@ -37,7 +37,6 @@ public class History {
 	 *
 	 * @return the active state
 	 */
-	// TODO: New Getter
 	public Event getActiveState() {
 		return activeState;
 	}
@@ -103,7 +102,6 @@ public class History {
 	 *
 	 * @param event the event
 	 */
-	// TODO: method added
 	public void removeEvent(Event event) {
 		events.remove(event);
 	}
@@ -113,6 +111,7 @@ public class History {
 	 */
 	private void cutTrailing() {
 		int indexOfActiveState = events.indexOf(activeState);
+
 		for (int i = indexOfActiveState + 1; i < events.size(); i++) {
 			events.remove(i);
 		}
@@ -127,6 +126,48 @@ public class History {
 			events.remove(j);
 			j++;
 		}
+	}
+
+	/**
+	 * print history
+	 */
+	public String toString() {
+		String historyEntries = "";
+		if (this.getEvents().size() == 0) {
+			return "";
+		}
+		//Building String
+		for (Event event : this.getEvents()) {
+			String changedGraphs = "";
+			for (int id : event.getChangedGraphs()) {
+				changedGraphs += id + ", ";
+			}
+			if (event.getType() != EventType.MESSAGE) {
+				changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 2);
+				historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (ID's: " + changedGraphs + ")\n";
+			}
+		}
+		historyEntries = historyEntries.substring(0, historyEntries.length());
+		return historyEntries;
+	}
+
+	/**
+	 * get the latest event
+	 * @return the latest event
+	 */
+	public String getLastEvent() {
+		String lastEvent = "";
+		if (this.getEvents().size() == 0) {
+			return "";
+		}
+		//Building String
+		Event event = events.get(events.size() - 1);
+		if (event.getType() == EventType.MESSAGE) {
+			lastEvent += "[" + event.getType() + "] " + event.getMessage();
+		} else {
+			lastEvent += "[" + event.getType() + "] " + event.getMessage();
+		}
+	return lastEvent;
 	}
 
 }
