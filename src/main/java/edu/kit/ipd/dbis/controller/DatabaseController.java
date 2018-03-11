@@ -10,6 +10,7 @@ import edu.kit.ipd.dbis.database.file.Connector;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
+import edu.kit.ipd.dbis.log.History;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -57,10 +58,10 @@ public class DatabaseController {
 	/**
 	 * Triggers the database to open a new database table.
 	 *
-	 * @param url      the url
-	 * @param user     the user
+	 * @param url the url
+	 * @param user the user
 	 * @param password the password
-	 * @param name     the name
+	 * @param name the name
 	 */
 	public void newDatabase(String url, String user, String password, String name) {
 		try {
@@ -70,6 +71,8 @@ public class DatabaseController {
 			this.statusbarUI.setRemainingCalculations(0);
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
+			this.statusbar.setHistory(new History(50));
+			this.statusbar.addMessage("Database \"" + name + "\" opened.");
 		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -86,6 +89,8 @@ public class DatabaseController {
 			this.updateDatabases();
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
+			this.statusbar.setHistory(new History(50));
+			this.statusbar.addMessage("Database loaded.");
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | FileContentCouldNotBeReadException
 				| ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
@@ -105,6 +110,8 @@ public class DatabaseController {
 			this.updateDatabases();
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
+			this.statusbar.setHistory(new History(50));
+			this.statusbar.addMessage("Databases merged");
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -118,6 +125,7 @@ public class DatabaseController {
 	public void saveDatabase(String filepath) {
 		try {
 			connector.saveGraphDatabase(filepath, database);
+			statusbar.addMessage("Database saved");
 		} catch (FileNameAlreadyTakenException | FileCouldNotBeSavedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -142,6 +150,7 @@ public class DatabaseController {
 				selectionDatabase.addGraph(this.database.getGraphById(id));
 			}
 			connector.saveGraphDatabase(filepath, selectionDatabase);
+			this.statusbar.addMessage("Selection saved");
 		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException
 				| InsertionFailedException | UnexpectedObjectException | FileCouldNotBeSavedException
 				| FileNameAlreadyTakenException e) {

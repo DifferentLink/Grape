@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
+import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.log.History;
@@ -23,6 +24,7 @@ public class StatusbarController {
 	private GrapeUI grapeUI;
 
 	private static StatusbarController statusbar;
+	private StatusbarUI statusbarUI;
 
 	private StatusbarController() {
 		this.log = new Log(100);
@@ -127,6 +129,7 @@ public class StatusbarController {
 	 */
 	public void addEvent(Event event) {
 		log.addEvent(event);
+		this.statusbarUI.setLastLogentry(statusbar.getHistory().getLastEvent());
 	}
 
 	/**
@@ -141,12 +144,27 @@ public class StatusbarController {
 		Event event;
 		String message;
 		if (type.equals(EventType.ADD)) {
-			message = "New graph added.";
+			message = "New graph added";
 		} else if (type.equals(EventType.REMOVE)) {
-			message = "graph removed.";
+			message = "Graph deleted";
 		} else {
 			return;
 		}
+		event = new Event(type, message, changedGraph);
+		this.addEvent(event);
+
+	}
+
+	/**
+	 * Add event.
+	 *
+	 * @param type the EventType
+	 * @param id   the id of the graph
+	 */
+	public void addEvent(EventType type, int id, String message) {
+		Set<Integer> changedGraph = new HashSet<>();
+		changedGraph.add(id);
+		Event event;
 		event = new Event(type, message, changedGraph);
 		this.addEvent(event);
 	}
@@ -190,6 +208,15 @@ public class StatusbarController {
 	 */
 	public int getNumberUncalculatedGraphs() {
 		return 0;
+	}
+
+	/**
+	 * Sets statusbar ui.
+	 *
+	 * @param statusbarUI the statusbar ui
+	 */
+	public void setStatusbarUI(StatusbarUI statusbarUI) {
+		this.statusbarUI = statusbarUI;
 	}
 }
 

@@ -8,6 +8,8 @@ import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
+import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
@@ -117,7 +119,6 @@ public final class GraphEditorController {
 				newGraph.calculateProperties();
 				database.addGraph(newGraph);
 				statusbar.addEvent(ADD, newGraph.getId());
-				statusbar.addEvent(REMOVE, oldID);
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
@@ -176,10 +177,10 @@ public final class GraphEditorController {
 			statusbar.addMessage(e.getMessage());
 		}
 		if (duplicate) {
-			statusbar.addMessage("Given graph already exists.");
+			statusbar.addMessage("Given graph already exists");
 			this.grapeUI.updateTable();
 		}
-		return duplicate;
+		return !duplicate;
 	}
 
 	/**
@@ -189,15 +190,19 @@ public final class GraphEditorController {
 	 */
 	public void addNextDenserToDatabase(PropertyGraph<Integer, Integer> graph) {
 		NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(graph);
-
 		PropertyGraph<Integer, Integer> denserGraph;
 		try {
 			denserGraph = denserGraphFinder.getNextDenserGraph();
-			database.addGraph(denserGraph);
-			statusbar.continueCalculation();
-			this.grapeUI.updateTable();
-		} catch (NoDenserGraphException| UnexpectedObjectException | InsertionFailedException |
-				ConnectionFailedException  e) {
+			if (!database.graphExists(denserGraph)) {
+				denserGraph.calculateProperties();
+				database.addGraph(denserGraph);
+				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
+				this.grapeUI.updateTable();
+			} else {
+				statusbar.addMessage("Denser graph already exists");
+			}
+		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
+				ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 	}
@@ -205,18 +210,22 @@ public final class GraphEditorController {
 	public void addNextDenserToDatabase(final int id) {
 		try {
 			NextDenserGraphFinder denserGraphFinder = new NextDenserGraphFinder(database.getGraphById(id));
-
 			PropertyGraph<Integer, Integer> denserGraph;
-			try {
-				denserGraph = denserGraphFinder.getNextDenserGraph();
-				database.addGraph(denserGraph);
-				statusbar.continueCalculation();
-				this.grapeUI.updateTable();
-			} catch (NoDenserGraphException e) {
-				statusbar.addMessage(e.getMessage());
-			} catch (InsertionFailedException e) {}
-		} catch (ConnectionFailedException | UnexpectedObjectException ignored) {}
-
+			denserGraph = denserGraphFinder.getNextDenserGraph();
+			denserGraph.calculateProperties();
+			boolean graphExists = database.graphExists(denserGraph);
+			database.addGraph(denserGraph);
+			//TODO: same problem: graph marked as deleted?
+			if (graphExists) {
+				statusbar.addMessage("Database already contains next denser graph");
+			} else {
+				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
+			}
+			this.grapeUI.updateTable();
+		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
+				ConnectionFailedException e) {
+			statusbar.addMessage(e.getMessage());
+		}
 	}
 
 	public String getProfile(final int id) {
@@ -226,7 +235,9 @@ public final class GraphEditorController {
 			ProfileDensityAlgorithm.Profile p = (ProfileDensityAlgorithm.Profile) graph.getProperty(Profile.class).getValue();
 			profile = p.getMatrix();
 
-		} catch (ConnectionFailedException | UnexpectedObjectException ignored) {}
+		} catch (ConnectionFailedException | UnexpectedObjectException e) {
+			statusbar.addMessage(e.getMessage());
+		}
 		String result = "";
 		Set<Integer> negative = new HashSet<>();
 		for (int i = 0; i < profile.length; i++) {

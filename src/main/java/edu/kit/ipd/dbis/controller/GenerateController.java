@@ -9,6 +9,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
+import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
@@ -127,51 +128,66 @@ public class GenerateController {
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InvalidGeneratorInputException, InterruptedException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
-			throw new InvalidGeneratorInputException();
-		}
+			statusbar.addMessage("Invalid Input");
+		} else {
+			Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
+			try {
+				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			} catch (NotEnoughGraphsException e) { }
+			//save uncalculated graphs
+			this.saveGraphs(graphs);
+			List<Thread> jobs = new LinkedList<>();
+			for (PropertyGraph<Integer, Integer> graph : graphs) {
+				jobs.add(new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							graph.calculateProperties();
+							database.replaceGraph(graph.getId(), graph);
+						} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+							statusbar.addMessage(e.getMessage());
+						}
+					}
+				}));
+			}
+			int runningJobs = 0;
+			final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
 
-		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
-		try {
-			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-		} catch (NotEnoughGraphsException e) {
-			statusbar.addMessage(e.getMessage());
-		}
-		//save uncalculated graphs
-		this.saveGraphs(graphs);
-		List<Thread> jobs = new LinkedList<>();
-		for (PropertyGraph<Integer, Integer> graph : graphs) {
-			jobs.add(new Thread(new Runnable() {
-				@Override
-				public void run() {
+			for (Thread job : jobs) {
+				job.start();
+				if (runningJobs < maxJobs) {
+					runningJobs++;
+				} else {
 					try {
-						graph.calculateProperties();
-						database.replaceGraph(graph.getId(), graph);
-						statusbar.addEvent(EventType.ADD, graph.getId());
-					} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-						statusbar.addMessage(e.getMessage());
+						job.join();
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
 					}
 				}
-			}));
-		}
-		int runningJobs = 0;
-		final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
+			}
+			for (Thread job : jobs) {
+				job.join();
+			}
 
-		for (Thread job : jobs) {
-			job.start();
-			if (runningJobs < maxJobs) {
-				runningJobs++;
-			} else {
-				try {
-					job.join();
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
+			//create log entry
+			Set<Integer> changedGraphs = new HashSet<>();
+			for (PropertyGraph<Integer, Integer> graph : graphs) {
+				if(graph.getId() != 0) {
+					changedGraphs.add(graph.getId());
 				}
 			}
+			if (changedGraphs.size() > 0) {
+				if (changedGraphs.size() < amount) {
+					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated " + amount +
+							" different graphs haven't been found", changedGraphs));
+				} else {
+					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated", changedGraphs));
+				}
+			} else {
+				statusbar.addMessage("All possible graphs already exists in the database");
+			}
+			grapeUI.updateTable();
 		}
-		for (Thread job : jobs) {
-			job.join();
-		}
-		grapeUI.updateTable();
 	}
 
 	/**
@@ -182,7 +198,7 @@ public class GenerateController {
 	 */
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
 		if (!isValidBFS(bfsCode)) {
-			throw new InvalidBfsCodeInputException("wrong input");
+			throw new InvalidBfsCodeInputException("Wrong BFS input");
 		} else {
 			// Parsing String into int[]
 			String[] splitCode = bfsCode.split(",");
@@ -192,13 +208,26 @@ public class GenerateController {
 			}
 			// Creating BfsCode Object
 			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
-			PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
 			try {
+				PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
+				boolean graphExists = false;
+				graphExists = database.graphExists(graph);
 				database.addGraph(graph);
 				calculation.run();
 				this.grapeUI.updateTable();
+
+				if (graphExists) {
+					//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
+					//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
+					statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists");
+				} else {
+					statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
+				}
+
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
+			} catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+				statusbar.addMessage("Illegal bfs code");
 			}
 		}
 	}
@@ -211,7 +240,7 @@ public class GenerateController {
 	public void deleteGraph(int id) {
 		try {
 			database.deleteGraph(id);
-			statusbar.addEvent(EventType.REMOVE, id);
+			statusbar.addEvent(EventType.REMOVE, id, "Graph " + id + " deleted");
 			grapeUI.updateTable();
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
