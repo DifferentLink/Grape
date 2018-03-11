@@ -42,13 +42,13 @@ public class StatusbarUI extends JPanel {
 
 	/**
 	 * @param statusbarController the controller responsible for the statusbar
-	 * @param databaseController  the controller responsible for database management
-	 * @param language            the language used
-	 * @param theme               the theme used to style the statusbar
+	 * @param databaseController the controller responsible for database management
+	 * @param language the language used
+	 * @param theme the theme used to style the statusbar
 	 */
 	public StatusbarUI(StatusbarController statusbarController,
-					   DatabaseController databaseController,
-					   ResourceBundle language, Theme theme) {
+	                   DatabaseController databaseController,
+	                   ResourceBundle language, Theme theme) {
 		this.statusbarController = statusbarController;
 		this.databaseController = databaseController;
 		this.generateController = GenerateController.getInstance();
@@ -173,7 +173,7 @@ public class StatusbarUI extends JPanel {
 	}
 
 	/**
-	 * @param databaseName   the name of the database to display
+	 * @param databaseName the name of the database to display
 	 * @param numberOfGraphs the total number of graphs in the database
 	 */
 	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
