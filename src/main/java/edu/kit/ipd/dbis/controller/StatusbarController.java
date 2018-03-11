@@ -210,6 +210,14 @@ public class StatusbarController {
 		}
 	}
 
+	public void setNumberOfGraphs() {
+		try {
+			this.statusbarUI.setNumberOfGraphs(this.database.getNumberOfGraphs());
+		} catch (ConnectionFailedException e) {
+			this.addMessage(e.getMessage());
+		}
+	}
+
 	/**
 	 * Sets statusbar ui.
 	 *

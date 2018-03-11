@@ -94,14 +94,15 @@ public class GenerateController {
 	 * @throws InterruptedException           the interrupted exception
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InvalidGeneratorInputException, InterruptedException {
+			InterruptedException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			statusbar.addMessage("Invalid Input");
 		} else {
 			Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 			try {
 				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-			} catch (NotEnoughGraphsException e) { }
+			} catch (NotEnoughGraphsException e) {
+			}
 			//save uncalculated graphs
 			this.saveGraphs(graphs);
 			List<Thread> jobs = new LinkedList<>();
@@ -140,21 +141,22 @@ public class GenerateController {
 			//create log entry
 			Set<Integer> changedGraphs = new HashSet<>();
 			for (PropertyGraph<Integer, Integer> graph : graphs) {
-				if(graph.getId() != 0) {
+				if (graph.getId() != 0) {
 					changedGraphs.add(graph.getId());
 				}
 			}
 			if (changedGraphs.size() > 0) {
 				if (changedGraphs.size() < amount) {
-					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated " + amount +
+					statusbar.addEvent(new Event(EventType.ADD, changedGraphs.size() + " graphs were generated " + amount +
 							" different graphs haven't been found", changedGraphs));
 				} else {
-					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated", changedGraphs));
+					statusbar.addEvent(new Event(EventType.ADD, changedGraphs.size() + " graphs were generated", changedGraphs));
 				}
 			} else {
 				statusbar.addMessage("All possible graphs already exists in the database");
 			}
-			grapeUI.updateTable();
+			this.statusbar.setNumberOfGraphs();
+			this.grapeUI.updateTable();
 		}
 	}
 
@@ -187,7 +189,7 @@ public class GenerateController {
 				if (graphExists) {
 					//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
 					//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
-					statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists");
+					statusbar.addMessage("BFS-Graph: " + bfsCode + " already exists");
 				} else {
 					statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
 				}
