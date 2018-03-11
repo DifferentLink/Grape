@@ -160,7 +160,6 @@ public final class GraphEditorController {
 	 *
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
-	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
 	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) {
 		boolean duplicate = false;
@@ -233,7 +232,7 @@ public final class GraphEditorController {
 		} catch (ConnectionFailedException | UnexpectedObjectException e) {
 			statusbar.addMessage(e.getMessage());
 		}
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		Set<Integer> negative = new HashSet<>();
 		for (int[] aProfile : profile) {
 			for (int j = 0; j < profile[0].length; j++) {
@@ -245,15 +244,15 @@ public final class GraphEditorController {
 		for (int i = 0; i < profile.length; i++) {
 			for (int j = 0; j < profile[0].length; j++) {
 				if (negative.contains(j) && profile[i][j] != -1) {
-					result += " ";
+					result.append(" ");
 				}
-				result += profile[i][j];
+				result.append(profile[i][j]);
 			}
 			if (i < profile.length) {
-				result += "\n";
+				result.append("\n");
 			}
 		}
-		return result;
+		return result.toString();
 	}
 
 	/**
