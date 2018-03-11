@@ -38,6 +38,7 @@ public class StatusbarUI extends JPanel {
 	private String remainingCalculations = "-";
 	private String selectedRow = "Position -";
 	private String databaseInfo = "-";
+	private String databaseName = "";
 
 	/**
 	 * @param statusbarController the controller responsible for the statusbar
@@ -176,6 +177,16 @@ public class StatusbarUI extends JPanel {
 	 * @param numberOfGraphs the total number of graphs in the database
 	 */
 	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
+		this.databaseName = databaseName;
+		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
+		updateStatusbarText();
+	}
+
+	/**
+	 * @param databaseName the name of the database to display
+	 * @param numberOfGraphs the total number of graphs in the database
+	 */
+	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
 		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
 		updateStatusbarText();
 	}
@@ -187,7 +198,7 @@ public class StatusbarUI extends JPanel {
 		this.logMessage = logMessage;
 		updateStatusbarText();
 	}
-
+  
 	private void updateStatusbarText() {
 		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo + " |	                " +
 				"          " + logMessage);
