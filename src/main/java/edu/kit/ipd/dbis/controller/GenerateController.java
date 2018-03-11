@@ -2,7 +2,6 @@ package edu.kit.ipd.dbis.controller;
 
 
 import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
-import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
@@ -17,7 +16,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphG
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import javax.swing.SwingUtilities;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,8 +88,7 @@ public class GenerateController {
 	 * @param minEdges    the min edges
 	 * @param maxEdges    the max edges
 	 * @param amount      the amount
-	 * @throws InvalidGeneratorInputException the invalid generator input exception
-	 * @throws InterruptedException           the interrupted exception
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
 			InterruptedException {
@@ -102,20 +99,18 @@ public class GenerateController {
 			try {
 				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 			} catch (NotEnoughGraphsException e) {
+				e.printStackTrace();
 			}
 			//save uncalculated graphs
 			this.saveGraphs(graphs);
 			List<Thread> jobs = new LinkedList<>();
 			for (PropertyGraph<Integer, Integer> graph : graphs) {
-				jobs.add(new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							graph.calculateProperties();
-							database.replaceGraph(graph.getId(), graph);
-						} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-							statusbar.addMessage(e.getMessage());
-						}
+				jobs.add(new Thread(() -> {
+					try {
+						graph.calculateProperties();
+						database.replaceGraph(graph.getId(), graph);
+					} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+						statusbar.addMessage(e.getMessage());
 					}
 				}));
 			}
@@ -180,7 +175,7 @@ public class GenerateController {
 			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
 			try {
 				PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
-				boolean graphExists = false;
+				boolean graphExists;
 				graphExists = database.graphExists(graph);
 				database.addGraph(graph);
 				calculation.run();
