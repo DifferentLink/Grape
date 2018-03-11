@@ -183,15 +183,6 @@ public class StatusbarUI extends JPanel {
 	}
 
 	/**
-	 * @param databaseName the name of the database to display
-	 * @param numberOfGraphs the total number of graphs in the database
-	 */
-	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
-		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
-		updateStatusbarText();
-	}
-
-	/**
 	 * @param logMessage tsdfgdfhe message of the last logentry
 	 */
 	public void setLastLogentry(final String logMessage) {
