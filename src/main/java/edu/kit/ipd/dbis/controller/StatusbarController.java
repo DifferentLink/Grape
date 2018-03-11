@@ -199,25 +199,15 @@ public class StatusbarController {
 			setCalculation();
 		}
 		calculation.continueCalculation();
+		this.setRemainingCalculations();
+	}
+
+	public void setRemainingCalculations() {
 		try {
 			this.statusbarUI.setRemainingCalculations(this.database.getNumberOfUncalculatedGraphs());
 		} catch (ConnectionFailedException e) {
 			this.addMessage(e.getMessage());
 		}
-	}
-
-	/**
-	 * Gets number uncalculated graphs.
-	 *
-	 * @return the number uncalculated graphs
-	 */
-	public int getNumberUncalculatedGraphs() {
-		try {
-			return this.database.getNumberOfUncalculatedGraphs();
-		} catch (ConnectionFailedException e) {
-			this.addMessage(e.getMessage());
-		}
-		return 0;
 	}
 
 	/**
