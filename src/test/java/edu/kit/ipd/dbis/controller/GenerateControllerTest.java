@@ -21,7 +21,7 @@ public class GenerateControllerTest {
 	GraphDatabase database;
 	GenerateController g;
 
-	/*@Before
+	@Before
 	public void setUp() throws Exception {
 		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
@@ -34,7 +34,7 @@ public class GenerateControllerTest {
 		database = fileManager.createGraphDatabase(url, user, password, name);
 		g = GenerateController.getInstance();
 		g.setDatabase(database);
-	}*/
+	}
 
 	@Test
 	public void isValidBFSTest1() {
@@ -142,6 +142,42 @@ public class GenerateControllerTest {
 			e.printStackTrace();
 		}
 		assertEquals(4, actual);
+	}
+
+	@Test
+	@Ignore
+	public void generateGraphsTestNotEnoughGraphs() {
+		try {
+			g.generateGraphs(1,2,1,3, 20);
+		} catch (InvalidGeneratorInputException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		int actual = 0;
+		try {
+			actual = database.getNumberOfGraphs();
+		} catch (ConnectionFailedException e) {
+			e.printStackTrace();
+		}
+		assertEquals(1, actual);
+	}
+
+	@Test
+	@Ignore
+	public void deleteGraphTest() {
+		String bfsCode = "1,1,2,1,1,3,-1,2,3";
+		try {
+			g.generateBFSGraph(bfsCode);
+			g.deleteGraph(1);
+		} catch (InvalidBfsCodeInputException e) {
+			e.printStackTrace();
+		}
+		int actual = 0;
+		try {
+			actual = database.getNumberOfGraphs();
+		} catch (ConnectionFailedException e) {
+			e.printStackTrace();
+		}
+		assertEquals(0, actual);
 	}
 
 }
