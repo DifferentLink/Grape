@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.correlation.CorrelationOutput;
+import edu.kit.ipd.dbis.correlation.Pearson;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,7 +15,8 @@ public class CorrelationControllerTest {
 	@Ignore
 	@Test
 	public void newCorrelationTestRightInput() {
-		String input = "";
+		String input = "Max Pearson 3";
+
 		CorrelationController c = CorrelationController.getInstance();
 		List<CorrelationOutput> output = null;
 		try {
@@ -22,9 +24,7 @@ public class CorrelationControllerTest {
 		} catch (InvalidCorrelationInputException e) {
 			e.printStackTrace();
 		}
-		assertEquals("", output.get(0).getFirstProperty());
-		assertEquals("", output.get(0).getSecondProperty());
-		assertEquals("", output.get(0).getOutputNumber());
+		assert output.getClass().equals(Pearson.class);
 	}
 
 	@Ignore
