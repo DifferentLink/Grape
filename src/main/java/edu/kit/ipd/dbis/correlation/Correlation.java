@@ -8,9 +8,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -162,8 +160,7 @@ abstract class Correlation {
             if ((outputArray.length - l - 1) < 0) {
                 return outputSet;
             }
-            if ((outputArray[outputArray.length - 1 - l].getOutputNumber() == 0.0)
-                    || outputArray[outputArray.length - 1 - l].getFirstProperty().
+            if (outputArray[outputArray.length - 1 - l].getFirstProperty().
                     equals(outputArray[outputArray.length - 1 - l].getSecondProperty())) {
                 l++;
             } else {

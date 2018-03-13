@@ -23,7 +23,9 @@ public class MutualCorrelation extends Correlation {
             for (int j = i; j < secondPropertyList.length; j++) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, secondPropertyList[j],
                         MutualCorrelation.calculateCorrelation(property1, secondPropertyList[j], database));
-                resultSet.add(outputObject);
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE) {
+                    resultSet.add(outputObject);
+                }
             }
         }
         return MutualCorrelation.cutListMaximum(resultSet, this.getAttributeCounter());
@@ -38,7 +40,10 @@ public class MutualCorrelation extends Correlation {
             if (!property1.toLowerCase().equals(property2.toLowerCase())) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE && outputObject.getOutputNumber()
+                        != Double.MIN_VALUE) {
+                    resultSet.add(outputObject);
+                }
             }
         }
         return MutualCorrelation.cutListMaximum(resultSet, this.getAttributeCounter());
@@ -53,7 +58,9 @@ public class MutualCorrelation extends Correlation {
             for (String property2: secondPropertyList) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE) {
+                    resultSet.add(outputObject);
+                }
             }
         }
         return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
@@ -68,7 +75,9 @@ public class MutualCorrelation extends Correlation {
             if (!property1.toLowerCase().equals(property2.toLowerCase())) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE) {
+                    resultSet.add(outputObject);
+                }
             }
         }
         return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
@@ -107,6 +116,9 @@ public class MutualCorrelation extends Correlation {
                 secondPropertyValues.remove(j);
             }
             firstPropertyValues.remove(i);
+        }
+        if (Math.abs(returnValue) < 0.01) {
+            return Double.MAX_VALUE;
         }
         return returnValue;
     }

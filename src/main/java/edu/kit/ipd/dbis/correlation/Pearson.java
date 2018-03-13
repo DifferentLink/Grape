@@ -21,7 +21,9 @@ public class Pearson extends Correlation {
             for (int j = i; j < secondPropertyList.length; j++) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, secondPropertyList[j],
                         Pearson.calculateCorrelation(property1, secondPropertyList[j], database));
-                resultSet.add(outputObject);
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE) {
+                    resultSet.add(outputObject);
+                }
             }
         }
         return Pearson.cutListMaximum(resultSet, this.getAttributeCounter());
@@ -36,7 +38,10 @@ public class Pearson extends Correlation {
             if (!property1.toLowerCase().equals(property2.toLowerCase())) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         Pearson.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE && outputObject.getOutputNumber()
+                        != Double.MIN_VALUE) {
+                    resultSet.add(outputObject);
+                }
             }
         }
         return Pearson.cutListMaximum(resultSet, this.getAttributeCounter());
@@ -51,7 +56,9 @@ public class Pearson extends Correlation {
             for (String property2: secondPropertyList) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         Pearson.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE) {
+                    resultSet.add(outputObject);
+                }
             }
         }
         return Pearson.cutListMinimum(resultSet, this.getAttributeCounter());
@@ -66,7 +73,9 @@ public class Pearson extends Correlation {
             if (!property1.toLowerCase().equals(property2.toLowerCase())) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
                         Pearson.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE) {
+                    resultSet.add(outputObject);
+                }
             }
         }
         return Pearson.cutListMinimum(resultSet, this.getAttributeCounter());
@@ -81,7 +90,7 @@ public class Pearson extends Correlation {
      * @throws ConnectionFailedException thrown if there was no connection to database possible
      */
     static double calculateCorrelation(String firstProperty, String secondProperty,
-                                               GraphDatabase database) throws ConnectionFailedException {
+                                       GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
@@ -113,7 +122,7 @@ public class Pearson extends Correlation {
         double coefficient = result / (Pearson.getSampleVariationskoeffizient(firstPropertyValues, firstRandomMedium)
                 * Pearson.getSampleVariationskoeffizient(secondPropertyValues, secondRandomMedium));
         if (!(coefficient > -1 && coefficient < 1)) {
-            return 0;
+            return Double.MAX_VALUE;
         }
         return coefficient;
     }
