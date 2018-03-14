@@ -161,7 +161,7 @@ public final class GraphEditorController {
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
 	 */
-	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) {
+	public boolean isValidGraph(PropertyGraph<Integer, Integer> graph) {
 		boolean duplicate = false;
 		try {
 			duplicate = database.graphExists(graph);
