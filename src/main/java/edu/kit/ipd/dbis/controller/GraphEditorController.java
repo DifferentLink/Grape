@@ -23,6 +23,7 @@ import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -118,7 +119,7 @@ public final class GraphEditorController {
 			try {
 				newGraph.calculateProperties();
 				database.addGraph(newGraph);
-				statusbar.addEvent(ADD, newGraph.getId());
+				statusbar.addEvent(ADD, newGraph.getId(), "");
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbar.addMessage(e.getMessage());
 			}
@@ -137,7 +138,7 @@ public final class GraphEditorController {
 			try {
 				database.addGraph(graph);
 				statusbar.continueCalculation();
-				statusbar.addEvent(ADD, graph.getId());
+				statusbar.addEvent(ADD, graph.getId(), "");
 				this.grapeUI.updateTable();
 			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException e) {

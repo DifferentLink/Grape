@@ -170,7 +170,7 @@ public class GenerateController {
 			}
 
 			//create log entry
-			Set<Integer> changedGraphs = new HashSet<>();
+			List<Integer> changedGraphs = new LinkedList<>();
 			for (PropertyGraph<Integer, Integer> graph : graphs) {
 				if(graph.getId() != 0) {
 					changedGraphs.add(graph.getId());
@@ -178,10 +178,13 @@ public class GenerateController {
 			}
 			if (changedGraphs.size() > 0) {
 				if (changedGraphs.size() < amount) {
-					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated " + amount +
-							" different graphs haven't been found", changedGraphs));
+					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size()
+							+ " graphs were generated " + amount + " different graphs haven't been found",
+							changedGraphs));
 				} else {
-					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated", changedGraphs));
+					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size()
+							+ " graphs were generated",
+							changedGraphs));
 				}
 			} else {
 				statusbar.addMessage("All possible graphs already exists in the database");
@@ -244,6 +247,18 @@ public class GenerateController {
 			grapeUI.updateTable();
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
+		}
+	}
+
+	public void deleteGraphs(List<Integer> ids) {
+		try {
+			for (int id : ids) {
+				database.deleteGraph(id);
+				grapeUI.updateTable();
+			}
+			statusbar.addEvent(EventType.REMOVE, ids, "Graphs deleted");
+		} catch (ConnectionFailedException e) {
+				statusbar.addMessage(e.getMessage());
 		}
 	}
 

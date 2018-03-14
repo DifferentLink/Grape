@@ -151,6 +151,29 @@ public class History {
 		return historyEntries;
 	}
 
+	public String[] toStringArray() {
+		if (this.getEvents().size() == 0) {
+			return new String[]{""};
+		} else {
+			String[] historyEntries = new String[this.getEvents().size()];
+			int position = 0;
+			for (Event event : this.getEvents()) {
+				StringBuilder changedGraphs = new StringBuilder();
+				for (int id : event.getChangedGraphs()) {
+					changedGraphs.append(id).append(", ");
+				}
+				if (event.getType() != EventType.MESSAGE) {
+					changedGraphs = new StringBuilder(changedGraphs.substring(0, changedGraphs.length() - 2));
+					historyEntries[position] = "[" + event.getType() + "]" + event.getMessage() + " (ID's: " + changedGraphs + ")\n";
+				} else {
+					historyEntries[position] = event.getMessage();
+				}
+				position++;
+			}
+			return historyEntries;
+		}
+	}
+
 	/**
 	 * @return the message of the latest event in the history or an empty string
 	 */

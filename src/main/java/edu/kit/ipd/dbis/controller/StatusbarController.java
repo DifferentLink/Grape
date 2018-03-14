@@ -12,6 +12,8 @@ import edu.kit.ipd.dbis.log.History;
 import edu.kit.ipd.dbis.log.Log;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -136,11 +138,9 @@ public class StatusbarController {
 	 * Add event.
 	 *
 	 * @param type the EventType
-	 * @param id   the id of the graph
+	 * @param ids the ids of the graph
 	 */
-	public void addEvent(EventType type, int id) {
-		Set<Integer> changedGraph = new HashSet<>();
-		changedGraph.add(id);
+	public void addEvent(EventType type, List<Integer> ids) {
 		Event event;
 		String message;
 		if (type.equals(EventType.ADD)) {
@@ -150,23 +150,24 @@ public class StatusbarController {
 		} else {
 			return;
 		}
-		event = new Event(type, message, changedGraph);
+		event = new Event(type, message, ids);
 		this.addEvent(event);
-
 	}
 
 	/**
 	 * Add event.
 	 *
 	 * @param type the EventType
-	 * @param id   the id of the graph
+	 * @param ids   the ids of the graph
 	 */
-	public void addEvent(EventType type, int id, String message) {
-		Set<Integer> changedGraph = new HashSet<>();
-		changedGraph.add(id);
-		Event event;
-		event = new Event(type, message, changedGraph);
-		this.addEvent(event);
+	public void addEvent(EventType type, List<Integer> ids, String message) {
+		this.addEvent(new Event(type, message, ids));
+	}
+
+	public void addEvent(EventType eventType, int id, String message) {
+		List<Integer> ids = new LinkedList<>();
+		ids.add(id);
+		this.addEvent(new Event(eventType, message, ids));
 	}
 
 	/**
@@ -175,10 +176,7 @@ public class StatusbarController {
 	 * @param message the message
 	 */
 	public void addMessage(String message) {
-		Set<Integer> empty = new HashSet<>();
-		Event event;
-		event = new Event(EventType.MESSAGE, message, empty);
-		this.addEvent(event);
+		this.addEvent(new Event(EventType.MESSAGE, message, new LinkedList<>()));
 	}
 
 	/**

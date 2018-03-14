@@ -59,13 +59,9 @@ public class LogUI extends JFrame {
 		scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
 		scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(Integer.MAX_VALUE, 10));
 
-		//history.getEvents().forEach(event -> container.add(renderEvent(event)));
-
-		JTextArea text = new JTextArea(history.toString());
-		text.setEditable(false);
-		text.setBackground(theme.backgroundColor);
-		text.setForeground(theme.foregroundColor);
-		container.add(text, BorderLayout.CENTER);
+		for (String logEntry : history.toStringArray()) {
+			scrollPane.add(new JLabel(logEntry));
+		}
 
 		this.add(scrollPane);
 		this.setMinimumSize(new Dimension(500, 100));
