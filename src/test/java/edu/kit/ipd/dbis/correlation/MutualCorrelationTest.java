@@ -49,16 +49,6 @@ public class MutualCorrelationTest {
     }
 
     @Test
-    public void testGetMinimum() {
-        LinkedList<Double> testList = new LinkedList<>();
-        testList.add(4.76);
-        testList.add(7.98);
-        testList.add(1.45);
-        testList.add(3.96);
-        assert MutualCorrelation.getMinimum(testList) == 1.45;
-    }
-
-    @Test
     public void testCalculatePX() {
         LinkedList<Double> testList = new LinkedList<>();
         testList.add(3.78);
