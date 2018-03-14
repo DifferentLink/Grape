@@ -183,9 +183,9 @@ public class StatusbarUI extends JPanel {
 	}
 
 	/**
-	 * @param logMessage tsdfgdfhe message of the last logentry
+	 * @param logMessage the message of the last logentry
 	 */
-	public void setLastLogentry(final String logMessage) {
+	public void setLastLogEntry(final String logMessage) {
 		this.logMessage = logMessage;
 		updateStatusbarText();
 	}

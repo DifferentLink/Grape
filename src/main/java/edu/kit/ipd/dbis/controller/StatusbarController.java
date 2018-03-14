@@ -129,7 +129,7 @@ public class StatusbarController {
 	 */
 	public void addEvent(Event event) {
 		log.addEvent(event);
-		this.statusbarUI.setLastLogentry(statusbar.getHistory().getLastEvent());
+		this.statusbarUI.setLastLogEntry(statusbar.getHistory().getLastEvent());
 	}
 
 	/**
