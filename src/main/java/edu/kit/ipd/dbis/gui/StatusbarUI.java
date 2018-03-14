@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
  */
 public class StatusbarUI extends JPanel {
 
+	private final ResourceBundle language;
 	private final int statusbarHeight = 15;
 	private final StatusbarController statusbarController;
 	private DatabaseController databaseController;
@@ -37,7 +38,7 @@ public class StatusbarUI extends JPanel {
 	private JLabel lastLogMessageText;
 	private String logMessage;
 	private String remainingCalculations = "-";
-	private String selectedRow = "Position -";
+	private String selectedRow = "-";
 	private String databaseInfo = "-";
 	private String databaseName = "";
 
@@ -50,6 +51,7 @@ public class StatusbarUI extends JPanel {
 	public StatusbarUI(StatusbarController statusbarController,
 	                   DatabaseController databaseController,
 	                   ResourceBundle language, Theme theme) {
+		this.language = language;
 		this.statusbarController = statusbarController;
 		this.databaseController = databaseController;
 		this.generateController = GenerateController.getInstance();
@@ -74,7 +76,7 @@ public class StatusbarUI extends JPanel {
 		this.setBackground(theme.backgroundColor);
 		this.setForeground(theme.foregroundColor);
 
-		JButton log = new JButton("Log");
+		JButton log = new JButton(language.getString("log"));
 		log.addActionListener(new ShowLogAction(new LogUI(statusbarController, language, theme), log));
 		log.setBackground(theme.backgroundColor);
 		log.setForeground(theme.foregroundColor);
@@ -172,7 +174,7 @@ public class StatusbarUI extends JPanel {
 	 * @param numberOfUncalculatedGraphs the number of uncalculated graphs
 	 */
 	public void setRemainingCalculations(final int numberOfUncalculatedGraphs) {
-		remainingCalculations = numberOfUncalculatedGraphs + " remaining calculations";
+		remainingCalculations = numberOfUncalculatedGraphs + " " + language.getString("remainingCalculations");
 		updateStatusbarText();
 	}
 
@@ -182,12 +184,12 @@ public class StatusbarUI extends JPanel {
 	 */
 	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
 		this.databaseName = databaseName;
-		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
+		databaseInfo = language.getString("database") + ": " + databaseName + " (" + numberOfGraphs + ")";
 		updateStatusbarText();
 	}
 
 	/**
-	 * @param logMessage the message of the last logentry
+	 * @param logMessage the message of the last log entry
 	 */
 	public void setLastLogEntry(final String logMessage) {
 		this.logMessage = logMessage;

@@ -22,6 +22,7 @@ import javax.swing.SwingUtilities;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
@@ -29,18 +30,18 @@ import java.util.Set;
  */
 public class GenerateController {
 
+	private final ResourceBundle language;
 	private GraphDatabase database;
 	private BulkGraphGenerator graphGenerator;
 	private StatusbarController statusbarController;
-	private CalculationController calculationController;
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
 	private static GenerateController generateController;
 
-	private GenerateController() {
+	private GenerateController(final ResourceBundle language) {
+		this.language = language;
 		this.statusbarController = StatusbarController.getInstance();
 		this.graphGenerator = new BulkRandomConnectedGraphGenerator();
-		this.calculationController = CalculationController.getInstance();
 	}
 
 	/**
@@ -48,9 +49,9 @@ public class GenerateController {
 	 *
 	 * @return the instance
 	 */
-	public static GenerateController getInstance() {
+	public static GenerateController getInstance(final ResourceBundle language) {
 		if (generateController == null) {
-			generateController = new GenerateController();
+			generateController = new GenerateController(language);
 		}
 		return generateController;
 	}
@@ -80,38 +81,6 @@ public class GenerateController {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		this.database = database;
-	}
-
-
-	/**
-	 * Gives the graph graphGenerator the command to generateController the graphs and saves them in the Database.
-	 *
-	 * @param minVertices lower bound of vertices
-	 * @param maxVertices upper bound of vertices
-	 * @param minEdges    lower bound of edges.
-	 * @param maxEdges    upper bound of edges.
-	 * @param amount      the number of graphs
-	 * @throws InvalidGeneratorInputException the invalid graphGenerator input exception
-	 */
-	public void generateGraphsSequential(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount)
-			throws InvalidGeneratorInputException {
-		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
-			throw new InvalidGeneratorInputException();
-		}
-		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
-		try {
-			graphGenerator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-			this.saveGraphs(graphs);
-			Thread calculate = new Thread(CalculationController.getInstance());
-			SwingUtilities.invokeLater(calculate);
-		} catch (IllegalArgumentException e) {
-			throw new InvalidGeneratorInputException();
-		} catch (NotEnoughGraphsException e) {
-			statusbarController.addMessage(e.getMessage());
-			this.saveGraphs(graphs);
-			Thread calculate = new Thread(CalculationController.getInstance());
-			SwingUtilities.invokeLater(calculate);
-		}
 	}
 
 	/**
@@ -150,15 +119,16 @@ public class GenerateController {
 			if (changedGraphs.size() > 0) {
 				if (changedGraphs.size() < amount) {
 					statusbarController.addEvent(new Event(EventType.ADD,  changedGraphs.size()
-							+ " graphs were generated " + amount + " different graphs haven't been found",
+							+ " " + language.getString("graphsIncompleteGenerated") + " "
+							+ amount + language.getString("found"),
 							changedGraphs));
 				} else {
 					statusbarController.addEvent(new Event(EventType.ADD,  changedGraphs.size()
-							+ " graphs were generated",
+							+ " " + language.getString("graphsGenerated"),
 							changedGraphs));
 				}
 			} else {
-				statusbarController.addMessage("All possible graphs already exists in the database");
+				statusbarController.addMessage(language.getString("allPossibleGraphsExist"));
 			}
 			grapeUI.updateTable();
 		}
@@ -172,7 +142,7 @@ public class GenerateController {
 	 */
 	public void generateBFSGraph(String bfsCode) throws InvalidBfsCodeInputException {
 		if (!isValidBFS(bfsCode)) {
-			throw new InvalidBfsCodeInputException("Wrong BFS input");
+			throw new InvalidBfsCodeInputException(language.getString("invalidBFSCode"));
 		} else {
 			// Parsing String into int[]
 			String[] splitCode = bfsCode.split(",");
@@ -187,22 +157,26 @@ public class GenerateController {
 				boolean graphExists = false;
 				graphExists = database.graphExists(graph);
 				database.addGraph(graph);
-				calculationController.run();
+				Thread thread = new CalculationWorker(graph, database);
+				thread.start();
+				thread.join();
 				this.grapeUI.updateTable();
 
 				if (graphExists) {
 					//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
 					//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
-					statusbarController.addMessage("BFS-Graph: " +  bfsCode + " already exists");
+					statusbarController.addMessage(language.getString("graph") + " " +  bfsCode
+							+ " " + language.getString("alreadyExists"));
 				} else {
-					statusbarController.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
+					statusbarController.addEvent(EventType.ADD, graph.getId(),
+							language.getString("graphAdded") + ": " + bfsCode);
 				}
 
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbarController.addMessage(e.getMessage());
 			} catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
-				statusbarController.addMessage("Illegal bfs code");
-			}
+				statusbarController.addMessage(language.getString("invalidBFSCode"));
+			} catch (InterruptedException ignored) { }
 		}
 	}
 
@@ -214,7 +188,7 @@ public class GenerateController {
 	public void deleteGraph(int id) {
 		try {
 			database.deleteGraph(id);
-			statusbarController.addEvent(EventType.REMOVE, id, "Graph deleted");
+			statusbarController.addEvent(EventType.REMOVE, id, language.getString("graphDeleted"));
 			grapeUI.updateTable();
 		} catch (ConnectionFailedException e) {
 			statusbarController.addMessage(e.getMessage());
@@ -227,7 +201,7 @@ public class GenerateController {
 				database.deleteGraph(id);
 				grapeUI.updateTable();
 			}
-			statusbarController.addEvent(EventType.REMOVE, ids, "Graphs deleted");
+			statusbarController.addEvent(EventType.REMOVE, ids,  language.getString("graphDeleted"));
 		} catch (ConnectionFailedException e) {
 				statusbarController.addMessage(e.getMessage());
 		}

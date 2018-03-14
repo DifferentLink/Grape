@@ -136,26 +136,6 @@ public class StatusbarController {
 	 * Add event.
 	 *
 	 * @param type the EventType
-	 * @param ids the ids of the graph
-	 */
-	public void addEvent(EventType type, List<Integer> ids) {
-		Event event;
-		String message;
-		if (type.equals(EventType.ADD)) {
-			message = "New graph added";
-		} else if (type.equals(EventType.REMOVE)) {
-			message = "Graph deleted";
-		} else {
-			return;
-		}
-		event = new Event(type, message, ids);
-		this.addEvent(event);
-	}
-
-	/**
-	 * Add event.
-	 *
-	 * @param type the EventType
 	 * @param ids   the ids of the graph
 	 */
 	public void addEvent(EventType type, List<Integer> ids, String message) {
