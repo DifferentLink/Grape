@@ -38,6 +38,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
@@ -120,6 +122,7 @@ public class GrapeUI {
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(400, 400));
 		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		mainWindow.addWindowListener(new CloseListener());
 
 		try {
 			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
@@ -332,5 +335,30 @@ public class GrapeUI {
 						.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
 			}
 		}
+	}
+
+	private class CloseListener implements WindowListener {
+		@Override
+		public void windowOpened(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowClosing(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowClosed(WindowEvent windowEvent) {
+
+		}
+
+		@Override
+		public void windowIconified(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowDeiconified(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowActivated(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowDeactivated(WindowEvent windowEvent) { }
 	}
 }
