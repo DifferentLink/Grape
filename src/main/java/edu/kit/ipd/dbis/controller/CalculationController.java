@@ -5,7 +5,6 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
-import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 /**
@@ -14,9 +13,8 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 public class CalculationController implements Runnable {
 
 	private Boolean isCalculating;
-	private StatusbarController statusbar;
+	private StatusbarController statusbarController;
 	private GraphDatabase database;
-
 	private GrapeUI grapeUI;
 
 	/**
@@ -29,7 +27,7 @@ public class CalculationController implements Runnable {
 	private static CalculationController calculation;
 
 	private CalculationController() {
-		this.statusbar = StatusbarController.getInstance();
+		this.statusbarController = StatusbarController.getInstance();
 		this.isCalculating = true;
 	}
 
@@ -68,7 +66,7 @@ public class CalculationController implements Runnable {
 					grapeUI.updateTable();
 				}
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-				statusbar.addMessage(e.getMessage());
+				statusbarController.addMessage(e.getMessage());
 			}
 			// start recursion
 			try {
@@ -76,7 +74,7 @@ public class CalculationController implements Runnable {
 					run();
 				}
 			} catch (ConnectionFailedException e) {
-				statusbar.addMessage(e.getMessage());
+				statusbarController.addMessage(e.getMessage());
 			}
 		}
 	}
