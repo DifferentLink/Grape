@@ -167,7 +167,7 @@ public class FilterUI extends JPanel {
 		isActive.addActionListener(new ToggleFilterAction(simpleFilter, isActive));
 		simpleFilterUI.add(isActive);
 		JTextField filterInput = new JTextField(simpleFilter.getText());
-		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput));
+		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput, isActive));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		try {
 			filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
@@ -304,10 +304,12 @@ public class FilterUI extends JPanel {
 
 		private final SimpleFilter filter;
 		private final JTextField textField;
+		private final JCheckBox checkBox;
 
-		SimpleFilterInputChange(SimpleFilter simpleFilter, JTextField textField) {
+		SimpleFilterInputChange(SimpleFilter simpleFilter, JTextField textField, JCheckBox checkBox) {
 			this.filter = simpleFilter;
 			this.textField = textField;
+			this.checkBox = checkBox;
 		}
 
 		@Override
@@ -335,6 +337,7 @@ public class FilterUI extends JPanel {
 			} catch (InvalidInputException e) {
 				textField.setBackground(theme.lightNeutralColor);
 			}
+			checkBox.setSelected(false);
 		}
 	}
 
