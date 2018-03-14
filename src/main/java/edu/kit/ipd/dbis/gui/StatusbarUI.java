@@ -57,7 +57,7 @@ public class StatusbarUI extends JPanel {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.add(Box.createHorizontalStrut(2));
-		//this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
+		this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
 		this.add(Box.createHorizontalStrut(5));
 
 		statusText = new JLabel(language.getString("noDatabaseLoaded"));
@@ -100,7 +100,7 @@ public class StatusbarUI extends JPanel {
 		pauseButton.addActionListener(new PauseRunAction(pauseButton));
 
 		try {
-			Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Pause.png"));
+			Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Continue.png"));
 			image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
 			pauseButton.setIcon(new ImageIcon(image));
 		} catch (IOException e) {
@@ -119,7 +119,6 @@ public class StatusbarUI extends JPanel {
 		private PauseRunAction(JButton button) {
 			this.button = button;
 		}
-
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
