@@ -25,6 +25,7 @@ public class CorrelationRequestUI extends JFrame {
 
 	private final CorrelationController correlationController;
 	private final String correlationRequest;
+	private final ResourceBundle language;
 	private final Theme theme;
 
 	/**
@@ -39,6 +40,7 @@ public class CorrelationRequestUI extends JFrame {
 	                            ResourceBundle language, Theme theme) throws InvalidCorrelationInputException {
 		this.correlationController = correlationController;
 		this.correlationRequest = correlationRequest;
+		this.language = language;
 		this.theme = theme;
 
 		try {
@@ -95,9 +97,9 @@ public class CorrelationRequestUI extends JFrame {
 		int tableSize = columns.size() + 1;
 		String[][] data = new String[3][tableSize];
 
-		data[0][0] = "First Property";
-		data[1][0] = "Second Property";
-		data[2][0] = "Correlation";
+		data[0][0] = language.getString("firstProperty");
+		data[1][0] = language.getString("secondProperty");
+		data[2][0] = language.getString("correlation");
 		for (int i = 1; i < tableSize; i++) {
 			CorrelationOutput column = columns.get(i - 1);
 			data[0][i] = column.getFirstProperty();
