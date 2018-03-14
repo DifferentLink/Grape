@@ -178,16 +178,6 @@ public class StatusbarController {
 	}
 
 	/**
-	 * pauses the method calculateGraphProperties().
-	 */
-	public void pauseCalculation() {
-		if (calculationController == null) {
-			setCalculation();
-		}
-		calculationController.pauseCalculation();
-	}
-
-	/**
 	 * continues the method calculateGraphProperties().
 	 */
 	public void continueCalculation() {

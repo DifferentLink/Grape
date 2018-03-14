@@ -123,7 +123,6 @@ public class StatusbarUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			if (isCalculationRunning) {
-				statusbarController.pauseCalculation();
 				try {
 					Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Continue.png"));
 					image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
