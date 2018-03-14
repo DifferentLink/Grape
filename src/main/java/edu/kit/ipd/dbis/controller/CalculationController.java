@@ -1,6 +1,5 @@
 package edu.kit.ipd.dbis.controller;
 
-
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
@@ -21,8 +20,6 @@ public class CalculationController implements Runnable {
 	private GrapeUI grapeUI;
 
 	/**
-	 * Sets grape ui.
-	 *
 	 * @param grapeUI the grape ui
 	 */
 	public void setGrapeUI(GrapeUI grapeUI) {

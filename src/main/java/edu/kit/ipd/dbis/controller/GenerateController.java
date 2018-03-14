@@ -3,6 +3,8 @@ package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
 import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
+import edu.kit.ipd.dbis.controller.util.CalculationMaster;
+import edu.kit.ipd.dbis.controller.util.CalculationWorker;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
@@ -122,52 +124,24 @@ public class GenerateController {
 	 * @param minEdges    the min edges
 	 * @param maxEdges    the max edges
 	 * @param amount      the amount
-	 * @throws InvalidGeneratorInputException the invalid generator input exception
-	 * @throws InterruptedException           the interrupted exception
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InvalidGeneratorInputException, InterruptedException {
+			InterruptedException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			statusbar.addMessage("Invalid Input");
 		} else {
 			Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 			try {
 				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-			} catch (NotEnoughGraphsException e) { }
-			//save uncalculated graphs
+			} catch (NotEnoughGraphsException ignored) { }
 			this.saveGraphs(graphs);
 			List<Thread> jobs = new LinkedList<>();
 			for (PropertyGraph<Integer, Integer> graph : graphs) {
-				jobs.add(new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							graph.calculateProperties();
-							database.replaceGraph(graph.getId(), graph);
-						} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-							statusbar.addMessage(e.getMessage());
-						}
-					}
-				}));
+				jobs.add(new CalculationWorker(graph, database));
 			}
-			int runningJobs = 0;
-			final int maxJobs = 8 * Runtime.getRuntime().availableProcessors();
 
-			for (Thread job : jobs) {
-				job.start();
-				if (runningJobs < maxJobs) {
-					runningJobs++;
-				} else {
-					try {
-						job.join();
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-			for (Thread job : jobs) {
-				job.join();
-			}
+			CalculationMaster.executeCalculation(jobs);
 
 			//create log entry
 			List<Integer> changedGraphs = new LinkedList<>();
