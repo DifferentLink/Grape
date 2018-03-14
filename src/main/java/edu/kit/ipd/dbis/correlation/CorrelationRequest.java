@@ -9,7 +9,6 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
 import java.util.*;
 
@@ -62,7 +61,7 @@ public class CorrelationRequest {
     }
 
     /**
-     * parse which parses a tree set into al list
+     * parser which parses a tree set into al list
      * @param input tree set which should be transformed int a list
      * @return list which inherits all elements the tree set inherits
      */
