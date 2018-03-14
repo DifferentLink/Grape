@@ -66,7 +66,6 @@ public class GrapeUI {
 	private StatusbarUI statusbarUI;
 	private LogUI logUI;
 
-	private String programName = "Grape";
 	private JFrame mainWindow;
 
 	private ResourceBundle language;
@@ -120,7 +119,7 @@ public class GrapeUI {
 		this.databaseController.setLanguage(language);
 		this.graphEditorController.setLanguage(language);
 
-		mainWindow = new JFrame(programName);
+		mainWindow = new JFrame(language.getString("programName"));
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(400, 400));
 		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
