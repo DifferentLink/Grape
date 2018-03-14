@@ -183,13 +183,20 @@ public class StatusbarUI extends JPanel {
 	}
 
 	/**
+	 * @param numberOfGraphs the total number of graphs in the database
+	 */
+	public void setNumberOfGraphs(final int numberOfGraphs) {
+		this.setDatabaseInfo(this.databaseName, numberOfGraphs);
+	}
+
+	/**
 	 * @param logMessage tsdfgdfhe message of the last logentry
 	 */
 	public void setLastLogentry(final String logMessage) {
 		this.logMessage = logMessage;
 		updateStatusbarText();
 	}
-  
+
 	private void updateStatusbarText() {
 		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo + " |	                " +
 				"          " + logMessage);

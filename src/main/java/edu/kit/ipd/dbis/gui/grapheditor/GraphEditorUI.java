@@ -6,6 +6,7 @@ import edu.kit.ipd.dbis.gui.themes.Theme;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -70,6 +71,7 @@ public class GraphEditorUI extends JPanel {
 				return "Total Coloring";
 			}
 		};
+
 		public abstract String toString();
 	}
 
@@ -80,9 +82,10 @@ public class GraphEditorUI extends JPanel {
 
 	/**
 	 * Creates a graph editor to add to the GUI
+	 *
 	 * @param graphEditorController the responsible controller
-	 * @param language the language used
-	 * @param theme the theme used to style the GUI
+	 * @param language              the language used
+	 * @param theme                 the theme used to style the GUI
 	 */
 	public GraphEditorUI(GraphEditorController graphEditorController, ResourceBundle language, Theme theme) {
 		currentColoringType = ColoringType.VERTEX;
@@ -170,6 +173,7 @@ public class GraphEditorUI extends JPanel {
 
 	/**
 	 * Displays the given graph in the editor using the selected coloring type
+	 *
 	 * @param graph the graph to display
 	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph) {
@@ -189,11 +193,12 @@ public class GraphEditorUI extends JPanel {
 
 	/**
 	 * Displays the given graph in the editor with colored vertices
-	 * @param graph the graph to display
+	 *
+	 * @param graph    the graph to display
 	 * @param coloring the vertex coloring to display
 	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph,
-	                         VertexColoringAlgorithm.Coloring<Integer> coloring) {
+							 VertexColoringAlgorithm.Coloring<Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring, this.factory);
 		this.history = new GraphEditorHistory();
@@ -204,11 +209,12 @@ public class GraphEditorUI extends JPanel {
 
 	/**
 	 * Displays the given graph in the editor with colored vertices and edges
-	 * @param graph the graph to display
+	 *
+	 * @param graph    the graph to display
 	 * @param coloring the vertex coloring to display
 	 */
 	public void displayGraph(PropertyGraph<Integer, Integer> graph,
-	                         TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
+							 TotalColoringAlgorithm.TotalColoring<Integer, Integer> coloring) {
 		propertyGraph = graph;
 		this.graph = new RenderableGraph(graph, coloring, this.factory);
 		this.history = new GraphEditorHistory();
@@ -384,16 +390,12 @@ public class GraphEditorUI extends JPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			propertyGraph = graph.asPropertyGraph();
 			propertyGraph.setId(graph.getId());
-			try {
-				if (graphEditorController.isValidGraph(propertyGraph)) {
-					graphEditorController.addEditedGraph(propertyGraph, graph.getId());
-					graph = new RenderableGraph();
-					history = new GraphEditorHistory();
-					history.addToHistory(graph);
-					graphEditor.repaint();
-				}
-			} catch (InvalidGraphInputException e) {
-				e.printStackTrace();
+			if (graphEditorController.isValidGraph(propertyGraph)) {
+				graphEditorController.addEditedGraph(propertyGraph, graph.getId());
+				graph = new RenderableGraph();
+				history = new GraphEditorHistory();
+				history.addToHistory(graph);
+				graphEditor.repaint();
 			}
 		}
 	}
@@ -447,6 +449,7 @@ public class GraphEditorUI extends JPanel {
 		private SwitchColoringTypeAction(GraphEditorController graphEditorController) {
 			this.graphEditorController = graphEditorController;
 		}
+
 		@Override
 		public void itemStateChanged(ItemEvent itemEvent) {
 			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
@@ -474,9 +477,9 @@ public class GraphEditorUI extends JPanel {
 		int wide = Math.min(graphEditor.getWidth(), graphEditor.getHeight());
 		Point upperLeft;
 		Point lowerRight;
-		if (graphEditor.getWidth()> graphEditor.getHeight()) {
-			upperLeft = new Point((graphEditor.getWidth() / 2) - (graphEditor.getHeight() / 2),0);
-			lowerRight = new Point((graphEditor.getWidth() / 2) + (graphEditor.getHeight() / 2),graphEditor.getHeight());
+		if (graphEditor.getWidth() > graphEditor.getHeight()) {
+			upperLeft = new Point((graphEditor.getWidth() / 2) - (graphEditor.getHeight() / 2), 0);
+			lowerRight = new Point((graphEditor.getWidth() / 2) + (graphEditor.getHeight() / 2), graphEditor.getHeight());
 		} else {
 			upperLeft = new Point(0, (graphEditor.getHeight() / 2) - (graphEditor.getWidth() / 2));
 			lowerRight = new Point(graphEditor.getWidth(), (graphEditor.getHeight() / 2) + (graphEditor.getWidth() / 2));
@@ -484,6 +487,5 @@ public class GraphEditorUI extends JPanel {
 		GraphLook.arrangeInCircle(graph.getSubgraphs(), graph.getVerticesNotContainedInSubgraphs(),
 				upperLeft, lowerRight);
 		repaint();
-
 	}
 }

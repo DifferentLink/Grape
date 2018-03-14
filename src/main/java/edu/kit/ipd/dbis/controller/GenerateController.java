@@ -2,7 +2,6 @@ package edu.kit.ipd.dbis.controller;
 
 
 import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
-import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
@@ -17,7 +16,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphG
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import javax.swing.SwingUtilities;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,38 +80,6 @@ public class GenerateController {
 		this.database = database;
 	}
 
-
-	/**
-	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
-	 *
-	 * @param minVertices lower bound of vertices
-	 * @param maxVertices upper bound of vertices
-	 * @param minEdges    lower bound of edges.
-	 * @param maxEdges    upper bound of edges.
-	 * @param amount      the number of graphs
-	 * @throws InvalidGeneratorInputException the invalid generator input exception
-	 */
-	public void generateGraphsSequential(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InvalidGeneratorInputException {
-		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
-			throw new InvalidGeneratorInputException();
-		}
-		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
-		try {
-			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-			this.saveGraphs(graphs);
-			Thread calculate = new Thread(CalculationController.getInstance());
-			SwingUtilities.invokeLater(calculate);
-		} catch (IllegalArgumentException e) {
-			throw new InvalidGeneratorInputException();
-		} catch (NotEnoughGraphsException e) {
-			statusbar.addMessage(e.getMessage());
-			this.saveGraphs(graphs);
-			Thread calculate = new Thread(CalculationController.getInstance());
-			SwingUtilities.invokeLater(calculate);
-		}
-	}
-
 	/**
 	 * Generate graphs.
 	 *
@@ -122,31 +88,29 @@ public class GenerateController {
 	 * @param minEdges    the min edges
 	 * @param maxEdges    the max edges
 	 * @param amount      the amount
-	 * @throws InvalidGeneratorInputException the invalid generator input exception
-	 * @throws InterruptedException           the interrupted exception
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InvalidGeneratorInputException, InterruptedException {
+			InterruptedException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			statusbar.addMessage("Invalid Input");
 		} else {
 			Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 			try {
 				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
-			} catch (NotEnoughGraphsException e) { }
+			} catch (NotEnoughGraphsException e) {
+				e.printStackTrace();
+			}
 			//save uncalculated graphs
 			this.saveGraphs(graphs);
 			List<Thread> jobs = new LinkedList<>();
 			for (PropertyGraph<Integer, Integer> graph : graphs) {
-				jobs.add(new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							graph.calculateProperties();
-							database.replaceGraph(graph.getId(), graph);
-						} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-							statusbar.addMessage(e.getMessage());
-						}
+				jobs.add(new Thread(() -> {
+					try {
+						graph.calculateProperties();
+						database.replaceGraph(graph.getId(), graph);
+					} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
+						statusbar.addMessage(e.getMessage());
 					}
 				}));
 			}
@@ -172,21 +136,22 @@ public class GenerateController {
 			//create log entry
 			Set<Integer> changedGraphs = new HashSet<>();
 			for (PropertyGraph<Integer, Integer> graph : graphs) {
-				if(graph.getId() != 0) {
+				if (graph.getId() != 0) {
 					changedGraphs.add(graph.getId());
 				}
 			}
 			if (changedGraphs.size() > 0) {
 				if (changedGraphs.size() < amount) {
-					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated " + amount +
+					statusbar.addEvent(new Event(EventType.ADD, changedGraphs.size() + " graphs were generated " + amount +
 							" different graphs haven't been found", changedGraphs));
 				} else {
-					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size() + " graphs were generated", changedGraphs));
+					statusbar.addEvent(new Event(EventType.ADD, changedGraphs.size() + " graphs were generated", changedGraphs));
 				}
 			} else {
 				statusbar.addMessage("All possible graphs already exists in the database");
 			}
-			grapeUI.updateTable();
+			this.statusbar.setNumberOfGraphs();
+			this.grapeUI.updateTable();
 		}
 	}
 
@@ -210,7 +175,7 @@ public class GenerateController {
 			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
 			try {
 				PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
-				boolean graphExists = false;
+				boolean graphExists;
 				graphExists = database.graphExists(graph);
 				database.addGraph(graph);
 				calculation.run();
@@ -219,7 +184,7 @@ public class GenerateController {
 				if (graphExists) {
 					//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
 					//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
-					statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists");
+					statusbar.addMessage("BFS-Graph: " + bfsCode + " already exists");
 				} else {
 					statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
 				}
