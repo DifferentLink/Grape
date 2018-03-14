@@ -34,6 +34,7 @@ public class StatusbarUI extends JPanel {
 	private GraphEditorController graphEditorController;
 	private boolean isCalculationRunning = true;
 	private JLabel statusText;
+	private JLabel lastLogMessageText;
 	private String logMessage;
 	private String remainingCalculations = "-";
 	private String selectedRow = "Position -";
@@ -62,6 +63,11 @@ public class StatusbarUI extends JPanel {
 		statusText = new JLabel(language.getString("noDatabaseLoaded"));
 		this.add(statusText);
 
+		lastLogMessageText = new JLabel();
+		lastLogMessageText.setForeground(theme.fontColor);
+		this.add(Box.createHorizontalGlue());
+		this.add(lastLogMessageText);
+
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
 		this.setMinimumSize(new Dimension(Integer.MIN_VALUE, statusbarHeight));
 		this.setBorder(BorderFactory.createLineBorder(theme.foregroundColor, 1));
@@ -81,7 +87,7 @@ public class StatusbarUI extends JPanel {
 		this.databaseController.setStatusbarUI(this);
 		this.statusbarController.setStatusbarUI(this);
 
-		this.add(Box.createHorizontalGlue());
+		this.add(Box.createHorizontalStrut(20));
 		this.add(log);
 	}
 
@@ -191,7 +197,7 @@ public class StatusbarUI extends JPanel {
 	}
   
 	private void updateStatusbarText() {
-		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo + " |	                " +
-				"          " + logMessage);
+		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo);
+		lastLogMessageText.setText(logMessage);
 	}
 }
