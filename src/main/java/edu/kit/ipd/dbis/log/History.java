@@ -152,22 +152,14 @@ public class History {
 	}
 
 	/**
-	 * get the latest event
-	 * @return the latest event
+	 * @return the message of the latest event in the history or an empty string
 	 */
 	public String getLastEvent() {
 		String lastEvent = "";
-		if (this.getEvents().size() == 0) {
-			return "";
+		if (this.getEvents().size() != 0) {
+			lastEvent = events.get(events.size() - 1).getMessage();
 		}
-		//Building String
-		Event event = events.get(events.size() - 1);
-		if (event.getType() == EventType.MESSAGE) {
-			lastEvent += "[" + event.getType() + "] " + event.getMessage();
-		} else {
-			lastEvent += "[" + event.getType() + "] " + event.getMessage();
-		}
-	return lastEvent;
+		return lastEvent;
 	}
 
 }
