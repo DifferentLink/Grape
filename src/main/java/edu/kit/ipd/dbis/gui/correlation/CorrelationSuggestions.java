@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.gui.correlation;
 
+import edu.kit.ipd.dbis.correlation.CorrelationRequest;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
@@ -24,15 +25,10 @@ public class CorrelationSuggestions extends JPopupMenu {
 	}
 
 	private void updateSuggestions() {
-		List<String> relations = new ArrayList<>();
-		relations.add("Max");
-		relations.add("Min");
-		relations.add("Least");
+		List<String> relations = CorrelationRequest.getValidFirstArguments();
 		Collections.sort(relations);
 
-		List<String> correlationFunctions = new ArrayList<>();
-		correlationFunctions.add("Pearson");
-		correlationFunctions.add("MutualCorrelation");
+		List<String> correlationFunctions = CorrelationRequest.getValidCorrelations();
 		Collections.sort(correlationFunctions);
 
 		List<String> properties = new LinkedList<>();
