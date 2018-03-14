@@ -7,13 +7,7 @@ import edu.kit.ipd.dbis.gui.AlternateTable;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -50,14 +44,14 @@ public class CorrelationRequestUI extends JFrame {
 		try {
 			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
 			this.setIconImage(logo);
-		} catch (IOException e) { }
+		} catch (IOException ignored) { }
 
-		JPanel container = new JPanel();
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		JScrollPane scrollPane = new JScrollPane(panel);
 
 		JTable table = populateTable();
-		container.add(table);
+		panel.add(table);
 
 		String[] separatedCorrelationRequest = correlationRequest.split(" ");
 		String amount = separatedCorrelationRequest[separatedCorrelationRequest.length - 1];
@@ -66,7 +60,7 @@ public class CorrelationRequestUI extends JFrame {
 		JLabel correlationText = new JLabel(language.getString("request") + " "
 				+ cutCorrelationRequest + " " + (table.getColumnCount() - 1));
 		theme.style(correlationText);
-		container.add(correlationText);
+		panel.add(correlationText);
 
 		JPanel buttonAlignment = new JPanel();
 		buttonAlignment.setLayout(new BoxLayout(buttonAlignment, BoxLayout.X_AXIS));
@@ -76,8 +70,8 @@ public class CorrelationRequestUI extends JFrame {
 		theme.style(addToTable);
 		buttonAlignment.add(addToTable);
 
-		container.add(buttonAlignment);
-		this.add(container);
+		panel.add(buttonAlignment);
+		this.add(scrollPane);
 		this.pack();
 		this.setPreferredSize(new Dimension(400, 300));
 		this.setLocationRelativeTo(null);
