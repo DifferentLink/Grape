@@ -95,8 +95,8 @@ public class GenerateController {
 	 * @param amount      the number of graphs
 	 * @throws InvalidGeneratorInputException the invalid generator input exception
 	 */
-	public void generateGraphsSequential(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InvalidGeneratorInputException {
+	public void generateGraphsSequential(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount)
+			throws InvalidGeneratorInputException {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			throw new InvalidGeneratorInputException();
 		}
@@ -142,7 +142,7 @@ public class GenerateController {
 
 			CalculationMaster.executeCalculation(jobs);
 
-			//create log entry
+			// Create log entry
 			List<Integer> changedGraphs = new LinkedList<>();
 			for (PropertyGraph<Integer, Integer> graph : graphs) {
 				if(graph.getId() != 0) {
