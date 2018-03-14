@@ -2,8 +2,6 @@ package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
@@ -27,24 +25,25 @@ abstract class Correlation {
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws AccessDeniedForUserException thrown if there is no access to database
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException;
+    public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws ConnectionFailedException {
+        TreeSet<CorrelationOutput> resultSet = this.createCorrelationList(database);
+        return MutualCorrelation.cutListMaximum(resultSet, this.getAttributeCounter());
+    }
 
     /**
      * method which is used to check filters for a specific correlation monitoring only one property
-     * @param property1 property to focus on
+     * @param property2 property to focus on
      * @param database database which inherits graphs for the correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws AccessDeniedForUserException thrown if there is no access to database
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMaximum(String property1, GraphDatabase database) throws
-            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException;
+    public TreeSet<CorrelationOutput> useMaximum(String property2, GraphDatabase database) throws
+            ConnectionFailedException {
+        TreeSet<CorrelationOutput> resultSet = this.createCorrelationList(property2, database);
+        return MutualCorrelation.cutListMaximum(resultSet, this.getAttributeCounter());
+    }
 
     /**
      * method which is used to check filters for a specific correlation
@@ -52,24 +51,68 @@ abstract class Correlation {
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws AccessDeniedForUserException thrown if there is no access to database
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws
-            DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException;
+    public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws ConnectionFailedException {
+        TreeSet<CorrelationOutput> resultSet = this.createCorrelationList(database);
+        return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
+    }
 
     /**
      * method which is used to check filters for a specific correlation monitoring only one property
-     * @param property1 property to focus on
+     * @param property2 property to focus on
      * @param database database which inherits graphs for the correlation
      * @return returns a list of objects of class CorrelationOutput which code the results of the
      * correlation calculation
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws AccessDeniedForUserException thrown if there is no access to database
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public abstract TreeSet<CorrelationOutput> useMinimum(String property1, GraphDatabase database)
-            throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException;
+    public TreeSet<CorrelationOutput> useMinimum(String property2, GraphDatabase database) throws
+            ConnectionFailedException {
+        TreeSet<CorrelationOutput> resultSet = this.createCorrelationList(property2, database);
+        return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
+    }
+
+    private TreeSet<CorrelationOutput> createCorrelationList(GraphDatabase database) throws ConnectionFailedException {
+        String[] firstPropertyList = Pearson.getValidProperties();
+        String[] secondPropertyList = Pearson.getValidProperties();
+        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
+        for (int i = 0; i < firstPropertyList.length; i++) {
+            for (int j = (i + 1); j < secondPropertyList.length; j++) {
+                CorrelationOutput outputObject = new CorrelationOutput(firstPropertyList[i], secondPropertyList[j],
+                        this.calculateCorrelation(firstPropertyList[i], secondPropertyList[j], database));
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE) {
+                    resultSet.add(outputObject);
+                }
+            }
+        }
+        return resultSet;
+    }
+
+    private TreeSet<CorrelationOutput> createCorrelationList(String property2, GraphDatabase database)
+            throws ConnectionFailedException {
+        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
+        String[] firstPropertyList = Pearson.getValidProperties();
+        for (String property1: firstPropertyList) {
+            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
+                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
+                        this.calculateCorrelation(property1, property2, database));
+                if (outputObject.getOutputNumber() != Double.MAX_VALUE) {
+                    resultSet.add(outputObject);
+                }
+            }
+        }
+        return resultSet;
+    }
+
+    /**
+     * method which calculates the specific correlation
+     * @param firstProperty first property to focus on
+     * @param secondProperty second property to focus on
+     * @param database database which inherits the graphs with calculated properties
+     * @return returns the value of the mutual correlation of two properties (firstProperty and secondProperty)
+     * @throws ConnectionFailedException thrown if there was no connection to the database possible
+     */
+    public abstract double calculateCorrelation(String firstProperty, String secondProperty,
+                                       GraphDatabase database) throws ConnectionFailedException;
 
     /**
      * setter of attribute attributeCounter
