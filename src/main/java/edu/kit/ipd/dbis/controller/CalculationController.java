@@ -3,9 +3,6 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.controller.util.CalculationMaster;
 import edu.kit.ipd.dbis.controller.util.CalculationWorker;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
