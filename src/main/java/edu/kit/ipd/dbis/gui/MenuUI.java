@@ -91,9 +91,7 @@ public class MenuUI extends JMenuBar {
 		JMenu help = new JMenu(language.getString("help"));
 		JMenuItem info = new JMenuItem(language.getString("about"));
 		info.addActionListener(new ShowAboutAction());
-		JMenuItem documentation = new JMenuItem(language.getString("documentation"));
 		help.add(info);
-		help.add(documentation);
 		this.add(help);
 
 		this.setBackground(theme.backgroundColor);

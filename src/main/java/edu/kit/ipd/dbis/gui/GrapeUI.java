@@ -124,7 +124,7 @@ public class GrapeUI {
 		try {
 			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
 			mainWindow.setIconImage(logo);
-		} catch (IOException e) { }
+		} catch (IOException ignored) { }
 
 		filterUI = new FilterUI(filterController, language, theme);
 		correlationUI = new CorrelationUI(correlationController, language, theme);
