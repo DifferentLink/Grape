@@ -9,6 +9,9 @@ import java.awt.*;
 import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import javax.swing.JPasswordField;
@@ -34,7 +37,8 @@ public class ConfigureDatabaseUI extends JFrame {
 	 * @param language the language to use
 	 * @param theme the theme to style the window
 	 */
-	public ConfigureDatabaseUI(JFrame mainWindow, DatabaseController databaseController, ResourceBundle language, Theme theme) {
+	public ConfigureDatabaseUI(
+			JFrame mainWindow, DatabaseController databaseController, ResourceBundle language, Theme theme) {
 
 		super.setTitle(language.getString("configureDatabase"));
 		this.mainWindow = mainWindow;
@@ -45,7 +49,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		try {
 			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
 			this.setIconImage(logo);
-		} catch (IOException e) { }
+		} catch (IOException ignored) { }
 
 		JPanel inputContainer = new JPanel();
 		inputContainer.setLayout(new GridLayout(4, 2, 2, 10));
@@ -65,7 +69,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		inputContainer.add(userLabel);
 		inputContainer.add(userInput);
 
-		JLabel passwordLabel = new JLabel(language.getString("password")); // todo use language resource
+		JLabel passwordLabel = new JLabel(language.getString("password"));
 
 		passwordInput = new JPasswordField("password");
 		inputContainer.add(passwordLabel);
@@ -90,6 +94,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		this.add(container);
 		this.setMinimumSize(new Dimension(300, 200));
 		this.setLocationRelativeTo(null);
+		this.addWindowListener(new CloseListener(this));
 	}
 
 	private class ConfigureDatabaseAction implements ActionListener {
@@ -105,9 +110,44 @@ public class ConfigureDatabaseUI extends JFrame {
 			databaseController.newDatabase(urlInput.getText(), userInput.getText(),
 					passwordInput.getText(), nameInput.getText());
 			configureDatabaseUI.dispose();
+		}
+	}
+
+	private class CloseListener implements WindowListener {
+
+		private final JFrame window;
+
+		CloseListener(JFrame window) {
+			this.window = window;
+		}
+
+		@Override
+		public void windowOpened(WindowEvent windowEvent) {	}
+
+		@Override
+		public void windowClosing(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowClosed(WindowEvent windowEvent) {
 			if (mainWindow != null) {
 				mainWindow.setEnabled(true);
 			}
+			window.dispose();
+			System.out.println("Closed");
+		}
+
+		@Override
+		public void windowIconified(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowDeiconified(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowActivated(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowDeactivated(WindowEvent windowEvent) {
+
 		}
 	}
 }
