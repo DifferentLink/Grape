@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.gui.correlation;
 
 import edu.kit.ipd.dbis.controller.CorrelationController;
+import edu.kit.ipd.dbis.correlation.CorrelationRequest;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.gui.popups.CorrelationRequestUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -126,14 +127,12 @@ public class CorrelationUI extends JPanel {
 					textField, textField.getX(), textField.getY() + textField.getHeight());
 			textField.requestFocus();
 
-			/*
 			try {
-				correlationController.addNewCorrelation(textField.getText());
+				CorrelationRequest.parseCorrelationToString(textField.getText());
 				textField.setBackground(Color.WHITE);
 			} catch (InvalidCorrelationInputException e) {
 				textField.setBackground(theme.lightNeutralColor);
 			}
-			*/
 		}
 	}
 }

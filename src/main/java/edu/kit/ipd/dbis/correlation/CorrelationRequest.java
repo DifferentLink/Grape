@@ -81,7 +81,7 @@ public class CorrelationRequest {
      * @return returns a correlation object which collects all information about the correlation in this object
      * @throws InvalidCorrelationInputException thrown if the user input was not valid
      */
-    static Correlation parseCorrelationToString(String correlationInput) throws
+    public static Correlation parseCorrelationToString(String correlationInput) throws
             InvalidCorrelationInputException {
         CorrelationRequest.checkCorrelationInputNull(correlationInput);
         String[] potentialPropertyArray = correlationInput.split(" ", 4);
