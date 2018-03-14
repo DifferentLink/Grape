@@ -117,6 +117,8 @@ public class GrapeUI {
 		this.statusbarController.setGrapeUI(this);
 
 		this.generateController.setLanguage(language);
+		this.databaseController.setLanguage(language);
+		this.graphEditorController.setLanguage(language);
 
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
