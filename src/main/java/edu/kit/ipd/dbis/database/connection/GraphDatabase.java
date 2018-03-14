@@ -405,6 +405,7 @@ public class GraphDatabase {
 	 * @throws ConnectionFailedException
 	 */
 	public int getNumberOfUncalculatedGraphs() throws ConnectionFailedException {
+		//TODO: implement/delete this method
 		return 0;
 	}
 
