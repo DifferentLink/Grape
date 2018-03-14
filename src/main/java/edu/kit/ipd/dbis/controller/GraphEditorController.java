@@ -21,6 +21,7 @@ import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
@@ -30,13 +31,14 @@ import static edu.kit.ipd.dbis.log.EventType.ADD;
  */
 public final class GraphEditorController {
 
+	private ResourceBundle language;
 	private GraphDatabase database;
 	private StatusbarController statusbar;
 	private FilterController filter;
 	private GraphEditorUI graphEditor;
-
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
+	private static GraphEditorController editor;
 
 	/**
 	 * Sets grape ui.
@@ -46,9 +48,6 @@ public final class GraphEditorController {
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
 	}
-
-	//TODO: Singleton pattern
-	private static GraphEditorController editor;
 
 	/**
 	 * Sets statusbar ui.
@@ -62,6 +61,13 @@ public final class GraphEditorController {
 	private GraphEditorController() {
 		this.statusbar = StatusbarController.getInstance();
 		this.filter = FilterController.getInstance();
+	}
+
+	/**
+	 * @param language the language used to create log messages
+	 */
+	public void setLanguage(ResourceBundle language) {
+		this.language = language;
 	}
 
 	/**
@@ -173,7 +179,7 @@ public final class GraphEditorController {
 			statusbar.addMessage(e.getMessage());
 		}
 		if (duplicate) {
-			statusbar.addMessage("Given graph already exists");
+			statusbar.addMessage(language.getString("graphAlreadyExist"));
 			this.grapeUI.updateTable();
 		}
 		return !duplicate;
@@ -192,10 +198,10 @@ public final class GraphEditorController {
 			if (!database.graphExists(denserGraph)) {
 				denserGraph.calculateProperties();
 				database.addGraph(denserGraph);
-				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
+				statusbar.addEvent(EventType.ADD, denserGraph.getId(), language.getString("nextDenserAdded"));
 				this.grapeUI.updateTable();
 			} else {
-				statusbar.addMessage("Denser graph already exists");
+				statusbar.addMessage(language.getString("nextDenserAlreadyExists"));
 			}
 		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
 				ConnectionFailedException e) {
@@ -213,9 +219,9 @@ public final class GraphEditorController {
 			database.addGraph(denserGraph);
 			//TODO: same problem: graph marked as deleted?
 			if (graphExists) {
-				statusbar.addMessage("Database already contains next denser graph");
+				statusbar.addMessage(language.getString("nextDenserAlreadyExists"));
 			} else {
-				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
+				statusbar.addEvent(EventType.ADD, denserGraph.getId(), language.getString("nextDenserAdded"));
 			}
 			this.grapeUI.updateTable();
 		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
