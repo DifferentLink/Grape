@@ -27,17 +27,19 @@ import java.util.ResourceBundle;
  */
 public class CorrelationUI extends JPanel {
 
-	private final CorrelationController controller;
+	private final CorrelationController correlationController;
+	private final Theme theme;
 	private JTextField correlationInput;
 
 	/**
 	 * Constructs the correlation panel
-	 * @param controller the controller responsible for the correlation request
+	 * @param correlationController the correlationController responsible for the correlation request
 	 * @param language the language used
 	 * @param theme theme theme used to style to correlation window
 	 */
-	public CorrelationUI(CorrelationController controller, ResourceBundle language, Theme theme) {
-		this.controller = controller;
+	public CorrelationUI(CorrelationController correlationController, ResourceBundle language, Theme theme) {
+		this.correlationController = correlationController;
+		this.theme = theme;
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBackground(theme.backgroundColor);
@@ -56,7 +58,7 @@ public class CorrelationUI extends JPanel {
 		correlationInput.getDocument().addDocumentListener(new CorrelationInputChangeListener(correlationInput));
 		correlationInput.setBackground(theme.backgroundColor);
 		JButton go = new JButton(language.getString("go"));
-		go.addActionListener(new CorrelationRequestAction(controller, correlationInput, language, theme));
+		go.addActionListener(new CorrelationRequestAction(correlationController, correlationInput, language, theme));
 		go.setBackground(theme.assertiveBackground);
 		go.setMinimumSize(new Dimension(120, 30));
 		inputContainer.add(correlationInput, BorderLayout.CENTER);
@@ -123,6 +125,15 @@ public class CorrelationUI extends JPanel {
 			(new CorrelationSuggestions(textField)).show(
 					textField, textField.getX(), textField.getY() + textField.getHeight());
 			textField.requestFocus();
+
+			/*
+			try {
+				correlationController.addNewCorrelation(textField.getText());
+				textField.setBackground(Color.WHITE);
+			} catch (InvalidCorrelationInputException e) {
+				textField.setBackground(theme.lightNeutralColor);
+			}
+			*/
 		}
 	}
 }
