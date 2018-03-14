@@ -87,7 +87,8 @@ public class MutualCorrelationTest {
 
     @Test
     public void testCalculateCorrelation() throws ConnectionFailedException {
-        assert Math.abs(MutualCorrelation.calculateCorrelation("AverageDegree",
+        MutualCorrelation mutualCorrelation = new MutualCorrelation();
+        assert Math.abs(mutualCorrelation.calculateCorrelation("AverageDegree",
                 "NumberOfEdges", database) - 0.693) < 0.01;
     }
 
