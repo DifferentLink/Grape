@@ -8,27 +8,22 @@ import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
-import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.TotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
-import static edu.kit.ipd.dbis.log.EventType.REMOVE;
 
 /**
  * The type Graph editor controller.
@@ -37,7 +32,6 @@ public final class GraphEditorController {
 
 	private GraphDatabase database;
 	private StatusbarController statusbar;
-	private FilterController filter;
 	private GraphEditorUI graphEditor;
 
 	private GrapeUI grapeUI;
@@ -52,7 +46,6 @@ public final class GraphEditorController {
 		this.grapeUI = grapeUI;
 	}
 
-	//TODO: Singleton pattern
 	private static GraphEditorController editor;
 
 	/**
@@ -66,7 +59,6 @@ public final class GraphEditorController {
 
 	private GraphEditorController() {
 		this.statusbar = StatusbarController.getInstance();
-		this.filter = FilterController.getInstance();
 	}
 
 	/**
@@ -124,6 +116,7 @@ public final class GraphEditorController {
 			}
 		}
 		this.grapeUI.updateTable();
+		statusbar.setNumberOfGraphs();
 	}
 
 	/**
@@ -167,9 +160,8 @@ public final class GraphEditorController {
 	 *
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
-	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
-	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
+	public boolean isValidGraph(PropertyGraph<Integer, Integer> graph) {
 		boolean duplicate = false;
 		try {
 			duplicate = database.graphExists(graph);
@@ -198,6 +190,7 @@ public final class GraphEditorController {
 				database.addGraph(denserGraph);
 				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
 				this.grapeUI.updateTable();
+				statusbar.setNumberOfGraphs();
 			} else {
 				statusbar.addMessage("Denser graph already exists");
 			}
@@ -222,6 +215,7 @@ public final class GraphEditorController {
 				statusbar.addEvent(EventType.ADD, denserGraph.getId(), "Next denser graph added");
 			}
 			this.grapeUI.updateTable();
+			statusbar.setNumberOfGraphs();
 		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
 				ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
@@ -238,11 +232,11 @@ public final class GraphEditorController {
 		} catch (ConnectionFailedException | UnexpectedObjectException e) {
 			statusbar.addMessage(e.getMessage());
 		}
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		Set<Integer> negative = new HashSet<>();
-		for (int i = 0; i < profile.length; i++) {
+		for (int[] aProfile : profile) {
 			for (int j = 0; j < profile[0].length; j++) {
-				if (profile[i][j] == -1) {
+				if (aProfile[j] == -1) {
 					negative.add(j);
 				}
 			}
@@ -250,15 +244,15 @@ public final class GraphEditorController {
 		for (int i = 0; i < profile.length; i++) {
 			for (int j = 0; j < profile[0].length; j++) {
 				if (negative.contains(j) && profile[i][j] != -1) {
-					result += " ";
+					result.append(" ");
 				}
-				result += profile[i][j];
+				result.append(profile[i][j]);
 			}
 			if (i < profile.length) {
-				result += "\n";
+				result.append("\n");
 			}
 		}
-		return result;
+		return result.toString();
 	}
 
 	/**
