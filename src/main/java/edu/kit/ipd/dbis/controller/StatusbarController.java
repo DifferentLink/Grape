@@ -194,7 +194,7 @@ public class StatusbarController {
 		if (calculationController == null) {
 			setCalculation();
 		}
-		calculationController.continueCalculation();
+		calculationController.startCalculation();
 	}
 
 	/**

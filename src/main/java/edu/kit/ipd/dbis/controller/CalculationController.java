@@ -16,6 +16,7 @@ public class CalculationController implements Runnable {
 	private StatusbarController statusbarController;
 	private GraphDatabase database;
 	private GrapeUI grapeUI;
+	private static CalculationController calculation;
 
 	/**
 	 * @param grapeUI the grape ui
@@ -23,8 +24,6 @@ public class CalculationController implements Runnable {
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
 	}
-
-	private static CalculationController calculation;
 
 	private CalculationController() {
 		this.statusbarController = StatusbarController.getInstance();
@@ -80,36 +79,9 @@ public class CalculationController implements Runnable {
 	}
 
 	/**
-	 * Gets number not calculated graphs.
-	 *
-	 * @return the length of the graphlist of CalculationController.
+	 * Start calculation of properties of graphs in database which have uncalculated properties
 	 */
-	public int getNumberNotCalculatedGraphs() { //Todo: perhaps remove method
-		int numberGraphs = 0;
-		//numberGraphs = database.getUncalculatedGraph().size();
-		return numberGraphs;
-	}
-
-	/**
-	 * checks if the current calculation is running.
-	 *
-	 * @return true if the calculation is running.
-	 */
-	public Boolean getCalcStatus() {
-		return isCalculating;
-	}
-
-	/**
-	 * pauses the method calculateGraphProperties().
-	 */
-	public void pauseCalculation() {
-		isCalculating = false;
-	}
-
-	/**
-	 * continues the method calculateGraphProperties().
-	 */
-	public synchronized void continueCalculation() {
+	public synchronized void startCalculation() {
 		isCalculating = true;
 		run();
 	}
