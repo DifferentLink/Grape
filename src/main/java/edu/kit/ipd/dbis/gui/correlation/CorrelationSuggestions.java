@@ -43,8 +43,6 @@ public class CorrelationSuggestions extends JPopupMenu {
 		this.removeAll();
 		revalidate();
 
-		String[] parts = inputField.getText().split(" ");
-		String lastKeyword = parts[parts.length - 1];
 		List<String> displayedSuggestions;
 		if (inputField.getText().matches("\\w*")) {
 			displayedSuggestions = relations;
@@ -56,6 +54,8 @@ public class CorrelationSuggestions extends JPopupMenu {
 			displayedSuggestions = new LinkedList<>();
 		}
 
+		String[] parts = inputField.getText().split(" ");
+		String lastKeyword = parts[parts.length - 1];
 		if (!lastKeyword.equals("")) {
 			for (String string : displayedSuggestions) {
 				if (string.toLowerCase().contains(lastKeyword.toLowerCase())) {
@@ -78,7 +78,7 @@ public class CorrelationSuggestions extends JPopupMenu {
 
 		private final String suggestion;
 
-		public ApplySuggestionAction(String suggestion) {
+		ApplySuggestionAction(String suggestion) {
 			this.suggestion = suggestion;
 		}
 
