@@ -1,6 +1,5 @@
 package edu.kit.ipd.dbis.controller;
 
-
 import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
 import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.controller.util.CalculationMaster;
@@ -31,18 +30,17 @@ import java.util.Set;
 public class GenerateController {
 
 	private GraphDatabase database;
-	private BulkGraphGenerator generator;
-	private StatusbarController statusbar;
-	private CalculationController calculation;
+	private BulkGraphGenerator graphGenerator;
+	private StatusbarController statusbarController;
+	private CalculationController calculationController;
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
-
-	private static GenerateController generate;
+	private static GenerateController generateController;
 
 	private GenerateController() {
-		this.statusbar = StatusbarController.getInstance();
-		this.generator = new BulkRandomConnectedGraphGenerator();
-		this.calculation = CalculationController.getInstance();
+		this.statusbarController = StatusbarController.getInstance();
+		this.graphGenerator = new BulkRandomConnectedGraphGenerator();
+		this.calculationController = CalculationController.getInstance();
 	}
 
 	/**
@@ -51,10 +49,10 @@ public class GenerateController {
 	 * @return the instance
 	 */
 	public static GenerateController getInstance() {
-		if (generate == null) {
-			generate = new GenerateController();
+		if (generateController == null) {
+			generateController = new GenerateController();
 		}
-		return generate;
+		return generateController;
 	}
 
 	/**
@@ -67,9 +65,9 @@ public class GenerateController {
 	}
 
 	/**
-	 * Sets statusbar ui.
+	 * Sets statusbarController ui.
 	 *
-	 * @param statusbarUI the statusbar ui
+	 * @param statusbarUI the statusbarController ui
 	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
@@ -86,14 +84,14 @@ public class GenerateController {
 
 
 	/**
-	 * Gives the graph generator the command to generate the graphs and saves them in the Database.
+	 * Gives the graph graphGenerator the command to generateController the graphs and saves them in the Database.
 	 *
 	 * @param minVertices lower bound of vertices
 	 * @param maxVertices upper bound of vertices
 	 * @param minEdges    lower bound of edges.
 	 * @param maxEdges    upper bound of edges.
 	 * @param amount      the number of graphs
-	 * @throws InvalidGeneratorInputException the invalid generator input exception
+	 * @throws InvalidGeneratorInputException the invalid graphGenerator input exception
 	 */
 	public void generateGraphsSequential(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount)
 			throws InvalidGeneratorInputException {
@@ -102,14 +100,14 @@ public class GenerateController {
 		}
 		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 		try {
-			generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+			graphGenerator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 			this.saveGraphs(graphs);
 			Thread calculate = new Thread(CalculationController.getInstance());
 			SwingUtilities.invokeLater(calculate);
 		} catch (IllegalArgumentException e) {
 			throw new InvalidGeneratorInputException();
 		} catch (NotEnoughGraphsException e) {
-			statusbar.addMessage(e.getMessage());
+			statusbarController.addMessage(e.getMessage());
 			this.saveGraphs(graphs);
 			Thread calculate = new Thread(CalculationController.getInstance());
 			SwingUtilities.invokeLater(calculate);
@@ -128,11 +126,11 @@ public class GenerateController {
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
-			statusbar.addMessage("Invalid Input");
+			statusbarController.addMessage("Invalid Input");
 		} else {
 			Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
 			try {
-				generator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+				graphGenerator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 			} catch (NotEnoughGraphsException ignored) { }
 			this.saveGraphs(graphs);
 			List<Thread> jobs = new LinkedList<>();
@@ -151,16 +149,16 @@ public class GenerateController {
 			}
 			if (changedGraphs.size() > 0) {
 				if (changedGraphs.size() < amount) {
-					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size()
+					statusbarController.addEvent(new Event(EventType.ADD,  changedGraphs.size()
 							+ " graphs were generated " + amount + " different graphs haven't been found",
 							changedGraphs));
 				} else {
-					statusbar.addEvent(new Event(EventType.ADD,  changedGraphs.size()
+					statusbarController.addEvent(new Event(EventType.ADD,  changedGraphs.size()
 							+ " graphs were generated",
 							changedGraphs));
 				}
 			} else {
-				statusbar.addMessage("All possible graphs already exists in the database");
+				statusbarController.addMessage("All possible graphs already exists in the database");
 			}
 			grapeUI.updateTable();
 		}
@@ -189,21 +187,21 @@ public class GenerateController {
 				boolean graphExists = false;
 				graphExists = database.graphExists(graph);
 				database.addGraph(graph);
-				calculation.run();
+				calculationController.run();
 				this.grapeUI.updateTable();
 
 				if (graphExists) {
 					//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
 					//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
-					statusbar.addMessage("BFS-Graph: " +  bfsCode + " already exists");
+					statusbarController.addMessage("BFS-Graph: " +  bfsCode + " already exists");
 				} else {
-					statusbar.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
+					statusbarController.addEvent(EventType.ADD, graph.getId(), "Graph added with BFS-Code: " + bfsCode);
 				}
 
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
-				statusbar.addMessage(e.getMessage());
+				statusbarController.addMessage(e.getMessage());
 			} catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
-				statusbar.addMessage("Illegal bfs code");
+				statusbarController.addMessage("Illegal bfs code");
 			}
 		}
 	}
@@ -216,10 +214,10 @@ public class GenerateController {
 	public void deleteGraph(int id) {
 		try {
 			database.deleteGraph(id);
-			statusbar.addEvent(EventType.REMOVE, id, "Graph deleted");
+			statusbarController.addEvent(EventType.REMOVE, id, "Graph deleted");
 			grapeUI.updateTable();
 		} catch (ConnectionFailedException e) {
-			statusbar.addMessage(e.getMessage());
+			statusbarController.addMessage(e.getMessage());
 		}
 	}
 
@@ -229,9 +227,9 @@ public class GenerateController {
 				database.deleteGraph(id);
 				grapeUI.updateTable();
 			}
-			statusbar.addEvent(EventType.REMOVE, ids, "Graphs deleted");
+			statusbarController.addEvent(EventType.REMOVE, ids, "Graphs deleted");
 		} catch (ConnectionFailedException e) {
-				statusbar.addMessage(e.getMessage());
+				statusbarController.addMessage(e.getMessage());
 		}
 	}
 
@@ -246,7 +244,7 @@ public class GenerateController {
 				database.addGraph(graph);
 				this.statusbarUI.setRemainingCalculations(0);
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-				statusbar.addMessage(e.getMessage());
+				statusbarController.addMessage(e.getMessage());
 			}
 		}
 	}
