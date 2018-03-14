@@ -12,68 +12,6 @@ import java.util.TreeSet;
  */
 public class MutualCorrelation extends Correlation {
 
-    @Override
-    public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws ConnectionFailedException {
-        String[] firstPropertyList = MutualCorrelation.getValidProperties();
-        String[] secondPropertyList = MutualCorrelation.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        int i = 0;
-        for (String property1: firstPropertyList) {
-            i++;
-            for (int j = i; j < secondPropertyList.length; j++) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, secondPropertyList[j],
-                        MutualCorrelation.calculateCorrelation(property1, secondPropertyList[j], database));
-                resultSet.add(outputObject);
-            }
-        }
-        return MutualCorrelation.cutListMaximum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMaximum(String property2, GraphDatabase database) throws
-            ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return MutualCorrelation.cutListMaximum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        String[] secondPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            for (String property2: secondPropertyList) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMinimum(String property2, GraphDatabase database) throws
-            ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
-    }
-
     /**
      * calculates the mutual correlation / information for two specific properties
      * @param firstProperty first property for the specific correlation
@@ -82,7 +20,8 @@ public class MutualCorrelation extends Correlation {
      * @return returns the value of the mutual correlation of two properties (firstProperty and secondProperty)
      * @throws ConnectionFailedException thrown if there was no connection to the database possible
      */
-    static double calculateCorrelation(String firstProperty, String secondProperty,
+    @Override
+    public double calculateCorrelation(String firstProperty, String secondProperty,
                                        GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
@@ -107,6 +46,9 @@ public class MutualCorrelation extends Correlation {
                 secondPropertyValues.remove(j);
             }
             firstPropertyValues.remove(i);
+        }
+        if (Math.abs(returnValue) < 0.01) {
+            return Double.MAX_VALUE;
         }
         return returnValue;
     }
