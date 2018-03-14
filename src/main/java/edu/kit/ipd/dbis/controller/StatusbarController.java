@@ -11,10 +11,8 @@ import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.log.History;
 import edu.kit.ipd.dbis.log.Log;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The type Statusbar controller.
@@ -22,10 +20,10 @@ import java.util.Set;
 public class StatusbarController {
 
 	private Log log;
-	private CalculationController calculation;
+	private CalculationController calculationController;
 	private GrapeUI grapeUI;
 
-	private static StatusbarController statusbar;
+	private static StatusbarController statusbarController;
 	private StatusbarUI statusbarUI;
 
 	private StatusbarController() {
@@ -38,10 +36,10 @@ public class StatusbarController {
 	 * @return the instance
 	 */
 	public static StatusbarController getInstance() {
-		if (statusbar == null) {
-			statusbar = new StatusbarController();
+		if (statusbarController == null) {
+			statusbarController = new StatusbarController();
 		}
-		return statusbar;
+		return statusbarController;
 	}
 
 	/**
@@ -63,7 +61,7 @@ public class StatusbarController {
 	}
 
 	private void setCalculation() {
-		this.calculation = CalculationController.getInstance();
+		this.calculationController = CalculationController.getInstance();
 	}
 
 	/**
@@ -131,7 +129,7 @@ public class StatusbarController {
 	 */
 	public void addEvent(Event event) {
 		log.addEvent(event);
-		this.statusbarUI.setLastLogEntry(statusbar.getHistory().getLastEvent());
+		this.statusbarUI.setLastLogEntry(statusbarController.getHistory().getLastEvent());
 	}
 
 	/**
@@ -183,25 +181,23 @@ public class StatusbarController {
 	 * pauses the method calculateGraphProperties().
 	 */
 	public void pauseCalculation() {
-		if (calculation == null) {
+		if (calculationController == null) {
 			setCalculation();
 		}
-		calculation.pauseCalculation();
+		calculationController.pauseCalculation();
 	}
 
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
 	public void continueCalculation() {
-		if (calculation == null) {
+		if (calculationController == null) {
 			setCalculation();
 		}
-		calculation.continueCalculation();
+		calculationController.continueCalculation();
 	}
 
 	/**
-	 * Gets number uncalculated graphs.
-	 *
 	 * @return the number uncalculated graphs
 	 */
 	public int getNumberUncalculatedGraphs() {
@@ -209,9 +205,7 @@ public class StatusbarController {
 	}
 
 	/**
-	 * Sets statusbar ui.
-	 *
-	 * @param statusbarUI the statusbar ui
+	 * @param statusbarUI the statusbarController ui
 	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
