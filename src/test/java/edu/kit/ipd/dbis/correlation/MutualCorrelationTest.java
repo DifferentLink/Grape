@@ -49,16 +49,6 @@ public class MutualCorrelationTest {
     }
 
     @Test
-    public void testGetMinimum() {
-        LinkedList<Double> testList = new LinkedList<>();
-        testList.add(4.76);
-        testList.add(7.98);
-        testList.add(1.45);
-        testList.add(3.96);
-        assert MutualCorrelation.getMinimum(testList) == 1.45;
-    }
-
-    @Test
     public void testCalculatePX() {
         LinkedList<Double> testList = new LinkedList<>();
         testList.add(3.78);
@@ -87,7 +77,8 @@ public class MutualCorrelationTest {
 
     @Test
     public void testCalculateCorrelation() throws ConnectionFailedException {
-        assert Math.abs(MutualCorrelation.calculateCorrelation("AverageDegree",
+        MutualCorrelation mutualCorrelation = new MutualCorrelation();
+        assert Math.abs(mutualCorrelation.calculateCorrelation("AverageDegree",
                 "NumberOfEdges", database) - 0.693) < 0.01;
     }
 

@@ -89,7 +89,8 @@ public class PearsonCorrelationTest {
     @Test
     public void testCalculateCorrelation() throws Exception {
         PearsonCorrelationTest.putGraphsIntoDatabase();
-        double result = Pearson.calculateCorrelation("numberofedges", "VertexColoringNumberOfColors", database);
+        Pearson pearson = new Pearson();
+        double result = pearson.calculateCorrelation("numberofedges", "VertexColoringNumberOfColors", database);
         assert (result - 1) < 0.01;
     }
 
@@ -97,8 +98,9 @@ public class PearsonCorrelationTest {
     public void testCalculateCorrelationDivisionByZero() throws Exception {
         PearsonCorrelationTest.putGraphsIntoDatabase();
         //The number of vertex colorings is 1 in both cases --> SampleVariationskoeffizient is 0 --> Division by zero
-        double result = Pearson.calculateCorrelation("numberofvertexcolorings", "VertexColoringNumberOfColors", database);
-        assert result == 0.0;
+        Pearson pearson = new Pearson();
+        double result = pearson.calculateCorrelation("numberofvertexcolorings", "VertexColoringNumberOfColors", database);
+        assert result == Double.MAX_VALUE;
     }
 
     @Test

@@ -3,13 +3,10 @@ package edu.kit.ipd.dbis.correlation;
 import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
 import java.util.*;
 
@@ -45,11 +42,8 @@ public class CorrelationRequest {
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws AccessDeniedForUserException thrown if there is no access to database
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public List<CorrelationOutput> applyCorrelation() throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException {
+    public List<CorrelationOutput> applyCorrelation() throws ConnectionFailedException {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(database));
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
@@ -62,7 +56,7 @@ public class CorrelationRequest {
     }
 
     /**
-     * parse which parses a tree set into al list
+     * parser which parses a tree set into al list
      * @param input tree set which should be transformed int a list
      * @return list which inherits all elements the tree set inherits
      */

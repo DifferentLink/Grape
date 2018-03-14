@@ -10,68 +10,6 @@ import java.util.*;
  */
 public class Pearson extends Correlation {
 
-    @Override
-    public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        String[] secondPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        int i = 0;
-        for (String property1: firstPropertyList) {
-            i++;
-            for (int j = i; j < secondPropertyList.length; j++) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, secondPropertyList[j],
-                        Pearson.calculateCorrelation(property1, secondPropertyList[j], database));
-                resultSet.add(outputObject);
-            }
-        }
-        return Pearson.cutListMaximum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMaximum(String property2, GraphDatabase database) throws
-            ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        Pearson.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return Pearson.cutListMaximum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        String[] secondPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            for (String property2: secondPropertyList) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        Pearson.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return Pearson.cutListMinimum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMinimum(String property2, GraphDatabase database) throws
-            ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        Pearson.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return Pearson.cutListMinimum(resultSet, this.getAttributeCounter());
-    }
-
     /**
      * calculates a specific correlation
      * @param firstProperty first property to focus on
@@ -80,8 +18,8 @@ public class Pearson extends Correlation {
      * @return returns a set of CorrelationOutput objects
      * @throws ConnectionFailedException thrown if there was no connection to database possible
      */
-    static double calculateCorrelation(String firstProperty, String secondProperty,
-                                               GraphDatabase database) throws ConnectionFailedException {
+    public double calculateCorrelation(String firstProperty, String secondProperty,
+                                       GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(),
@@ -92,28 +30,17 @@ public class Pearson extends Correlation {
         double secondRandomMedium = Pearson.createRandomMedium(secondPropertyValues);
 
         double sum = 0;
-        Double[] firstPropertyArrayValues = new Double[firstPropertyValues.size()];
         int a = 0;
-        for (double current: firstPropertyValues) {
-            firstPropertyArrayValues[a] = current;
+        for (Double current: firstPropertyValues) {
+            sum = sum + ((current - firstRandomMedium) * (secondPropertyValues.get(a) - secondRandomMedium));
             a++;
-        }
-        Double[] secondPropertyArrayValues = new Double[firstPropertyValues.size()];
-        a = 0;
-        for (double current: firstPropertyValues) {
-            secondPropertyArrayValues[a] = current;
-            a++;
-        }
-        for (int b = 0; b < firstPropertyArrayValues.length; b++) {
-            sum = sum + ((firstPropertyArrayValues[b] - firstRandomMedium)
-                    * (secondPropertyArrayValues[b] - secondRandomMedium));
         }
 
         double result = (sum / (firstPropertyValues.size() - 1));
         double coefficient = result / (Pearson.getSampleVariationskoeffizient(firstPropertyValues, firstRandomMedium)
                 * Pearson.getSampleVariationskoeffizient(secondPropertyValues, secondRandomMedium));
         if (!(coefficient > -1 && coefficient < 1)) {
-            return 0;
+            return Double.MAX_VALUE;
         }
         return coefficient;
     }
