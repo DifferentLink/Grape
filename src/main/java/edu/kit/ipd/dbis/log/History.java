@@ -128,29 +128,6 @@ public class History {
 		}
 	}
 
-	/**
-	 * print history
-	 */
-	public String toString() {
-		String historyEntries = "";
-		if (this.getEvents().size() == 0) {
-			return "";
-		}
-		//Building String
-		for (Event event : this.getEvents()) {
-			String changedGraphs = "";
-			for (int id : event.getChangedGraphs()) {
-				changedGraphs += id + ", ";
-			}
-			if (event.getType() != EventType.MESSAGE) {
-				changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 2);
-				historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (ID's: " + changedGraphs + ")\n";
-			}
-		}
-		historyEntries = historyEntries.substring(0, historyEntries.length());
-		return historyEntries;
-	}
-
 	public String[] toStringArray() {
 		if (this.getEvents().size() == 0) {
 			return new String[]{""};
@@ -164,7 +141,8 @@ public class History {
 				}
 				if (event.getType() != EventType.MESSAGE) {
 					changedGraphs = new StringBuilder(changedGraphs.substring(0, changedGraphs.length() - 2));
-					historyEntries[position] = "[" + event.getType() + "]" + event.getMessage() + " (ID's: " + changedGraphs + ")\n";
+					historyEntries[position] = "[" + event.getType() + "]" + event.getMessage()
+							+ " (ID's: " + changedGraphs + ")";
 				} else {
 					historyEntries[position] = event.getMessage();
 				}
