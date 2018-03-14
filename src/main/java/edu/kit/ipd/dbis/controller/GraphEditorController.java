@@ -8,28 +8,22 @@ import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.gui.StatusbarUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
-import edu.kit.ipd.dbis.log.Event;
 import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NextDenserGraphFinder;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.density.NoDenserGraphException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.TotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static edu.kit.ipd.dbis.log.EventType.ADD;
-import static edu.kit.ipd.dbis.log.EventType.REMOVE;
 
 /**
  * The type Graph editor controller.
@@ -133,7 +127,8 @@ public final class GraphEditorController {
 	 * @param graph the graph
 	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
-	public void addNewGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException { // todo only duplicate check??
+	public void addNewGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
+		// todo only duplicate check??
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
@@ -233,7 +228,8 @@ public final class GraphEditorController {
 		int[][] profile = new int[][]{{}};
 		try {
 			PropertyGraph<Integer, Integer> graph = database.getGraphById(id);
-			ProfileDensityAlgorithm.Profile p = (ProfileDensityAlgorithm.Profile) graph.getProperty(Profile.class).getValue();
+			ProfileDensityAlgorithm.Profile p = (ProfileDensityAlgorithm.Profile)
+					graph.getProperty(Profile.class).getValue();
 			profile = p.getMatrix();
 
 		} catch (ConnectionFailedException | UnexpectedObjectException e) {
@@ -269,7 +265,8 @@ public final class GraphEditorController {
 	 * @return the graphcolorization.
 	 */
 	public static VertexColoringAlgorithm.Coloring<Integer> getVertexColoring(PropertyGraph<Integer, Integer> graph) {
-		return ((List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue()).get(0);
+		return ((List<VertexColoringAlgorithm.Coloring<Integer>>)
+				graph.getProperty(VertexColoring.class).getValue()).get(0);
 	}
 
 	/**
@@ -278,8 +275,10 @@ public final class GraphEditorController {
 	 * @param graph input graph
 	 * @return the graph coloring.
 	 */
-	public static TotalColoringAlgorithm.TotalColoring<Integer, Integer> getTotalColoring(PropertyGraph<Integer, Integer> graph) {
-		return ((List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>>) graph.getProperty(TotalColoring.class).getValue()).get(0);
+	public static TotalColoringAlgorithm.TotalColoring<Integer, Integer> getTotalColoring(
+			PropertyGraph<Integer, Integer> graph) {
+		return ((List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>>)
+				graph.getProperty(TotalColoring.class).getValue()).get(0);
 	}
 
 	/**
@@ -293,7 +292,8 @@ public final class GraphEditorController {
 			PropertyGraph<Integer, Integer> graph,
 			VertexColoringAlgorithm.Coloring<Integer> currentColoring) {
 		List<VertexColoringAlgorithm.Coloring<Integer>> colorings =
-				(List<VertexColoringAlgorithm.Coloring<Integer>>) graph.getProperty(VertexColoring.class).getValue();
+				(List<VertexColoringAlgorithm.Coloring<Integer>>)
+						graph.getProperty(VertexColoring.class).getValue();
 		int index = colorings.indexOf(currentColoring);
 		if (index + 1 == colorings.size()) {
 			return colorings.get(0);
@@ -313,7 +313,8 @@ public final class GraphEditorController {
 			PropertyGraph<Integer, Integer> graph,
 			TotalColoringAlgorithm.TotalColoring<Integer, Integer> currentColoring) {
 		List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>> colorings =
-				(List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>>) graph.getProperty(TotalColoring.class).getValue();
+				(List<TotalColoringAlgorithm.TotalColoring<Integer, Integer>>)
+						graph.getProperty(TotalColoring.class).getValue();
 		int index = colorings.indexOf(currentColoring);
 		if (index + 1 == colorings.size()) {
 			return colorings.get(0);
