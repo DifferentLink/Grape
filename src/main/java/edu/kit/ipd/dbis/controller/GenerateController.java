@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class GenerateController {
 
-	private final ResourceBundle language;
+	private ResourceBundle language;
 	private GraphDatabase database;
 	private BulkGraphGenerator graphGenerator;
 	private StatusbarController statusbarController;
@@ -38,8 +38,7 @@ public class GenerateController {
 	private StatusbarUI statusbarUI;
 	private static GenerateController generateController;
 
-	private GenerateController(final ResourceBundle language) {
-		this.language = language;
+	private GenerateController() {
 		this.statusbarController = StatusbarController.getInstance();
 		this.graphGenerator = new BulkRandomConnectedGraphGenerator();
 	}
@@ -49,11 +48,15 @@ public class GenerateController {
 	 *
 	 * @return the instance
 	 */
-	public static GenerateController getInstance(final ResourceBundle language) {
+	public static GenerateController getInstance() {
 		if (generateController == null) {
-			generateController = new GenerateController(language);
+			generateController = new GenerateController();
 		}
 		return generateController;
+	}
+
+	public void setLanguage(final ResourceBundle language) {
+		this.language = language;
 	}
 
 	/**

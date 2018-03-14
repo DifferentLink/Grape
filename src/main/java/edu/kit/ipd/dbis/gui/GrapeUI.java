@@ -116,6 +116,8 @@ public class GrapeUI {
 		this.graphEditorController.setGrapeUI(this);
 		this.statusbarController.setGrapeUI(this);
 
+		this.generateController.setLanguage(language);
+
 		mainWindow = new JFrame(programName);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(400, 400));
