@@ -140,7 +140,7 @@ public class CorrelationRequest {
         throw new InvalidCorrelationInputException();
     }
 
-    public List<String> getValidFirstArguments() {
+    public static List<String> getValidFirstArguments() {
         ArrayList<String> validFirstArguments = new ArrayList<>();
         validFirstArguments.add("min");
         validFirstArguments.add("max");
@@ -163,7 +163,7 @@ public class CorrelationRequest {
         throw new InvalidCorrelationInputException();
     }
 
-    public List<String> getValidCorrelations() {
+    public static List<String> getValidCorrelations() {
         ArrayList<String> validCorrelations = new ArrayList<>();
         validCorrelations.add("pearson");
         validCorrelations.add("mutualcorrelation");
