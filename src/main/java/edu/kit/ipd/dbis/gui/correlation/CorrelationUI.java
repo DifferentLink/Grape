@@ -1,4 +1,4 @@
-package edu.kit.ipd.dbis.gui;
+package edu.kit.ipd.dbis.gui.correlation;
 
 import edu.kit.ipd.dbis.controller.CorrelationController;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -51,6 +53,7 @@ public class CorrelationUI extends JPanel {
 		JPanel inputContainer = new JPanel(new BorderLayout());
 		inputContainer.add(Box.createHorizontalStrut(8), BorderLayout.WEST);
 		correlationInput = new JTextField("Max Pearson 3");
+		correlationInput.getDocument().addDocumentListener(new CorrelationInputChangeListener(correlationInput));
 		correlationInput.setBackground(theme.backgroundColor);
 		JButton go = new JButton(language.getString("go"));
 		go.addActionListener(new CorrelationRequestAction(controller, correlationInput, language, theme));
@@ -91,6 +94,35 @@ public class CorrelationUI extends JPanel {
 			} catch (InvalidCorrelationInputException e) {
 				correlationInput.setBackground(theme.lightNeutralColor);
 			}
+		}
+	}
+
+	private class CorrelationInputChangeListener implements DocumentListener {
+		private final JTextField textField;
+
+		CorrelationInputChangeListener(JTextField textField) {
+			this.textField = textField;
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent documentEvent) {
+			update();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent documentEvent) {
+			update();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent documentEvent) {
+			update();
+		}
+
+		private void update() {
+			(new CorrelationSuggestions(textField)).show(
+					textField, textField.getX(), textField.getY() + textField.getHeight());
+			textField.requestFocus();
 		}
 	}
 }
