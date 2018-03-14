@@ -126,8 +126,7 @@ public class GenerateController {
 	 * @param amount      the amount
 	 * @throws InterruptedException the interrupted exception
 	 */
-	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) throws
-			InterruptedException {
+	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
 			statusbar.addMessage("Invalid Input");
 		} else {
