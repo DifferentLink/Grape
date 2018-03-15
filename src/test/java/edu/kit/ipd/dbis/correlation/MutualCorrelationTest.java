@@ -2,6 +2,8 @@ package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 
+import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
+import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
@@ -26,7 +28,7 @@ public class MutualCorrelationTest {
     @Before
     public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
             ConnectionFailedException, UnexpectedObjectException, InsertionFailedException {
-    	Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+    	/*Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
 		String url = "jdbc:mysql://127.0.0.1/library";
 		String user = "travis";
@@ -35,6 +37,18 @@ public class MutualCorrelationTest {
 		FileManager fileManager = new FileManager();
 		database = fileManager.createGraphDatabase(url, user, password, name);
 		manager = new Filtermanagement();
+        manager.setDatabase(database);*/
+
+        String url = "jdbc:mysql://127.0.0.1/library";
+        String user = "user";
+        String password = "password";
+        String name = "grape2";
+        GraphDatabase gdb = new GraphDatabase(new GraphTable(url, user, password, name),
+                new FilterTable(url, user, password, "grape2filters"));
+        FileManager fileManager = new FileManager();
+        fileManager.deleteGraphDatabase(gdb);
+        database = fileManager.createGraphDatabase(url, user, password, name);
+        manager = new Filtermanagement();
         manager.setDatabase(database);
 
         Set<PropertyGraph> mySet = new HashSet<>();
@@ -46,16 +60,6 @@ public class MutualCorrelationTest {
         for (PropertyGraph<Integer, Integer> current: mySet) {
             database.addGraph(current);
         }
-    }
-
-    @Test
-    public void testGetMinimum() {
-        LinkedList<Double> testList = new LinkedList<>();
-        testList.add(4.76);
-        testList.add(7.98);
-        testList.add(1.45);
-        testList.add(3.96);
-        assert MutualCorrelation.getMinimum(testList) == 1.45;
     }
 
     @Test

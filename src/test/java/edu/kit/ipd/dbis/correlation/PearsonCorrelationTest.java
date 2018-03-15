@@ -46,7 +46,7 @@ public class PearsonCorrelationTest {
     public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
             ConnectionFailedException {
 
-    	Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+    	/*Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
 		String url = "jdbc:mysql://127.0.0.1/library";
 		String user = "travis";
@@ -54,6 +54,18 @@ public class PearsonCorrelationTest {
 		String name = "grape";
 		FileManager fileManager = new FileManager();
 		database = fileManager.createGraphDatabase(url, user, password, name);
+		manager = new Filtermanagement();
+        manager.setDatabase(database);*/
+
+        String url = "jdbc:mysql://127.0.0.1/library";
+        String user = "user";
+        String password = "password";
+        String name = "grape2";
+        GraphDatabase gdb = new GraphDatabase(new GraphTable(url, user, password, name),
+                new FilterTable(url, user, password, "grape2filters"));
+        FileManager fileManager = new FileManager();
+        fileManager.deleteGraphDatabase(gdb);
+        database = fileManager.createGraphDatabase(url, user, password, name);
     }
 
     @Test
@@ -112,22 +124,8 @@ public class PearsonCorrelationTest {
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMinimum("AverageDegree", database);
 
         assert resultSet.size() == 3;
-        int counter = 0;
         for (CorrelationOutput current: resultSet) {
-            if (counter == 0) {
-                assert current.getFirstProperty().equals("StructureDensity");
-                assert current.getSecondProperty().equals("AverageDegree");
-                assert Math.abs(current.getOutputNumber() - 0.8) < 0.01;
-            } else if (counter == 1) {
-                assert current.getFirstProperty().equals("BinomialDensity");
-                assert current.getSecondProperty().equals("AverageDegree");
-                assert Math.abs(current.getOutputNumber() - 0.5) < 0.01;
-            } else {
-                assert current.getFirstProperty().equals("ProportionDensity");
-                assert current.getSecondProperty().equals("AverageDegree");
-                assert Math.abs(current.getOutputNumber() - 0.2) < 0.01;
-            }
-            counter++;
+            assert Math.abs(current.getOutputNumber() + 1) < 0.01;
         }
     }
 
@@ -139,14 +137,8 @@ public class PearsonCorrelationTest {
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMinimum(database);
 
         assert resultSet.size() == 4;
-        int counter = 0;
         for (CorrelationOutput current: resultSet) {
-            if (counter == 4) {
-                assert current.getFirstProperty().equals("ProportionDensity");
-                assert current.getSecondProperty().equals("NumberOfDisjointEdgesFromKkGraph");
-                assert Math.abs(current.getOutputNumber() - 0.05) < 0.01;
-            }
-            counter++;
+            assert Math.abs(current.getOutputNumber() + 1) < 0.01;
         }
     }
 
@@ -159,6 +151,9 @@ public class PearsonCorrelationTest {
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMaximum("VertexColoringNumberOfColors", database);
 
         assert resultSet.size() == 3;
+        for (CorrelationOutput current: resultSet) {
+            assert Math.abs(current.getOutputNumber() - 1) < 0.01;
+        }
     }
 
     @Test
@@ -169,5 +164,8 @@ public class PearsonCorrelationTest {
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMaximum(database);
 
         assert resultSet.size() == 4;
+        for (CorrelationOutput current: resultSet) {
+            assert Math.abs(current.getOutputNumber() - 1) < 0.01;
+        }
     }
 }

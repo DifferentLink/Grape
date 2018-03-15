@@ -22,7 +22,8 @@ public class CorrelationRequestTest {
     @Before
     public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
             ConnectionFailedException {
-    	Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+
+    	/*Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
 		String url = "jdbc:mysql://127.0.0.1/library";
 		String user = "travis";
@@ -31,6 +32,18 @@ public class CorrelationRequestTest {
 		FileManager fileManager = new FileManager();
 		database = fileManager.createGraphDatabase(url, user, password, name);
 		manager = new Filtermanagement();
+        manager.setDatabase(database);*/
+
+        String url = "jdbc:mysql://127.0.0.1/library";
+        String user = "user";
+        String password = "password";
+        String name = "grape2";
+        GraphDatabase gdb = new GraphDatabase(new GraphTable(url, user, password, name),
+                new FilterTable(url, user, password, "grape2filters"));
+        FileManager fileManager = new FileManager();
+        fileManager.deleteGraphDatabase(gdb);
+        database = fileManager.createGraphDatabase(url, user, password, name);
+        manager = new Filtermanagement();
         manager.setDatabase(database);
     }
 
@@ -88,6 +101,11 @@ public class CorrelationRequestTest {
         }
         try {
             CorrelationRequest.testMaxOrMin("min");
+        } catch (InvalidCorrelationInputException e) {
+            throw new AssertionError();
+        }
+        try {
+            CorrelationRequest.testMaxOrMin("least");
         } catch (InvalidCorrelationInputException e) {
             throw new AssertionError();
         }
@@ -161,8 +179,7 @@ public class CorrelationRequestTest {
 
     @Test
     public void testApplyCorrelation() throws ConnectionFailedException, InsertionFailedException,
-            UnexpectedObjectException, DatabaseDoesNotExistException, AccessDeniedForUserException,
-            InvalidCorrelationInputException {
+            UnexpectedObjectException, InvalidCorrelationInputException {
 		PearsonCorrelationTest.setDatabase(database);
         PearsonCorrelationTest.putGraphsIntoDatabase();
 

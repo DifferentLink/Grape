@@ -44,13 +44,13 @@ public class CorrelationRequest {
      * @throws ConnectionFailedException thrown if the connection to database failed
      */
     public List<CorrelationOutput> applyCorrelation() throws ConnectionFailedException {
-        if (correlation.getFirstArgument().equals("maximum") && correlation.getProperty() == null) {
+        if (correlation.getFirstArgument().equals("max") && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(database));
-        } else if (correlation.getFirstArgument().equals("minimum") && correlation.getProperty() == null) {
+        } else if (correlation.getFirstArgument().equals("min") && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMinimum(database));
-        } else if (correlation.getFirstArgument().equals("maximum") && correlation.getProperty() != null) {
+        } else if (correlation.getFirstArgument().equals("max") && correlation.getProperty() != null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(correlation.getProperty(), database));
-        } else if (correlation.getFirstArgument().equals("minimum") && correlation.getProperty() != null) {
+        } else if (correlation.getFirstArgument().equals("min") && correlation.getProperty() != null) {
             return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty(), database));
         } else if (correlation.getFirstArgument().equals("least") && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMinimum(database));

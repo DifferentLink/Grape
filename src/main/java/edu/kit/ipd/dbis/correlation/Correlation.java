@@ -90,7 +90,7 @@ abstract class Correlation {
     private TreeSet<CorrelationOutput> createCorrelationList(String property2, GraphDatabase database)
             throws ConnectionFailedException {
         TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        String[] firstPropertyList = Pearson.getValidProperties();
+        String[] firstPropertyList = Correlation.getValidProperties();
         for (String property1: firstPropertyList) {
             if (!property1.toLowerCase().equals(property2.toLowerCase())) {
                 CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
