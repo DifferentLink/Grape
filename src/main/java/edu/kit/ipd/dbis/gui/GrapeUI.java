@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.gui;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import edu.kit.ipd.dbis.controller.CalculationController;
 import edu.kit.ipd.dbis.controller.CorrelationController;
 import edu.kit.ipd.dbis.controller.DatabaseController;
@@ -342,11 +343,13 @@ public class GrapeUI {
 		public void windowOpened(WindowEvent windowEvent) { }
 
 		@Override
-		public void windowClosing(WindowEvent windowEvent) { }
+		public void windowClosing(WindowEvent windowEvent) {
+			databaseController.permanentlyDeleteGraphs();
+		}
 
 		@Override
 		public void windowClosed(WindowEvent windowEvent) {
-			databaseController.permanentlyDeleteGraphs();
+
 		}
 
 		@Override
