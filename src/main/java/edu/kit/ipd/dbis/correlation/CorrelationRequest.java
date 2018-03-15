@@ -44,11 +44,8 @@ public class CorrelationRequest {
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws AccessDeniedForUserException thrown if there is no access to database
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public List<CorrelationOutput> applyCorrelation() throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException {
+    public List<CorrelationOutput> applyCorrelation() throws ConnectionFailedException {
         if (correlation.getMaximum() && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(database));
         } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
@@ -81,7 +78,7 @@ public class CorrelationRequest {
      * @return returns a correlation object which collects all information about the correlation in this object
      * @throws InvalidCorrelationInputException thrown if the user input was not valid
      */
-    static Correlation parseCorrelationToString(String correlationInput) throws
+    public static Correlation parseCorrelationToString(String correlationInput) throws
             InvalidCorrelationInputException {
         CorrelationRequest.checkCorrelationInputNull(correlationInput);
         String[] potentialPropertyArray = correlationInput.split(" ", 4);
@@ -137,8 +134,18 @@ public class CorrelationRequest {
             return false;
         } else if (input.equals("max")) {
             return true;
+        } else if (input.equals("least")) {
+            return true;
         }
         throw new InvalidCorrelationInputException();
+    }
+
+    public static List<String> getValidFirstArguments() {
+        ArrayList<String> validFirstArguments = new ArrayList<>();
+        validFirstArguments.add("min");
+        validFirstArguments.add("max");
+        validFirstArguments.add("least");
+        return validFirstArguments;
     }
 
     /**
@@ -154,6 +161,13 @@ public class CorrelationRequest {
             return new MutualCorrelation();
         }
         throw new InvalidCorrelationInputException();
+    }
+
+    public static List<String> getValidCorrelations() {
+        ArrayList<String> validCorrelations = new ArrayList<>();
+        validCorrelations.add("pearson");
+        validCorrelations.add("mutualcorrelation");
+        return validCorrelations;
     }
 
     /**
