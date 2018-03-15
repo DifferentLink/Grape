@@ -55,7 +55,7 @@ public class CalculationController {
 	 * Start calculation of properties of graphs in database which have uncalculated properties
 	 */
 	public synchronized void startCalculation() {
-		List<PropertyGraph<Integer, Integer>> uncalculatedGraphs = new LinkedList<>();
+		List<PropertyGraph<Integer, Integer>> uncalculatedGraphs = new LinkedList<>(); // todo get uncalculated graphs from database
 		List<Thread> jobs = new LinkedList<>();
 		for (PropertyGraph<Integer, Integer> graph : uncalculatedGraphs) {
 			jobs.add(new CalculationWorker(graph, database));
