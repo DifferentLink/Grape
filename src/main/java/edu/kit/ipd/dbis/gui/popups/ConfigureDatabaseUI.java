@@ -94,7 +94,7 @@ public class ConfigureDatabaseUI extends JFrame {
 		this.add(container);
 		this.setMinimumSize(new Dimension(300, 200));
 		this.setLocationRelativeTo(null);
-		this.addWindowListener(new CloseListener(this));
+		this.addWindowListener(new CloseListener(mainWindow));
 	}
 
 	private class ConfigureDatabaseAction implements ActionListener {
@@ -125,18 +125,16 @@ public class ConfigureDatabaseUI extends JFrame {
 		public void windowOpened(WindowEvent windowEvent) {	}
 
 		@Override
-		public void windowClosing(WindowEvent windowEvent) { }
+		public void windowClosing(WindowEvent windowEvent) {
+			if (!databaseController.isDatabaseLoaded()) {
+				System.exit(0);
+			}
+		}
 
 		@Override
 		public void windowClosed(WindowEvent windowEvent) {
-			if (mainWindow != null) {
-				if (!databaseController.isDatabaseLoaded()) {
-					mainWindow.dispose();
-					System.exit(0);
-					System.out.println("sysexit");
-				} else {
-					mainWindow.setEnabled(true);
-				}
+			if (window != null) {
+				window.setEnabled(true);
 			}
 		}
 
