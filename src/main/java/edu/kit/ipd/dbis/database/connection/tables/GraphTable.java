@@ -355,4 +355,16 @@ public class GraphTable extends Table {
 		}
 	}
 
+	public int numberOfUncalculatedGraphs() throws SQLException {
+
+		String sql = "SELECT COUNT(*) FROM "
+				+ this.getName()
+				+ " WHERE iscalculated = 0";
+		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
+		if (result.next()) {
+			return result.getInt(1);
+		}
+		return 0;
+	}
+
 }

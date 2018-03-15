@@ -400,13 +400,16 @@ public class GraphDatabase {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Returns number of uncalculated graphs
+	 * @return number of uncalculated graphs
 	 * @throws ConnectionFailedException
 	 */
 	public int getNumberOfUncalculatedGraphs() throws ConnectionFailedException {
-		//TODO: implement/delete this method
-		return 0;
+		try {
+			return this.graphTable.numberOfUncalculatedGraphs();
+		} catch (SQLException e) {
+			throw new ConnectionFailedException();
+		}
 	}
 
 }
