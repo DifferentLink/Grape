@@ -128,46 +128,39 @@ public class History {
 		}
 	}
 
-	/**
-	 * print history
-	 */
-	public String toString() {
-		String historyEntries = "";
+	public String[] toStringArray() {
 		if (this.getEvents().size() == 0) {
-			return "";
-		}
-		//Building String
-		for (Event event : this.getEvents()) {
-			String changedGraphs = "";
-			for (int id : event.getChangedGraphs()) {
-				changedGraphs += id + ", ";
+			return new String[]{""};
+		} else {
+			String[] historyEntries = new String[this.getEvents().size()];
+			int position = 0;
+			for (Event event : this.getEvents()) {
+				StringBuilder changedGraphs = new StringBuilder();
+				for (int id : event.getChangedGraphs()) {
+					changedGraphs.append(id).append(", ");
+				}
+				if (event.getType() != EventType.MESSAGE) {
+					changedGraphs = new StringBuilder(changedGraphs.substring(0, changedGraphs.length() - 2));
+					historyEntries[position] = "[" + event.getType() + "]" + event.getMessage()
+							+ " (ID's: " + changedGraphs + ")";
+				} else {
+					historyEntries[position] = event.getMessage();
+				}
+				position++;
 			}
-			if (event.getType() != EventType.MESSAGE) {
-				changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 2);
-				historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (ID's: " + changedGraphs + ")\n";
-			}
+			return historyEntries;
 		}
-		historyEntries = historyEntries.substring(0, historyEntries.length());
-		return historyEntries;
 	}
 
 	/**
-	 * get the latest event
-	 * @return the latest event
+	 * @return the message of the latest event in the history or an empty string
 	 */
 	public String getLastEvent() {
 		String lastEvent = "";
-		if (this.getEvents().size() == 0) {
-			return "";
+		if (this.getEvents().size() != 0) {
+			lastEvent = events.get(events.size() - 1).getMessage();
 		}
-		//Building String
-		Event event = events.get(events.size() - 1);
-		if (event.getType() == EventType.MESSAGE) {
-			lastEvent += "[" + event.getType() + "] " + event.getMessage();
-		} else {
-			lastEvent += "[" + event.getType() + "] " + event.getMessage();
-		}
-	return lastEvent;
+		return lastEvent;
 	}
 
 }

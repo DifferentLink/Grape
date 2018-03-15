@@ -153,14 +153,12 @@ public class UIFilterManager {
 	public void exportVisibleFilters() {
 		try {
 			final JFileChooser fileChooser = new JFileChooser();
-			final int returnValue = fileChooser.showDialog(null, language.getString("saveFilters"));
+			final int returnValue = fileChooser.showDialog(null, language.getString("saveSelectedFilters"));
 			File file = fileChooser.getSelectedFile();
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				Files.write(Paths.get(file.getPath()), visibleFiltersToString().getBytes());
 			}
-		} catch (IOException e) {
-			System.out.println("Failed to write filters to file!");
-		}
+		} catch (IOException ignored) { }
 	}
 
 	/**
