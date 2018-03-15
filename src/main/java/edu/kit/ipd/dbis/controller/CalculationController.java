@@ -6,7 +6,6 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
-import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
 /**
@@ -69,6 +68,7 @@ public class CalculationController implements Runnable {
 					graph.calculateProperties();
 					database.replaceGraph(graph.getId(), graph);
 					grapeUI.updateTable();
+					this.statusbar.setRemainingCalculations();
 				}
 			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 				statusbar.addMessage(e.getMessage());
@@ -85,26 +85,6 @@ public class CalculationController implements Runnable {
 	}
 
 	/**
-	 * Gets number not calculated graphs.
-	 *
-	 * @return the length of the graphlist of CalculationController.
-	 */
-	public int getNumberNotCalculatedGraphs() { //Todo: perhaps remove method
-		int numberGraphs = 0;
-		//numberGraphs = database.getUncalculatedGraph().size();
-		return numberGraphs;
-	}
-
-	/**
-	 * checks if the current calculation is running.
-	 *
-	 * @return true if the calculation is running.
-	 */
-	public Boolean getCalcStatus() {
-		return isCalculating;
-	}
-
-	/**
 	 * pauses the method calculateGraphProperties().
 	 */
 	public void pauseCalculation() {
@@ -114,7 +94,7 @@ public class CalculationController implements Runnable {
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
-	public synchronized void continueCalculation() {
+	public void continueCalculation() {
 		isCalculating = true;
 		run();
 	}
