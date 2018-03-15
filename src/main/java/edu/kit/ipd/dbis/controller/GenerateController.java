@@ -164,6 +164,7 @@ public class GenerateController {
 				thread.start();
 				thread.join();
 				this.grapeUI.updateTable();
+				this.statusbarController.setNumberOfGraphs();
 
 				if (graphExists) {
 					//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
@@ -193,6 +194,7 @@ public class GenerateController {
 			database.deleteGraph(id);
 			statusbarController.addEvent(EventType.REMOVE, id, language.getString("graphDeleted"));
 			grapeUI.updateTable();
+			this.statusbarController.setNumberOfGraphs();
 		} catch (ConnectionFailedException e) {
 			statusbarController.addMessage(e.getMessage());
 		}
@@ -203,6 +205,7 @@ public class GenerateController {
 			for (int id : ids) {
 				database.deleteGraph(id);
 				grapeUI.updateTable();
+				this.statusbarController.setNumberOfGraphs();
 			}
 			statusbarController.addEvent(EventType.REMOVE, ids,  language.getString("graphDeleted"));
 		} catch (ConnectionFailedException e) {
