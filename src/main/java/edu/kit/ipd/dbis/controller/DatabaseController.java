@@ -183,6 +183,10 @@ public class DatabaseController {
 		this.statusbarUI = statusbarUI;
 	}
 
+	public boolean isDatabaseLoaded() {
+		return database != null;
+  }
+  
 	public void permanentlyDeleteGraphs() {
 		try {
 			database.permanentlyDeleteGraphs();
