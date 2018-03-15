@@ -130,10 +130,14 @@ public class ConfigureDatabaseUI extends JFrame {
 		@Override
 		public void windowClosed(WindowEvent windowEvent) {
 			if (mainWindow != null) {
-				mainWindow.setEnabled(true);
+				if (!databaseController.isDatabaseLoaded()) {
+					mainWindow.dispose();
+					System.exit(0);
+					System.out.println("sysexit");
+				} else {
+					mainWindow.setEnabled(true);
+				}
 			}
-			window.dispose();
-			System.out.println("Closed");
 		}
 
 		@Override

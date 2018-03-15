@@ -178,4 +178,8 @@ public class DatabaseController {
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}
+
+	public boolean isDatabaseLoaded() {
+		return database != null;
+	}
 }
