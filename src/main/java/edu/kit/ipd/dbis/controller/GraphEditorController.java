@@ -33,8 +33,7 @@ public final class GraphEditorController {
 
 	private ResourceBundle language;
 	private GraphDatabase database;
-	private StatusbarController statusbar;
-	private FilterController filter;
+	private StatusbarController statusbarController;
 	private GraphEditorUI graphEditor;
 	private GrapeUI grapeUI;
 	private StatusbarUI statusbarUI;
@@ -50,17 +49,16 @@ public final class GraphEditorController {
 	}
 
 	/**
-	 * Sets statusbar ui.
+	 * Sets statusbarController ui.
 	 *
-	 * @param statusbarUI the statusbar ui
+	 * @param statusbarUI the statusbarController ui
 	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}
 
 	private GraphEditorController() {
-		this.statusbar = StatusbarController.getInstance();
-		this.filter = FilterController.getInstance();
+		this.statusbarController = StatusbarController.getInstance();
 	}
 
 	/**
@@ -113,18 +111,19 @@ public final class GraphEditorController {
 		try {
 			isDuplicate = database.graphExists(newGraph);
 		} catch (ConnectionFailedException e) {
-			statusbar.addMessage(e.getMessage());
+			statusbarController.addMessage(e.getMessage());
 		}
 		if (!isDuplicate) {
 			try {
 				newGraph.calculateProperties();
 				database.addGraph(newGraph);
-				statusbar.addEvent(ADD, newGraph.getId(), "");
+				statusbarController.addEvent(ADD, newGraph.getId(), "");
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
-				statusbar.addMessage(e.getMessage());
+				statusbarController.addMessage(e.getMessage());
 			}
 		}
 		this.grapeUI.updateTable();
+		statusbarController.setNumberOfGraphs();
 	}
 
 	/**
@@ -138,12 +137,12 @@ public final class GraphEditorController {
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
-				statusbar.continueCalculation();
-				statusbar.addEvent(ADD, graph.getId(), "");
+				statusbarController.continueCalculation();
+				statusbarController.addEvent(ADD, graph.getId(), "");
 				this.grapeUI.updateTable();
 			} catch (ConnectionFailedException
 					| InsertionFailedException | UnexpectedObjectException e) {
-				statusbar.addMessage(e.getMessage());
+				statusbarController.addMessage(e.getMessage());
 			}
 		}
 	}
@@ -159,7 +158,7 @@ public final class GraphEditorController {
 		try {
 			graph = database.getGraphById(id);
 		} catch (ConnectionFailedException | UnexpectedObjectException e) {
-			statusbar.addMessage(e.getMessage());
+			statusbarController.addMessage(e.getMessage());
 		}
 		return graph;
 	}
@@ -169,17 +168,16 @@ public final class GraphEditorController {
 	 *
 	 * @param graph the PropertyGraph<V,E> to check.
 	 * @return true if the given graph is valid.
-	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
-	public Boolean isValidGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
+	public boolean isValidGraph(PropertyGraph<Integer, Integer> graph) {
 		boolean duplicate = false;
 		try {
 			duplicate = database.graphExists(graph);
 		} catch (ConnectionFailedException e) {
-			statusbar.addMessage(e.getMessage());
+			statusbarController.addMessage(e.getMessage());
 		}
 		if (duplicate) {
-			statusbar.addMessage(language.getString("graphAlreadyExist"));
+			statusbarController.addMessage(language.getString("graphAlreadyExist"));
 			this.grapeUI.updateTable();
 		}
 		return !duplicate;
@@ -198,14 +196,15 @@ public final class GraphEditorController {
 			if (!database.graphExists(denserGraph)) {
 				denserGraph.calculateProperties();
 				database.addGraph(denserGraph);
-				statusbar.addEvent(EventType.ADD, denserGraph.getId(), language.getString("nextDenserAdded"));
+				statusbarController.addEvent(EventType.ADD, denserGraph.getId(), language.getString("nextDenserAdded"));
 				this.grapeUI.updateTable();
+				statusbarController.setNumberOfGraphs();
 			} else {
-				statusbar.addMessage(language.getString("nextDenserAlreadyExists"));
+				statusbarController.addMessage(language.getString("nextDenserAlreadyExists"));
 			}
 		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
 				ConnectionFailedException e) {
-			statusbar.addMessage(e.getMessage());
+			statusbarController.addMessage(e.getMessage());
 		}
 	}
 
@@ -219,14 +218,15 @@ public final class GraphEditorController {
 			database.addGraph(denserGraph);
 			//TODO: same problem: graph marked as deleted?
 			if (graphExists) {
-				statusbar.addMessage(language.getString("nextDenserAlreadyExists"));
+				statusbarController.addMessage(language.getString("nextDenserAlreadyExists"));
 			} else {
-				statusbar.addEvent(EventType.ADD, denserGraph.getId(), language.getString("nextDenserAdded"));
+				statusbarController.addEvent(EventType.ADD, denserGraph.getId(), language.getString("nextDenserAdded"));
 			}
 			this.grapeUI.updateTable();
+			statusbarController.setNumberOfGraphs();
 		} catch (NoDenserGraphException | UnexpectedObjectException | InsertionFailedException |
 				ConnectionFailedException e) {
-			statusbar.addMessage(e.getMessage());
+			statusbarController.addMessage(e.getMessage());
 		}
 	}
 
@@ -239,13 +239,13 @@ public final class GraphEditorController {
 			profile = p.getMatrix();
 
 		} catch (ConnectionFailedException | UnexpectedObjectException e) {
-			statusbar.addMessage(e.getMessage());
+			statusbarController.addMessage(e.getMessage());
 		}
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		Set<Integer> negative = new HashSet<>();
-		for (int i = 0; i < profile.length; i++) {
+		for (int[] aProfile : profile) {
 			for (int j = 0; j < profile[0].length; j++) {
-				if (profile[i][j] == -1) {
+				if (aProfile[j] == -1) {
 					negative.add(j);
 				}
 			}
@@ -253,15 +253,15 @@ public final class GraphEditorController {
 		for (int i = 0; i < profile.length; i++) {
 			for (int j = 0; j < profile[0].length; j++) {
 				if (negative.contains(j) && profile[i][j] != -1) {
-					result += " ";
+					result.append(" ");
 				}
-				result += profile[i][j];
+				result.append(profile[i][j]);
 			}
 			if (i < profile.length) {
-				result += "\n";
+				result.append("\n");
 			}
 		}
-		return result;
+		return result.toString();
 	}
 
 	/**

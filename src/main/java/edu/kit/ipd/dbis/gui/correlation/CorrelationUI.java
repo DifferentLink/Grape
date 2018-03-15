@@ -1,6 +1,7 @@
-package edu.kit.ipd.dbis.gui;
+package edu.kit.ipd.dbis.gui.correlation;
 
 import edu.kit.ipd.dbis.controller.CorrelationController;
+import edu.kit.ipd.dbis.correlation.CorrelationRequest;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.gui.popups.CorrelationRequestUI;
 import edu.kit.ipd.dbis.gui.themes.Theme;
@@ -13,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,17 +28,19 @@ import java.util.ResourceBundle;
  */
 public class CorrelationUI extends JPanel {
 
-	private final CorrelationController controller;
+	private final CorrelationController correlationController;
+	private final Theme theme;
 	private JTextField correlationInput;
 
 	/**
 	 * Constructs the correlation panel
-	 * @param controller the controller responsible for the correlation request
+	 * @param correlationController the correlationController responsible for the correlation request
 	 * @param language the language used
 	 * @param theme theme theme used to style to correlation window
 	 */
-	public CorrelationUI(CorrelationController controller, ResourceBundle language, Theme theme) {
-		this.controller = controller;
+	public CorrelationUI(CorrelationController correlationController, ResourceBundle language, Theme theme) {
+		this.correlationController = correlationController;
+		this.theme = theme;
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBackground(theme.backgroundColor);
@@ -51,9 +56,10 @@ public class CorrelationUI extends JPanel {
 		JPanel inputContainer = new JPanel(new BorderLayout());
 		inputContainer.add(Box.createHorizontalStrut(8), BorderLayout.WEST);
 		correlationInput = new JTextField("Max Pearson 3");
-		correlationInput.setBackground(theme.backgroundColor);
+		correlationInput.getDocument().addDocumentListener(new CorrelationInputChangeListener(correlationInput));
+		correlationInput.setBackground(Color.WHITE);
 		JButton go = new JButton(language.getString("go"));
-		go.addActionListener(new CorrelationRequestAction(controller, correlationInput, language, theme));
+		go.addActionListener(new CorrelationRequestAction(correlationController, correlationInput, language, theme));
 		go.setBackground(theme.assertiveBackground);
 		go.setMinimumSize(new Dimension(120, 30));
 		inputContainer.add(correlationInput, BorderLayout.CENTER);
@@ -90,6 +96,42 @@ public class CorrelationUI extends JPanel {
 				correlationInput.setBackground(Color.WHITE);
 			} catch (InvalidCorrelationInputException e) {
 				correlationInput.setBackground(theme.lightNeutralColor);
+			}
+		}
+	}
+
+	private class CorrelationInputChangeListener implements DocumentListener {
+		private final JTextField textField;
+
+		CorrelationInputChangeListener(JTextField textField) {
+			this.textField = textField;
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent documentEvent) {
+			update();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent documentEvent) {
+			update();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent documentEvent) {
+			update();
+		}
+
+		private void update() {
+			(new CorrelationSuggestions(textField)).show(
+					textField, textField.getX(), textField.getY() + textField.getHeight());
+			textField.requestFocus();
+
+			try {
+				CorrelationRequest.parseCorrelationToString(textField.getText());
+				textField.setBackground(Color.WHITE);
+			} catch (InvalidCorrelationInputException e) {
+				textField.setBackground(theme.lightNeutralColor);
 			}
 		}
 	}

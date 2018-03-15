@@ -18,7 +18,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphG
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
-import javax.swing.SwingUtilities;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -115,7 +114,7 @@ public class GenerateController {
 			// Create log entry
 			List<Integer> changedGraphs = new LinkedList<>();
 			for (PropertyGraph<Integer, Integer> graph : graphs) {
-				if(graph.getId() != 0) {
+				if (graph.getId() != 0) {
 					changedGraphs.add(graph.getId());
 				}
 			}

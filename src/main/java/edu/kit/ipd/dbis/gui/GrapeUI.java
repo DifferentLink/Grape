@@ -7,6 +7,7 @@ import edu.kit.ipd.dbis.controller.FilterController;
 import edu.kit.ipd.dbis.controller.GenerateController;
 import edu.kit.ipd.dbis.controller.GraphEditorController;
 import edu.kit.ipd.dbis.controller.StatusbarController;
+import edu.kit.ipd.dbis.gui.correlation.CorrelationUI;
 import edu.kit.ipd.dbis.gui.filter.FilterUI;
 import edu.kit.ipd.dbis.gui.grapheditor.GraphEditorUI;
 import edu.kit.ipd.dbis.gui.popups.ConfigureDatabaseUI;
@@ -28,7 +29,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-import edu.kit.ipd.dbis.gui.popups.GraphOptions;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -38,6 +38,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
@@ -123,11 +125,12 @@ public class GrapeUI {
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(400, 400));
 		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		mainWindow.addWindowListener(new CloseListener());
 
 		try {
 			Image logo = ImageIO.read(getClass().getResource("/icons/GrapeLogo.png"));
 			mainWindow.setIconImage(logo);
-		} catch (IOException e) { }
+		} catch (IOException ignored) { }
 
 		filterUI = new FilterUI(filterController, language, theme);
 		correlationUI = new CorrelationUI(correlationController, language, theme);
@@ -335,5 +338,32 @@ public class GrapeUI {
 						.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
 			}
 		}
+	}
+
+	private class CloseListener implements WindowListener {
+		@Override
+		public void windowOpened(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowClosing(WindowEvent windowEvent) {
+			databaseController.permanentlyDeleteGraphs();
+		}
+
+		@Override
+		public void windowClosed(WindowEvent windowEvent) {
+
+		}
+
+		@Override
+		public void windowIconified(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowDeiconified(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowActivated(WindowEvent windowEvent) { }
+
+		@Override
+		public void windowDeactivated(WindowEvent windowEvent) { }
 	}
 }

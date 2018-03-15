@@ -58,7 +58,7 @@ public class CorrelationController {
 		CorrelationRequest request = new CorrelationRequest(input, this.database);
 		try {
 			output = request.applyCorrelation();
-		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException e) {
+		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
 		return output;

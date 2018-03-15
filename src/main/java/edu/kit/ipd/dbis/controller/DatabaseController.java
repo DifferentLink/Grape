@@ -81,7 +81,7 @@ public class DatabaseController {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
 			this.statusbarUI.setDatabaseInfo(name, this.database.getNumberOfGraphs());
-			this.statusbarUI.setRemainingCalculations(0);
+			this.statusbarUI.setRemainingCalculations(this.database.getNumberOfUncalculatedGraphs());
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
 			this.statusbar.setHistory(new History(50));
@@ -103,6 +103,8 @@ public class DatabaseController {
 			this.updateDatabases();
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
+			this.statusbarUI.setRemainingCalculations(this.database.getNumberOfUncalculatedGraphs());
+			this.statusbarUI.setNumberOfGraphs(database.getNumberOfGraphs());
 			this.statusbar.setHistory(new History(50));
 			this.statusbar.addMessage(language.getString("databaseLoaded"));
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | FileContentCouldNotBeReadException
@@ -124,6 +126,8 @@ public class DatabaseController {
 			this.updateDatabases();
 			this.filter.updateFilters();
 			this.grapeUI.updateTable();
+			this.statusbarUI.setRemainingCalculations(this.database.getNumberOfUncalculatedGraphs());
+			this.statusbarUI.setNumberOfGraphs(database.getNumberOfGraphs());
 			this.statusbar.setHistory(new History(50));
 			this.statusbar.addMessage(language.getString("databasesMerged"));
 		} catch (FileNotFoundException | FileContentNotAsExpectedException | ConnectionFailedException | FileContentCouldNotBeReadException e) {
@@ -191,5 +195,15 @@ public class DatabaseController {
 	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
+	}
+
+	public boolean isDatabaseLoaded() {
+		return database != null;
+  }
+  
+	public void permanentlyDeleteGraphs() {
+		try {
+			database.permanentlyDeleteGraphs();
+		} catch (ConnectionFailedException ignored) { }
 	}
 }
