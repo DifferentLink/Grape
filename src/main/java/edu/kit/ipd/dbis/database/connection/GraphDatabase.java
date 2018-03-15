@@ -402,7 +402,7 @@ public class GraphDatabase {
 	/**
 	 * Returns number of uncalculated graphs
 	 * @return number of uncalculated graphs
-	 * @throws ConnectionFailedException
+	 * @throws ConnectionFailedException if a database connection could not be established
 	 */
 	public int getNumberOfUncalculatedGraphs() throws ConnectionFailedException {
 		try {

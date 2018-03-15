@@ -355,6 +355,11 @@ public class GraphTable extends Table {
 		}
 	}
 
+	/**
+	 * Returns number of uncalculated graphs
+	 * @return number of uncalculated graphs
+	 * @throws SQLException if the connection to the database fails
+	 */
 	public int numberOfUncalculatedGraphs() throws SQLException {
 
 		String sql = "SELECT COUNT(*) FROM "
