@@ -190,5 +190,6 @@ public class StatusbarController {
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}
+
 }
 

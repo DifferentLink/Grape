@@ -132,7 +132,8 @@ public class GenerateController {
 			} else {
 				statusbarController.addMessage(language.getString("allPossibleGraphsExist"));
 			}
-			grapeUI.updateTable();
+			this.statusbar.setNumberOfGraphs();
+			this.grapeUI.updateTable();
 		}
 	}
 
@@ -156,7 +157,7 @@ public class GenerateController {
 			BfsCodeAlgorithm.BfsCodeImpl bfs = new BfsCodeAlgorithm.BfsCodeImpl(code);
 			try {
 				PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfs);
-				boolean graphExists = false;
+				boolean graphExists;
 				graphExists = database.graphExists(graph);
 				database.addGraph(graph);
 				Thread thread = new CalculationWorker(graph, database);
