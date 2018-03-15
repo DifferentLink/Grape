@@ -17,7 +17,7 @@ import java.util.TreeSet;
 abstract class Correlation {
     private int attributeCounter;
     private String property;
-    private boolean maximum;
+    private String firstArgument;
 
     /**
      * method which is used to check filters for a specific correlation
@@ -133,11 +133,11 @@ abstract class Correlation {
 
     /**
      * setter of attribute maximum
-     * @param maximum shows if it is searched for the weakest or for
-     * the strongest correlations
+     * @param firstArgument shows if it is searched for the weakest, for
+     * the strongest or for the least correlations
      */
-    void setMaximum(boolean maximum) {
-        this.maximum = maximum;
+    void setFirstArgument(String firstArgument) {
+        this.firstArgument = firstArgument;
     }
 
     /**
@@ -159,11 +159,11 @@ abstract class Correlation {
 
     /**
      * getter of attribute maximum
-     * @return return true if it is search for a strong correlation and false
+     * @return return the first argument
      * if it is searched for a weak correlation
      */
-    boolean getMaximum() {
-        return maximum;
+    String getFirstArgument() {
+        return firstArgument;
     }
 
     /**
