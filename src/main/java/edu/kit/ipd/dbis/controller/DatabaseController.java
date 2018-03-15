@@ -182,4 +182,10 @@ public class DatabaseController {
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}
+
+	public void permanentlyDeleteGraphs() {
+		try {
+			database.permanentlyDeleteGraphs();
+		} catch (ConnectionFailedException ignored) { }
+	}
 }
