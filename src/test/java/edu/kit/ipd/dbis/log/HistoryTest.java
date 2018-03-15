@@ -5,6 +5,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -31,7 +33,7 @@ public class HistoryTest {
 		history = new History(100);
 
 		// random graphIDs
-		Set<Integer> graphs = new HashSet<>();
+		List<Integer> graphs = new LinkedList<>();
 		graphs.add(1);
 		graphs.add(2);
 		graphs.add(3);

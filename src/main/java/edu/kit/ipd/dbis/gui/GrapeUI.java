@@ -1,6 +1,5 @@
 package edu.kit.ipd.dbis.gui;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import edu.kit.ipd.dbis.controller.CalculationController;
 import edu.kit.ipd.dbis.controller.CorrelationController;
 import edu.kit.ipd.dbis.controller.DatabaseController;
@@ -69,7 +68,6 @@ public class GrapeUI {
 	private StatusbarUI statusbarUI;
 	private LogUI logUI;
 
-	private String programName = "Grape";
 	private JFrame mainWindow;
 
 	private ResourceBundle language;
@@ -119,7 +117,11 @@ public class GrapeUI {
 		this.graphEditorController.setGrapeUI(this);
 		this.statusbarController.setGrapeUI(this);
 
-		mainWindow = new JFrame(programName);
+		this.generateController.setLanguage(language);
+		this.databaseController.setLanguage(language);
+		this.graphEditorController.setLanguage(language);
+
+		mainWindow = new JFrame(language.getString("programName"));
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setMinimumSize(new Dimension(400, 400));
 		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);

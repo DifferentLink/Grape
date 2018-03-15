@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.log;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -9,7 +10,7 @@ public class Event {
 
 	private String message;
 	private EventType type;
-	private Set<Integer> changedGraphs;
+	private List<Integer> changedGraphs;
 
 	/**
 	 * Instantiates a new Event.
@@ -18,7 +19,7 @@ public class Event {
 	 * @param message       the message
 	 * @param changedGraphs the changed graphs
 	 */
-	public Event(EventType type, String message, Set<Integer> changedGraphs) {
+	public Event(EventType type, String message, List<Integer> changedGraphs) {
 		this.message = message;
 		this.type = type;
 		this.changedGraphs = changedGraphs;
@@ -47,7 +48,7 @@ public class Event {
 	 *
 	 * @return the changed graphs
 	 */
-	public Set<Integer> getChangedGraphs() {
+	public List<Integer> getChangedGraphs() {
 		return changedGraphs;
 	}
 }
