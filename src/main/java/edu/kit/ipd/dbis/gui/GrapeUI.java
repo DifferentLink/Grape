@@ -1,6 +1,5 @@
 package edu.kit.ipd.dbis.gui;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import edu.kit.ipd.dbis.controller.CalculationController;
 import edu.kit.ipd.dbis.controller.CorrelationController;
 import edu.kit.ipd.dbis.controller.DatabaseController;

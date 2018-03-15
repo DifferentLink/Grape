@@ -132,7 +132,7 @@ public class GenerateController {
 			} else {
 				statusbarController.addMessage(language.getString("allPossibleGraphsExist"));
 			}
-			this.statusbar.setNumberOfGraphs();
+			this.statusbarController.setNumberOfGraphs();
 			this.grapeUI.updateTable();
 		}
 	}
