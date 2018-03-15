@@ -355,7 +355,8 @@ public class FilterUI extends JPanel {
 
 		private void update() {
 			filter.setText(textField.getText());
-			(new FilterSuggestions(textField)).show(textField, textField.getX(), textField.getY() + textField.getHeight());
+			(new FilterSuggestions(textField)).show(
+					textField, textField.getX(), textField.getY() + textField.getHeight());
 			textField.requestFocus();
 			try {
 				filterController.updateFilter(textField.getText(), filter.getID());
