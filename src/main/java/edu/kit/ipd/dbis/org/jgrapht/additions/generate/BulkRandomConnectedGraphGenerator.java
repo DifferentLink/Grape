@@ -42,7 +42,6 @@ public class BulkRandomConnectedGraphGenerator<V, E> implements BulkGraphGenerat
 			if (!isDuplicat) {
 				target.add(graph);
 			}
-			//TODO: temporary solution (find a better one) / break after find no new graphs after "value" loops
 			if (cnt > 5 * quantity) {
 				throw new NotEnoughGraphsException("Only " + target.size() + " graphs found. Quantity: " + quantity
 						+ " too big.");
