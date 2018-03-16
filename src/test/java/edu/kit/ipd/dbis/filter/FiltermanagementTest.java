@@ -12,6 +12,8 @@ import org.junit.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class FiltermanagementTest {
@@ -19,25 +21,45 @@ public class FiltermanagementTest {
     private static Filtermanagement manager;
     private static GraphDatabase database;
 
-    @Ignore
-    @Before
+    @BeforeClass
     public void setUp() throws Exception {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
-        connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
-        String url = "jdbc:mysql://127.0.0.1/library";
-        String user = "travis";
-        String password = "";
-        String name = "grape";
+        try {
+            String url = "jdbc:mysql://127.0.0.1/library";
+            String user = "user";
+            String password = "password";
+            String name = "grape";
 
-        FileManager fileManager = new FileManager();
-        database = fileManager.createGraphDatabase(url, user, password, name);
+            FileManager fileManager = new FileManager();
+            database = fileManager.createGraphDatabase(url, user, password, name);
+            fileManager.deleteGraphDatabase(database);
+            database = fileManager.createGraphDatabase(url, user, password, name);
+        } catch (Exception e){
+            Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+            connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+            String url = "jdbc:mysql://127.0.0.1/library";
+            String user = "travis";
+            String password = "";
+            String name = "filtermanagementtests";
 
+            FileManager fileManager = new FileManager();
+            database = fileManager.createGraphDatabase(url, user, password, name);
+        }
         manager = new Filtermanagement();
         manager.setDatabase(database);
 
+
     }
 
-    @Ignore
+    @Before
+    public void clear() throws SQLException, ConnectionFailedException {
+    	LinkedList<Integer> ids = database.getFilterTable().getIds();
+    	for (Integer id : ids) {
+    		if (id != 0) {
+    			database.deleteFilter(id);
+		    }
+	    }
+    }
+
     @Test
     public void testSetDatabase() throws InvalidInputException, ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
         manager.updateFilter("Averagedegree = 10", 1);
@@ -52,13 +74,11 @@ public class FiltermanagementTest {
 
     }
 
-    @Ignore
     @Test
     public void testSettingOfDatabase() {
         assert manager.getDatabase() != null;
     }
 
-    @Ignore
     @Test
     public void testStringParserSimpleFilter() throws InvalidInputException, ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
@@ -95,7 +115,6 @@ public class FiltermanagementTest {
         assert output[2][6].equals("2.0");
     }
 
-    @Ignore
     @Test
     public void testStringParserFiltergroup() throws InvalidInputException, ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
@@ -124,7 +143,6 @@ public class FiltermanagementTest {
         assert output[1][6].equals("4.0");
     }
 
-    @Ignore
     @Test
     public void replaceFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -134,7 +152,6 @@ public class FiltermanagementTest {
         assert manager.availableFilter.get(0).getName().equals("averagedegree >= 12");
     }
 
-    @Ignore
     @Test
     public void replaceFilterGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -144,7 +161,6 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getName().equals("This is an updated filtergroup");
     }
 
-    @Ignore
     @Test
     public void replaceFilterInFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -155,7 +171,6 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getAvailableFilter().get(0).getName().equals("averagedegree < 41");
     }
 
-    @Ignore
     @Test
     public void replaceFiltersegments() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -184,7 +199,6 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(1).getAvailableFilter().size() == 2;
     }
 
-    @Ignore
     @Test
     public void removeFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -197,7 +211,6 @@ public class FiltermanagementTest {
         manager.removeFiltersegment(81);
     }
 
-    @Ignore
     @Test
     public void removeFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -207,7 +220,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.size() == 0;
     }
 
-    @Ignore
+
     @Test
     public void removeFilterFromGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -218,7 +231,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getAvailableFilter().size() == 0;
     }
 
-    @Ignore
+
     @Test
     public void deactivateFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -229,7 +242,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilter.get(0).isActivated;
     }
 
-    @Ignore
+
     @Test
     public void deactivateFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -240,7 +253,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).isActivated;
     }
 
-    @Ignore
+
     @Test
     public void deactivateFilterInGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -253,7 +266,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).getAvailableFilter().get(0).isActivated;
     }
 
-    @Ignore
+
     @Test
     public void deactivateFiltersegments() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -311,7 +324,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(1).getAvailableFilter().get(1).isActivated;
     }
 
-    @Ignore
+
     @Test
     public void testFilterInputParserBasicFilter() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -319,7 +332,7 @@ public class FiltermanagementTest {
         assert manager.availableFilter.get(0).getName().equals("averagedegree = 10.87");
     }
 
-    @Ignore
+
     @Test
     public void testFilterInputParserConnectedFilter() throws  ConnectionFailedException, InvalidInputException,
             InsertionFailedException,
@@ -385,7 +398,7 @@ public class FiltermanagementTest {
         manager.removeFiltersegment(9);
     }
 
-    @Ignore
+
     @Test
     public void testFilterInputParserInvalidInputs() throws ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
@@ -408,7 +421,7 @@ public class FiltermanagementTest {
         assert inputExceptionCounter == 3;
     }
 
-    @Ignore
+
     @Test
     public void testFilterInputParserInvalidBasicInput() throws UnexpectedObjectException, InsertionFailedException,
             ConnectionFailedException {
@@ -431,7 +444,7 @@ public class FiltermanagementTest {
         assert inputExceptionCounter == 3;
     }
 
-    @Ignore
+
     @Test
     public void testFilterInputParserInvalidConnectedInput() throws UnexpectedObjectException, InsertionFailedException,
             ConnectionFailedException {
@@ -475,7 +488,7 @@ public class FiltermanagementTest {
         assert inputExceptionCounter == 7;
     }
 
-    @Ignore
+
     @Test
     public void testGetAvailableFilterGroups() throws InvalidInputException, ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
@@ -491,19 +504,19 @@ public class FiltermanagementTest {
         assert filtergroupsOutputList.get(1).getName().equals("This is the second sample group");
     }
 
-    @Ignore
+
     @Test
     public void testGetFilteredAndAscendingSortedGraphs() throws ConnectionFailedException {
         manager.getFilteredAndAscendingSortedGraphs(new AverageDegree(new PropertyGraph<Integer, Integer>()));
     }
 
-    @Ignore
+
     @Test
     public void testGetFilteredAndDescendingSortedGraphs() throws ConnectionFailedException {
         manager.getFilteredAndDescendingSortedGraphs(new AverageDegree(new PropertyGraph<Integer, Integer>()));
     }
 
-    @Ignore
+
     @Test
     public void testGetFilteredAndSortedGraphs() throws ConnectionFailedException {
         manager.getFilteredAndSortedGraphs();

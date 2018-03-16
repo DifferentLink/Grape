@@ -42,19 +42,51 @@ public class PearsonCorrelationTest {
         }
     }
 
-    @Before
-    public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+    @BeforeClass
+    public static void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
             ConnectionFailedException {
 
-    	Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
-		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
-		String url = "jdbc:mysql://127.0.0.1/library";
-		String user = "travis";
-		String password = "";
-		String name = "grape";
-		FileManager fileManager = new FileManager();
-		database = fileManager.createGraphDatabase(url, user, password, name);
+        try {
+            String url = "jdbc:mysql://127.0.0.1/library";
+            String user = "user";
+            String password = "password";
+            String name = "grape";
+
+            FileManager fileManager = new FileManager();
+            database = fileManager.createGraphDatabase(url, user, password, name);
+            fileManager.deleteGraphDatabase(database);
+            database = fileManager.createGraphDatabase(url, user, password, name);
+        } catch (Exception e){
+            Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+            connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+            String url = "jdbc:mysql://127.0.0.1/library";
+            String user = "travis";
+            String password = "";
+            String name = "pearsoncorrelationtests";
+
+            FileManager fileManager = new FileManager();
+            database = fileManager.createGraphDatabase(url, user, password, name);
+        }
+
     }
+
+	@Before
+	public void clear() throws SQLException, ConnectionFailedException {
+		LinkedList<Integer> ids = database.getFilterTable().getIds();
+		for (Integer id : ids) {
+			if (id != 0) {
+				database.deleteFilter(id);
+			}
+		}
+
+		LinkedList<Integer> ids2 = database.getGraphTable().getIds();
+		for (Integer id : ids2) {
+			if (id != 0) {
+				database.deleteGraph(id);
+			}
+		}
+
+	}
 
     @Test
     public void testGetSampleVariationskoeffizient() {

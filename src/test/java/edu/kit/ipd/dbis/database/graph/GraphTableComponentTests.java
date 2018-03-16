@@ -39,15 +39,27 @@ public class GraphTableComponentTests {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
-		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
-		String url = "jdbc:mysql://127.0.0.1/library";
-		String user = "travis";
-		String password = "";
-		String name = "grape";
+		try {
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "user";
+			String password = "password";
+			String name = "grape";
 
-		FileManager fileManager = new FileManager();
-		database = fileManager.createGraphDatabase(url, user, password, name);
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+			fileManager.deleteGraphDatabase(database);
+			database = fileManager.createGraphDatabase(url, user, password, name);
+		} catch (Exception e){
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+			connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "travis";
+			String password = "";
+			String name = "graphtablecomponenttests";
+
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+		}
 
 	}
 
@@ -287,15 +299,28 @@ public class GraphTableComponentTests {
 
 	@Test
 	public void mergeTest() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, SQLException, IOException, UnexpectedObjectException {
-		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
-		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
-		String url = "jdbc:mysql://127.0.0.1/library";
-		String user = "travis";
-		String password = "";
-		String name = "grape2";
+		GraphDatabase newDatabase;
+		try {
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "user";
+			String password = "password";
+			String name = "grape2";
 
-		FileManager fileManager = new FileManager();
-		GraphDatabase newDatabase = fileManager.createGraphDatabase(url, user, password, name);
+			FileManager fileManager = new FileManager();
+			newDatabase = fileManager.createGraphDatabase(url, user, password, name);
+			fileManager.deleteGraphDatabase(newDatabase);
+			newDatabase = fileManager.createGraphDatabase(url, user, password, name);
+		} catch (Exception e){
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+			connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "travis";
+			String password = "";
+			String name = "graphtablecomponenttests2";
+
+			FileManager fileManager = new FileManager();
+			newDatabase = fileManager.createGraphDatabase(url, user, password, name);
+		}
 
 		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
 		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
