@@ -3,7 +3,9 @@ package edu.kit.ipd.dbis.database.graph;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.file.FileManager;
+import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.RandomConnectedGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
@@ -67,6 +70,38 @@ public class GraphTableComponentTests {
 		assertEquals(database.getGraphTable().getContent(1), graph);
 		database.getGraphTable().deleteAll();
 
+	}
+
+	@Test
+	public void getContentTest() throws UnexpectedObjectException, SQLException, IOException {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
+		gen.generateGraph(graph1, new IntegerVertexFactory(1), null);
+		GraphGenerator gen2 = new RandomConnectedGraphGenerator(3, 3, 3, 3);
+		PropertyGraph<Integer, Integer> graph2 = new PropertyGraph<>();
+		gen2.generateGraph(graph2, new IntegerVertexFactory(1), null);
+
+		String[][] filter = new String[1][7];
+		filter[0][0] = "id";
+		filter[0][1] = "+";
+		filter[0][2] = "0";
+		filter[0][3] = "=";
+		filter[0][4] = "1";
+		filter[0][5] = "+";
+		filter[0][6] = "0";
+
+		database.getGraphTable().insert(graph1);
+		database.getGraphTable().insert(graph2);
+		ResultSet rs = database.getGraphTable().getContent(filter, "id", true);
+		rs.next();
+		assertEquals(rs.getInt("id"), 1);
+		database.getGraphTable().deleteAll();
+
+	}
+
+	@Test (expected = NullPointerException.class)
+	public void getContentTest1() throws ClassNotFoundException, SQLException, UnexpectedObjectException, IOException {
+		database.getGraphTable().getContent(1);
 	}
 
 
