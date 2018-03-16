@@ -115,6 +115,7 @@ public class FiltermanagementTest {
         assert output[2][6].equals("2.0");
     }
 
+    @Ignore
     @Test
     public void testStringParserFiltergroup() throws InvalidInputException, ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
@@ -143,6 +144,7 @@ public class FiltermanagementTest {
         assert output[1][6].equals("4.0");
     }
 
+    @Ignore
     @Test
     public void replaceFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -152,6 +154,7 @@ public class FiltermanagementTest {
         assert manager.availableFilter.get(0).getName().equals("averagedegree >= 12");
     }
 
+    @Ignore
     @Test
     public void replaceFilterGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -161,6 +164,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getName().equals("This is an updated filtergroup");
     }
 
+    @Ignore
     @Test
     public void replaceFilterInFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -171,6 +175,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getAvailableFilter().get(0).getName().equals("averagedegree < 41");
     }
 
+    @Ignore
     @Test
     public void replaceFiltersegments() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -199,6 +204,7 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(1).getAvailableFilter().size() == 2;
     }
 
+    @Ignore
     @Test
     public void removeFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -211,6 +217,7 @@ public class FiltermanagementTest {
         manager.removeFiltersegment(81);
     }
 
+    @Ignore
     @Test
     public void removeFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -221,6 +228,7 @@ public class FiltermanagementTest {
     }
 
 
+    @Ignore
     @Test
     public void removeFilterFromGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -232,6 +240,7 @@ public class FiltermanagementTest {
     }
 
 
+    @Ignore
     @Test
     public void deactivateFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -253,7 +262,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).isActivated;
     }
 
-
+    @Ignore
     @Test
     public void deactivateFilterInGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -266,7 +275,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).getAvailableFilter().get(0).isActivated;
     }
 
-
+    @Ignore
     @Test
     public void deactivateFiltersegments() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -325,6 +334,7 @@ public class FiltermanagementTest {
     }
 
 
+    @Ignore
     @Test
     public void testFilterInputParserBasicFilter() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -333,6 +343,7 @@ public class FiltermanagementTest {
     }
 
 
+    @Ignore
     @Test
     public void testFilterInputParserConnectedFilter() throws  ConnectionFailedException, InvalidInputException,
             InsertionFailedException,
