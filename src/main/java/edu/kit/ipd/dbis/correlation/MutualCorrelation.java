@@ -36,7 +36,7 @@ public class MutualCorrelation extends Correlation {
                 double log = Math.log(MutualCorrelation.calculatePXY(firstPropertyValuesCopy, i,
                         secondPropertyValuesCopy, j) / (MutualCorrelation.calculatePX(firstPropertyValuesCopy, i)
                         * MutualCorrelation.calculatePX(secondPropertyValuesCopy, j)));
-                if (log > -2000.0 && log < 2000.0) {
+                if (log >= 0.0 && log < 2000.0) {
                     returnValue = returnValue + (MutualCorrelation.calculatePXY(firstPropertyValuesCopy, i,
                             secondPropertyValuesCopy, j) * log);
                 }

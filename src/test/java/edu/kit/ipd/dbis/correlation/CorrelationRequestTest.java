@@ -150,6 +150,11 @@ public class CorrelationRequestTest {
     }
 
     @Test (expected = InvalidCorrelationInputException.class)
+    public void testParseCorrelationToStringIntegerIs0() throws InvalidCorrelationInputException {
+        CorrelationRequest.parseCorrelationToString("Max Pearson 0");
+    }
+
+    @Test (expected = InvalidCorrelationInputException.class)
     public void testCheckCorrelationInputNull() throws InvalidCorrelationInputException {
         CorrelationRequest.parseCorrelationToString(null);
     }

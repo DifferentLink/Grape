@@ -116,6 +116,9 @@ public class CorrelationRequest {
 
         try {
             int attributeCounter = Integer.parseInt(propertyCounterString);
+            if (attributeCounter == 0) {
+                throw new InvalidCorrelationInputException();
+            }
 
             correlation.setFirstArgument(firstArgument);
             correlation.setAttributeCounter(attributeCounter);
