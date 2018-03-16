@@ -117,7 +117,7 @@ public final class GraphEditorController {
 			try {
 				newGraph.calculateProperties();
 				database.addGraph(newGraph);
-				statusbarController.addEvent(ADD, newGraph.getId(), "");
+				statusbarController.addEvent(ADD, newGraph.getId(), language.getString("graphAdded"));
 			} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 				statusbarController.addMessage(e.getMessage());
 			}
