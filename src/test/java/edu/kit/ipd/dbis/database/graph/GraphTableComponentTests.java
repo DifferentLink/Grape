@@ -37,7 +37,7 @@ public class GraphTableComponentTests {
 	private static GraphDatabase database;
 
 	@BeforeClass
-	public void setUp() throws Exception {
+	public static void setUp() throws Exception {
 		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
 		String url = "jdbc:mysql://127.0.0.1/library";
