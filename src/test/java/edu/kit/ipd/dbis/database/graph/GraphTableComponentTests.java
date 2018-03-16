@@ -57,4 +57,17 @@ public class GraphTableComponentTests {
 
 	}
 
+	@Test
+	public void getContentByIdTest() throws UnexpectedObjectException, SQLException, IOException, ClassNotFoundException {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+
+		database.getGraphTable().insert(graph);
+		assertEquals(database.getGraphTable().getContent(1), graph);
+		database.getGraphTable().deleteAll();
+
+	}
+
+
 }
