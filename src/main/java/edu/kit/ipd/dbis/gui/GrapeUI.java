@@ -346,6 +346,7 @@ public class GrapeUI {
 
 		@Override
 		public void windowClosing(WindowEvent windowEvent) {
+			filterUI.saveFilters();
 			databaseController.permanentlyDeleteGraphs();
 		}
 
