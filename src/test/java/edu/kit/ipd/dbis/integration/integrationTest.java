@@ -1,10 +1,7 @@
 package edu.kit.ipd.dbis.integration;
 
-import edu.kit.ipd.dbis.controller.*;
 import edu.kit.ipd.dbis.controller.util.CalculationMaster;
 import edu.kit.ipd.dbis.controller.util.CalculationWorker;
-import edu.kit.ipd.dbis.correlation.CorrelationOutput;
-import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
@@ -14,7 +11,6 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphG
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -24,6 +20,9 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
+/*
+* This Test class tests the integration of grape.
+* */
 public class integrationTest {
 
 	GraphDatabase database;
@@ -31,6 +30,7 @@ public class integrationTest {
 
 	@BeforeClass
 	public static void setUp() {
+		//set Database here!
 		graphGenerator = new BulkRandomConnectedGraphGenerator();
 	}
 
@@ -52,7 +52,8 @@ public class integrationTest {
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
-			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException ignored) { }
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException ignored) {
+			}
 		}
 		List<Thread> jobs = new LinkedList<>();
 		for (PropertyGraph<Integer, Integer> graph : graphs) {
@@ -60,11 +61,18 @@ public class integrationTest {
 		}
 		CalculationMaster.executeCalculation(jobs);
 		try {
-			graphAmount= database.getNumberOfGraphs();
+			graphAmount = database.getNumberOfGraphs();
 			uncalculated = database.getNumberOfUncalculatedGraphs();
-		} catch (ConnectionFailedException ignored) { }
+		} catch (ConnectionFailedException ignored) {
+		}
+
 		assertEquals(amount, graphAmount);
 		assertEquals(0, uncalculated);
+	}
+
+	@Test
+	public void scenary2() {
+
 	}
 
 }
