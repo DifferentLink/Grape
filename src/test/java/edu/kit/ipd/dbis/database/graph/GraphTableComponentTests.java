@@ -1,16 +1,22 @@
 package edu.kit.ipd.dbis.database.graph;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.RandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.junit.Before;
 import org.junit.Test;
+import sun.awt.image.ImageWatched;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -18,6 +24,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -127,6 +135,160 @@ public class GraphTableComponentTests {
 		database.getGraphTable().insert(graph);
 		database.getGraphTable().delete(1);
 		database.getGraphTable().getContent(1);
+	}
+
+	@Test
+	public void getColumnsTest() throws SQLException {
+		LinkedList<String> columns = database.getGraphTable().getColumns();
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		Collection<Property> properties = graph.getProperties();
+
+		for (Property property : properties) {
+			if (property.getClass().getSuperclass() == IntegerProperty.class) {
+				assertEquals(columns.contains(property), true);
+			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
+				assertEquals(columns.contains(property), true);
+			}
+		}
+
+	}
+
+	@Test
+	public void getNumberOfRowsTest() throws UnexpectedObjectException, SQLException, IOException {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
+		gen.generateGraph(graph1, new IntegerVertexFactory(1), null);
+		GraphGenerator gen2 = new RandomConnectedGraphGenerator(3, 3, 3, 3);
+		PropertyGraph<Integer, Integer> graph2 = new PropertyGraph<>();
+		gen2.generateGraph(graph2, new IntegerVertexFactory(1), null);
+		GraphGenerator gen3 = new RandomConnectedGraphGenerator(4, 4, 4, 4);
+		PropertyGraph<Integer, Integer> graph3 = new PropertyGraph<>();
+		gen3.generateGraph(graph3, new IntegerVertexFactory(1), null);
+		GraphGenerator gen4 = new RandomConnectedGraphGenerator(5, 5, 5, 5);
+		PropertyGraph<Integer, Integer> graph4 = new PropertyGraph<>();
+		gen4.generateGraph(graph4, new IntegerVertexFactory(1), null);
+
+		database.getGraphTable().insert(graph1);
+		database.getGraphTable().insert(graph2);
+		database.getGraphTable().insert(graph3);
+		database.getGraphTable().insert(graph4);
+
+		assertEquals(database.getGraphTable().getNumberOfRows(), 4);
+		database.getGraphTable().delete(1);
+		database.getGraphTable().delete(2);
+		database.getGraphTable().delete(3);
+		database.getGraphTable().delete(4);
+
+	}
+
+	@Test
+	public void getUncalculatedGraphTest() throws UnexpectedObjectException, SQLException, IOException, ClassNotFoundException {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
+		gen.generateGraph(graph1, new IntegerVertexFactory(1), null);
+
+		database.getGraphTable().insert(graph1);
+		assertEquals(database.getGraphTable().getUncalculatedGraph(), graph1);
+
+		database.getGraphTable().delete(1);
+
+	}
+
+	@Test
+	public void getValuesTest() throws UnexpectedObjectException, SQLException, IOException, ConnectionFailedException {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
+		gen.generateGraph(graph1, new IntegerVertexFactory(1), null);
+		GraphGenerator gen2 = new RandomConnectedGraphGenerator(3, 3, 3, 3);
+		PropertyGraph<Integer, Integer> graph2 = new PropertyGraph<>();
+		gen2.generateGraph(graph2, new IntegerVertexFactory(1), null);
+
+		graph1.calculateProperties();
+		graph2.calculateProperties();
+
+		database.getGraphTable().insert(graph1);
+		database.getGraphTable().insert(graph2);
+
+		String[][] filter = new String[1][7];
+		filter[0][0] = "id";
+		filter[0][1] = "+";
+		filter[0][2] = "0";
+		filter[0][3] = "=";
+		filter[0][4] = "1";
+		filter[0][5] = "+";
+		filter[0][6] = "0";
+		LinkedList<Double> values = database.getValues(filter, "numberOfVertices");
+
+		assertEquals(values.contains(2), true);
+		assertEquals(values.contains(3), true);
+
+		database.getGraphTable().delete(1);
+		database.getGraphTable().delete(2);
+
+	}
+
+	@Test
+	public void uncalculatedGraphsTest() throws UnexpectedObjectException, SQLException, IOException, ClassNotFoundException {
+
+		assertEquals(database.getGraphTable().hasUncalculated(), false);
+
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
+		gen.generateGraph(graph1, new IntegerVertexFactory(1), null);
+		GraphGenerator gen2 = new RandomConnectedGraphGenerator(3, 3, 3, 3);
+		PropertyGraph<Integer, Integer> graph2 = new PropertyGraph<>();
+		gen2.generateGraph(graph2, new IntegerVertexFactory(1), null);
+
+		database.getGraphTable().insert(graph1);
+		database.getGraphTable().insert(graph2);
+
+		assertEquals(database.getGraphTable().hasUncalculated(), true);
+		assertEquals(database.getGraphTable().numberOfUncalculatedGraphs(), 2);
+		database.getGraphTable().delete(1);
+		assertEquals(database.getGraphTable().getUncalculatedGraph(), graph2);
+
+		database.getGraphTable().delete(2);
+
+	}
+
+	@Test
+	public void graphExistsTest() throws SQLException, IOException, UnexpectedObjectException {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
+		gen.generateGraph(graph1, new IntegerVertexFactory(1), null);
+
+		assertEquals(database.getGraphTable().graphExists(graph1), false);
+		database.getGraphTable().insert(graph1);
+		assertEquals(database.getGraphTable().graphExists(graph1), true);
+		database.getGraphTable().delete(1);
+	}
+
+	@Test
+	public void mergeTest() throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException, SQLException, IOException, UnexpectedObjectException {
+		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+		String url = "jdbc:mysql://127.0.0.1/library";
+		String user = "travis";
+		String password = "";
+		String name = "grape2";
+
+		FileManager fileManager = new FileManager();
+		GraphDatabase newDatabase = fileManager.createGraphDatabase(url, user, password, name);
+
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
+		gen.generateGraph(graph1, new IntegerVertexFactory(1), null);
+		GraphGenerator gen2 = new RandomConnectedGraphGenerator(3, 3, 3, 3);
+		PropertyGraph<Integer, Integer> graph2 = new PropertyGraph<>();
+		gen2.generateGraph(graph2, new IntegerVertexFactory(1), null);
+
+		database.getGraphTable().insert(graph1);
+		newDatabase.getGraphTable().insert(graph2);
+		assertEquals(database.getGraphTable().getNumberOfRows(), 1);
+
+		database.merge(newDatabase);
+		assertEquals(database.getGraphTable().getNumberOfRows(), 1);
+
 	}
 
 }
