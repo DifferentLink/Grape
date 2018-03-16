@@ -57,7 +57,7 @@ public class CorrelationUI extends JPanel {
 		inputContainer.add(Box.createHorizontalStrut(8), BorderLayout.WEST);
 		correlationInput = new JTextField("Max Pearson 3");
 		correlationInput.getDocument().addDocumentListener(new CorrelationInputChangeListener(correlationInput));
-		correlationInput.setBackground(theme.backgroundColor);
+		correlationInput.setBackground(Color.WHITE);
 		JButton go = new JButton(language.getString("go"));
 		go.addActionListener(new CorrelationRequestAction(correlationController, correlationInput, language, theme));
 		go.setBackground(theme.assertiveBackground);

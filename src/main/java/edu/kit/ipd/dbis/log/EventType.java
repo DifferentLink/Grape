@@ -5,6 +5,7 @@ import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
 import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,14 +17,14 @@ public enum EventType {
 	 */
 	ADD {
 		@Override
-		public void undo(GraphDatabase database, Set<Integer> changedGraphs) throws ConnectionFailedException {
+		public void undo(GraphDatabase database, List<Integer> changedGraphs) throws ConnectionFailedException {
 			for (int id : changedGraphs) {
 				database.deleteGraph(id);
 			}
 		}
 
 		@Override
-		public void redo(GraphDatabase database, Set<Integer> changedGraphs) throws ConnectionFailedException {
+		public void redo(GraphDatabase database, List<Integer> changedGraphs) throws ConnectionFailedException {
 			for (int id : changedGraphs) {
 				database.restoreGraph(id);
 			}
@@ -34,14 +35,14 @@ public enum EventType {
 	 */
 	REMOVE {
 		@Override
-		public void undo(GraphDatabase database, Set<Integer> changedGraphs) throws ConnectionFailedException {
+		public void undo(GraphDatabase database, List<Integer> changedGraphs) throws ConnectionFailedException {
 			for (int id : changedGraphs) {
 				database.restoreGraph(id);
 			}
 		}
 
 		@Override
-		public void redo(GraphDatabase database, Set<Integer> changedGraphs) throws ConnectionFailedException {
+		public void redo(GraphDatabase database, List<Integer> changedGraphs) throws ConnectionFailedException {
 			for (int id : changedGraphs) {
 				database.deleteGraph(id);
 			}
@@ -52,12 +53,12 @@ public enum EventType {
 	 */
 	MESSAGE {
 		@Override
-		public void undo(GraphDatabase database, Set<Integer> changedGraphs) {
+		public void undo(GraphDatabase database, List<Integer> changedGraphs) {
 
 		}
 
 		@Override
-		public void redo(GraphDatabase database, Set<Integer> changedGraphs) {
+		public void redo(GraphDatabase database, List<Integer> changedGraphs) {
 
 		}
 	};
@@ -71,7 +72,7 @@ public enum EventType {
 	 * @throws AccessDeniedForUserException  the access denied for user exception
 	 * @throws ConnectionFailedException     the connection failed exception
 	 */
-	abstract void undo(GraphDatabase database, Set<Integer> changedGraphs) throws DatabaseDoesNotExistException,
+	abstract void undo(GraphDatabase database, List<Integer> changedGraphs) throws DatabaseDoesNotExistException,
 			AccessDeniedForUserException, ConnectionFailedException;
 
 	/**
@@ -83,6 +84,6 @@ public enum EventType {
 	 * @throws AccessDeniedForUserException  the access denied for user exception
 	 * @throws ConnectionFailedException     the connection failed exception
 	 */
-	abstract void redo(GraphDatabase database, Set<Integer> changedGraphs) throws DatabaseDoesNotExistException,
+	abstract void redo(GraphDatabase database, List<Integer> changedGraphs) throws DatabaseDoesNotExistException,
 			AccessDeniedForUserException, ConnectionFailedException;
 }

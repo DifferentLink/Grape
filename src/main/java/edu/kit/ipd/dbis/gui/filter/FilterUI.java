@@ -114,6 +114,44 @@ public class FilterUI extends JPanel {
 	}
 
 	/**
+	 * getter-method
+	 * @return uiFilterManager
+	 */
+	public UIFilterManager getUiFilterManager() {
+		return this.uiFilterManager;
+	}
+
+	/**
+	 * Save all filters
+	 */
+	public void saveFilters() {
+
+		for (FilterGroup filterGroup : this.uiFilterManager.getFilterGroups()) {
+			this.filterController.removeFiltersegment(filterGroup.getID());
+			this.filterController.updateFilterGroup(filterGroup.getText(), filterGroup.getID());
+			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
+				try {
+					this.filterController.removeFiltersegment(simpleFilter.getID());
+					this.filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID(), filterGroup.getID());
+				} catch(InvalidInputException e) {
+
+				}
+			}
+		}
+
+		for (SimpleFilter simpleFilter : this.uiFilterManager.getSimpleFilter()) {
+			try {
+				this.filterController.removeFiltersegment(simpleFilter.getID());
+				this.filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
+			} catch (InvalidInputException e) {
+
+			}
+		}
+
+
+	}
+
+	/**
 	 * Uses current state of FilterGroups and SimpleFilters to create the GUI elements in the filter panel.
 	 */
 	public void update() {

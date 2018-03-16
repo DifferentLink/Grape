@@ -177,13 +177,8 @@ public class GenerateGraphUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			try {
-				generateController.generateGraphs(
-						minVertices, maxVertices, minEdges, maxEdges, amount);
-				generateGraphUI.dispose();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			generateController.generateGraphs(minVertices, maxVertices, minEdges, maxEdges, amount);
+			generateGraphUI.dispose();
 		}
 	}
 

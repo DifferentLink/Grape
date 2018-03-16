@@ -5,13 +5,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
 
 public class LogTest {
 	static Log log;
-	static Set<Integer> graphs;
+	static List<Integer> graphs;
 	static Event a1;
 	static Event a2;
 	static Event a3;
@@ -28,7 +30,7 @@ public class LogTest {
 	@BeforeClass
 	public static void initialize() {
 		// random graphIDs
-		graphs = new HashSet<>();
+		graphs = new LinkedList<>();
 		graphs.add(1);
 		graphs.add(2);
 		graphs.add(3);

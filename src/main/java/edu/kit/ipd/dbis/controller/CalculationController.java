@@ -1,38 +1,33 @@
 package edu.kit.ipd.dbis.controller;
 
-
+import edu.kit.ipd.dbis.controller.util.CalculationMaster;
+import edu.kit.ipd.dbis.controller.util.CalculationWorker;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The type Calculation controller.
  */
-public class CalculationController implements Runnable {
+public class CalculationController {
 
-	private Boolean isCalculating;
-	private StatusbarController statusbar;
+	private StatusbarController statusbarController;
 	private GraphDatabase database;
-
 	private GrapeUI grapeUI;
+	private static CalculationController calculation;
 
 	/**
-	 * Sets grape ui.
-	 *
 	 * @param grapeUI the grape ui
 	 */
 	public void setGrapeUI(GrapeUI grapeUI) {
 		this.grapeUI = grapeUI;
 	}
 
-	private static CalculationController calculation;
-
 	private CalculationController() {
-		this.statusbar = StatusbarController.getInstance();
-		this.isCalculating = true;
+		this.statusbarController = StatusbarController.getInstance();
 	}
 
 	/**
@@ -57,46 +52,15 @@ public class CalculationController implements Runnable {
 	}
 
 	/**
-	 * induces the calculation of all properties of PropertyGraph<V,E> in the graphlist
-	 * of the database and induces their saving in the database.
+	 * Start calculation of properties of graphs in database which have uncalculated properties
 	 */
-	public void run() {
-		if (isCalculating) {
-			try {
-				if (database.hasUncalculatedGraphs()) {
-					PropertyGraph<Integer, Integer> graph = database.getUncalculatedGraph();
-					graph.calculateProperties();
-					database.replaceGraph(graph.getId(), graph);
-					grapeUI.updateTable();
-					this.statusbar.setRemainingCalculations();
-				}
-			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
-				statusbar.addMessage(e.getMessage());
-			}
-			// start recursion
-			try {
-				if (database.hasUncalculatedGraphs()) {
-					run();
-				}
-			} catch (ConnectionFailedException e) {
-				statusbar.addMessage(e.getMessage());
-			}
+	public synchronized void startCalculation() {
+		List<PropertyGraph<Integer, Integer>> uncalculatedGraphs = new LinkedList<>(); // todo get uncalculated graphs from database
+		List<Thread> jobs = new LinkedList<>();
+		for (PropertyGraph<Integer, Integer> graph : uncalculatedGraphs) {
+			jobs.add(new CalculationWorker(graph, database));
 		}
-	}
-
-	/**
-	 * pauses the method calculateGraphProperties().
-	 */
-	public void pauseCalculation() {
-		isCalculating = false;
-	}
-
-	/**
-	 * continues the method calculateGraphProperties().
-	 */
-	public void continueCalculation() {
-		isCalculating = true;
-		run();
+		CalculationMaster.executeCalculation(jobs);
 	}
 
 }

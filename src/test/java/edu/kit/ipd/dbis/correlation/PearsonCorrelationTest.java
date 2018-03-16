@@ -46,7 +46,7 @@ public class PearsonCorrelationTest {
     public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
             ConnectionFailedException {
 
-    	/*Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+    	Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
 		String url = "jdbc:mysql://127.0.0.1/library";
 		String user = "travis";
@@ -54,18 +54,6 @@ public class PearsonCorrelationTest {
 		String name = "grape";
 		FileManager fileManager = new FileManager();
 		database = fileManager.createGraphDatabase(url, user, password, name);
-		manager = new Filtermanagement();
-        manager.setDatabase(database);*/
-
-        String url = "jdbc:mysql://127.0.0.1/library";
-        String user = "user";
-        String password = "password";
-        String name = "grape2";
-        GraphDatabase gdb = new GraphDatabase(new GraphTable(url, user, password, name),
-                new FilterTable(url, user, password, "grape2filters"));
-        FileManager fileManager = new FileManager();
-        fileManager.deleteGraphDatabase(gdb);
-        database = fileManager.createGraphDatabase(url, user, password, name);
     }
 
     @Test
