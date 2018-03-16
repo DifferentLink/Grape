@@ -47,7 +47,7 @@ public class GraphTableComponentTests {
 
 		database.getGraphTable().insert(graph);
 		assertEquals(database.getGraphTable().hasUncalculated(), true);
-		database.getGraphTable().deleteAll();
+		database.getGraphTable().delete(1);
 
 	}
 
@@ -68,7 +68,7 @@ public class GraphTableComponentTests {
 
 		database.getGraphTable().insert(graph);
 		assertEquals(database.getGraphTable().getContent(1), graph);
-		database.getGraphTable().deleteAll();
+		database.getGraphTable().delete(1);
 
 	}
 
@@ -95,7 +95,8 @@ public class GraphTableComponentTests {
 		ResultSet rs = database.getGraphTable().getContent(filter, "id", true);
 		rs.next();
 		assertEquals(rs.getInt("id"), 1);
-		database.getGraphTable().deleteAll();
+		database.getGraphTable().delete(1);
+		database.getGraphTable().delete(2);
 
 	}
 
@@ -104,5 +105,28 @@ public class GraphTableComponentTests {
 		database.getGraphTable().getContent(1);
 	}
 
+	@Test (expected = NullPointerException.class)
+	public void switchStateTest() throws UnexpectedObjectException, SQLException, IOException, ClassNotFoundException {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+
+		database.getGraphTable().insert(graph);
+		database.getGraphTable().switchState(1);
+		database.getGraphTable().deleteAll();
+
+		database.getGraphTable().getContent(1);
+	}
+
+	@Test (expected = NullPointerException.class)
+	public void deleteTest() throws SQLException, UnexpectedObjectException, IOException, ClassNotFoundException {
+		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
+		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+
+		database.getGraphTable().insert(graph);
+		database.getGraphTable().delete(1);
+		database.getGraphTable().getContent(1);
+	}
 
 }
