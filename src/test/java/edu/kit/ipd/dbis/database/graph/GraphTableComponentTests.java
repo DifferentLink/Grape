@@ -7,14 +7,17 @@ import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.RandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import sun.awt.image.ImageWatched;
 
@@ -33,7 +36,7 @@ public class GraphTableComponentTests {
 
 	private static GraphDatabase database;
 
-	@Before
+	@BeforeClass
 	public void setUp() throws Exception {
 		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
@@ -75,7 +78,13 @@ public class GraphTableComponentTests {
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
 
 		database.getGraphTable().insert(graph);
-		assertEquals(database.getGraphTable().getContent(1), graph);
+		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
+		BfsCodeAlgorithm.BfsCode code = (BfsCodeAlgorithm.BfsCode) bfs.getValue();
+
+		BfsCode bfs2 = (BfsCode) database.getGraphTable().getContent(1).getProperty(BfsCode.class);
+		BfsCodeAlgorithm.BfsCode code2 = (BfsCodeAlgorithm.BfsCode) bfs2.getValue();
+
+		assertEquals(code2.toString(), code.toString());
 		database.getGraphTable().delete(1);
 
 	}
@@ -145,9 +154,9 @@ public class GraphTableComponentTests {
 
 		for (Property property : properties) {
 			if (property.getClass().getSuperclass() == IntegerProperty.class) {
-				assertEquals(columns.contains(property), true);
+				assertEquals(columns.contains(property.getClass().getSimpleName().toLowerCase()), true);
 			} else if (property.getClass().getSuperclass() == DoubleProperty.class) {
-				assertEquals(columns.contains(property), true);
+				assertEquals(columns.contains(property.getClass().getSimpleName().toLowerCase()), true);
 			}
 		}
 
@@ -219,8 +228,8 @@ public class GraphTableComponentTests {
 		filter[0][6] = "0";
 		LinkedList<Double> values = database.getValues(filter, "numberOfVertices");
 
-		assertEquals(values.contains(2), true);
-		assertEquals(values.contains(3), true);
+		assertEquals(values.contains(2.0), true);
+		assertEquals(values.contains(3.0), true);
 
 		database.getGraphTable().delete(1);
 		database.getGraphTable().delete(2);
@@ -288,6 +297,8 @@ public class GraphTableComponentTests {
 
 		database.merge(newDatabase);
 		assertEquals(database.getGraphTable().getNumberOfRows(), 1);
+		database.getGraphTable().delete(1);
+		database.getGraphTable().delete(2);
 
 	}
 
