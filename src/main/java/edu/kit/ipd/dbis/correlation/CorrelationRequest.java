@@ -53,9 +53,9 @@ public class CorrelationRequest {
         } else if (correlation.getFirstArgument().equals("min") && correlation.getProperty() != null) {
             return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty(), database));
         } else if (correlation.getFirstArgument().equals("least") && correlation.getProperty() == null) {
-            return CorrelationRequest.parseToList(correlation.useMinimum(database));
+            return CorrelationRequest.parseToList(correlation.useLeast(database));
         } else {
-            return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty(), database));
+            return CorrelationRequest.parseToList(correlation.useLeast(correlation.getProperty(), database));
         }
     }
 

@@ -71,6 +71,17 @@ abstract class Correlation {
         return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
     }
 
+    public TreeSet<CorrelationOutput> useLeast(GraphDatabase database) throws ConnectionFailedException {
+        TreeSet<CorrelationOutput> resultSet = this.createCorrelationList(database);
+        return Correlation.cutListLeast(resultSet, this.getAttributeCounter());
+    }
+
+    public TreeSet<CorrelationOutput> useLeast(String property2, GraphDatabase database)
+            throws ConnectionFailedException {
+        TreeSet<CorrelationOutput> resultSet = this.createCorrelationList(property2, database);
+        return Correlation.cutListLeast(resultSet, this.getAttributeCounter());
+    }
+
     private TreeSet<CorrelationOutput> createCorrelationList(GraphDatabase database) throws ConnectionFailedException {
         String[] firstPropertyList = Pearson.getValidProperties();
         String[] secondPropertyList = Pearson.getValidProperties();
@@ -246,5 +257,32 @@ abstract class Correlation {
             }
         }
         return outputSet;
+    }
+
+    /**
+     * used to take only the smallest elements of a specific list
+     * @param resultSet list which inherits too much elements
+     * @param attributeCounter size of new list
+     * @return short list which inherits only the smallest elements of the input list
+     */
+    private static TreeSet<CorrelationOutput> cutListLeast(TreeSet<CorrelationOutput> resultSet,
+                                                             int attributeCounter) {
+        TreeSet<CorrelationOutput> absSet = new TreeSet<>();
+        for (CorrelationOutput current: resultSet) {
+            CorrelationOutput modified = new CorrelationOutput(current.getFirstProperty(), current.getSecondProperty(),
+                    Math.abs(current.getOutputNumber()));
+            absSet.add(modified);
+        }
+        TreeSet<CorrelationOutput> smallerSet = Correlation.cutListMinimum(absSet, attributeCounter);
+        TreeSet<CorrelationOutput> returnSet = new TreeSet<>();
+        for (CorrelationOutput current: resultSet) {
+            for (CorrelationOutput currentSmallerSet: smallerSet) {
+                if (current.getFirstProperty().equals(currentSmallerSet.getFirstProperty())
+                 && current.getSecondProperty().equals(currentSmallerSet.getSecondProperty())) {
+                    returnSet.add(current);
+                }
+            }
+        }
+        return returnSet;
     }
 }
