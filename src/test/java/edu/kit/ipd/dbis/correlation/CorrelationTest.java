@@ -17,8 +17,8 @@ public class CorrelationTest {
     @Test
     public void testSetMaximum() {
         Correlation testCorrelation = new MutualCorrelation();
-        testCorrelation.setMaximum(true);
-        assert testCorrelation.getMaximum();
+        testCorrelation.setFirstArgument("min");
+        assert testCorrelation.getFirstArgument().equals("min");
     }
 
     @Test

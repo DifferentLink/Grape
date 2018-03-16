@@ -2,6 +2,8 @@ package edu.kit.ipd.dbis.correlation;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 
+import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
+import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
 import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
@@ -46,16 +48,6 @@ public class MutualCorrelationTest {
         for (PropertyGraph<Integer, Integer> current: mySet) {
             database.addGraph(current);
         }
-    }
-
-    @Test
-    public void testGetMinimum() {
-        LinkedList<Double> testList = new LinkedList<>();
-        testList.add(4.76);
-        testList.add(7.98);
-        testList.add(1.45);
-        testList.add(3.96);
-        assert MutualCorrelation.getMinimum(testList) == 1.45;
     }
 
     @Test
