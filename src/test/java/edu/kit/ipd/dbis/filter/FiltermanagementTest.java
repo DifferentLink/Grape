@@ -22,7 +22,7 @@ public class FiltermanagementTest {
     private static GraphDatabase database;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public static void setUp() throws Exception {
         try {
             String url = "jdbc:mysql://127.0.0.1/library";
             String user = "user";
