@@ -112,22 +112,8 @@ public class PearsonCorrelationTest {
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMinimum("AverageDegree", database);
 
         assert resultSet.size() == 3;
-        int counter = 0;
         for (CorrelationOutput current: resultSet) {
-            if (counter == 0) {
-                assert current.getFirstProperty().equals("StructureDensity");
-                assert current.getSecondProperty().equals("AverageDegree");
-                assert Math.abs(current.getOutputNumber() - 0.8) < 0.01;
-            } else if (counter == 1) {
-                assert current.getFirstProperty().equals("BinomialDensity");
-                assert current.getSecondProperty().equals("AverageDegree");
-                assert Math.abs(current.getOutputNumber() - 0.5) < 0.01;
-            } else {
-                assert current.getFirstProperty().equals("ProportionDensity");
-                assert current.getSecondProperty().equals("AverageDegree");
-                assert Math.abs(current.getOutputNumber() - 0.2) < 0.01;
-            }
-            counter++;
+            assert Math.abs(current.getOutputNumber() + 1) < 0.01;
         }
     }
 
@@ -139,14 +125,8 @@ public class PearsonCorrelationTest {
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMinimum(database);
 
         assert resultSet.size() == 4;
-        int counter = 0;
         for (CorrelationOutput current: resultSet) {
-            if (counter == 4) {
-                assert current.getFirstProperty().equals("ProportionDensity");
-                assert current.getSecondProperty().equals("NumberOfDisjointEdgesFromKkGraph");
-                assert Math.abs(current.getOutputNumber() - 0.05) < 0.01;
-            }
-            counter++;
+            assert Math.abs(current.getOutputNumber() + 1) < 0.01;
         }
     }
 
@@ -159,6 +139,9 @@ public class PearsonCorrelationTest {
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMaximum("VertexColoringNumberOfColors", database);
 
         assert resultSet.size() == 3;
+        for (CorrelationOutput current: resultSet) {
+            assert Math.abs(current.getOutputNumber() - 1) < 0.01;
+        }
     }
 
     @Test
@@ -169,5 +152,8 @@ public class PearsonCorrelationTest {
         TreeSet<CorrelationOutput> resultSet = pearsonObject.useMaximum(database);
 
         assert resultSet.size() == 4;
+        for (CorrelationOutput current: resultSet) {
+            assert Math.abs(current.getOutputNumber() - 1) < 0.01;
+        }
     }
 }
