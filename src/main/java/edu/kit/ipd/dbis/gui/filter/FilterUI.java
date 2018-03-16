@@ -121,6 +121,9 @@ public class FilterUI extends JPanel {
 		return this.uiFilterManager;
 	}
 
+	/**
+	 * Save all filters
+	 */
 	public void saveFilters() {
 
 		for (FilterGroup filterGroup : this.uiFilterManager.getFilterGroups()) {
