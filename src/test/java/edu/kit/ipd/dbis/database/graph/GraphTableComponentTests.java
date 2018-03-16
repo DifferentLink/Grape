@@ -14,6 +14,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.DoubleProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.IntegerProperty;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
+import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.integer.NumberOfVertices;
 import org.jgrapht.alg.util.IntegerVertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.junit.Before;
@@ -76,6 +77,7 @@ public class GraphTableComponentTests {
 		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
 		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+		graph.calculateProperties();
 
 		database.getGraphTable().insert(graph);
 		BfsCode bfs = (BfsCode) graph.getProperty(BfsCode.class);
@@ -97,6 +99,8 @@ public class GraphTableComponentTests {
 		GraphGenerator gen2 = new RandomConnectedGraphGenerator(3, 3, 3, 3);
 		PropertyGraph<Integer, Integer> graph2 = new PropertyGraph<>();
 		gen2.generateGraph(graph2, new IntegerVertexFactory(1), null);
+		graph1.calculateProperties();
+		graph2.calculateProperties();
 
 		String[][] filter = new String[1][7];
 		filter[0][0] = "id";
@@ -110,6 +114,7 @@ public class GraphTableComponentTests {
 		database.getGraphTable().insert(graph1);
 		database.getGraphTable().insert(graph2);
 		ResultSet rs = database.getGraphTable().getContent(filter, "id", true);
+
 		rs.next();
 		assertEquals(rs.getInt("id"), 1);
 		database.getGraphTable().delete(1);
@@ -119,7 +124,7 @@ public class GraphTableComponentTests {
 
 	@Test (expected = NullPointerException.class)
 	public void getContentTest1() throws ClassNotFoundException, SQLException, UnexpectedObjectException, IOException {
-		database.getGraphTable().getContent(1);
+		database.getGraphTable().getContent(1).getId();
 	}
 
 	@Test (expected = NullPointerException.class)
@@ -127,12 +132,13 @@ public class GraphTableComponentTests {
 		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
 		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+		graph.calculateProperties();
 
 		database.getGraphTable().insert(graph);
 		database.getGraphTable().switchState(1);
 		database.getGraphTable().deleteAll();
 
-		database.getGraphTable().getContent(1);
+		database.getGraphTable().getContent(1).getId();
 	}
 
 	@Test (expected = NullPointerException.class)
@@ -140,10 +146,11 @@ public class GraphTableComponentTests {
 		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
 		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>();
 		gen.generateGraph(graph, new IntegerVertexFactory(1), null);
+		graph.calculateProperties();
 
 		database.getGraphTable().insert(graph);
 		database.getGraphTable().delete(1);
-		database.getGraphTable().getContent(1);
+		database.getGraphTable().getContent(1).getId();
 	}
 
 	@Test
@@ -176,6 +183,11 @@ public class GraphTableComponentTests {
 		GraphGenerator gen4 = new RandomConnectedGraphGenerator(5, 5, 5, 5);
 		PropertyGraph<Integer, Integer> graph4 = new PropertyGraph<>();
 		gen4.generateGraph(graph4, new IntegerVertexFactory(1), null);
+
+		graph1.calculateProperties();
+		graph2.calculateProperties();
+		graph3.calculateProperties();
+		graph4.calculateProperties();
 
 		database.getGraphTable().insert(graph1);
 		database.getGraphTable().insert(graph2);
@@ -219,14 +231,14 @@ public class GraphTableComponentTests {
 		database.getGraphTable().insert(graph2);
 
 		String[][] filter = new String[1][7];
-		filter[0][0] = "id";
+		filter[0][0] = "0";
 		filter[0][1] = "+";
 		filter[0][2] = "0";
 		filter[0][3] = "=";
-		filter[0][4] = "1";
+		filter[0][4] = "0";
 		filter[0][5] = "+";
 		filter[0][6] = "0";
-		LinkedList<Double> values = database.getValues(filter, "numberOfVertices");
+		LinkedList<Double> values = database.getValues(filter, "numberofvertices");
 
 		assertEquals(values.contains(2.0), true);
 		assertEquals(values.contains(3.0), true);
@@ -265,6 +277,7 @@ public class GraphTableComponentTests {
 		GraphGenerator gen = new RandomConnectedGraphGenerator(2, 2, 1, 1);
 		PropertyGraph<Integer, Integer> graph1 = new PropertyGraph<>();
 		gen.generateGraph(graph1, new IntegerVertexFactory(1), null);
+		graph1.calculateProperties();
 
 		assertEquals(database.getGraphTable().graphExists(graph1), false);
 		database.getGraphTable().insert(graph1);
@@ -291,12 +304,17 @@ public class GraphTableComponentTests {
 		PropertyGraph<Integer, Integer> graph2 = new PropertyGraph<>();
 		gen2.generateGraph(graph2, new IntegerVertexFactory(1), null);
 
+		graph1.calculateProperties();
+		graph2.calculateProperties();
+
 		database.getGraphTable().insert(graph1);
 		newDatabase.getGraphTable().insert(graph2);
 		assertEquals(database.getGraphTable().getNumberOfRows(), 1);
 
 		database.merge(newDatabase);
-		assertEquals(database.getGraphTable().getNumberOfRows(), 1);
+		assertEquals(database.getGraphTable().getNumberOfRows(), 2);
+
+		newDatabase.getGraphTable().delete(1);
 		database.getGraphTable().delete(1);
 		database.getGraphTable().delete(2);
 
