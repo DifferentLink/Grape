@@ -72,6 +72,7 @@ public class CalculationController {
 		}
 		CalculationMaster.executeCalculation(jobs);
 		grapeUI.updateTable();
+		statusbarController.setRemainingCalculations();
 	}
 
 }
