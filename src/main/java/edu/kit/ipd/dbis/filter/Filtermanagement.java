@@ -23,8 +23,6 @@ public class Filtermanagement {
     List<Filter> availableFilter;
     private GraphDatabase database;
 
-
-
     /**
      * Constructor of class Filtermanagement. The constructor creates two empty lists: One list for the
      * filter and another list for the filtergroups.
@@ -480,12 +478,7 @@ public class Filtermanagement {
         }
         for (Filtergroup current: availableFilterGroups) {
             if (current.isActivated) {
-                List<Filter> filterInGroup = current.getAvailableFilter();
-                for (Filter currentFilterInGroup: filterInGroup) {
-                    if (current.isActivated) {
-                        activatedFilter.add(currentFilterInGroup);
-                    }
-                }
+            	activatedFilter.addAll(current.getAvailableFilter());
             }
         }
         int arrayLenght = activatedFilter.size();
@@ -499,7 +492,7 @@ public class Filtermanagement {
     }
 
     private static String[][] fillColumn(String[][] stringArray, int currentColumn, Filter element) {
-        if (element.getClass() == BasicFilter.class && element.isActivated) {
+        if (element.getClass() == BasicFilter.class) {
             stringArray[currentColumn][0] = element.getProperty1();
             stringArray[currentColumn][1] = "+";
             stringArray[currentColumn][2] = "0";
@@ -507,7 +500,7 @@ public class Filtermanagement {
             stringArray[currentColumn][4] = "0";
             stringArray[currentColumn][5] = "+";
             stringArray[currentColumn][6] = String.valueOf(element.getValue1());
-        } else if (element.getClass() == ConnectedFilter.class && element.isActivated) {
+        } else if (element.getClass() == ConnectedFilter.class) {
             stringArray[currentColumn][0] = element.getProperty1();
             stringArray[currentColumn][1] = Filtermanagement.transformFirstOperatorToString(element);
             stringArray[currentColumn][2] = String.valueOf(element.getValue1());

@@ -40,7 +40,7 @@ public abstract class Filter {
 	/**
 	 * @param active the new state of the filter
 	 */
-	public void setActive(boolean active) {
+	public void setStatus(boolean active) {
 		isActive = active;
 	}
 

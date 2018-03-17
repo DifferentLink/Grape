@@ -1,6 +1,7 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
+import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.controller.util.CalculationMaster;
 import edu.kit.ipd.dbis.controller.util.CalculationWorker;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
@@ -92,6 +93,7 @@ public class GenerateController {
 	 * @param minEdges    the min edges
 	 * @param maxEdges    the max edges
 	 * @param amount      the amount
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {

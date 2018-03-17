@@ -113,6 +113,17 @@ public class UIFilterManager {
 		return filterGroups;
 	}
 
+	public int getGroupID(int filterID) {
+		for (FilterGroup f : filterGroups) {
+			for (SimpleFilter s : f.getSimpleFilter()) {
+				if (s.getID() == filterID) {
+					return f.getID();
+				}
+			}
+		}
+		return -1;
+	}
+
 	/**
 	 * Uses an ID to remove a Filter
 	 * @param id the ID of the filter to remove
