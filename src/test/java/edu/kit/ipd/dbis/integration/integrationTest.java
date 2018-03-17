@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,8 +25,8 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 /*
-* This Test class tests the integration of grape.
-* */
+ * This Test class tests the integration of grape.
+ * */
 public class integrationTest {
 
 	static GraphDatabase database;
@@ -80,13 +81,18 @@ public class integrationTest {
 	}
 
 	@Test
-	public void filterIntegration() {
+	public void filterIntegration() throws SQLException {
 		int amount = 5;
 		int minVertices = 2;
 		int maxVertices = 6;
 		int minEdges = 2;
 		int maxEdges = 8;
 		int filterId = 1;
+		int numberEdges = 0;
+		int expectedAmount = 0;
+		int actualAmount = 0;
+
+
 		String filterInput = "numberofedges = 4";
 
 		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
@@ -107,14 +113,31 @@ public class integrationTest {
 		CalculationMaster.executeCalculation(jobs);
 		try {
 			filter.updateFilter(filterInput, filterId);
+			filter.activate(filterId);
 		} catch (ConnectionFailedException | InsertionFailedException | InvalidInputException | UnexpectedObjectException ignored) {
 		}
-
+		ResultSet result = null;
+		//Get Number of Graphs
 		try {
-			ResultSet result = filter.getFilteredAndSortedGraphs();
+			result = filter.getFilteredAndSortedGraphs();
 		} catch (ConnectionFailedException e) {
 		}
+		assert result != null;
+		while (result.next()) {
+			actualAmount++;
+		}
+		//own Filter method
+		try {
+			result = database.getGraphs("", "", true);
+		} catch (ConnectionFailedException e) {
+		}
+		assert result != null;
+		while (result.next()) {
+			actualAmount++;
+		}
 
+
+		assertEquals(expectedAmount, actualAmount);
 	}
 
 	@Test
