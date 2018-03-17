@@ -208,7 +208,12 @@ public class FilterUI extends JPanel {
 		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput, isActive));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		try {
-			filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
+			int groupID = uiFilterManager.getGroupID(simpleFilter.getID());
+			if (groupID != -1) {
+				filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID(), groupID);
+			} else {
+				filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
+			}
 			filterInput.setBackground(Color.WHITE);
 		} catch (InvalidInputException e) {
 			filterInput.setBackground(theme.lightNeutralColor);
@@ -262,6 +267,7 @@ public class FilterUI extends JPanel {
 		simpleFilterContainer.setLayout(new BoxLayout(simpleFilterContainer, BoxLayout.Y_AXIS));
 		for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
 			simpleFilterContainer.add(drawSimpleFilter(simpleFilter));
+
 		}
 
 		JPanel filterGroupUI = new JPanel();
@@ -465,7 +471,6 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			//filterController.
 			uiFilterManager.addNewSimpleFilterToGroup(filterGroup);
 			update();
 			repaint();

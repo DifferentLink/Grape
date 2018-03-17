@@ -23,8 +23,6 @@ public class Filtermanagement {
     List<Filter> availableFilter;
     private GraphDatabase database;
 
-
-
     /**
      * Constructor of class Filtermanagement. The constructor creates two empty lists: One list for the
      * filter and another list for the filtergroups.
