@@ -333,6 +333,7 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			filterController.activate(filterGroup.getID());
 			filterGroup.setActive(checkBox.isSelected());
 			filterGroup.getSimpleFilter().forEach(filter -> {
 				filter.setActive(checkBox.isSelected());
