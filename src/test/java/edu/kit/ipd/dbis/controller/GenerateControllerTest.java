@@ -130,11 +130,9 @@ public class GenerateControllerTest {
 	@Test
 	@Ignore
 	public void generateGraphsTest() {
-		try {
-			g.generateGraphs(2,5,1,5, 4);
-		} catch (InvalidGeneratorInputException | InterruptedException e) {
-			e.printStackTrace();
-		}
+
+		g.generateGraphs(2, 5, 1, 5, 4);
+
 		int actual = 0;
 		try {
 			actual = database.getNumberOfGraphs();
@@ -147,11 +145,9 @@ public class GenerateControllerTest {
 	@Test
 	@Ignore
 	public void generateGraphsTestNotEnoughGraphs() {
-		try {
-			g.generateGraphs(1,2,1,3, 20);
-		} catch (InvalidGeneratorInputException | InterruptedException e) {
-			e.printStackTrace();
-		}
+
+		g.generateGraphs(1, 2, 1, 3, 20);
+
 		int actual = 0;
 		try {
 			actual = database.getNumberOfGraphs();
