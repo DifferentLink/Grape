@@ -3,12 +3,13 @@ package edu.kit.ipd.dbis.integration;
 import edu.kit.ipd.dbis.controller.util.CalculationMaster;
 import edu.kit.ipd.dbis.controller.util.CalculationWorker;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
-import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.exceptions.sql.*;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
+import edu.kit.ipd.dbis.log.Event;
+import edu.kit.ipd.dbis.log.EventType;
+import edu.kit.ipd.dbis.log.Log;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
@@ -49,7 +50,7 @@ public class integrationTest {
 			database = fileManager.createGraphDatabase(url, user, password, name);
 			fileManager.deleteGraphDatabase(database);
 			database = fileManager.createGraphDatabase(url, user, password, name);
-		} catch (Exception e){
+		} catch (Exception e) {
 			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 			connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
 			String url = "jdbc:mysql://127.0.0.1/library";
@@ -59,6 +60,7 @@ public class integrationTest {
 
 			FileManager fileManager = new FileManager();
 			database = fileManager.createGraphDatabase(url, user, password, name);
+
 		}
 		graphGenerator = new BulkRandomConnectedGraphGenerator();
 		filter = new Filtermanagement();
@@ -117,7 +119,6 @@ public class integrationTest {
 			uncalculated = database.getNumberOfUncalculatedGraphs();
 		} catch (ConnectionFailedException ignored) {
 		}
-		assertEquals(amount, graphAmount);
 		assertEquals(0, uncalculated);
 	}
 
@@ -129,10 +130,8 @@ public class integrationTest {
 		int minEdges = 2;
 		int maxEdges = 8;
 		int filterId = 1;
-		int numberEdges = 0;
 		int expectedAmount = 0;
 		int actualAmount = 0;
-
 
 		String filterInput = "numberofedges = 4";
 
@@ -161,7 +160,7 @@ public class integrationTest {
 		//Get Number of Graphs
 		try {
 			result = filter.getFilteredAndSortedGraphs();
-		} catch (ConnectionFailedException e) {
+		} catch (ConnectionFailedException ignored) {
 		}
 		assert result != null;
 		while (result.next()) {
@@ -175,7 +174,7 @@ public class integrationTest {
 		}
 		assert result != null;
 		while (result.next()) {
-			if(result.getInt("numberofedges") == 4) {
+			if (result.getInt("numberofedges") == 4) {
 				expectedAmount++;
 			}
 		}
@@ -183,8 +182,78 @@ public class integrationTest {
 	}
 
 	@Test
-	public void integration() {
+	public void undoRedoIntegration() {
+		int amount = 1;
+		int minVertices = 2;
+		int maxVertices = 5;
+		int minEdges = 2;
+		int maxEdges = 5;
+		int graphAmount = 0;
+		int expectedAmount = 0;
+		int actualAmount = 0;
 
+		Log log = new Log(50);
+		log.setDatabase(database);
+		Set<PropertyGraph<Integer, Integer>> graphs = new HashSet<>();
+		try {
+			graphGenerator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
+		} catch (NotEnoughGraphsException ignored) {
+		}
+		graphAmount = graphs.size();
+		assertEquals(amount, graphAmount);
+		for (PropertyGraph graph : graphs) {
+			try {
+				database.addGraph(graph);
+			} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException ignored) {
+			}
+		}
+		List<Thread> jobs = new LinkedList<>();
+		for (PropertyGraph<Integer, Integer> graph : graphs) {
+			jobs.add(new CalculationWorker(graph, database));
+		}
+		CalculationMaster.executeCalculation(jobs);
+
+		// Create log entry
+		List<Integer> changedGraphs = new LinkedList<>();
+		for (PropertyGraph<Integer, Integer> graph : graphs) {
+			if (graph.getId() != 0) {
+				changedGraphs.add(graph.getId());
+			}
+		}
+		log.addEvent(new Event(EventType.ADD, changedGraphs.size() + " " + "graphsGenerated", changedGraphs));
+		try {
+			expectedAmount = database.getNumberOfGraphs() - graphAmount;
+		} catch (ConnectionFailedException e) {
+			e.printStackTrace();
+		}
+		try {
+			log.undo();
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException ignored) {
+		}
+
+		try {
+			actualAmount = database.getNumberOfGraphs();
+		} catch (ConnectionFailedException e) {
+			e.printStackTrace();
+		}
+		assertEquals(expectedAmount, actualAmount);
+
+		try {
+			expectedAmount = database.getNumberOfGraphs() + graphAmount;
+		} catch (ConnectionFailedException e) {
+			e.printStackTrace();
+		}
+		try {
+			log.redo();
+		} catch (DatabaseDoesNotExistException | AccessDeniedForUserException | ConnectionFailedException ignored) {
+		}
+
+		try {
+			actualAmount = database.getNumberOfGraphs();
+		} catch (ConnectionFailedException e) {
+			e.printStackTrace();
+		}
+		assertEquals(expectedAmount, actualAmount);
 	}
 
 
