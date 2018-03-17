@@ -18,20 +18,32 @@ import static org.junit.Assert.assertEquals;
 
 public class GenerateControllerTest {
 
-	GraphDatabase database;
-	GenerateController g;
+	private static GraphDatabase database;
+	private static GenerateController g;
 
-	@Before
-	public void setUp() throws Exception {
-		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
-		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
-		String url = "jdbc:mysql://127.0.0.1/library";
-		String user = "travis";
-		String password = "";
-		String name = "grape";
+	@BeforeClass
+	public static void setUp() throws Exception {
+		try {
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "user";
+			String password = "password";
+			String name = "grape";
 
-		FileManager fileManager = new FileManager();
-		database = fileManager.createGraphDatabase(url, user, password, name);
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+			fileManager.deleteGraphDatabase(database);
+			database = fileManager.createGraphDatabase(url, user, password, name);
+		} catch (Exception e){
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+			connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "travis";
+			String password = "";
+			String name = "generatecontrollertest";
+
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+		}
 		g = GenerateController.getInstance();
 		g.setDatabase(database);
 	}
