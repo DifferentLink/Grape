@@ -210,7 +210,7 @@ public class FilterUI extends JPanel {
 		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput, isActive));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		try {
-			updateFilter(filterController, simpleFilter);
+			updateFilter(simpleFilter);
 			filterInput.setBackground(Color.WHITE);
 		} catch (InvalidInputException e) {
 			filterInput.setBackground(theme.lightNeutralColor);
@@ -398,7 +398,7 @@ public class FilterUI extends JPanel {
 					textField, textField.getX(), textField.getY() + textField.getHeight());
 			textField.requestFocus();
 			try {
-				updateFilter(filterController, filter);
+				updateFilter(filter);
 				textField.setBackground(Color.WHITE);
 			} catch (InvalidInputException e) {
 				textField.setBackground(theme.lightNeutralColor);
@@ -475,7 +475,7 @@ public class FilterUI extends JPanel {
 		}
 	}
 
-	private void updateFilter(FilterController controller, SimpleFilter simpleFilter) throws InvalidInputException {
+	private void updateFilter(SimpleFilter simpleFilter) throws InvalidInputException {
 		int groupID = uiFilterManager.getGroupID(simpleFilter.getID());
 		if (groupID != -1) {
 			filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID(), groupID);
