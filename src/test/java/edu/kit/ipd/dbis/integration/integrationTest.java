@@ -128,15 +128,16 @@ public class integrationTest {
 		}
 		//own Filter method
 		try {
-			result = database.getGraphs("", "", true);
+			String[][] filterlist = new String[][]{};
+			result = database.getGraphs(filterlist, "id", true);
 		} catch (ConnectionFailedException e) {
 		}
 		assert result != null;
 		while (result.next()) {
-			actualAmount++;
+			if(result.getInt("numberofedges") == 4) {
+				expectedAmount++;
+			}
 		}
-
-
 		assertEquals(expectedAmount, actualAmount);
 	}
 
