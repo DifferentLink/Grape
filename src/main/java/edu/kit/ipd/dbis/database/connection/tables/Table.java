@@ -245,7 +245,7 @@ public abstract class Table {
 	 * @return all ids in the represented MySQL-Table
 	 * @throws SQLException if the connection to the database fails
 	 */
-	protected LinkedList<Integer> getIds() throws SQLException {
+	public LinkedList<Integer> getIds() throws SQLException {
 
 		String sql = "SELECT id FROM "
 				+ this.name;

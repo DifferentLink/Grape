@@ -216,6 +216,7 @@ public class GraphTable extends Table {
 	public void merge(GraphTable table) throws SQLException {
 
 		LinkedList<Integer> ids = table.getIds();
+		ids.remove(new Integer(0));
 		for (int i : ids) {
 			try {
 				if (!this.graphExists(table.getContent(i))) {
