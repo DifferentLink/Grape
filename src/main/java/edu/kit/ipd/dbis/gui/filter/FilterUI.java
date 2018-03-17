@@ -128,6 +128,7 @@ public class FilterUI extends JPanel {
 
 		for (FilterGroup filterGroup : this.uiFilterManager.getFilterGroups()) {
 			this.filterController.removeFiltersegment(filterGroup.getID());
+			this.filterController.deactivate(filterGroup.getID());
 			this.filterController.updateFilterGroup(filterGroup.getText(), filterGroup.getID());
 			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
 				try {
@@ -142,6 +143,7 @@ public class FilterUI extends JPanel {
 		for (SimpleFilter simpleFilter : this.uiFilterManager.getSimpleFilter()) {
 			try {
 				this.filterController.removeFiltersegment(simpleFilter.getID());
+				this.filterController.deactivate(simpleFilter.getID());
 				this.filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
 			} catch (InvalidInputException e) {
 

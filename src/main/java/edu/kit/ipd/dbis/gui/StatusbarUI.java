@@ -124,7 +124,7 @@ public class StatusbarUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-
+			statusbarController.continueCalculation();
 		}
 	}
 

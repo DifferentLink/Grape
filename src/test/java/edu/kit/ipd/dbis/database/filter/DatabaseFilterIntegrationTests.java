@@ -37,10 +37,10 @@ public class DatabaseFilterIntegrationTests {
 			database = fileManager.createGraphDatabase(url, user, password, name);
 
 			name = "grape2modified";
-			FileManager fileManager2 = new FileManager();
-			newDatabase = fileManager2.createGraphDatabase(url, user, password, name);
-			fileManager.deleteGraphDatabase(newDatabase);
-			newDatabase = fileManager2.createGraphDatabase(url, user, password, name);
+			GraphTable graphTable = new GraphTable(url, user, password, name);
+			name = "grape2modifiedFilters";
+			FilterTable filterTable = new FilterTable(url, user,password, name);
+			newDatabase = new GraphDatabase(graphTable, filterTable);
 
 
 		} catch (Exception e){
