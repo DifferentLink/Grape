@@ -3,6 +3,8 @@ package edu.kit.ipd.dbis.controller;
 import edu.kit.ipd.dbis.controller.util.CalculationMaster;
 import edu.kit.ipd.dbis.controller.util.CalculationWorker;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.gui.GrapeUI;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 
@@ -55,7 +57,15 @@ public class CalculationController {
 	 * Start calculation of properties of graphs in database which have uncalculated properties
 	 */
 	public synchronized void startCalculation() {
-		List<PropertyGraph<Integer, Integer>> uncalculatedGraphs = new LinkedList<>(); // todo get uncalculated graphs from database
+		List<PropertyGraph<Integer, Integer>> uncalculatedGraphs = new LinkedList<>();
+		try {
+			while (database.hasUncalculatedGraphs()) {
+				uncalculatedGraphs.add(database.getUncalculatedGraph());
+			}
+		} catch (ConnectionFailedException | UnexpectedObjectException e) {
+			statusbarController.addMessage(e.getMessage());
+		}
+
 		List<Thread> jobs = new LinkedList<>();
 		for (PropertyGraph<Integer, Integer> graph : uncalculatedGraphs) {
 			jobs.add(new CalculationWorker(graph, database));
