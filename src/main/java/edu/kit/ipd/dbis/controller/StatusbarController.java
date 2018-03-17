@@ -11,8 +11,8 @@ import edu.kit.ipd.dbis.log.EventType;
 import edu.kit.ipd.dbis.log.History;
 import edu.kit.ipd.dbis.log.Log;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The type Statusbar controller.
@@ -20,10 +20,10 @@ import java.util.Set;
 public class StatusbarController {
 
 	private Log log;
-	private CalculationController calculation;
+	private CalculationController calculationController;
 	private GrapeUI grapeUI;
-
-	private static StatusbarController statusbar;
+	private GraphDatabase database;
+	private static StatusbarController statusbarController;
 	private StatusbarUI statusbarUI;
 
 	private StatusbarController() {
@@ -36,10 +36,10 @@ public class StatusbarController {
 	 * @return the instance
 	 */
 	public static StatusbarController getInstance() {
-		if (statusbar == null) {
-			statusbar = new StatusbarController();
+		if (statusbarController == null) {
+			statusbarController = new StatusbarController();
 		}
-		return statusbar;
+		return statusbarController;
 	}
 
 	/**
@@ -48,6 +48,7 @@ public class StatusbarController {
 	 * @param database the database
 	 */
 	public void setDatabase(GraphDatabase database) {
+		this.database = database;
 		log.setDatabase(database);
 	}
 
@@ -61,7 +62,7 @@ public class StatusbarController {
 	}
 
 	private void setCalculation() {
-		this.calculation = CalculationController.getInstance();
+		this.calculationController = CalculationController.getInstance();
 	}
 
 	/**
@@ -129,44 +130,23 @@ public class StatusbarController {
 	 */
 	public void addEvent(Event event) {
 		log.addEvent(event);
-		this.statusbarUI.setLastLogentry(statusbar.getHistory().getLastEvent());
+		this.statusbarUI.setLastLogEntry(statusbarController.getHistory().getLastEvent());
 	}
 
 	/**
 	 * Add event.
 	 *
 	 * @param type the EventType
-	 * @param id   the id of the graph
+	 * @param ids   the ids of the graph
 	 */
-	public void addEvent(EventType type, int id) {
-		Set<Integer> changedGraph = new HashSet<>();
-		changedGraph.add(id);
-		Event event;
-		String message;
-		if (type.equals(EventType.ADD)) {
-			message = "New graph added";
-		} else if (type.equals(EventType.REMOVE)) {
-			message = "Graph deleted";
-		} else {
-			return;
-		}
-		event = new Event(type, message, changedGraph);
-		this.addEvent(event);
-
+	public void addEvent(EventType type, List<Integer> ids, String message) {
+		this.addEvent(new Event(type, message, ids));
 	}
 
-	/**
-	 * Add event.
-	 *
-	 * @param type the EventType
-	 * @param id   the id of the graph
-	 */
-	public void addEvent(EventType type, int id, String message) {
-		Set<Integer> changedGraph = new HashSet<>();
-		changedGraph.add(id);
-		Event event;
-		event = new Event(type, message, changedGraph);
-		this.addEvent(event);
+	public void addEvent(EventType eventType, int id, String message) {
+		List<Integer> ids = new LinkedList<>();
+		ids.add(id);
+		this.addEvent(new Event(eventType, message, ids));
 	}
 
 	/**
@@ -175,48 +155,41 @@ public class StatusbarController {
 	 * @param message the message
 	 */
 	public void addMessage(String message) {
-		Set<Integer> empty = new HashSet<>();
-		Event event;
-		event = new Event(EventType.MESSAGE, message, empty);
-		this.addEvent(event);
-	}
-
-	/**
-	 * pauses the method calculateGraphProperties().
-	 */
-	public void pauseCalculation() {
-		if (calculation == null) {
-			setCalculation();
-		}
-		calculation.pauseCalculation();
+		this.addEvent(new Event(EventType.MESSAGE, message, new LinkedList<>()));
 	}
 
 	/**
 	 * continues the method calculateGraphProperties().
 	 */
 	public void continueCalculation() {
-		if (calculation == null) {
+		if (calculationController == null) {
 			setCalculation();
 		}
-		calculation.continueCalculation();
+		calculationController.startCalculation();
+	}
+
+	public void setRemainingCalculations() {
+		try {
+			this.statusbarUI.setRemainingCalculations(this.database.getNumberOfUncalculatedGraphs());
+		} catch (ConnectionFailedException e) {
+			this.addMessage(e.getMessage());
+		}
+	}
+
+	public void setNumberOfGraphs() {
+		try {
+			this.statusbarUI.setNumberOfGraphs(this.database.getNumberOfGraphs());
+		} catch (ConnectionFailedException e) {
+			this.addMessage(e.getMessage());
+		}
 	}
 
 	/**
-	 * Gets number uncalculated graphs.
-	 *
-	 * @return the number uncalculated graphs
-	 */
-	public int getNumberUncalculatedGraphs() {
-		return 0;
-	}
-
-	/**
-	 * Sets statusbar ui.
-	 *
-	 * @param statusbarUI the statusbar ui
+	 * @param statusbarUI the statusbarController ui
 	 */
 	public void setStatusbarUI(StatusbarUI statusbarUI) {
 		this.statusbarUI = statusbarUI;
 	}
+
 }
 

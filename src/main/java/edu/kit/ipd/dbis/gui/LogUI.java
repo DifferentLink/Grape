@@ -30,7 +30,6 @@ public class LogUI extends JFrame {
 	 * @param theme the theme to style the log
 	 */
 	public LogUI(StatusbarController statusbarController, ResourceBundle language, Theme theme) {
-
 		this.history = statusbarController.getHistory();
 		this.language = language;
 		this.theme = theme;
@@ -39,7 +38,6 @@ public class LogUI extends JFrame {
 	}
 
 	/**
-	 * set history
 	 * @param history new history
 	 */
 	public void setHistory(History history) {
@@ -51,21 +49,17 @@ public class LogUI extends JFrame {
 	 * @param component the component used to position the log
 	 */
 	public void drawLog(Component component) {
-		//dispose();
-		this.addFocusListener(new HasFocusListener(this));
+		dispose();
+		addFocusListener(new HasFocusListener(this));
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		JScrollPane scrollPane = new JScrollPane(container);
 		scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
 		scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(Integer.MAX_VALUE, 10));
 
-		//history.getEvents().forEach(event -> container.add(renderEvent(event)));
-
-		JTextArea text = new JTextArea(history.toString());
-		text.setEditable(false);
-		text.setBackground(theme.backgroundColor);
-		text.setForeground(theme.foregroundColor);
-		container.add(text, BorderLayout.CENTER);
+		for (String logEntry : history.toStringArray()) {
+			container.add(new JLabel(logEntry));
+		}
 
 		this.add(scrollPane);
 		this.setMinimumSize(new Dimension(500, 100));
@@ -77,65 +71,4 @@ public class LogUI extends JFrame {
 		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
 		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
 	}
-
-
-	/**
-	 * Takes an event as the input and calls the respective method to make a JPanel out of it
-	 * @param event
-	 * @return
-	 */
-
-	/**
-	private JPanel renderEvent(Event event) {
-		switch (event.getType()) {
-			case MESSAGE : return renderMESSAGE(event);
-			case REMOVE : return renderREMOVE(event);
-			case ADD : return renderADD(event);
-			default : break;
-		}
-		return null;
-	}
-
-	private JPanel renderMESSAGE(Event event) {
-		JPanel container = new JPanel(new BorderLayout());
-		String changedGraphs = "";
-		for (int id : event.getChangedGraphs()) {
-			changedGraphs += id + ", ";
-		}
-		container.add(new JLabel("[Message] " + event.getMessage()));
-		container.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, theme.neutralColor));
-		return container;
-	}
-
-	private JPanel renderREMOVE(Event event) {
-		JPanel container = new JPanel(new BorderLayout());
-		String changedGraphs = "[REMOVE] ";
-		if (event.getChangedGraphs().size() > 3) {
-			Iterator iterator = event.getChangedGraphs().iterator();
-			changedGraphs = String.valueOf(iterator.next()) + ", "
-					+ String.valueOf(iterator.next()) + ", "
-					+ String.valueOf(iterator.next());
-		} else if (event.getChangedGraphs().size() > 0) {
-			Iterator iterator = event.getChangedGraphs().iterator();
-			while (iterator.hasNext()) {
-				changedGraphs += String.valueOf(iterator.next()) + ", ";
-			}
-			changedGraphs = changedGraphs.substring(changedGraphs.length() - 2);
-		}
-		container.add(new JLabel(event.getMessage() + ": " + changedGraphs));
-		return container;
-	}
-
-	private JPanel renderADD(Event event) {
-		JPanel container = new JPanel(new BorderLayout());
-		String changedGraphs = "";
-		for (int id : event.getChangedGraphs()) {
-			changedGraphs += id + ", ";
-		}
-		container.add(new JLabel("[ADD] " + event.getMessage() + " (ID's: " + changedGraphs + ")"));
-		container.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, theme.neutralColor));
-		return container;
-	}
-	 */
-
 }

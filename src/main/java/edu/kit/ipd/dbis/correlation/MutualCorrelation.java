@@ -5,74 +5,11 @@ import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 
 import java.util.LinkedList;
-import java.util.TreeSet;
 
 /**
  * class which calculates the MutualCorrelation for a list of graphs
  */
 public class MutualCorrelation extends Correlation {
-
-    @Override
-    public TreeSet<CorrelationOutput> useMaximum(GraphDatabase database) throws ConnectionFailedException {
-        String[] firstPropertyList = MutualCorrelation.getValidProperties();
-        String[] secondPropertyList = MutualCorrelation.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        int i = 0;
-        for (String property1: firstPropertyList) {
-            i++;
-            for (int j = i; j < secondPropertyList.length; j++) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, secondPropertyList[j],
-                        MutualCorrelation.calculateCorrelation(property1, secondPropertyList[j], database));
-                resultSet.add(outputObject);
-            }
-        }
-        return MutualCorrelation.cutListMaximum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMaximum(String property2, GraphDatabase database) throws
-            ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return MutualCorrelation.cutListMaximum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMinimum(GraphDatabase database) throws ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        String[] secondPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            for (String property2: secondPropertyList) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
-    }
-
-    @Override
-    public TreeSet<CorrelationOutput> useMinimum(String property2, GraphDatabase database) throws
-            ConnectionFailedException {
-        String[] firstPropertyList = Pearson.getValidProperties();
-        TreeSet<CorrelationOutput> resultSet = new TreeSet<>();
-        for (String property1: firstPropertyList) {
-            if (!property1.toLowerCase().equals(property2.toLowerCase())) {
-                CorrelationOutput outputObject = new CorrelationOutput(property1, property2,
-                        MutualCorrelation.calculateCorrelation(property1, property2, database));
-                resultSet.add(outputObject);
-            }
-        }
-        return MutualCorrelation.cutListMinimum(resultSet, this.getAttributeCounter());
-    }
 
     /**
      * calculates the mutual correlation / information for two specific properties
@@ -82,31 +19,31 @@ public class MutualCorrelation extends Correlation {
      * @return returns the value of the mutual correlation of two properties (firstProperty and secondProperty)
      * @throws ConnectionFailedException thrown if there was no connection to the database possible
      */
-    static double calculateCorrelation(String firstProperty, String secondProperty,
+    @Override
+    public double calculateCorrelation(String firstProperty, String secondProperty,
                                        GraphDatabase database) throws ConnectionFailedException {
         Filtermanagement manager = new Filtermanagement();
         manager.setDatabase(database);
         LinkedList<Double> firstPropertyValues = database.getValues(manager.parseFilterList(), firstProperty);
         LinkedList<Double> firstPropertyValuesCopy = database.getValues(manager.parseFilterList(), firstProperty);
+        LinkedList<Double> secondPropertyValuesCopy = database.getValues(manager.parseFilterList(), secondProperty);
         double returnValue = 0;
         while (!firstPropertyValues.isEmpty()) {
             LinkedList<Double> secondPropertyValues = database.getValues(manager.parseFilterList(), secondProperty);
-            LinkedList<Double> secondPropertyValuesCopy = database.getValues(manager.parseFilterList(), secondProperty);
-            double i = MutualCorrelation.getMinimum(firstPropertyValues);
+            double i = firstPropertyValues.pollFirst();
             while (!secondPropertyValues.isEmpty()) {
-                double j = MutualCorrelation.getMinimum(secondPropertyValues);
+                double j = secondPropertyValues.pollFirst();
                 double log = Math.log(MutualCorrelation.calculatePXY(firstPropertyValuesCopy, i,
-                        secondPropertyValuesCopy, j) / (MutualCorrelation.calculatePX(firstPropertyValuesCopy, i)));
-                if (log > -2000.0 && log < 2000.0) {
+                        secondPropertyValuesCopy, j) / (MutualCorrelation.calculatePX(firstPropertyValuesCopy, i)
+                        * MutualCorrelation.calculatePX(secondPropertyValuesCopy, j)));
+                if (log >= 0.0 && log < 2000.0) {
                     returnValue = returnValue + (MutualCorrelation.calculatePXY(firstPropertyValuesCopy, i,
-                            secondPropertyValuesCopy, j) * Math.log((MutualCorrelation.calculatePXY(
-                            firstPropertyValuesCopy, i, secondPropertyValuesCopy, j) /
-                            (MutualCorrelation.calculatePX(firstPropertyValuesCopy, i)
-                                    * MutualCorrelation.calculatePX(secondPropertyValuesCopy, j)))));
+                            secondPropertyValuesCopy, j) * log);
                 }
-                secondPropertyValues.remove(j);
             }
-            firstPropertyValues.remove(i);
+        }
+        if (Math.abs(returnValue) < 0.01) {
+            return Double.MAX_VALUE;
         }
         return returnValue;
     }
@@ -125,7 +62,7 @@ public class MutualCorrelation extends Correlation {
         double counter = 0.0;
         for (int i = 0; i < inputList1.size(); i++) {
             if (Math.abs(inputList1.get(i) - value1) < 0.01 && Math.abs(inputList2.get(i) - value2) < 0.01) {
-                counter++;
+                counter = counter + 1;
             }
         }
         return (counter / inputList1.size());
@@ -147,18 +84,4 @@ public class MutualCorrelation extends Correlation {
         return (counter / inputList.size());
     }
 
-    /**
-     * method which allows to get the smallest element of a list
-     * @param inputList list where the minimum is searched for
-     * @return returns the smallest element of the list
-     */
-    static double getMinimum(LinkedList<Double> inputList) {
-        double minimum = Integer.MAX_VALUE;
-        for (double currentElement: inputList) {
-            if (currentElement < minimum) {
-                minimum = currentElement;
-            }
-        }
-        return minimum;
-    }
 }

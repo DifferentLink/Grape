@@ -114,6 +114,44 @@ public class FilterUI extends JPanel {
 	}
 
 	/**
+	 * getter-method
+	 * @return uiFilterManager
+	 */
+	public UIFilterManager getUiFilterManager() {
+		return this.uiFilterManager;
+	}
+
+	/**
+	 * Save all filters
+	 */
+	public void saveFilters() {
+
+		for (FilterGroup filterGroup : this.uiFilterManager.getFilterGroups()) {
+			this.filterController.removeFiltersegment(filterGroup.getID());
+			this.filterController.updateFilterGroup(filterGroup.getText(), filterGroup.getID());
+			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
+				try {
+					this.filterController.removeFiltersegment(simpleFilter.getID());
+					this.filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID(), filterGroup.getID());
+				} catch(InvalidInputException e) {
+
+				}
+			}
+		}
+
+		for (SimpleFilter simpleFilter : this.uiFilterManager.getSimpleFilter()) {
+			try {
+				this.filterController.removeFiltersegment(simpleFilter.getID());
+				this.filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
+			} catch (InvalidInputException e) {
+
+			}
+		}
+
+
+	}
+
+	/**
 	 * Uses current state of FilterGroups and SimpleFilters to create the GUI elements in the filter panel.
 	 */
 	public void update() {
@@ -164,10 +202,10 @@ public class FilterUI extends JPanel {
 		simpleFilterUI.add(new JLabel("⚫"));
 		JCheckBox isActive = new JCheckBox();
 		isActive.setSelected(simpleFilter.isActive());
-		isActive.addActionListener(new ToggleFilterAction(simpleFilter, isActive));
+		isActive.addActionListener(new ToggleSimpleFilterAction(simpleFilter, isActive));
 		simpleFilterUI.add(isActive);
 		JTextField filterInput = new JTextField(simpleFilter.getText());
-		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput));
+		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput, isActive));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		try {
 			filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
@@ -192,7 +230,7 @@ public class FilterUI extends JPanel {
 		filterGroupHeaderUI.setLayout(new BoxLayout(filterGroupHeaderUI, BoxLayout.X_AXIS));
 		JCheckBox isActive = new JCheckBox();
 		isActive.setSelected(filterGroup.isActive());
-		isActive.addActionListener(new ToggleFilterAction(filterGroup, isActive));
+		isActive.addActionListener(new ToggleFilterGroupAction(filterGroup, isActive));
 		filterGroupHeaderUI.add(isActive);
 		JTextField filterInput = new JTextField(filterGroup.getText());
 		filterInput.getDocument().addDocumentListener(new FilterGroupInputChange(filterGroup, filterInput));
@@ -262,12 +300,12 @@ public class FilterUI extends JPanel {
 		}
 	}
 
-	private class ToggleFilterAction implements ActionListener {
+	private class ToggleSimpleFilterAction implements ActionListener {
 
 		private final Filter filter;
 		private final JCheckBox checkBox;
 
-		ToggleFilterAction(Filter filter, JCheckBox checkBox) {
+		ToggleSimpleFilterAction(Filter filter, JCheckBox checkBox) {
 			this.filter = filter;
 			this.checkBox = checkBox;
 		}
@@ -280,6 +318,32 @@ public class FilterUI extends JPanel {
 			} else {
 				filterController.deactivate(filter.getID());
 			}
+		}
+	}
+
+	private class ToggleFilterGroupAction implements ActionListener {
+
+		private final FilterGroup filterGroup;
+		private final JCheckBox checkBox;
+
+		ToggleFilterGroupAction(FilterGroup filterGroup, JCheckBox checkBox) {
+			this.filterGroup = filterGroup;
+			this.checkBox = checkBox;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			filterGroup.setActive(checkBox.isSelected());
+			filterGroup.getSimpleFilter().forEach(filter -> {
+				filter.setActive(checkBox.isSelected());
+				if (filter.isActive()) {
+					filterController.activate(filter.getID());
+				} else {
+					filterController.deactivate(filter.getID());
+				}
+			});
+			update();
+			revalidate();
 		}
 	}
 
@@ -304,10 +368,12 @@ public class FilterUI extends JPanel {
 
 		private final SimpleFilter filter;
 		private final JTextField textField;
+		private final JCheckBox checkBox;
 
-		SimpleFilterInputChange(SimpleFilter simpleFilter, JTextField textField) {
+		SimpleFilterInputChange(SimpleFilter simpleFilter, JTextField textField, JCheckBox checkBox) {
 			this.filter = simpleFilter;
 			this.textField = textField;
+			this.checkBox = checkBox;
 		}
 
 		@Override
@@ -327,7 +393,8 @@ public class FilterUI extends JPanel {
 
 		private void update() {
 			filter.setText(textField.getText());
-			(new FilterSuggestions(textField)).show(textField, textField.getX(), textField.getY() + textField.getHeight());
+			(new FilterSuggestions(textField)).show(
+					textField, textField.getX(), textField.getY() + textField.getHeight());
 			textField.requestFocus();
 			try {
 				filterController.updateFilter(textField.getText(), filter.getID());
@@ -335,6 +402,7 @@ public class FilterUI extends JPanel {
 			} catch (InvalidInputException e) {
 				textField.setBackground(theme.lightNeutralColor);
 			}
+			checkBox.setSelected(false);
 		}
 	}
 

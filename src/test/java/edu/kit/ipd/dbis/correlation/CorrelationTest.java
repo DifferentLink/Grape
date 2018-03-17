@@ -17,8 +17,8 @@ public class CorrelationTest {
     @Test
     public void testSetMaximum() {
         Correlation testCorrelation = new MutualCorrelation();
-        testCorrelation.setMaximum(true);
-        assert testCorrelation.getMaximum();
+        testCorrelation.setFirstArgument("min");
+        assert testCorrelation.getFirstArgument().equals("min");
     }
 
     @Test
@@ -82,8 +82,6 @@ public class CorrelationTest {
         CorrelationOutput output3 = new CorrelationOutput("TotalColoringNumberOfColors", "NumberOfCliques", 1.89);
         CorrelationOutput output4 = new CorrelationOutput("VertexColoringNumberOfColors", "NumberOfDisjointVerticesFromKkGraph", 6.83);
         CorrelationOutput output5 = new CorrelationOutput("SmallestDegree", "NumberOfDisjointEdgesFromKkGraph", 8.71);
-        //correlation value is null --> may happen due to a division by zero --> result should be ignored
-        CorrelationOutput output6 = new CorrelationOutput("GreatestDegree", "LargestCliqueSize", 0.0);
         //first property is equal to second property --> correlation values are only interesting between different properties
         CorrelationOutput output7 = new CorrelationOutput("GreatestDegree", "GreatestDegree", 9.32);
         TreeSet<CorrelationOutput> testSet = new TreeSet<>();
@@ -92,7 +90,6 @@ public class CorrelationTest {
         testSet.add(output3);
         testSet.add(output4);
         testSet.add(output5);
-        testSet.add(output6);
         testSet.add(output7);
         TreeSet<CorrelationOutput> outputSet = Correlation.cutListMinimum(testSet, 3);
         assert outputSet.size() == 3;
@@ -148,8 +145,6 @@ public class CorrelationTest {
         CorrelationOutput output3 = new CorrelationOutput("TotalColoringNumberOfColors", "NumberOfCliques", 1.89);
         CorrelationOutput output4 = new CorrelationOutput("VertexColoringNumberOfColors", "NumberOfDisjointVerticesFromKkGraph", 6.83);
         CorrelationOutput output5 = new CorrelationOutput("SmallestDegree", "NumberOfDisjointEdgesFromKkGraph", 8.71);
-        //correlation value is null --> may happen due to a division by zero --> result should be ignored
-        CorrelationOutput output6 = new CorrelationOutput("GreatestDegree", "LargestCliqueSize", 0.0);
         //first property is equal to second property --> correlation values are only interesting between different properties
         CorrelationOutput output7 = new CorrelationOutput("GreatestDegree", "GreatestDegree", 9.32);
         TreeSet<CorrelationOutput> testSet = new TreeSet<>();
@@ -158,7 +153,6 @@ public class CorrelationTest {
         testSet.add(output3);
         testSet.add(output4);
         testSet.add(output5);
-        testSet.add(output6);
         testSet.add(output7);
         TreeSet<CorrelationOutput> outputSet = Correlation.cutListMaximum(testSet, 3);
         assert outputSet.size() == 3;

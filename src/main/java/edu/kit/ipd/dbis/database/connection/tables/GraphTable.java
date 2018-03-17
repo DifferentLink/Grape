@@ -216,6 +216,7 @@ public class GraphTable extends Table {
 	public void merge(GraphTable table) throws SQLException {
 
 		LinkedList<Integer> ids = table.getIds();
+		ids.remove(new Integer(0));
 		for (int i : ids) {
 			try {
 				if (!this.graphExists(table.getContent(i))) {
@@ -353,6 +354,23 @@ public class GraphTable extends Table {
 		} catch (NullPointerException e) {
 			graph.setId(this.getId());
 		}
+	}
+
+	/**
+	 * Returns number of uncalculated graphs
+	 * @return number of uncalculated graphs
+	 * @throws SQLException if the connection to the database fails
+	 */
+	public int numberOfUncalculatedGraphs() throws SQLException {
+
+		String sql = "SELECT COUNT(*) FROM "
+				+ this.getName()
+				+ " WHERE iscalculated = 0";
+		ResultSet result = this.connection.prepareStatement(sql).executeQuery();
+		if (result.next()) {
+			return result.getInt(1);
+		}
+		return 0;
 	}
 
 }

@@ -19,19 +19,52 @@ public class CorrelationRequestTest {
     private static GraphDatabase database;
 	private static Filtermanagement manager;
 
-    @Before
-    public void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
+    @BeforeClass
+    public static void delete() throws DatabaseDoesNotExistException, SQLException, AccessDeniedForUserException,
             ConnectionFailedException {
-    	Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
-		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
-		String url = "jdbc:mysql://127.0.0.1/library";
-		String user = "travis";
-		String password = "";
-		String name = "grape";
-		FileManager fileManager = new FileManager();
-		database = fileManager.createGraphDatabase(url, user, password, name);
-		manager = new Filtermanagement();
+
+        try {
+            String url = "jdbc:mysql://127.0.0.1/library";
+            String user = "user";
+            String password = "password";
+            String name = "grape";
+
+            FileManager fileManager = new FileManager();
+            database = fileManager.createGraphDatabase(url, user, password, name);
+            fileManager.deleteGraphDatabase(database);
+            database = fileManager.createGraphDatabase(url, user, password, name);
+        } catch (Exception e){
+            Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+            connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+            String url = "jdbc:mysql://127.0.0.1/library";
+            String user = "travis";
+            String password = "";
+            String name = "correlationrequesttests";
+
+            FileManager fileManager = new FileManager();
+            database = fileManager.createGraphDatabase(url, user, password, name);
+        }
+        manager = new Filtermanagement();
         manager.setDatabase(database);
+
+    }
+
+    @Before
+    public void clear() throws SQLException, ConnectionFailedException {
+        LinkedList<Integer> ids = database.getFilterTable().getIds();
+        for (Integer id : ids) {
+            if (id != 0) {
+                database.deleteFilter(id);
+            }
+        }
+
+        LinkedList<Integer> ids2 = database.getGraphTable().getIds();
+        for (Integer id : ids2) {
+            if (id != 0) {
+                database.deleteGraph(id);
+            }
+        }
+
     }
 
     @Test
@@ -80,7 +113,7 @@ public class CorrelationRequestTest {
     }
 
     @Test
-    public void testTestMaxOrMinValidInput() {
+    public void testTestFirstArgumentValidInput() {
         try {
             CorrelationRequest.testMaxOrMin("max");
         } catch (InvalidCorrelationInputException e) {
@@ -91,10 +124,15 @@ public class CorrelationRequestTest {
         } catch (InvalidCorrelationInputException e) {
             throw new AssertionError();
         }
+        try {
+            CorrelationRequest.testMaxOrMin("least");
+        } catch (InvalidCorrelationInputException e) {
+            throw new AssertionError();
+        }
     }
 
     @Test(expected = InvalidCorrelationInputException.class)
-    public void testTestMaxOrMin() throws InvalidCorrelationInputException {
+    public void testTestFirstArgumentInvalidInput() throws InvalidCorrelationInputException {
         CorrelationRequest.testMaxOrMin("nonsence");
     }
 
@@ -132,6 +170,11 @@ public class CorrelationRequestTest {
     }
 
     @Test (expected = InvalidCorrelationInputException.class)
+    public void testParseCorrelationToStringIntegerIs0() throws InvalidCorrelationInputException {
+        CorrelationRequest.parseCorrelationToString("Max Pearson 0");
+    }
+
+    @Test (expected = InvalidCorrelationInputException.class)
     public void testCheckCorrelationInputNull() throws InvalidCorrelationInputException {
         CorrelationRequest.parseCorrelationToString(null);
     }
@@ -160,9 +203,15 @@ public class CorrelationRequestTest {
     }
 
     @Test
+    public void testGetValidCorrelations() {
+        List<String> availableCorrelations = CorrelationRequest.getValidCorrelations();
+        assert availableCorrelations.contains("pearson");
+        assert availableCorrelations.contains("mutualcorrelation");
+    }
+
+    @Test
     public void testApplyCorrelation() throws ConnectionFailedException, InsertionFailedException,
-            UnexpectedObjectException, DatabaseDoesNotExistException, AccessDeniedForUserException,
-            InvalidCorrelationInputException {
+            UnexpectedObjectException, InvalidCorrelationInputException {
 		PearsonCorrelationTest.setDatabase(database);
         PearsonCorrelationTest.putGraphsIntoDatabase();
 
@@ -186,5 +235,17 @@ public class CorrelationRequestTest {
         testRequest9.applyCorrelation();
         CorrelationRequest testRequest10 = new CorrelationRequest("Max MutualCorrelation BinomialDensity 20000", database);
         testRequest10.applyCorrelation();
+        CorrelationRequest testRequest11 = new CorrelationRequest("Min Pearson 4", database);
+        testRequest11.applyCorrelation();
+        CorrelationRequest testRequest12 = new CorrelationRequest("Max Pearson 3", database);
+        testRequest12.applyCorrelation();
+        CorrelationRequest testRequest13 = new CorrelationRequest("Least MutualCorrelation 5", database);
+        testRequest13.applyCorrelation();
+        CorrelationRequest testRequest14 = new CorrelationRequest("Least MutualCorrelation StructureDensity 3", database);
+        testRequest14.applyCorrelation();
+        CorrelationRequest testRequest15 = new CorrelationRequest("Least Pearson 4", database);
+        testRequest15.applyCorrelation();
+        CorrelationRequest testRequest16 = new CorrelationRequest("Least Pearson NumberOfEdges 2", database);
+        testRequest16.applyCorrelation();
     }
 }

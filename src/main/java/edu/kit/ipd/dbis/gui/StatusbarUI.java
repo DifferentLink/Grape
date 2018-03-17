@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
  */
 public class StatusbarUI extends JPanel {
 
+	private final ResourceBundle language;
 	private final int statusbarHeight = 15;
 	private final StatusbarController statusbarController;
 	private DatabaseController databaseController;
@@ -34,9 +35,10 @@ public class StatusbarUI extends JPanel {
 	private GraphEditorController graphEditorController;
 	private boolean isCalculationRunning = true;
 	private JLabel statusText;
+	private JLabel lastLogMessageText;
 	private String logMessage;
 	private String remainingCalculations = "-";
-	private String selectedRow = "Position -";
+	private String selectedRow = "-";
 	private String databaseInfo = "-";
 	private String databaseName = "";
 
@@ -49,6 +51,7 @@ public class StatusbarUI extends JPanel {
 	public StatusbarUI(StatusbarController statusbarController,
 	                   DatabaseController databaseController,
 	                   ResourceBundle language, Theme theme) {
+		this.language = language;
 		this.statusbarController = statusbarController;
 		this.databaseController = databaseController;
 		this.generateController = GenerateController.getInstance();
@@ -56,11 +59,16 @@ public class StatusbarUI extends JPanel {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.add(Box.createHorizontalStrut(2));
-		//this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
+		this.add(makePauseButton(new Dimension(statusbarHeight, statusbarHeight), theme));
 		this.add(Box.createHorizontalStrut(5));
 
 		statusText = new JLabel(language.getString("noDatabaseLoaded"));
 		this.add(statusText);
+
+		lastLogMessageText = new JLabel();
+		lastLogMessageText.setForeground(theme.fontColor);
+		this.add(Box.createHorizontalGlue());
+		this.add(lastLogMessageText);
 
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, statusbarHeight));
 		this.setMinimumSize(new Dimension(Integer.MIN_VALUE, statusbarHeight));
@@ -68,7 +76,7 @@ public class StatusbarUI extends JPanel {
 		this.setBackground(theme.backgroundColor);
 		this.setForeground(theme.foregroundColor);
 
-		JButton log = new JButton("Log");
+		JButton log = new JButton(language.getString("log"));
 		log.addActionListener(new ShowLogAction(new LogUI(statusbarController, language, theme), log));
 		log.setBackground(theme.backgroundColor);
 		log.setForeground(theme.foregroundColor);
@@ -81,7 +89,7 @@ public class StatusbarUI extends JPanel {
 		this.databaseController.setStatusbarUI(this);
 		this.statusbarController.setStatusbarUI(this);
 
-		this.add(Box.createHorizontalGlue());
+		this.add(Box.createHorizontalStrut(20));
 		this.add(log);
 	}
 
@@ -94,7 +102,7 @@ public class StatusbarUI extends JPanel {
 		pauseButton.addActionListener(new PauseRunAction(pauseButton));
 
 		try {
-			Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Pause.png"));
+			Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Continue.png"));
 			image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
 			pauseButton.setIcon(new ImageIcon(image));
 		} catch (IOException e) {
@@ -114,29 +122,9 @@ public class StatusbarUI extends JPanel {
 			this.button = button;
 		}
 
-
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			if (isCalculationRunning) {
-				statusbarController.pauseCalculation();
-				try {
-					Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Continue.png"));
-					image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
-					button.setIcon(new ImageIcon(image));
-				} catch (IOException e) {
-					button.setText("R");
-				}
-			} else {
-				statusbarController.continueCalculation();
-				try {
-					Image image = ImageIO.read(getClass().getResource("/icons/ButtonRun_Pause.png"));
-					image = image.getScaledInstance(statusbarHeight - 2, statusbarHeight - 2, Image.SCALE_SMOOTH);
-					button.setIcon(new ImageIcon(image));
-				} catch (IOException e) {
-					button.setText("P");
-				}
-			}
-			isCalculationRunning = !isCalculationRunning;
+			statusbarController.continueCalculation();
 		}
 	}
 
@@ -168,7 +156,7 @@ public class StatusbarUI extends JPanel {
 	 * @param numberOfUncalculatedGraphs the number of uncalculated graphs
 	 */
 	public void setRemainingCalculations(final int numberOfUncalculatedGraphs) {
-		remainingCalculations = numberOfUncalculatedGraphs + " remaining calculations";
+		remainingCalculations = numberOfUncalculatedGraphs + " " + language.getString("remainingCalculations");
 		updateStatusbarText();
 	}
 
@@ -178,20 +166,27 @@ public class StatusbarUI extends JPanel {
 	 */
 	public void setDatabaseInfo(final String databaseName, final int numberOfGraphs) {
 		this.databaseName = databaseName;
-		databaseInfo = "Database: " + databaseName + " (" + numberOfGraphs + ")";
+		databaseInfo = language.getString("database") + ": " + databaseName + " (" + numberOfGraphs + ")";
 		updateStatusbarText();
 	}
 
 	/**
-	 * @param logMessage tsdfgdfhe message of the last logentry
+	 * @param numberOfGraphs the total number of graphs in the database
 	 */
-	public void setLastLogentry(final String logMessage) {
+	public void setNumberOfGraphs(final int numberOfGraphs) {
+		this.setDatabaseInfo(this.databaseName, numberOfGraphs);
+	}
+
+	/**
+	 * @param logMessage the message of the last log entry
+	 */
+	public void setLastLogEntry(final String logMessage) {
 		this.logMessage = logMessage;
 		updateStatusbarText();
 	}
-  
+
 	private void updateStatusbarText() {
-		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo + " |	                " +
-				"          " + logMessage);
+		statusText.setText(remainingCalculations + " | " + selectedRow + " | " + databaseInfo);
+		lastLogMessageText.setText(logMessage);
 	}
 }

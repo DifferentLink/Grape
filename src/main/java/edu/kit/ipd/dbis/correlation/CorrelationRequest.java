@@ -3,13 +3,10 @@ package edu.kit.ipd.dbis.correlation;
 import com.mysql.jdbc.StringUtils;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
 import java.util.*;
 
@@ -45,24 +42,25 @@ public class CorrelationRequest {
      * used to perform a specific correlation calculation
      * @return returns an array list which codes the results of the correlation calculation
      * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws AccessDeniedForUserException thrown if there is no access to database
-     * @throws DatabaseDoesNotExistException thrown if there is no database
      */
-    public List<CorrelationOutput> applyCorrelation() throws DatabaseDoesNotExistException,
-            AccessDeniedForUserException, ConnectionFailedException {
-        if (correlation.getMaximum() && correlation.getProperty() == null) {
+    public List<CorrelationOutput> applyCorrelation() throws ConnectionFailedException {
+        if (correlation.getFirstArgument().equals("max") && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(database));
-        } else if (!correlation.getMaximum() && correlation.getProperty() == null) {
+        } else if (correlation.getFirstArgument().equals("min") && correlation.getProperty() == null) {
             return CorrelationRequest.parseToList(correlation.useMinimum(database));
-        } else if (correlation.getMaximum() && correlation.getProperty() != null) {
+        } else if (correlation.getFirstArgument().equals("max") && correlation.getProperty() != null) {
             return CorrelationRequest.parseToList(correlation.useMaximum(correlation.getProperty(), database));
-        } else {
+        } else if (correlation.getFirstArgument().equals("min") && correlation.getProperty() != null) {
             return CorrelationRequest.parseToList(correlation.useMinimum(correlation.getProperty(), database));
+        } else if (correlation.getFirstArgument().equals("least") && correlation.getProperty() == null) {
+            return CorrelationRequest.parseToList(correlation.useLeast(database));
+        } else {
+            return CorrelationRequest.parseToList(correlation.useLeast(correlation.getProperty(), database));
         }
     }
 
     /**
-     * parse which parses a tree set into al list
+     * parser which parses a tree set into al list
      * @param input tree set which should be transformed int a list
      * @return list which inherits all elements the tree set inherits
      */
@@ -82,7 +80,7 @@ public class CorrelationRequest {
      * @return returns a correlation object which collects all information about the correlation in this object
      * @throws InvalidCorrelationInputException thrown if the user input was not valid
      */
-    static Correlation parseCorrelationToString(String correlationInput) throws
+    public static Correlation parseCorrelationToString(String correlationInput) throws
             InvalidCorrelationInputException {
         CorrelationRequest.checkCorrelationInputNull(correlationInput);
         String[] potentialPropertyArray = correlationInput.split(" ", 4);
@@ -95,7 +93,7 @@ public class CorrelationRequest {
 
         String maxOrMin = parameters[0];
         checkCorrelationInputNull(maxOrMin);
-        boolean maximum = CorrelationRequest.testMaxOrMin(maxOrMin);
+        String firstArgument = CorrelationRequest.testMaxOrMin(maxOrMin);
 
         String correlationString = parameters[1];
         checkCorrelationInputNull(correlationString);
@@ -118,8 +116,11 @@ public class CorrelationRequest {
 
         try {
             int attributeCounter = Integer.parseInt(propertyCounterString);
+            if (attributeCounter == 0) {
+                throw new InvalidCorrelationInputException();
+            }
 
-            correlation.setMaximum(maximum);
+            correlation.setFirstArgument(firstArgument);
             correlation.setAttributeCounter(attributeCounter);
             return correlation;
         } catch (NumberFormatException e) {
@@ -133,13 +134,25 @@ public class CorrelationRequest {
      * @return returns true if the user entered "max" and false if the user entered "min"
      * @throws InvalidCorrelationInputException thrown if the user input was not valid
      */
-    static boolean testMaxOrMin(String input) throws InvalidCorrelationInputException {
-        if (input.equals("min")) {
-            return false;
-        } else if (input.equals("max")) {
-            return true;
+    static String testMaxOrMin(String input) throws InvalidCorrelationInputException {
+        for (String current: CorrelationRequest.getValidFirstArguments()) {
+            if (current.equals(input)) {
+                return input;
+            }
         }
         throw new InvalidCorrelationInputException();
+    }
+
+    /**
+     * method which allows other packages (e.g. gui) to find out all supported first expressions
+     * @return returns a list which inherits all supported first expressions
+     */
+    public static List<String> getValidFirstArguments() {
+        ArrayList<String> validFirstArguments = new ArrayList<>();
+        validFirstArguments.add("min");
+        validFirstArguments.add("max");
+        validFirstArguments.add("least");
+        return validFirstArguments;
     }
 
     /**
@@ -155,6 +168,17 @@ public class CorrelationRequest {
             return new MutualCorrelation();
         }
         throw new InvalidCorrelationInputException();
+    }
+
+    /**
+     * method which allows other packages (e.g. gui) to find out all supported correlation algorithms
+     * @return returns a list of strings which inherits all names of subclasses of abstract class Correlation
+     */
+    public static List<String> getValidCorrelations() {
+        ArrayList<String> validCorrelations = new ArrayList<>();
+        validCorrelations.add("pearson");
+        validCorrelations.add("mutualcorrelation");
+        return validCorrelations;
     }
 
     /**
