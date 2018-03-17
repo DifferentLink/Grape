@@ -62,6 +62,7 @@ public class LogUI extends JFrame {
 		}
 
 		this.add(scrollPane);
+		this.add(container);
 		this.setMinimumSize(new Dimension(500, 100));
 		this.setMaximumSize(new Dimension(500, 200));
 		Point position = new Point(component.getLocationOnScreen().x - this.getWidth() + component.getWidth(),
@@ -70,5 +71,6 @@ public class LogUI extends JFrame {
 		this.setVisible(true);
 		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
 		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
+
 	}
 }
