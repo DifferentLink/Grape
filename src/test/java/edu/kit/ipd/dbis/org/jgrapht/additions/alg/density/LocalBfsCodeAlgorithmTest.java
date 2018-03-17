@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.density;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.Util;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.clique.BronKerboschCliqueFinder;
@@ -12,33 +13,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class LocalBfsCodeAlgorithmTest {
-
-	private PropertyGraph generateSimpleTestGraph() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-		graph.addVertex("d");
-		graph.addVertex("e");
-		graph.addVertex("f");
-		graph.addVertex("g");
-		graph.addEdge("d", "a");
-		graph.addEdge("d", "e");
-		graph.addEdge("d", "b");
-		graph.addEdge("a", "f");
-		graph.addEdge("e", "f");
-		graph.addEdge("e", "b");
-		graph.addEdge("e", "g");
-		graph.addEdge("e", "c");
-		graph.addEdge("g", "c");
-		graph.addEdge("a", "g");
-		return graph;
-	}
-
-
 	@Test
 	public void localBfsCodeTest() {
-		PropertyGraph graph = generateSimpleTestGraph();
+		PropertyGraph graph = Util.generateSimpleTestGraph();
 		LocalBfsCodeAlgorithm<String> alg = new LocalBfsCodeAlgorithm<>("e");
 		int[] result = alg.getBfsCode(graph).getCode();
 		int[] local = {1, 1, 2, 1, 1, 3, -1, 2, 3, 1, 1, 4, 1, 1, 5, -1, 4, 5, 1, 1, 6, 1, 2, 7, -1, 4, 7, -1, 6, 7};

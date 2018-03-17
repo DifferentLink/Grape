@@ -62,10 +62,10 @@ public class MinimalVertexColoring<V, E> implements VertexColoringAlgorithm<V> {
 		int numberOfColors = Integer.MAX_VALUE;
 		int[] partitioning = getFirstPartitioning(numberOfVertices, largestCliqueSize);
 
-		// iterate over partitions
+		// iterate over partitionings
 		while (partitioning != null) {
 			// because different partitionings can have the
-			// same length (= number of colors), this is
+			// same length (= number of colors), the following is
 			// needed in order to determine every isomorphic
 			// coloring, and then break.
 			if (partitioning.length > numberOfColors) {

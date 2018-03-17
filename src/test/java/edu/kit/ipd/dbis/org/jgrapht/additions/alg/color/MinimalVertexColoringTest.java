@@ -1,13 +1,15 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.Util;
+import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm.Coloring;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -269,6 +271,40 @@ public class MinimalVertexColoringTest {
 	}
 
 	@Test
+	public void getColorings3() {
+		// checks if the different vertex colorings are
+		// non-equivalent
+		// 1;1;2;1;1;3;-1;2;3;1;1;4;1;1;5;1;1;6;1;1;7;1;2;8
+		int[] bfsCode = {1,1,2,1,1,3,-1,2,3,1,1,4,1,1,5,1,1,6,1,1,7,1,2,8};
+		BfsCodeAlgorithm.BfsCode<Integer, Integer> bfsObject= new BfsCodeAlgorithm.BfsCodeImpl<>(bfsCode);
+		PropertyGraph<Integer, Integer> graph = new PropertyGraph<>(bfsObject);
+		MinimalVertexColoring<Integer, Integer> alg = new MinimalVertexColoring<>(graph);
+		List<Coloring<Integer>> colorings = alg.getAllColorings();
+		assertEquals(5, colorings.size());
+		assertEquals(false, containsEquivalentColorings(colorings));
+	}
+
+	@Test
+	public void randomEquivalentColorings() {
+		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator();
+		HashSet<PropertyGraph<Integer, Integer>> target = new HashSet<>();
+		bulkGen.generateBulk(target, 20, 8, 20, 7, 20);
+
+		Set<List<Coloring<Integer>>> colorings = new HashSet<>();
+		for (PropertyGraph graph : target) {
+			MinimalVertexColoring<Integer, Integer> alg = new MinimalVertexColoring<>(graph);
+			List<Coloring<Integer>> allColorings = alg.getAllColorings();
+			if (allColorings.size() > 1) {
+				colorings.add(allColorings);
+			}
+		}
+		for (List<Coloring<Integer>> c : colorings) {
+			assertEquals(false, containsEquivalentColorings(c));
+		}
+
+	}
+
+	@Test
 	public void isEquivalent() {
 		Map<Integer, Integer> c1colors = new HashMap<>();
 		Map<Integer, Integer> c2colors = new HashMap<>();
@@ -324,5 +360,16 @@ public class MinimalVertexColoringTest {
 
 		MinimalVertexColoring alg = new MinimalVertexColoring(graph);
 		assertEquals(2, alg.getColoring().getNumberColors());
+	}
+
+	private boolean containsEquivalentColorings(List<Coloring<Integer>> colorings) {
+		for (Coloring<Integer> c1 : colorings) {
+			for (Coloring<Integer> c2 : colorings) {
+				if (!(c1 == c2) && MinimalVertexColoring.equivalentColoring(c1, c2)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
