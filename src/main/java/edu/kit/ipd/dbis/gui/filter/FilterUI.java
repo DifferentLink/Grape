@@ -128,6 +128,7 @@ public class FilterUI extends JPanel {
 
 		for (FilterGroup filterGroup : this.uiFilterManager.getFilterGroups()) {
 			this.filterController.removeFiltersegment(filterGroup.getID());
+			this.filterController.deactivate(filterGroup.getID());
 			this.filterController.updateFilterGroup(filterGroup.getText(), filterGroup.getID());
 			for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
 				try {
@@ -142,6 +143,7 @@ public class FilterUI extends JPanel {
 		for (SimpleFilter simpleFilter : this.uiFilterManager.getSimpleFilter()) {
 			try {
 				this.filterController.removeFiltersegment(simpleFilter.getID());
+				this.filterController.deactivate(simpleFilter.getID());
 				this.filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
 			} catch (InvalidInputException e) {
 
@@ -208,7 +210,12 @@ public class FilterUI extends JPanel {
 		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput, isActive));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		try {
-			filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
+			int groupID = uiFilterManager.getGroupID(simpleFilter.getID());
+			if (groupID != -1) {
+				filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID(), groupID);
+			} else {
+				filterController.updateFilter(simpleFilter.getText(), simpleFilter.getID());
+			}
 			filterInput.setBackground(Color.WHITE);
 		} catch (InvalidInputException e) {
 			filterInput.setBackground(theme.lightNeutralColor);
@@ -242,7 +249,7 @@ public class FilterUI extends JPanel {
 		filterGroupHeaderUI.add(Box.createHorizontalStrut(2));
 
 		JButton addSimpleFilterToGroup = new JButton("+");
-		addSimpleFilterToGroup.addActionListener(new SimpleFilterToGroupAction(filterGroup));
+		addSimpleFilterToGroup.addActionListener(new SimpleFilterToGroupAction(filterGroup, filterController));
 		addSimpleFilterToGroup.setBackground(theme.assertiveBackground);
 		addSimpleFilterToGroup.setBorder(BorderFactory.createLineBorder(theme.outlineColor, 1));
 		addSimpleFilterToGroup.setMaximumSize(new Dimension(simpleFilterUIHeight, simpleFilterUIHeight));
@@ -262,6 +269,7 @@ public class FilterUI extends JPanel {
 		simpleFilterContainer.setLayout(new BoxLayout(simpleFilterContainer, BoxLayout.Y_AXIS));
 		for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
 			simpleFilterContainer.add(drawSimpleFilter(simpleFilter));
+
 		}
 
 		JPanel filterGroupUI = new JPanel();
@@ -312,7 +320,7 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			filter.setActive(checkBox.isSelected());
+			filter.setStatus(checkBox.isSelected());
 			if (checkBox.isSelected()) {
 				filterController.activate(filter.getID());
 			} else {
@@ -333,15 +341,13 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			filterGroup.setActive(checkBox.isSelected());
-			filterGroup.getSimpleFilter().forEach(filter -> {
-				filter.setActive(checkBox.isSelected());
-				if (filter.isActive()) {
-					filterController.activate(filter.getID());
-				} else {
-					filterController.deactivate(filter.getID());
-				}
-			});
+			filterGroup.setStatus(checkBox.isSelected());
+			if (checkBox.isSelected()) {
+				filterController.activate(filterGroup.getID());
+			} else {
+				filterController.deactivate(filterGroup.getID());
+			}
+			filterGroup.getSimpleFilter().forEach(filter -> filter.setStatus(checkBox.isSelected()));
 			update();
 			revalidate();
 		}
@@ -458,9 +464,11 @@ public class FilterUI extends JPanel {
 	private class SimpleFilterToGroupAction implements ActionListener {
 
 		private final FilterGroup filterGroup;
+		private final FilterController filterController;
 
-		SimpleFilterToGroupAction(FilterGroup filterGroup) {
+		SimpleFilterToGroupAction(FilterGroup filterGroup, FilterController filterController) {
 			this.filterGroup = filterGroup;
+			this.filterController = filterController;
 		}
 
 		@Override
