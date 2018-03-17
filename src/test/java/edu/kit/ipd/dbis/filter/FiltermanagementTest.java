@@ -275,6 +275,7 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).getAvailableFilter().get(0).isActivated;
     }
 
+
     @Ignore
     @Test
     public void deactivateFiltersegments() throws ConnectionFailedException, InvalidInputException,

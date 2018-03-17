@@ -168,7 +168,7 @@ public class DatabaseFilterIntegrationTests {
 
 		manager.setDatabase(newDatabase);
 		assertEquals(manager.getDatabase().getGraphTable().getName()
-				+ manager.getDatabase().getFilterTable().getName(), "grape2modifiedgrape2filtersmodified");
+				+ manager.getDatabase().getFilterTable().getName(), "grape2modifiedgrape2modifiedFilters");
 
 	}
 
