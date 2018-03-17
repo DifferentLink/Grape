@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class FilterController {
 
-	private Filtermanagement filter;
+	private Filtermanagement filtermanagement;
 	private StatusbarController statusbar;
 	private GrapeUI grapeUI;
 	private UIFilterManager uiFilterManager;
@@ -33,7 +33,7 @@ public class FilterController {
 
 	private FilterController() {
 		this.statusbar = StatusbarController.getInstance();
-		this.filter = new Filtermanagement();
+		this.filtermanagement = new Filtermanagement();
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class FilterController {
 	 */
 	public void setDatabase(GraphDatabase database) {
 		try {
-			filter.setDatabase(database);
+			filtermanagement.setDatabase(database);
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -97,7 +97,7 @@ public class FilterController {
 	 */
 	public void updateFilter(String filterInput, int id) throws InvalidInputException {
 		try {
-			filter.updateFilter(filterInput, id);
+			filtermanagement.updateFilter(filterInput, id);
 			this.grapeUI.updateTable();
 		} catch (ConnectionFailedException
 				| InsertionFailedException | UnexpectedObjectException e) {
@@ -115,7 +115,7 @@ public class FilterController {
 	 */
 	public void updateFilter(String filterInput, int filterId, int groupId) throws InvalidInputException {
 		try {
-			filter.updateFilter(filterInput, filterId, groupId);
+			filtermanagement.updateFilter(filterInput, filterId, groupId);
 		} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -129,7 +129,7 @@ public class FilterController {
 	 */
 	public void updateFilterGroup(String filterInput, int id) {
 		try {
-			filter.updateFiltergroup(filterInput, id);
+			filtermanagement.updateFiltergroup(filterInput, id);
 			this.grapeUI.updateTable();
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
@@ -143,7 +143,7 @@ public class FilterController {
 	 */
 	public void removeFiltersegment(int id) {
 		try {
-			filter.removeFiltersegment(id);
+			filtermanagement.removeFiltersegment(id);
 			this.grapeUI.updateTable();
 		} catch (ConnectionFailedException | UnexpectedObjectException | InsertionFailedException e) {
 			statusbar.addMessage(e.getMessage());
@@ -151,13 +151,13 @@ public class FilterController {
 	}
 
 	/**
-	 * Activate.
+	 * .
 	 *
 	 * @param id the id
 	 */
 	public void activate(int id) {
 		try {
-			filter.activate(id);
+			filtermanagement.activate(id);
 			this.grapeUI.updateTable();
 		} catch (UnexpectedObjectException
 				| InsertionFailedException | ConnectionFailedException e) {
@@ -172,7 +172,7 @@ public class FilterController {
 	 */
 	public void deactivate(int id) {
 		try {
-			filter.deactivate(id);
+			filtermanagement.deactivate(id);
 			this.grapeUI.updateTable();
 		} catch (UnexpectedObjectException
 				| InsertionFailedException | ConnectionFailedException e) {
@@ -185,8 +185,8 @@ public class FilterController {
 	 */
 	public void updateFilters() {
 		this.uiFilterManager.clearFilters();
-		List<Filter> filterList = filter.getAvailableFilter();
-		List<Filtergroup> filtergroupList = filter.getAvailableFilterGroups();
+		List<Filter> filterList = filtermanagement.getAvailableFilter();
+		List<Filtergroup> filtergroupList = filtermanagement.getAvailableFilterGroups();
 		List<Integer> newId = new LinkedList<>();
 		newId.add(0);
 
@@ -217,7 +217,7 @@ public class FilterController {
 	 */
 	public ResultSet getFilteredAndSortedGraphs() {
 		try {
-			return filter.getFilteredAndSortedGraphs();
+			return filtermanagement.getFilteredAndSortedGraphs();
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -233,7 +233,7 @@ public class FilterController {
 	 */
 	public ResultSet getFilteredAndAscendingSortedGraphs(Property property) {
 		try {
-			return filter.getFilteredAndAscendingSortedGraphs(property);
+			return filtermanagement.getFilteredAndAscendingSortedGraphs(property);
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -248,7 +248,7 @@ public class FilterController {
 	 */
 	public ResultSet getFilteredAndDescendingSortedGraphs(Property property) {
 		try {
-			return filter.getFilteredAndDescendingSortedGraphs(property);
+			return filtermanagement.getFilteredAndDescendingSortedGraphs(property);
 		} catch (ConnectionFailedException e) {
 			statusbar.addMessage(e.getMessage());
 		}
