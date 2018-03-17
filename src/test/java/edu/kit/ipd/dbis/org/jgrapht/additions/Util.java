@@ -40,4 +40,30 @@ public class Util {
 		graph.addEdge("a", "g");
 		return graph;
 	}
+
+	public static PropertyGraph generateSimpleTestGraph2() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addVertex("d");
+		graph.addVertex("e");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		graph.addEdge("a", "d");
+		graph.addEdge("a", "e");
+		graph.addEdge("b", "c");
+		graph.addEdge("d", "e");
+		return graph;
+	}
+
+	public static PropertyGraph generateSimpleTestGraph3() {
+		PropertyGraph graph = new PropertyGraph();
+		graph.addVertex("a");
+		graph.addVertex("b");
+		graph.addVertex("c");
+		graph.addEdge("a", "b");
+		graph.addEdge("a", "c");
+		return graph;
+	}
 }
