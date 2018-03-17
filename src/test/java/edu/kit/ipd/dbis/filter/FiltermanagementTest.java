@@ -1,14 +1,17 @@
 package edu.kit.ipd.dbis.filter;
 
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.connection.tables.FilterTable;
-import edu.kit.ipd.dbis.database.connection.tables.GraphTable;
-import edu.kit.ipd.dbis.database.exceptions.sql.*;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
 import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.double_.AverageDegree;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -58,6 +61,8 @@ public class FiltermanagementTest {
     			database.deleteFilter(id);
 		    }
 	    }
+	    manager.getAvailableFilter().clear();
+    	manager.getAvailableFilterGroups().clear();
     }
 
     @Test
@@ -115,19 +120,18 @@ public class FiltermanagementTest {
         assert output[2][6].equals("2.0");
     }
 
-    @Ignore
     @Test
     public void testStringParserFiltergroup() throws InvalidInputException, ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
         manager.updateFiltergroup("This is a filtergroup", 44);
-        manager.updateFilter("StructureDensity < 39", 7, 44);
+        manager.updateFilter("ProportionDensity < 39", 7, 44);
         manager.activate(44);
         manager.activate(7);
         manager.updateFilter("TotalColoringNumberOfColors / 3 <= VertexColoringNumberOfColors * 4", 2, 44);
         manager.activate(2);
         String[][] output = manager.parseFilterList();
 
-        assert output[0][0].equals("structuredensity");
+        assert output[0][0].equals("proportiondensity");
         assert output[0][1].equals("+");
         assert output[0][2].equals("0");
         assert output[0][3].equals("<");
@@ -144,7 +148,6 @@ public class FiltermanagementTest {
         assert output[1][6].equals("4.0");
     }
 
-    @Ignore
     @Test
     public void replaceFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -154,7 +157,6 @@ public class FiltermanagementTest {
         assert manager.availableFilter.get(0).getName().equals("averagedegree >= 12");
     }
 
-    @Ignore
     @Test
     public void replaceFilterGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -164,7 +166,6 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getName().equals("This is an updated filtergroup");
     }
 
-    @Ignore
     @Test
     public void replaceFilterInFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -175,7 +176,6 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getAvailableFilter().get(0).getName().equals("averagedegree < 41");
     }
 
-    @Ignore
     @Test
     public void replaceFiltersegments() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -204,7 +204,6 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(1).getAvailableFilter().size() == 2;
     }
 
-    @Ignore
     @Test
     public void removeFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -217,7 +216,6 @@ public class FiltermanagementTest {
         manager.removeFiltersegment(81);
     }
 
-    @Ignore
     @Test
     public void removeFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
@@ -227,8 +225,6 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.size() == 0;
     }
 
-
-    @Ignore
     @Test
     public void removeFilterFromGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -239,8 +235,6 @@ public class FiltermanagementTest {
         assert manager.availableFilterGroups.get(0).getAvailableFilter().size() == 0;
     }
 
-
-    @Ignore
     @Test
     public void deactivateFilter() throws ConnectionFailedException, InvalidInputException, InsertionFailedException,
             UnexpectedObjectException {
@@ -250,7 +244,6 @@ public class FiltermanagementTest {
         manager.deactivate(2);
         assert !manager.availableFilter.get(0).isActivated;
     }
-
 
     @Test
     public void deactivateFiltergroup() throws ConnectionFailedException, UnexpectedObjectException,
@@ -262,7 +255,6 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).isActivated;
     }
 
-    @Ignore
     @Test
     public void deactivateFilterInGroup() throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException, InvalidInputException {
@@ -275,8 +267,6 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(0).getAvailableFilter().get(0).isActivated;
     }
 
-
-    @Ignore
     @Test
     public void deactivateFiltersegments() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -334,8 +324,6 @@ public class FiltermanagementTest {
         assert !manager.availableFilterGroups.get(1).getAvailableFilter().get(1).isActivated;
     }
 
-
-    @Ignore
     @Test
     public void testFilterInputParserBasicFilter() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
@@ -343,8 +331,6 @@ public class FiltermanagementTest {
         assert manager.availableFilter.get(0).getName().equals("averagedegree = 10.87");
     }
 
-
-    @Ignore
     @Test
     public void testFilterInputParserConnectedFilter() throws  ConnectionFailedException, InvalidInputException,
             InsertionFailedException,

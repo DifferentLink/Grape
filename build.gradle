@@ -48,4 +48,5 @@ task fullJar(type: Jar) {
             it.isDirectory() ? it : zipTree(it)
         }
     }
+    with jar
 }
