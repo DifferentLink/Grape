@@ -100,6 +100,8 @@ public class integrationTest {
 			graphGenerator.generateBulk(graphs, amount, minVertices, maxVertices, minEdges, maxEdges);
 		} catch (NotEnoughGraphsException ignored) {
 		}
+		graphAmount = graphs.size();
+		assertEquals(amount, graphAmount);
 		for (PropertyGraph graph : graphs) {
 			try {
 				database.addGraph(graph);
@@ -112,11 +114,9 @@ public class integrationTest {
 		}
 		CalculationMaster.executeCalculation(jobs);
 		try {
-			graphAmount = database.getNumberOfGraphs();
 			uncalculated = database.getNumberOfUncalculatedGraphs();
 		} catch (ConnectionFailedException ignored) {
 		}
-
 		assertEquals(amount, graphAmount);
 		assertEquals(0, uncalculated);
 	}
