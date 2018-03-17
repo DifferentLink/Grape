@@ -10,6 +10,7 @@ import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -19,19 +20,44 @@ import java.util.List;
 public class DatabaseFilterIntegrationTests {
 
 	private static GraphDatabase database;
+	private static GraphDatabase newDatabase;
 	private static Filtermanagement manager;
 
-	@Before
-	public void setUp() throws Exception {
-		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
-		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
-		String url = "jdbc:mysql://127.0.0.1/library";
-		String user = "travis";
-		String password = "";
-		String name = "grape";
+	@BeforeClass
+	public static void setUp() throws Exception {
+		try {
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "user";
+			String password = "password";
+			String name = "grape";
 
-		FileManager fileManager = new FileManager();
-		database = fileManager.createGraphDatabase(url, user, password, name);
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+			fileManager.deleteGraphDatabase(database);
+			database = fileManager.createGraphDatabase(url, user, password, name);
+
+			name = "grape2modified";
+			GraphTable graphTable = new GraphTable(url, user, password, name);
+			name = "grape2modifiedFilters";
+			FilterTable filterTable = new FilterTable(url, user,password, name);
+			newDatabase = new GraphDatabase(graphTable, filterTable);
+
+
+		} catch (Exception e){
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+			connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "travis";
+			String password = "";
+			String name = "databasefilterintegrationtests";
+
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+
+			name = "grape2modified";
+			FileManager fileManager2 = new FileManager();
+			newDatabase = fileManager2.createGraphDatabase(url, user, password, name);
+		}
 		manager = new Filtermanagement();
 		manager.setDatabase(database);
 
@@ -140,12 +166,9 @@ public class DatabaseFilterIntegrationTests {
 			}
 		}
 
-		GraphTable graphs2 = new GraphTable(url, username, password, "grape2Modified");
-		FilterTable filter2 = new FilterTable(url, username, password, "grape2filtersModified");
-		GraphDatabase database2 = new GraphDatabase(graphs2, filter2);
-		manager.setDatabase(database2);
+		manager.setDatabase(newDatabase);
 		assertEquals(manager.getDatabase().getGraphTable().getName()
-				+ manager.getDatabase().getFilterTable().getName(), "grape2Modifiedgrape2filtersModified");
+				+ manager.getDatabase().getFilterTable().getName(), "grape2modifiedgrape2modifiedFilters");
 
 	}
 

@@ -34,7 +34,7 @@ public class PropertyGraph<V, E> extends SimpleGraph {
 	 *
 	 * @param bfsCode the bfs code
 	 */
-	public PropertyGraph(BfsCodeAlgorithm.BfsCodeImpl bfsCode) {
+	public PropertyGraph(BfsCodeAlgorithm.BfsCode bfsCode) {
 		super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false);
 		int[] code = bfsCode.getCode();
 		for (int i = 1; i <= (code[code.length - 1]); i++) {

@@ -13,6 +13,7 @@ import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -25,17 +26,29 @@ public class FilterTableComponentTests {
 
 	private static GraphDatabase database;
 
-	@Before
-	public void setUp() throws Exception {
-		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
-		connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
-		String url = "jdbc:mysql://127.0.0.1/library";
-		String user = "travis";
-		String password = "";
-		String name = "grape";
+	@BeforeClass
+	public static void setUp() throws Exception {
+		try {
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "user";
+			String password = "password";
+			String name = "grape";
 
-		FileManager fileManager = new FileManager();
-		database = fileManager.createGraphDatabase(url, user, password, name);
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+			fileManager.deleteGraphDatabase(database);
+			database = fileManager.createGraphDatabase(url, user, password, name);
+		} catch (Exception e){
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+			connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "travis";
+			String password = "";
+			String name = "filtertablecomponenttests";
+
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+		}
 
 	}
 
