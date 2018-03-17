@@ -6,15 +6,19 @@ import edu.kit.ipd.dbis.database.connection.GraphDatabase;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.InsertionFailedException;
 import edu.kit.ipd.dbis.database.exceptions.sql.UnexpectedObjectException;
+import edu.kit.ipd.dbis.database.file.FileManager;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.generate.NotEnoughGraphsException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -34,13 +38,50 @@ public class integrationTest {
 	static Filtermanagement filter;
 
 	@BeforeClass
-	public static void setUp() {
-		//set Database here!
+	public static void setUp() throws Exception {
+		try {
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "user";
+			String password = "password";
+			String name = "grape";
+
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+			fileManager.deleteGraphDatabase(database);
+			database = fileManager.createGraphDatabase(url, user, password, name);
+		} catch (Exception e){
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
+			connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
+			String url = "jdbc:mysql://127.0.0.1/library";
+			String user = "travis";
+			String password = "";
+			String name = "integrationtest";
+
+			FileManager fileManager = new FileManager();
+			database = fileManager.createGraphDatabase(url, user, password, name);
+		}
 		graphGenerator = new BulkRandomConnectedGraphGenerator();
 		filter = new Filtermanagement();
 		try {
 			filter.setDatabase(database);
 		} catch (ConnectionFailedException ignored) {
+		}
+	}
+
+	@Before
+	public void clear() throws SQLException, ConnectionFailedException {
+		LinkedList<Integer> ids = database.getFilterTable().getIds();
+		for (Integer id : ids) {
+			if (id != 0) {
+				database.deleteFilter(id);
+			}
+		}
+
+		LinkedList<Integer> ids2 = database.getGraphTable().getIds();
+		for (Integer id : ids) {
+			if (id != 0) {
+				database.deleteFilter(id);
+			}
 		}
 	}
 
