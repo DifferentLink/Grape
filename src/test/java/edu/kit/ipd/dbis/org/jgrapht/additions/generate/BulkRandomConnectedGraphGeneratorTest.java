@@ -74,12 +74,11 @@ public class BulkRandomConnectedGraphGeneratorTest {
 		Assert.assertTrue(target.size() == 1);
 	}
 
-	@Ignore
 	@Test
 	public void largeParameterTest() {
 		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator<>();
 		HashSet<PropertyGraph> target = new HashSet<>();
-		bulkGen.generateBulk(target,3000, 0, 20, 1, 3000);
-		Assert.assertTrue(target.size() == 3000);
+		bulkGen.generateBulk(target,1000, 0, 20, 1, 50);
+		Assert.assertTrue(target.size() == 1000);
 	}
 }
