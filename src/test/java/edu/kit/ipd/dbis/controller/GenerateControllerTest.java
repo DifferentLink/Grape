@@ -12,6 +12,7 @@ import org.junit.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
@@ -46,6 +47,23 @@ public class GenerateControllerTest {
 		}
 		g = GenerateController.getInstance();
 		g.setDatabase(database);
+	}
+
+	@Before
+	public void clear() throws SQLException, ConnectionFailedException {
+		LinkedList<Integer> ids = database.getFilterTable().getIds();
+		for (Integer id : ids) {
+			if (id != 0) {
+				database.deleteFilter(id);
+			}
+		}
+
+		LinkedList<Integer> ids2 = database.getGraphTable().getIds();
+		for (Integer id : ids) {
+			if (id != 0) {
+				database.deleteFilter(id);
+			}
+		}
 	}
 
 	@Test
