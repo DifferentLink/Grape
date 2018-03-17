@@ -1,5 +1,6 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.graph;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.Util;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.ProfileDensityAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.BfsCode;
@@ -22,32 +23,9 @@ import static org.junit.Assert.assertEquals;
 
 public class PropertyGraphTest {
 
-	private PropertyGraph generateSimpleTestGraph() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-		graph.addVertex("d");
-		graph.addVertex("e");
-		graph.addVertex("f");
-		graph.addVertex("g");
-		graph.addEdge("d", "a");
-		graph.addEdge("d", "e");
-		graph.addEdge("d", "b");
-		graph.addEdge("a", "f");
-		graph.addEdge("e", "f");
-		graph.addEdge("e", "b");
-		graph.addEdge("e", "g");
-		graph.addEdge("e", "c");
-		graph.addEdge("g", "c");
-		graph.addEdge("a", "g");
-		return graph;
-	}
-
 	@Test
-	@Ignore
 	public void calculateAllPropertyTest() {
-		PropertyGraph graph = generateSimpleTestGraph();
+		PropertyGraph graph = Util.generateSimpleTestGraph();
 		graph.calculateProperties();
 		int[] code = {1,1,2,1,1,3,-1,2,3,1,1,4,1,1,5,-1,4,5,1,1,6,1,2,7,-1,4,7,-1,6,7};
 		BfsCodeAlgorithm.BfsCodeImpl minBfsCode = new BfsCodeAlgorithm.BfsCodeImpl(code);
@@ -70,50 +48,6 @@ public class PropertyGraphTest {
 		Assert.assertTrue(Math.abs((Double) graph.getProperty(AverageDegree.class).getValue() - 2.857142857) < 0.001);
 		Assert.assertTrue(graph.getProperty(NumberOfEdges.class).getValue().equals(10));
 	}
-
-	@Test
-	public void twoVerticesTest() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addEdge("a", "b");
-		graph.calculateProperties();
-		Assert.assertTrue(true);
-	}
-
-	@Test
-	public void threeVerticesTest() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-		graph.addEdge("a", "b");
-		graph.addEdge("c", "a");
-		graph.calculateProperties();
-		Assert.assertTrue(true);
-	}
-
-	@Ignore
-	@Test
-	public void sixVerticesTest() {
-		PropertyGraph graph = new PropertyGraph();
-		graph.addVertex("a");
-		graph.addVertex("b");
-		graph.addVertex("c");
-		graph.addVertex("d");
-		graph.addVertex("e");
-		graph.addVertex("f");
-		graph.addEdge("a", "b");
-		graph.addEdge("a", "c");
-		graph.addEdge("a", "d");
-		graph.addEdge("b", "e");
-		graph.addEdge("b", "f");
-		graph.addEdge("e", "f");
-		graph.addEdge("f", "d");
-		graph.calculateProperties();
-		Assert.assertTrue(true);
-	}
-
 
 	@Test
 	public void largestSubgraphSizeNPETest() {

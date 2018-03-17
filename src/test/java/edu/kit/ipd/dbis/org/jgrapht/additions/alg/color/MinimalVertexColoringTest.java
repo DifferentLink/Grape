@@ -1,12 +1,16 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.Util;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.BfsCodeAlgorithm;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkGraphGenerator;
+import edu.kit.ipd.dbis.org.jgrapht.additions.generate.BulkRandomConnectedGraphGenerator;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm.Coloring;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -287,6 +291,12 @@ public class MinimalVertexColoringTest {
 				}
 			}
 		}
+	}
+
+	@Test
+	public void randomEquivalentColorings() {
+		BulkGraphGenerator bulkGen = new BulkRandomConnectedGraphGenerator();
+		HashSet<PropertyGraph> target = new HashSet<>();
 	}
 
 	@Test

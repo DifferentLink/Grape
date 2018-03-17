@@ -1,8 +1,8 @@
 package edu.kit.ipd.dbis.org.jgrapht.additions.alg.color;
 
+import edu.kit.ipd.dbis.org.jgrapht.additions.Util;
 import edu.kit.ipd.dbis.org.jgrapht.additions.alg.interfaces.TotalColoringAlgorithm;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import org.jgrapht.graph.SimpleGraph;
 import org.junit.Test;
 
 import java.util.List;
