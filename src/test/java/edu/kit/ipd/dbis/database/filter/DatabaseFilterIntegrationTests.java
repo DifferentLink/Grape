@@ -20,6 +20,7 @@ import java.util.List;
 public class DatabaseFilterIntegrationTests {
 
 	private static GraphDatabase database;
+	private static GraphDatabase newDatabase;
 	private static Filtermanagement manager;
 
 	@BeforeClass
@@ -34,6 +35,14 @@ public class DatabaseFilterIntegrationTests {
 			database = fileManager.createGraphDatabase(url, user, password, name);
 			fileManager.deleteGraphDatabase(database);
 			database = fileManager.createGraphDatabase(url, user, password, name);
+
+			name = "grape2modified";
+			FileManager fileManager2 = new FileManager();
+			newDatabase = fileManager2.createGraphDatabase(url, user, password, name);
+			fileManager.deleteGraphDatabase(newDatabase);
+			newDatabase = fileManager2.createGraphDatabase(url, user, password, name);
+
+
 		} catch (Exception e){
 			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/?user=travis&password=");
 			connection.prepareStatement("CREATE DATABASE IF NOT EXISTS library").executeUpdate();
@@ -44,6 +53,10 @@ public class DatabaseFilterIntegrationTests {
 
 			FileManager fileManager = new FileManager();
 			database = fileManager.createGraphDatabase(url, user, password, name);
+
+			name = "grape2modified";
+			FileManager fileManager2 = new FileManager();
+			newDatabase = fileManager2.createGraphDatabase(url, user, password, name);
 		}
 		manager = new Filtermanagement();
 		manager.setDatabase(database);
@@ -153,12 +166,9 @@ public class DatabaseFilterIntegrationTests {
 			}
 		}
 
-		GraphTable graphs2 = new GraphTable(url, username, password, "grape2Modified");
-		FilterTable filter2 = new FilterTable(url, username, password, "grape2filtersModified");
-		GraphDatabase database2 = new GraphDatabase(graphs2, filter2);
-		manager.setDatabase(database2);
+		manager.setDatabase(newDatabase);
 		assertEquals(manager.getDatabase().getGraphTable().getName()
-				+ manager.getDatabase().getFilterTable().getName(), "grape2Modifiedgrape2filtersModified");
+				+ manager.getDatabase().getFilterTable().getName(), "grape2modifiedgrape2modifiedFilters");
 
 	}
 
