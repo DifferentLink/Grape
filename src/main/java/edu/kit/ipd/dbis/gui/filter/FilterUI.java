@@ -242,7 +242,7 @@ public class FilterUI extends JPanel {
 		filterGroupHeaderUI.add(Box.createHorizontalStrut(2));
 
 		JButton addSimpleFilterToGroup = new JButton("+");
-		addSimpleFilterToGroup.addActionListener(new SimpleFilterToGroupAction(filterGroup));
+		addSimpleFilterToGroup.addActionListener(new SimpleFilterToGroupAction(filterGroup, filterController));
 		addSimpleFilterToGroup.setBackground(theme.assertiveBackground);
 		addSimpleFilterToGroup.setBorder(BorderFactory.createLineBorder(theme.outlineColor, 1));
 		addSimpleFilterToGroup.setMaximumSize(new Dimension(simpleFilterUIHeight, simpleFilterUIHeight));
@@ -312,7 +312,7 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			filter.setActive(checkBox.isSelected());
+			filter.setStatus(checkBox.isSelected());
 			if (checkBox.isSelected()) {
 				filterController.activate(filter.getID());
 			} else {
@@ -333,16 +333,13 @@ public class FilterUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			filterController.activate(filterGroup.getID());
-			filterGroup.setActive(checkBox.isSelected());
-			filterGroup.getSimpleFilter().forEach(filter -> {
-				filter.setActive(checkBox.isSelected());
-				if (filter.isActive()) {
-					filterController.activate(filter.getID());
-				} else {
-					filterController.deactivate(filter.getID());
-				}
-			});
+			filterGroup.setStatus(checkBox.isSelected());
+			if (checkBox.isSelected()) {
+				filterController.activate(filterGroup.getID());
+			} else {
+				filterController.deactivate(filterGroup.getID());
+			}
+			filterGroup.getSimpleFilter().forEach(filter -> filter.setStatus(checkBox.isSelected()));
 			update();
 			revalidate();
 		}
@@ -459,13 +456,16 @@ public class FilterUI extends JPanel {
 	private class SimpleFilterToGroupAction implements ActionListener {
 
 		private final FilterGroup filterGroup;
+		private final FilterController filterController;
 
-		SimpleFilterToGroupAction(FilterGroup filterGroup) {
+		SimpleFilterToGroupAction(FilterGroup filterGroup, FilterController filterController) {
 			this.filterGroup = filterGroup;
+			this.filterController = filterController;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			//filterController.
 			uiFilterManager.addNewSimpleFilterToGroup(filterGroup);
 			update();
 			repaint();
