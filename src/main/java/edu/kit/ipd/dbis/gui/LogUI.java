@@ -58,7 +58,9 @@ public class LogUI extends JFrame {
 		scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(Integer.MAX_VALUE, 10));
 
 		for (String logEntry : history.toStringArray()) {
-			container.add(new JLabel(logEntry));
+			JLabel message = new JLabel(logEntry);
+			message.setVisible(true);
+			container.add(message);
 		}
 
 		this.add(scrollPane);
@@ -71,5 +73,6 @@ public class LogUI extends JFrame {
 		this.setVisible(true);
 		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
 		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
+
 	}
 }
