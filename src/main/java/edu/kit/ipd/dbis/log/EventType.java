@@ -6,7 +6,6 @@ import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * The enum Event type.
