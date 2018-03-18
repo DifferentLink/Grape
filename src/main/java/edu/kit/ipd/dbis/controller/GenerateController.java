@@ -1,7 +1,6 @@
 package edu.kit.ipd.dbis.controller;
 
 import edu.kit.ipd.dbis.controller.exceptions.InvalidBfsCodeInputException;
-import edu.kit.ipd.dbis.controller.exceptions.InvalidGeneratorInputException;
 import edu.kit.ipd.dbis.controller.util.CalculationMaster;
 import edu.kit.ipd.dbis.controller.util.CalculationWorker;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
@@ -93,7 +92,6 @@ public class GenerateController {
 	 * @param minEdges    the min edges
 	 * @param maxEdges    the max edges
 	 * @param amount      the amount
-	 * @throws InterruptedException the interrupted exception
 	 */
 	public void generateGraphs(int minVertices, int maxVertices, int minEdges, int maxEdges, int amount) {
 		if (!isValidGeneratorInput(minVertices, maxVertices, minEdges, maxEdges, amount)) {
@@ -167,8 +165,6 @@ public class GenerateController {
 				this.statusbarController.setNumberOfGraphs();
 
 				if (graphExists) {
-					//TODO: message is shown if the graph was deleted before (don't know if graph is visible)
-					//TODO: how can i know if a graph is markes as deleted or not? -> else wrong message (create deleted graph)
 					statusbarController.addMessage(language.getString("graph") + " " +  bfsCode
 							+ " " + language.getString("alreadyExists"));
 				} else {

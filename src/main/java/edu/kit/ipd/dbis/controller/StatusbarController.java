@@ -66,22 +66,6 @@ public class StatusbarController {
 	}
 
 	/**
-	 * Gets as string.
-	 *
-	 * @return the as string
-	 */
-	public String getAsString() {
-		return log.getAsString();
-	}
-
-	/**
-	 * Removes all events of the type MESSAGE from the current history
-	 */
-	public void removeMessages() {
-		log.removeMessages();
-	}
-
-	/**
 	 * Move backward in the history
 	 */
 	public void undo() {
@@ -137,7 +121,7 @@ public class StatusbarController {
 	 * Add event.
 	 *
 	 * @param type the EventType
-	 * @param ids   the ids of the graph
+	 * @param ids  the ids of the graph
 	 */
 	public void addEvent(EventType type, List<Integer> ids, String message) {
 		this.addEvent(new Event(type, message, ids));
