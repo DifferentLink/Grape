@@ -332,8 +332,8 @@ public class FiltermanagementTest {
         assert !manager.availableFilters.get(2).isActivated;
         assert !manager.availableFilters.get(3).isActivated;
         assert !manager.availableFilterGroups.get(4).isActivated;
-        assert manager.availableFilterGroups.get(4).getFilter(5).isActivated;
-        assert manager.availableFilterGroups.get(4).getFilter(6).isActivated;
+        assert !manager.availableFilterGroups.get(4).getFilter(5).isActivated;
+        assert !manager.availableFilterGroups.get(4).getFilter(6).isActivated;
         assert manager.availableFilterGroups.get(7).isActivated;
         assert !manager.availableFilterGroups.get(7).getFilter(8).isActivated;
         assert !manager.availableFilterGroups.get(7).getFilter(9).isActivated;
