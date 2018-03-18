@@ -9,13 +9,14 @@ import edu.kit.ipd.dbis.filter.Filtergroup;
 import edu.kit.ipd.dbis.filter.Filtermanagement;
 import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
+import java.util.Set;
 
 public class DatabaseFilterIntegrationTests {
 
@@ -107,7 +108,7 @@ public class DatabaseFilterIntegrationTests {
 
 		if (database.getFilterById(5) instanceof Filtergroup) {
 			Filtergroup group = (Filtergroup) database.getFilterById(5);
-			List<Filter> filters = group.getAvailableFilter();
+			Set<Filter> filters = group.getAvailableFilters();
 			boolean found = false;
 			for (Filter f : filters) {
 				if (f.getID() == 60) {
@@ -122,7 +123,7 @@ public class DatabaseFilterIntegrationTests {
 		assertEquals(database.getFilterById(5) instanceof Filtergroup, true);
 		if (database.getFilterById(5) instanceof Filtergroup) {
 			Filtergroup group = (Filtergroup) database.getFilterById(5);
-			List<Filter> filters = group.getAvailableFilter();
+			Set<Filter> filters = group.getAvailableFilters();
 			for (Filter f : filters) {
 				assertEquals((f.getID() == 60), false);
 			}
@@ -145,7 +146,7 @@ public class DatabaseFilterIntegrationTests {
 
 		if (database.getFilterById(6) instanceof Filtergroup) {
 			Filtergroup group = (Filtergroup) database.getFilterById(6);
-			List<Filter> filters = group.getAvailableFilter();
+			Set<Filter> filters = group.getAvailableFilters();
 			boolean found = false;
 			for (Filter f : filters) {
 				if (f.getID() == 31) {
@@ -160,7 +161,7 @@ public class DatabaseFilterIntegrationTests {
 		assertEquals((database.getFilterById(6) instanceof Filtergroup), true);
 		if (database.getFilterById(6) instanceof Filtergroup) {
 			Filtergroup group = (Filtergroup) database.getFilterById(6);
-			List<Filter> filters = group.getAvailableFilter();
+			Set<Filter> filters = group.getAvailableFilters();
 			for (Filter f : filters) {
 				assertEquals((f.getID() == 31), false);
 			}

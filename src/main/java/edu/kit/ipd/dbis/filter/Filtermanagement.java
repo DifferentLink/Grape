@@ -9,7 +9,6 @@ import edu.kit.ipd.dbis.filter.exceptions.InvalidInputException;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.Property;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyFactory;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
-import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.ComplexProperty;
 
 import java.sql.ResultSet;
 import java.util.*;
@@ -19,8 +18,8 @@ import java.util.*;
  */
 public class Filtermanagement {
 
-    List<Filtergroup> availableFilterGroups;
-    List<Filter> availableFilter;
+    Map<Integer, Filtergroup> availableFilterGroups;
+    Map<Integer, Filter> availableFilters;
     private GraphDatabase database;
 
     /**
@@ -28,8 +27,8 @@ public class Filtermanagement {
      * filter and another list for the filtergroups.
      */
     public Filtermanagement() {
-        availableFilterGroups = new ArrayList<>();
-        availableFilter = new ArrayList<>();
+        availableFilterGroups = new HashMap<>();
+        availableFilters = new HashMap<>();
     }
 
     /**
@@ -44,57 +43,55 @@ public class Filtermanagement {
      * getter-method for filter groups
      * @return returns all filtergroups the current filtermanager inherits
      */
-    public List<Filtergroup> getAvailableFilterGroups() {
-        return availableFilterGroups;
+    public Set<Filtergroup> getAvailableFilterGroups() {
+        return new HashSet<>(availableFilterGroups.values());
     }
 
     /**
      * getter-method for filter
      * @return returns all filter the current filtermanager inherits
      */
-    public List<Filter> getAvailableFilter() {
-        return availableFilter;
+    public Set<Filter> getAvailableFilters() {
+        return new HashSet<>(availableFilters.values());
     }
 
     private void addFilterGroup(Filtergroup filtergroup) throws ConnectionFailedException,
 
             UnexpectedObjectException, InsertionFailedException {
         database.addFilter(filtergroup);
-        availableFilterGroups.add(filtergroup);
+        availableFilterGroups.put(filtergroup.id, filtergroup);
     }
 
     private void addFilter(Filter filter) throws ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
         database.addFilter(filter);
-        availableFilter.add(filter);
+        availableFilters.put(filter.id, filter);
     }
 
     private void addFilterToFiltergroup(Filter filter, int groupID) throws ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
-        for (Filtergroup element: availableFilterGroups) {
-            if (element.id == groupID) {
-                element.getAvailableFilter().add(filter);
-                database.replaceFilter(groupID, element);
-            }
-        }
+        Filtergroup group = availableFilterGroups.get(groupID);
+        group.addFilter(filter);
+        database.replaceFilter(groupID, group);
     }
 
-    private int removeFiltersegmentAngGetID(int id) throws ConnectionFailedException, UnexpectedObjectException,
+    private int removeFiltersegmentAndGetID(int id) throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
-        for (Filter element : availableFilter) {
-            if (element.id == id) {
-                availableFilter.remove(element);
-                database.deleteFilter(id);
-                return 0;
-            }
-        }
-        for (Filtergroup element : availableFilterGroups) {
-            for (Filter filterInGroup : element.getAvailableFilter()) {
-                if (filterInGroup.id == id) {
-                    element.getAvailableFilter().remove(filterInGroup);
-                    database.replaceFilter(element.id, element);
-                    return element.id;
-                }
+        if (availableFilters.containsKey(id)) {
+            availableFilters.remove(availableFilters.get(id));
+            database.deleteFilter(id);
+            return 0;
+        } else if (availableFilterGroups.containsKey(id)) {
+            availableFilterGroups.remove(availableFilterGroups.get(id));
+            database.deleteFilter(id);
+            return 0;
+        } else {
+            // filter is inside of filtergroup
+            Filtergroup f = this.getFilterGroup(id);
+            if (f != null) {
+                f.removeFilter(id);
+                database.replaceFilter(f.id, f);
+                return f.id;
             }
         }
         return 0;
@@ -110,25 +107,18 @@ public class Filtermanagement {
      */
     public void removeFiltersegment(int id) throws ConnectionFailedException, UnexpectedObjectException,
             InsertionFailedException {
-        for (Filter element: availableFilter) {
-            if (element.id == id) {
-                availableFilter.remove(element);
-                database.deleteFilter(id);
-                return;
-            }
-        }
-        for (Filtergroup element: availableFilterGroups) {
-            if (element.id == id) {
-                availableFilterGroups.remove(element);
-                database.deleteFilter(id);
-                return;
-            }
-            for (Filter filterInGroup: element.getAvailableFilter()) {
-                if (filterInGroup.id == id) {
-                    element.getAvailableFilter().remove(filterInGroup);
-                    database.replaceFilter(element.id, element);
-                    return;
-                }
+        if (availableFilters.containsKey(id)) {
+            availableFilters.remove(id);
+            database.deleteFilter(id);
+        } else if (availableFilterGroups.containsKey(id)) {
+            availableFilterGroups.remove(id);
+            database.deleteFilter(id);
+        } else {
+            // filter is inside of filtergroup
+            Filtergroup f = this.getFilterGroup(id);
+            if (f != null) {
+                f.removeFilter(id);
+                database.replaceFilter(f.id, f);
             }
         }
     }
@@ -143,25 +133,20 @@ public class Filtermanagement {
      * @throws InsertionFailedException thrown if the database operation failed
      */
     public void activate(int id) throws InsertionFailedException, UnexpectedObjectException, ConnectionFailedException {
-        for (Filtersegment element: availableFilter) {
-            if (element.id == id) {
-                element.activate();
-                database.replaceFilter(id, element);
-                return;
-            }
-        }
-        for (Filtergroup element: availableFilterGroups) {
-            if (element.id == id) {
-                element.activate();
-                database.replaceFilter(id, element);
-                return;
-            }
-            for (Filter currentFilter: element.getAvailableFilter()) {
-                if (currentFilter.id == id) {
-                    currentFilter.activate();
-                    database.replaceFilter(element.id, element);
-                    return;
-                }
+        if (availableFilters.containsKey(id)) {
+            Filter f = availableFilters.get(id);
+            f.activate();
+            database.replaceFilter(f.id, f);
+        } else if (availableFilterGroups.containsKey(id)) {
+            Filtergroup f = availableFilterGroups.get(id);
+            f.activate();
+            database.replaceFilter(f.id, f);
+        } else {
+            // filter is inside of filtergroup
+            Filtergroup f = this.getFilterGroup(id);
+            if (f != null) {
+                f.getFilter(id).activate();
+                database.replaceFilter(f.id, f);
             }
         }
     }
@@ -177,32 +162,27 @@ public class Filtermanagement {
      */
     public void deactivate(int id) throws ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException {
-        for (Filter element: availableFilter) {
-            if (element.id == id) {
-                element.deactivate();
-                database.replaceFilter(id, element);
-                return;
-            }
-        }
-        for (Filtergroup currentElement: availableFilterGroups) {
-            if (currentElement.id == id) {
-                currentElement.deactivate();
-                database.replaceFilter(id, currentElement);
-                return;
-            }
-            for (Filter currentFilter : currentElement.getAvailableFilter()) {
-                if (currentFilter.id == id) {
-                    currentFilter.deactivate();
-                    database.replaceFilter(currentElement.id, currentElement);
-                    return;
-                }
+        if (availableFilters.containsKey(id)) {
+            Filter f = availableFilters.get(id);
+            f.deactivate();
+            database.replaceFilter(f.id, f);
+        } else if (availableFilterGroups.containsKey(id)) {
+            Filtergroup f = availableFilterGroups.get(id);
+            f.deactivate();
+            database.replaceFilter(f.id, f);
+        } else {
+            // filter is inside of filtergroup
+            Filtergroup f = this.getFilterGroup(id);
+            if (f != null) {
+                f.getFilter(id).deactivate();
+                database.replaceFilter(f.id, f);
             }
         }
 
     }
 
     /**
-     * method which offers the oppotunity to modify a specific filter
+     * method which offers the opportunity to modify a specific filter
      * @param input code of the modified filter
      * @param id id of the filter to modify
      * @throws ConnectionFailedException thrown if the table in database is not as expected
@@ -213,13 +193,31 @@ public class Filtermanagement {
      */
     public void updateFilter(String input, int id) throws ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException, InvalidInputException {
-        int groupID = this.removeFiltersegmentAngGetID(id);
+        boolean activated = false;
+        if (availableFilters.containsKey(id)) {
+            activated = availableFilters.get(id).isActivated;
+        } else {
+            Filtergroup f = this.getFilterGroup(id);
+            if (f != null) {
+                activated = f.getFilter(id).isActivated;
+            }
+        }
+        int groupID = this.removeFiltersegmentAndGetID(id);
         if (groupID != 0) {
             this.removeFiltersegment(id);
             this.updateFilter(input, id, groupID);
         } else {
             this.removeFiltersegment(id);
             this.addFilter(input, id);
+        }
+
+        if (activated && availableFilters.containsKey(id)) {
+            availableFilters.get(id).activate();
+        } else if (activated) {
+            Filtergroup f = this.getFilterGroup(id);
+            if (f != null) {
+                f.getFilter(id).activate();
+            }
         }
     }
 
@@ -233,14 +231,12 @@ public class Filtermanagement {
      */
     public void updateFiltergroup(String input, int id) throws ConnectionFailedException, InsertionFailedException,
             UnexpectedObjectException {
-        for (Filtergroup element: availableFilterGroups) {
-            if (element.id == id) {
-                element.name = input;
-                return;
-            }
+        if (availableFilterGroups.containsKey(id)) {
+            availableFilterGroups.get(id).name = input;
+        } else {
+            Filtergroup myGroup = new Filtergroup(input, false, id);
+            this.addFilterGroup(myGroup);
         }
-        Filtergroup myGroup = new Filtergroup(input, false, id);
-        this.addFilterGroup(myGroup);
     }
 
     /**
@@ -312,6 +308,7 @@ public class Filtermanagement {
     }
 
     private static Filter parseToFilter(String input, int id) throws InvalidInputException {
+        boolean isactivated = false;
         Filtermanagement.checkFilterInputNull(input);
         String inputCopy = input.toLowerCase();
         String[] parameters = inputCopy.split(" ", 7);
@@ -369,15 +366,23 @@ public class Filtermanagement {
             double secondValue = Filtermanagement.parseToIntegerOrDouble(secondValueString);
 
             if (parameters[5].equals("+") && parameters[6].equals("0")) {
-                input = parameters[0] + " " + parameters[1] + " " + parameters[2] + " " + parameters[3]
-                        + " " + parameters[4];
+                input = parameters[0] + " "
+                        + parameters[1] + " "
+                        + parameters[2] + " "
+                        + parameters[3] + " "
+                        + parameters[4];
                 if (parameters[1].equals("+") && parameters[2].equals("0")) {
-                    input = parameters[0] + " " + parameters[3] + " " + parameters[4];
+                    input = parameters[0] + " "
+                            + parameters[3] + " "
+                            + parameters[4];
                 }
             }
             else if (parameters[1].equals("+") && parameters[2].equals("0")) {
-                input = parameters[0] + " " + parameters[3] + " " + parameters[4] + " " + parameters[5]
-                        + " " + parameters[6];
+                input = parameters[0] + " "
+                        + parameters[3] + " "
+                        + parameters[4] + " "
+                        + parameters[5] + " "
+                        + parameters[6];
             }
             return new ConnectedFilter(input, false, property1, property2, operator1,
                     operator2, firstValue, secondValue, relation, id);
@@ -444,8 +449,8 @@ public class Filtermanagement {
     }
 
     /**
-     * used when initializing Grape or switching a database. The methode clears the current
-     * list of Filtersegments and calls the methode addFiltersegment(filtersegment:
+     * used when initializing Grape or switching a database. The method clears the current
+     * list of Filtersegments and calls the method addFiltersegment(filtersegment:
      * Filtersegment): void for every Filter element of the new database
      * @param database new database which should be used in future
      * @throws ConnectionFailedException thrown if the connection to database failed
@@ -453,14 +458,14 @@ public class Filtermanagement {
      */
     public void setDatabase(GraphDatabase database) throws ConnectionFailedException {
         availableFilterGroups.clear();
-        availableFilter.clear();
+        availableFilters.clear();
         this.database = database;
         LinkedList<Filtersegment> activatedFilter = database.getFilters();
         for (Filtersegment element: activatedFilter) {
             if (element.getClass() == Filtergroup.class) {
-                availableFilterGroups.add((Filtergroup) element);
+                availableFilterGroups.put(element.getID(), (Filtergroup) element);
             } else {
-                availableFilter.add((Filter) element);
+                availableFilters.put(element.getID(), (Filter) element);
             }
         }
     }
@@ -471,14 +476,14 @@ public class Filtermanagement {
      */
     public String[][] parseFilterList() {
         ArrayList<Filter> activatedFilter = new ArrayList<>();
-        for (Filter current: availableFilter) {
+        for (Filter current: availableFilters.values()) {
             if (current.isActivated) {
                 activatedFilter.add(current);
             }
         }
-        for (Filtergroup current: availableFilterGroups) {
+        for (Filtergroup current: availableFilterGroups.values()) {
             if (current.isActivated) {
-            	activatedFilter.addAll(current.getAvailableFilter());
+            	activatedFilter.addAll(current.getAvailableFilters());
             }
         }
         int arrayLenght = activatedFilter.size();
@@ -566,5 +571,14 @@ public class Filtermanagement {
         } else {
             return Double.parseDouble(input);
         }
+    }
+
+    private Filtergroup getFilterGroup(int filterId) {
+        for (Filtergroup f : availableFilterGroups.values()) {
+            if (f.containsFilter(filterId)) {
+                return f;
+            }
+        }
+        return null;
     }
 }
