@@ -17,6 +17,7 @@ import edu.kit.ipd.dbis.org.jgrapht.additions.graph.PropertyGraph;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.Profile;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.TotalColoring;
 import edu.kit.ipd.dbis.org.jgrapht.additions.graph.properties.complex.VertexColoring;
+import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.alg.interfaces.VertexColoringAlgorithm;
 
 import java.util.HashSet;
@@ -334,5 +335,15 @@ public final class GraphEditorController {
 	 */
 	public void emptyGraphToGraphEditor() {
 		graphEditor.showEmptyGraph();
+	}
+
+	public boolean isConnected(PropertyGraph graph) {
+		ConnectivityInspector c = new ConnectivityInspector(graph);
+		boolean isConnected = c.isGraphConnected();
+		if (!isConnected) {
+			statusbarController.addMessage(language.getString("notConnected"));
+			return false;
+		}
+		return true;
 	}
 }
