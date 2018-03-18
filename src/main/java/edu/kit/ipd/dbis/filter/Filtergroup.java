@@ -33,6 +33,18 @@ public class Filtergroup extends Filtersegment {
         this.availableFilters.remove(filterId);
     }
 
+    @Override
+    public void activate() {
+        super.activate();
+        this.availableFilters.values().forEach(f -> f.activate());
+    }
+
+    @Override
+    public void deactivate() {
+        super.deactivate();
+        this.availableFilters.values().forEach(f -> f.deactivate());
+    }
+
     /**
      * Constructor of class Filtergroup
      * @param name name of the filtergroup (name of filtergroup should be equal to user
