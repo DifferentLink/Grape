@@ -1,6 +1,9 @@
 package edu.kit.ipd.dbis.gui.popups;
 
 import edu.kit.ipd.dbis.controller.DatabaseController;
+import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
+import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.gui.themes.Theme;
 
 import javax.imageio.ImageIO;
@@ -107,9 +110,19 @@ public class ConfigureDatabaseUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			databaseController.newDatabase(urlInput.getText(), userInput.getText(),
-					passwordInput.getText(), nameInput.getText());
-			configureDatabaseUI.dispose();
+			try {
+				databaseController.newDatabase(urlInput.getText(), userInput.getText(),
+						passwordInput.getText(), nameInput.getText());
+				configureDatabaseUI.dispose();
+			} catch (DatabaseDoesNotExistException e) {
+				urlInput.setBackground(new Color(255, 99, 71));
+			} catch (AccessDeniedForUserException e) {
+				passwordInput.setBackground(new Color(255, 99, 71));
+				userInput.setBackground(new Color(255, 99, 71));
+			} catch (ConnectionFailedException e) {
+				nameInput.setBackground(new Color(255, 99, 71));
+			}
+
 		}
 	}
 
