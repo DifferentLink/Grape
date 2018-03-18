@@ -202,12 +202,12 @@ public class FilterUI extends JPanel {
 		JPanel simpleFilterUI = new JPanel();
 		simpleFilterUI.setLayout(new BoxLayout(simpleFilterUI, BoxLayout.X_AXIS));
 		simpleFilterUI.add(new JLabel("⚫"));
-		JCheckBox isActive = new JCheckBox();
-		isActive.setSelected(simpleFilter.isActive());
-		isActive.addActionListener(new ToggleSimpleFilterAction(simpleFilter, isActive));
-		simpleFilterUI.add(isActive);
+		JCheckBox checkBox = new JCheckBox();
+		checkBox.setSelected(simpleFilter.isActive());
+		checkBox.addActionListener(new ToggleSimpleFilterAction(simpleFilter, checkBox));
+		simpleFilterUI.add(checkBox);
 		JTextField filterInput = new JTextField(simpleFilter.getText());
-		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput, isActive));
+		filterInput.getDocument().addDocumentListener(new SimpleFilterInputChange(simpleFilter, filterInput, checkBox));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
 		try {
 			updateFilter(simpleFilter);
@@ -244,7 +244,7 @@ public class FilterUI extends JPanel {
 		filterGroupHeaderUI.add(Box.createHorizontalStrut(2));
 
 		JButton addSimpleFilterToGroup = new JButton("+");
-		addSimpleFilterToGroup.addActionListener(new SimpleFilterToGroupAction(filterGroup, filterController));
+		addSimpleFilterToGroup.addActionListener(new SimpleFilterToGroupAction(filterGroup));
 		addSimpleFilterToGroup.setBackground(theme.assertiveBackground);
 		addSimpleFilterToGroup.setBorder(BorderFactory.createLineBorder(theme.outlineColor, 1));
 		addSimpleFilterToGroup.setMaximumSize(new Dimension(simpleFilterUIHeight, simpleFilterUIHeight));
@@ -339,10 +339,11 @@ public class FilterUI extends JPanel {
 			filterGroup.setStatus(checkBox.isSelected());
 			if (checkBox.isSelected()) {
 				filterController.activate(filterGroup.getID());
+				filterGroup.getSimpleFilter().forEach(filter -> filter.setStatus(true));
 			} else {
 				filterController.deactivate(filterGroup.getID());
+				filterGroup.getSimpleFilter().forEach(filter -> filter.setStatus(false));
 			}
-			filterGroup.getSimpleFilter().forEach(filter -> filter.setStatus(checkBox.isSelected()));
 			update();
 			revalidate();
 		}
@@ -459,11 +460,9 @@ public class FilterUI extends JPanel {
 	private class SimpleFilterToGroupAction implements ActionListener {
 
 		private final FilterGroup filterGroup;
-		private final FilterController filterController;
 
-		SimpleFilterToGroupAction(FilterGroup filterGroup, FilterController filterController) {
+		SimpleFilterToGroupAction(FilterGroup filterGroup) {
 			this.filterGroup = filterGroup;
-			this.filterController = filterController;
 		}
 
 		@Override
