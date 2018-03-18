@@ -22,7 +22,6 @@ public class PearsonCorrelationTest {
     public static void setDatabase(GraphDatabase newDatabase) {
         database = newDatabase;
     }
-
     /**
      * generates two (of two possible) graphs and adds them to the database
      * @throws UnexpectedObjectException thrown if the object type is wrong
