@@ -77,7 +77,7 @@ public class StatusbarUI extends JPanel {
 		this.setForeground(theme.foregroundColor);
 
 		JButton log = new JButton(language.getString("log"));
-		log.addActionListener(new ShowLogAction(new LogUI(statusbarController, language, theme), log));
+		log.addActionListener(new ShowLogAction(log));
 		log.setBackground(theme.backgroundColor);
 		log.setForeground(theme.foregroundColor);
 		log.setFont(theme.defaultFont);
@@ -129,18 +129,17 @@ public class StatusbarUI extends JPanel {
 	}
 
 	private class ShowLogAction implements ActionListener {
-		private final LogUI logUI;
 		private Component component;
 
-		ShowLogAction(LogUI logUI, Component component) {
-			this.logUI = logUI;
+		ShowLogAction(Component component) {
 			this.component = component;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
-			logUI.setHistory(statusbarController.getHistory());
-			logUI.drawLog(component);
+			LogUI log = new LogUI(statusbarController, language, null);
+			log.setHistory(statusbarController.getHistory());
+			log.drawLog(component);
 		}
 	}
 

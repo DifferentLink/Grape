@@ -66,7 +66,6 @@ public class GrapeUI {
 	private CorrelationUI correlationUI;
 	private JTable tableUI;
 	private StatusbarUI statusbarUI;
-	private LogUI logUI;
 
 	private JFrame mainWindow;
 
