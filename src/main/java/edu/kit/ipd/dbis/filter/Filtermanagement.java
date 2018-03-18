@@ -222,6 +222,33 @@ public class Filtermanagement {
     }
 
     /**
+     * checks whether the input string codes a valid filter. In case of success the method
+     * addFiltersegment(filtersegment: Filtersegment): void is called and a new
+     * filter is added to the list of class Filtermanagement
+     * @param input string which might code a filter
+     * @param id unique identifier of the new filterobject
+     * @param groupID unique identifier of the filtergroup on which the filter should be add to
+     * @throws InvalidInputException this exception is thrown if the input string does not code a valid filter
+     * @throws ConnectionFailedException thrown if the table in database is not as expected
+     * @throws ConnectionFailedException thrown if the connection to database failed
+     * @throws InsertionFailedException thrown if filter could not be added to database
+     * @throws UnexpectedObjectException thrown if there is an unknown object
+     */
+    public void updateFilter(String input, int id, int groupID) throws InvalidInputException,
+            ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
+        boolean activated = false;
+        if (availableFilterGroups.containsKey(groupID)
+                && availableFilterGroups.get(groupID).containsFilter(id)) {
+            activated = availableFilterGroups.get(groupID).getFilter(id).isActivated;
+        }
+        this.removeFiltersegment(id);
+        this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
+        if (activated) {
+            availableFilterGroups.get(groupID).getFilter(id).activate();
+        }
+    }
+
+    /**
      * method which offers the opportunity to modify a specific filtergroup
      * @param input new name of the filtergroup
      * @param id id of the filtergroup which should be modified
@@ -238,6 +265,8 @@ public class Filtermanagement {
             this.addFilterGroup(myGroup);
         }
     }
+
+
 
     /**
      * method which returns all graphs sorted by a specific property ascending
@@ -277,25 +306,6 @@ public class Filtermanagement {
      * filter is added to the list of class Filtermanagement
      * @param input string which might code a filter
      * @param id unique identifier of the new filterobject
-     * @param groupID unique identifier of the filtergroup on which the filter should be add to
-     * @throws InvalidInputException this exception is thrown if the input string does not code a valid filter
-     * @throws ConnectionFailedException thrown if the table in database is not as expected
-     * @throws ConnectionFailedException thrown if the connection to database failed
-     * @throws InsertionFailedException thrown if filter could not be added to database
-     * @throws UnexpectedObjectException thrown if there is an unknown object
-     */
-    public void updateFilter(String input, int id, int groupID) throws InvalidInputException,
-            ConnectionFailedException, InsertionFailedException, UnexpectedObjectException {
-        this.removeFiltersegment(id);
-        this.addFilterToFiltergroup(Filtermanagement.parseToFilter(input, id), groupID);
-    }
-
-    /**
-     * checks whether the input string codes a valid filter. In case of success the method
-     * addFiltersegment(filtersegment: Filtersegment): void is called and a new
-     * filter is added to the list of class Filtermanagement
-     * @param input string which might code a filter
-     * @param id unique identifier of the new filterobject
      * @throws InvalidInputException this exception is thrown if the input string does not code a valid filter
      * @throws ConnectionFailedException thrown if the table in database is not as expected
      * @throws ConnectionFailedException thrown if the connection to database failed
@@ -308,7 +318,6 @@ public class Filtermanagement {
     }
 
     private static Filter parseToFilter(String input, int id) throws InvalidInputException {
-        boolean isactivated = false;
         Filtermanagement.checkFilterInputNull(input);
         String inputCopy = input.toLowerCase();
         String[] parameters = inputCopy.split(" ", 7);

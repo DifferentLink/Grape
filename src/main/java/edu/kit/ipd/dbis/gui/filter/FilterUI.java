@@ -157,7 +157,6 @@ public class FilterUI extends JPanel {
 	 * Uses current state of FilterGroups and SimpleFilters to create the GUI elements in the filter panel.
 	 */
 	public void update() {
-
 		filter.removeAll();
 		filter.add(Box.createVerticalStrut(2));
 		JPanel container = new JPanel();
@@ -230,10 +229,10 @@ public class FilterUI extends JPanel {
 	private JPanel drawFilterGroup(FilterGroup filterGroup) {
 		JPanel filterGroupHeaderUI = new JPanel();
 		filterGroupHeaderUI.setLayout(new BoxLayout(filterGroupHeaderUI, BoxLayout.X_AXIS));
-		JCheckBox isActive = new JCheckBox();
-		isActive.setSelected(filterGroup.isActive());
-		isActive.addActionListener(new ToggleFilterGroupAction(filterGroup, isActive));
-		filterGroupHeaderUI.add(isActive);
+		JCheckBox checkBox = new JCheckBox();
+		checkBox.setSelected(filterGroup.isActive());
+		checkBox.addActionListener(new ToggleFilterGroupAction(filterGroup, checkBox));
+		filterGroupHeaderUI.add(checkBox);
 		JTextField filterInput = new JTextField(filterGroup.getText());
 		filterInput.getDocument().addDocumentListener(new FilterGroupInputChange(filterGroup, filterInput));
 		filterInput.setBorder(BorderFactory.createLineBorder(theme.neutralColor));
@@ -264,7 +263,6 @@ public class FilterUI extends JPanel {
 		simpleFilterContainer.setLayout(new BoxLayout(simpleFilterContainer, BoxLayout.Y_AXIS));
 		for (SimpleFilter simpleFilter : filterGroup.getSimpleFilter()) {
 			simpleFilterContainer.add(drawSimpleFilter(simpleFilter));
-
 		}
 
 		JPanel filterGroupUI = new JPanel();
