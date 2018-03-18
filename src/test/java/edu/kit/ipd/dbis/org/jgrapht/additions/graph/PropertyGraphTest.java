@@ -22,7 +22,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class PropertyGraphTest {
-
 	@Test
 	public void calculateAllPropertyTest() {
 		PropertyGraph graph = Util.generateSimpleTestGraph2();
