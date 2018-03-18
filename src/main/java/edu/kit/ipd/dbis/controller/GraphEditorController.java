@@ -134,7 +134,6 @@ public final class GraphEditorController {
 	 * @throws InvalidGraphInputException the invalid graph input exception
 	 */
 	public void addNewGraph(PropertyGraph<Integer, Integer> graph) throws InvalidGraphInputException {
-		// todo only duplicate check??
 		if (isValidGraph(graph)) {
 			try {
 				database.addGraph(graph);
@@ -217,7 +216,6 @@ public final class GraphEditorController {
 			denserGraph.calculateProperties();
 			boolean graphExists = database.graphExists(denserGraph);
 			database.addGraph(denserGraph);
-			//TODO: same problem: graph marked as deleted?
 			if (graphExists) {
 				statusbarController.addMessage(language.getString("nextDenserAlreadyExists"));
 			} else {
