@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The type Filter controller.
@@ -116,6 +117,7 @@ public class FilterController {
 	public void updateFilter(String filterInput, int filterId, int groupId) throws InvalidInputException {
 		try {
 			filtermanagement.updateFilter(filterInput, filterId, groupId);
+			this.grapeUI.updateTable();
 		} catch (ConnectionFailedException | InsertionFailedException | UnexpectedObjectException e) {
 			statusbar.addMessage(e.getMessage());
 		}
@@ -185,19 +187,19 @@ public class FilterController {
 	 */
 	public void updateFilters() {
 		this.uiFilterManager.clearFilters();
-		List<Filter> filterList = filtermanagement.getAvailableFilter();
-		List<Filtergroup> filtergroupList = filtermanagement.getAvailableFilterGroups();
+		Set<Filter> filterSet = filtermanagement.getAvailableFilters();
+		Set<Filtergroup> filtergroupSet = filtermanagement.getAvailableFilterGroups();
 		List<Integer> newId = new LinkedList<>();
 		newId.add(0);
 
-		for (Filter f : filterList) {
+		for (Filter f : filterSet) {
 			SimpleFilter simpleFilter = new SimpleFilter(f.getID(), f.getName());
 			uiFilterManager.addNewSimpleFilter(simpleFilter);
 			newId.add(f.getID());
 		}
-		for (Filtergroup f : filtergroupList) {
+		for (Filtergroup f : filtergroupSet) {
 			FilterGroup filterGroup = new FilterGroup(f.getID(), f.getName());
-			for (Filter filter : f.getAvailableFilter()) {
+			for (Filter filter : f.getAvailableFilters()) {
 				SimpleFilter simpleFilter = new SimpleFilter(filter.getID(), filter.getName());
 				filterGroup.add(simpleFilter);
 				newId.add(filter.getID());

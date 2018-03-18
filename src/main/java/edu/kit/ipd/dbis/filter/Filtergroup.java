@@ -1,21 +1,48 @@
 package edu.kit.ipd.dbis.filter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * this class allows to put multiply filter to one set
  */
 public class Filtergroup extends Filtersegment {
 
-    private List<Filter> availableFilter;
+    private Map<Integer, Filter> availableFilters;
 
     /**
-     * getter-method for availableFilter
-     * @return availableFilter
+     * getter-method for availableFilters
+     * @return availableFilters
      */
-    public List<Filter> getAvailableFilter() {
-        return availableFilter;
+    public Set<Filter> getAvailableFilters() {
+        return new HashSet<>(availableFilters.values());
+    }
+
+    public void addFilter(Filter filter) {
+        this.availableFilters.put(filter.id, filter);
+    }
+
+    public boolean containsFilter(int filterId) {
+        return this.availableFilters.containsKey(filterId);
+    }
+
+    public Filter getFilter(int filterId) {
+        return this.availableFilters.get(filterId);
+    }
+
+    public void removeFilter(int filterId) {
+        this.availableFilters.remove(filterId);
+    }
+
+    @Override
+    public void activate() {
+        super.activate();
+        this.availableFilters.values().forEach(f -> f.activate());
+    }
+
+    @Override
+    public void deactivate() {
+        super.deactivate();
+        this.availableFilters.values().forEach(f -> f.deactivate());
     }
 
     /**
@@ -30,6 +57,6 @@ public class Filtergroup extends Filtersegment {
         this.name = name;
         this.isActivated = isActivated;
         this.id = id;
-        availableFilter = new ArrayList<>();
+        this.availableFilters = new HashMap<>();
     }
 }

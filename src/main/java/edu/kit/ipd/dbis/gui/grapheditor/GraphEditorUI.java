@@ -374,7 +374,9 @@ public class GraphEditorUI extends JPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			propertyGraph = graph.asPropertyGraph();
 			history.addToHistory(graph);
-			displayColoring(graphEditorController);
+			if (graphEditorController.isConnected(propertyGraph)) {
+				displayColoring(graphEditorController);
+			}
 		}
 	}
 
@@ -390,7 +392,7 @@ public class GraphEditorUI extends JPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			propertyGraph = graph.asPropertyGraph();
 			propertyGraph.setId(graph.getId());
-			if (graphEditorController.isValidGraph(propertyGraph)) {
+			if (graphEditorController.isConnected(propertyGraph) && graphEditorController.isValidGraph(propertyGraph)){
 				graphEditorController.addEditedGraph(propertyGraph, graph.getId());
 				graph = new RenderableGraph();
 				history = new GraphEditorHistory();
