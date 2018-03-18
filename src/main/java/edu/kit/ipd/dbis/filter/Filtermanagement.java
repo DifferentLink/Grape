@@ -482,18 +482,14 @@ public class Filtermanagement {
             }
         }
         for (Filtergroup current: availableFilterGroups.values()) {
-            if (current.isActivated) {
-                activatedFilter.addAll(current.getAvailableFilters());
-            } else {
-                for (Filter filter : current.getAvailableFilters()) {
-                    if (filter.isActivated) {
-                        activatedFilter.add(filter);
-                    }
+        	for (Filter filter : current.getAvailableFilters()) {
+                if (filter.isActivated) {
+                    activatedFilter.add(filter);
                 }
             }
         }
-        int arrayLenght = activatedFilter.size();
-        String[][] stringArray = new String[arrayLenght][7];
+        int arrayLength = activatedFilter.size();
+        String[][] stringArray = new String[arrayLength][7];
         int currentColumn = 0;
         for (Filter element: activatedFilter) {
             stringArray = Filtermanagement.fillColumn(stringArray, currentColumn, element);
