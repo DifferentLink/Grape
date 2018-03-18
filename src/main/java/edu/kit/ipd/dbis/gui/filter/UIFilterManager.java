@@ -205,8 +205,6 @@ public class UIFilterManager {
 				this.filterGroups.add((FilterGroup) pair.getValue());
 				iterator.remove();
 			}
-
-			//TODO: Groups
 		}
 	}
 

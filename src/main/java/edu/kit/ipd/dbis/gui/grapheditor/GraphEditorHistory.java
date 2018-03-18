@@ -67,12 +67,6 @@ public class GraphEditorHistory {
 	}
 
 	/**
-	 * Removes all states after the active state
-	 */
-	private void cutTrailingHistory() { // todo implement cutTrailingHistory()
-	}
-
-	/**
 	 * Deletes all recorded states
 	 */
 	public void clear() {

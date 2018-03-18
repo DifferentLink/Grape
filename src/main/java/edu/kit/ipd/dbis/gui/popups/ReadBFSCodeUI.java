@@ -107,7 +107,6 @@ public class ReadBFSCodeUI extends JFrame {
 			try {
 				generateController.generateBFSGraph(bfsCode);
 			} catch (InvalidBfsCodeInputException e) {
-				// TODO: implement me
 				e.printStackTrace();
 			}
 			readBFSCodeUI.dispose();
