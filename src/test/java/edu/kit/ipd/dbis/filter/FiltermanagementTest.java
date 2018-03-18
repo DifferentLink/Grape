@@ -61,8 +61,9 @@ public class FiltermanagementTest {
     			database.deleteFilter(id);
 		    }
 	    }
-	    manager.getAvailableFilters().clear();
-    	manager.getAvailableFilterGroups().clear();
+
+	    manager.availableFilterGroups.clear();
+    	manager.availableFilters.clear();
     }
 
     @Test
@@ -186,7 +187,7 @@ public class FiltermanagementTest {
         manager.updateFiltergroup("This is a filtergroup", 8);
         manager.updateFilter("averagedegree <= 41", 4, 8);
         manager.updateFilter("averagedegree < 41", 4);
-        assert manager.availableFilterGroups.size() == 1;
+        assert manager.availableFilterGroups.values().size() == 1;
         assert manager.availableFilterGroups.get(8).getFilter(4).getName().equals("averagedegree < 41");
     }
 
@@ -205,8 +206,8 @@ public class FiltermanagementTest {
 
         assert manager.availableFilters.size() == 3;
         assert manager.availableFilterGroups.size() == 2;
-        assert manager.availableFilterGroups.get(0).getAvailableFilters().size() == 2;
-        assert manager.availableFilterGroups.get(1).getAvailableFilters().size() == 2;
+        assert manager.availableFilterGroups.get(4).getAvailableFilters().size() == 2;
+        assert manager.availableFilterGroups.get(7).getAvailableFilters().size() == 2;
 
         manager.updateFilter("averagedegree = 23", 3);
         manager.updateFiltergroup("The second group has been modified", 4);
@@ -214,8 +215,8 @@ public class FiltermanagementTest {
 
         assert manager.availableFilters.size() == 3;
         assert manager.availableFilterGroups.size() == 2;
-        assert manager.availableFilterGroups.get(0).getAvailableFilters().size() == 2;
-        assert manager.availableFilterGroups.get(1).getAvailableFilters().size() == 2;
+        assert manager.availableFilterGroups.get(4).getAvailableFilters().size() == 2;
+        assert manager.availableFilterGroups.get(7).getAvailableFilters().size() == 2;
     }
 
     @Test
