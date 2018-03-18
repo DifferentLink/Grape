@@ -62,6 +62,7 @@ public class LogUI extends JFrame {
 			message.setVisible(true);
 			container.add(message);
 		}
+
 		this.add(scrollPane);
 		this.add(container);
 		this.setMinimumSize(new Dimension(500, 100));
