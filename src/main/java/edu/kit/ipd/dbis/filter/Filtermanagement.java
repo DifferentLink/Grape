@@ -483,7 +483,12 @@ public class Filtermanagement {
         }
         for (Filtergroup current: availableFilterGroups.values()) {
             if (current.isActivated) {
-            	activatedFilter.addAll(current.getAvailableFilters());
+                for (Filter filter : current.getAvailableFilters()) {
+                    if (filter.isActivated) {
+                        activatedFilter.add(filter);
+                    }
+                }
+
             }
         }
         int arrayLenght = activatedFilter.size();
