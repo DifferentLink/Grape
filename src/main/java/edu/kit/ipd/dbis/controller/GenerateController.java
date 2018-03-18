@@ -120,7 +120,7 @@ public class GenerateController {
 				if (changedGraphs.size() < amount) {
 					statusbarController.addEvent(new Event(EventType.ADD,  changedGraphs.size()
 							+ " " + language.getString("graphsIncompleteGenerated") + " "
-							+ amount + language.getString(" found"),
+							+ amount + language.getString("found"),
 							changedGraphs));
 				} else {
 					statusbarController.addEvent(new Event(EventType.ADD,  changedGraphs.size()
