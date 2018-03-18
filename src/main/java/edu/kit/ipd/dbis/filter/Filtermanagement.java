@@ -193,6 +193,15 @@ public class Filtermanagement {
      */
     public void updateFilter(String input, int id) throws ConnectionFailedException,
             InsertionFailedException, UnexpectedObjectException, InvalidInputException {
+        boolean activated = false;
+        if (availableFilters.containsKey(id)) {
+            activated = availableFilters.get(id).isActivated;
+        } else {
+            Filtergroup f = this.getFilterGroup(id);
+            if (f != null) {
+                activated = f.getFilter(id).isActivated;
+            }
+        }
         int groupID = this.removeFiltersegmentAndGetID(id);
         if (groupID != 0) {
             this.removeFiltersegment(id);
@@ -200,6 +209,15 @@ public class Filtermanagement {
         } else {
             this.removeFiltersegment(id);
             this.addFilter(input, id);
+        }
+
+        if (activated && availableFilters.containsKey(id)) {
+            availableFilters.get(id).activate();
+        } else if (activated) {
+            Filtergroup f = this.getFilterGroup(id);
+            if (f != null) {
+                f.getFilter(id).activate();
+            }
         }
     }
 
@@ -290,6 +308,7 @@ public class Filtermanagement {
     }
 
     private static Filter parseToFilter(String input, int id) throws InvalidInputException {
+        boolean isactivated = false;
         Filtermanagement.checkFilterInputNull(input);
         String inputCopy = input.toLowerCase();
         String[] parameters = inputCopy.split(" ", 7);
