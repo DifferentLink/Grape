@@ -76,8 +76,7 @@ public class DatabaseController {
 	 * @param password the password
 	 * @param name     the name
 	 */
-	public void newDatabase(String url, String user, String password, String name) {
-		try {
+	public void newDatabase(String url, String user, String password, String name) throws DatabaseDoesNotExistException, AccessDeniedForUserException, ConnectionFailedException {
 			database = connector.createGraphDatabase(url, user, password, name);
 			this.updateDatabases();
 			this.statusbarUI.setDatabaseInfo(name, this.database.getNumberOfGraphs());
@@ -87,9 +86,7 @@ public class DatabaseController {
 			this.statusbar.setHistory(new History(50));
 			this.statusbar.addMessage(
 					language.getString("database") + " \"" + name + "\" " + language.getString("opened"));
-		} catch (DatabaseDoesNotExistException | ConnectionFailedException | AccessDeniedForUserException e) {
-			statusbar.addMessage(e.getMessage());
-		}
+
 	}
 
 	/**
