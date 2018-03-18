@@ -254,9 +254,9 @@ public class FiltermanagementTest {
             UnexpectedObjectException {
         manager.updateFilter("smallestdegree = 3", 2);
         manager.activate(2);
-        assert manager.availableFilters.get(0).isActivated;
+        assert manager.availableFilters.get(2).isActivated;
         manager.deactivate(2);
-        assert !manager.availableFilters.get(0).isActivated;
+        assert !manager.availableFilters.get(2).isActivated;
     }
 
     @Test
@@ -342,7 +342,7 @@ public class FiltermanagementTest {
     public void testFilterInputParserBasicFilter() throws ConnectionFailedException, InvalidInputException,
             InsertionFailedException, UnexpectedObjectException {
         manager.updateFilter("averagedegree = 10.87", 7);
-        assert manager.availableFilters.get(0).getName().equals("averagedegree = 10.87");
+        assert manager.availableFilters.get(7).getName().equals("averagedegree = 10.87");
     }
 
     @Test
@@ -350,63 +350,63 @@ public class FiltermanagementTest {
             InsertionFailedException,
             UnexpectedObjectException {
         manager.updateFilter("NumberOfDisjointEdgesFromKkGraph + 34 < averagedegree - 4.76", 65);
-        assert manager.availableFilters.get(0).property1.equals("numberofdisjointedgesfromkkgraph");
-        assert manager.availableFilters.get(0).operator1.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value1 == 34.0;
-        assert manager.availableFilters.get(0).relation.equals(Relation.LESSTHAN);
-        assert manager.availableFilters.get(0).property2.equals("averagedegree");
-        assert manager.availableFilters.get(0).operator2.equals(Operator.SUB);
-        assert manager.availableFilters.get(0).value2 == 4.76;
+        assert manager.availableFilters.get(65).property1.equals("numberofdisjointedgesfromkkgraph");
+        assert manager.availableFilters.get(65).operator1.equals(Operator.ADD);
+        assert manager.availableFilters.get(65).value1 == 34.0;
+        assert manager.availableFilters.get(65).relation.equals(Relation.LESSTHAN);
+        assert manager.availableFilters.get(65).property2.equals("averagedegree");
+        assert manager.availableFilters.get(65).operator2.equals(Operator.SUB);
+        assert manager.availableFilters.get(65).value2 == 4.76;
         manager.removeFiltersegment(65);
 
         manager.updateFilter("NumberOfDisjointVerticesFromKkGraph / 7 > LargestSubgraphSize", 4);
-        assert manager.availableFilters.get(0).property1.equals("numberofdisjointverticesfromkkgraph");
-        assert manager.availableFilters.get(0).operator1.equals(Operator.DIV);
-        assert manager.availableFilters.get(0).value1 == 7.0;
-        assert manager.availableFilters.get(0).relation.equals(Relation.GREATHERTHAN);
-        assert manager.availableFilters.get(0).property2.equals("largestsubgraphsize");
-        assert manager.availableFilters.get(0).operator2.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value2 == 0.0;
+        assert manager.availableFilters.get(4).property1.equals("numberofdisjointverticesfromkkgraph");
+        assert manager.availableFilters.get(4).operator1.equals(Operator.DIV);
+        assert manager.availableFilters.get(4).value1 == 7.0;
+        assert manager.availableFilters.get(4).relation.equals(Relation.GREATHERTHAN);
+        assert manager.availableFilters.get(4).property2.equals("largestsubgraphsize");
+        assert manager.availableFilters.get(4).operator2.equals(Operator.ADD);
+        assert manager.availableFilters.get(4).value2 == 0.0;
         manager.removeFiltersegment(4);
 
         manager.updateFilter("ProportionDensity >= StructureDensity", 5);
-        assert manager.availableFilters.get(0).property1.equals("proportiondensity");
-        assert manager.availableFilters.get(0).operator1.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value1 == 0.0;
-        assert manager.availableFilters.get(0).relation.equals(Relation.GREATHEROREQUAL);
-        assert manager.availableFilters.get(0).property2.equals("structuredensity");
-        assert manager.availableFilters.get(0).operator2.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value2 == 0.0;
+        assert manager.availableFilters.get(5).property1.equals("proportiondensity");
+        assert manager.availableFilters.get(5).operator1.equals(Operator.ADD);
+        assert manager.availableFilters.get(5).value1 == 0.0;
+        assert manager.availableFilters.get(5).relation.equals(Relation.GREATHEROREQUAL);
+        assert manager.availableFilters.get(5).property2.equals("structuredensity");
+        assert manager.availableFilters.get(5).operator2.equals(Operator.ADD);
+        assert manager.availableFilters.get(5).value2 == 0.0;
         manager.removeFiltersegment(5);
 
         manager.updateFilter("BinomialDensity <= LargestCliqueSize * 3", 6);
-        assert manager.availableFilters.get(0).property1.equals("binomialdensity");
-        assert manager.availableFilters.get(0).operator1.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value1 == 0.0;
-        assert manager.availableFilters.get(0).relation.equals(Relation.LESSOREQUAL);
-        assert manager.availableFilters.get(0).property2.equals("largestcliquesize");
-        assert manager.availableFilters.get(0).operator2.equals(Operator.MULT);
-        assert manager.availableFilters.get(0).value2 == 3.0;
+        assert manager.availableFilters.get(6).property1.equals("binomialdensity");
+        assert manager.availableFilters.get(6).operator1.equals(Operator.ADD);
+        assert manager.availableFilters.get(6).value1 == 0.0;
+        assert manager.availableFilters.get(6).relation.equals(Relation.LESSOREQUAL);
+        assert manager.availableFilters.get(6).property2.equals("largestcliquesize");
+        assert manager.availableFilters.get(6).operator2.equals(Operator.MULT);
+        assert manager.availableFilters.get(6).value2 == 3.0;
         manager.removeFiltersegment(6);
 
         manager.updateFilter("hadwigerconjecture", 7);
-        assert manager.availableFilters.get(0).property1.equals("kkgraphnumberofsubgraphs");
-        assert manager.availableFilters.get(0).operator1.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value1 == 0.0;
-        assert manager.availableFilters.get(0).relation.equals(Relation.GREATHEROREQUAL);
-        assert manager.availableFilters.get(0).property2.equals("vertexcoloringnumberofcolors");
-        assert manager.availableFilters.get(0).operator2.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value2 == 0.0;
+        assert manager.availableFilters.get(7).property1.equals("kkgraphnumberofsubgraphs");
+        assert manager.availableFilters.get(7).operator1.equals(Operator.ADD);
+        assert manager.availableFilters.get(7).value1 == 0.0;
+        assert manager.availableFilters.get(7).relation.equals(Relation.GREATHEROREQUAL);
+        assert manager.availableFilters.get(7).property2.equals("vertexcoloringnumberofcolors");
+        assert manager.availableFilters.get(7).operator2.equals(Operator.ADD);
+        assert manager.availableFilters.get(7).value2 == 0.0;
         manager.removeFiltersegment(7);
 
         manager.updateFilter("totalcoloringconjecture", 9);
-        assert manager.availableFilters.get(0).property1.equals("totalcoloringnumberofcolors");
-        assert manager.availableFilters.get(0).operator1.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value1 == 0.0;
-        assert manager.availableFilters.get(0).relation.equals(Relation.LESSOREQUAL);
-        assert manager.availableFilters.get(0).property2.equals("greatestdegree");
-        assert manager.availableFilters.get(0).operator2.equals(Operator.ADD);
-        assert manager.availableFilters.get(0).value2 == 2.0;
+        assert manager.availableFilters.get(9).property1.equals("totalcoloringnumberofcolors");
+        assert manager.availableFilters.get(9).operator1.equals(Operator.ADD);
+        assert manager.availableFilters.get(9).value1 == 0.0;
+        assert manager.availableFilters.get(9).relation.equals(Relation.LESSOREQUAL);
+        assert manager.availableFilters.get(9).property2.equals("greatestdegree");
+        assert manager.availableFilters.get(9).operator2.equals(Operator.ADD);
+        assert manager.availableFilters.get(9).value2 == 2.0;
         manager.removeFiltersegment(9);
     }
 
