@@ -105,10 +105,6 @@ public class FilterController {
 		}
 	}
 
-	public void addFilterToFilterGroup() {
-
-	}
-
 	/**
 	 * Add filter to group.
 	 *
