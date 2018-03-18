@@ -71,6 +71,5 @@ public class LogUI extends JFrame {
 		this.setVisible(true);
 		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
 		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
-
 	}
 }
