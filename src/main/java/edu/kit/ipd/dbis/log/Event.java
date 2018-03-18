@@ -1,7 +1,6 @@
 package edu.kit.ipd.dbis.log;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * The type Event.

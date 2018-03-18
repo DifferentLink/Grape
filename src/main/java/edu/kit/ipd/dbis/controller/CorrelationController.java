@@ -4,9 +4,8 @@ import edu.kit.ipd.dbis.correlation.CorrelationOutput;
 import edu.kit.ipd.dbis.correlation.CorrelationRequest;
 import edu.kit.ipd.dbis.correlation.exceptions.InvalidCorrelationInputException;
 import edu.kit.ipd.dbis.database.connection.GraphDatabase;
-import edu.kit.ipd.dbis.database.exceptions.sql.AccessDeniedForUserException;
-import edu.kit.ipd.dbis.database.exceptions.sql.DatabaseDoesNotExistException;
 import edu.kit.ipd.dbis.database.exceptions.sql.ConnectionFailedException;
+
 import java.util.List;
 
 /**
@@ -17,7 +16,6 @@ public class CorrelationController {
 	private StatusbarController statusbar;
 	private GraphDatabase database;
 
-	//TODO: Singleton pattern
 	private static CorrelationController correlationController;
 
 	private CorrelationController() {

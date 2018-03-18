@@ -38,25 +38,25 @@ public class Log {
 	 * the string corresponds to one log entry.
 	 */
 	public String getAsString() {
-		String historyEntries = "";
+		StringBuilder historyEntries = new StringBuilder();
 		if (history == null || history.getEvents().size() == 0) {
 			return "";
 		}
 		//Building String
 		for (Event event : history.getEvents()) {
-			String changedGraphs = "";
+			StringBuilder changedGraphs = new StringBuilder();
 			for (int id : event.getChangedGraphs()) {
-				changedGraphs += id + ", ";
+				changedGraphs.append(id).append(", ");
 			}
 			if (event.getType() == EventType.MESSAGE) {
-				historyEntries += "[" + event.getType() + "] " + event.getMessage();
+				historyEntries.append("[").append(event.getType()).append("] ").append(event.getMessage());
 			} else {
-				changedGraphs = changedGraphs.substring(0, changedGraphs.length() - 2);
-				historyEntries += "[" + event.getType() + "] " + event.getMessage() + " (" + changedGraphs + ")\n";
+				changedGraphs = new StringBuilder(changedGraphs.substring(0, changedGraphs.length() - 2));
+				historyEntries.append("[").append(event.getType()).append("] ").append(event.getMessage()).append(" (").append(changedGraphs).append(")\n");
 			}
 		}
-		historyEntries = historyEntries.substring(0, historyEntries.length());
-		return historyEntries;
+		historyEntries = new StringBuilder(historyEntries.substring(0, historyEntries.length()));
+		return historyEntries.toString();
 	}
 
 	/**
